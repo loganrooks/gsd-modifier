@@ -125,9 +125,19 @@ Template for `.planning/phases/XX-name/{phase_num}-CONTEXT.md` - captures the ph
 <future_awareness>
 ## Future Awareness
 
-[Architectural or product constraints imposed by downstream phases, known roadmap ambitions, or v2 directions. These are not future features to build now; they are reasons not to paint the current phase into a corner.]
+### Protected Seams
+[Interfaces, abstractions, schemas, or authored-shape boundaries that current work must preserve so later phases remain possible.]
 
-[If none: "No additional future-facing constraints identified beyond the decisions and constraints above"]
+### Explicit Non-Decisions
+[Choices that should stay intentionally open in this phase rather than being silently fixed.]
+
+### Current Posture
+[The current trust, visibility, and service-obligation posture in project terms. Prefer concrete framing over generic aspiration.]
+
+### Future Shape Notes
+[Constrained notes about wrapper, sibling-surface, or later-shape evolution that should influence present seams without pulling future scope forward.]
+
+[If none: still include the four headings above and write `None` under each.]
 
 </future_awareness>
 

@@ -257,7 +257,7 @@ Process all answered questions from the JSON file and generate CONTEXT.md.
 5. Write CONTEXT.md using the standard context template format:
    - `<decisions>` section with all answered questions grouped by section
    - `<working_model>` / `<open_questions>` when answers remain provisional or intentionally unresolved
-   - `<future_awareness>` section for downstream architectural constraints derived during analysis
+   - `<future_awareness>` section using the same four buckets as standard discuss mode: `Protected Seams`, `Explicit Non-Decisions`, `Current Posture`, `Future Shape Notes`
    - `<deferred>` section for unanswered questions that are actually future-scope ideas (carry forward for future discussion)
    - `<specifics>` section for any chat_more content that adds nuance
    - `<code_context>` section with reusable assets found during analysis
@@ -290,6 +290,6 @@ Next step: /gsd-plan-phase {N}
 - CONTEXT.md generated in the same format as standard discuss-phase output
 - Unanswered questions preserved as deferred items (not silently dropped)
 - `canonical_refs` section always present in CONTEXT.md (MANDATORY)
-- `future_awareness` is preserved so power mode does not lag behind standard discuss mode
+- `future_awareness` is preserved with the same normalized bucket vocabulary so power mode does not lag behind standard discuss mode
 - User knows how to refresh, finalize, explain, or exit power mode
 </success_criteria>

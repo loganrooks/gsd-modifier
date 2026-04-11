@@ -474,10 +474,11 @@ Analyze the phase to identify gray areas worth discussing. **Use both `prior_dec
 
 1c. **Derive future awareness** — Scan ROADMAP.md for the next few downstream phases and any explicit future or v2 ambitions referenced in PROJECT.md, REQUIREMENTS.md, backlog/todos, or prior context.
 
-   Build an internal `<future_awareness>` accumulator with constraints such as:
-   - interfaces that should stay extensible because later phases depend on them
-   - data models that should avoid locking out future modes or entities
-   - UX/room/content choices that should not foreclose later product directions
+   Build an internal `<future_awareness>` accumulator using these buckets:
+   - **Protected Seams** — interfaces, data contracts, abstractions, or authored-shape boundaries that current work must not close off
+   - **Explicit Non-Decisions** — things that should stay intentionally undecided in this phase rather than being silently locked
+   - **Current Posture** — the project's present trust, visibility, and service-obligation stance that downstream work must respect
+   - **Future Shape Notes** — constrained notes about plausible wrappers, sibling surfaces, or later product shapes that should influence present seams without pulling future scope in
 
    **Important:** Future awareness is not a place to smuggle future scope into the current phase. It only captures constraints on HOW current work should be shaped so later phases remain possible.
 
@@ -1071,11 +1072,19 @@ Every entry needs a full relative path — not just a name.]
 <future_awareness>
 ## Future Awareness
 
-[Architectural or product constraints imposed by downstream phases, known roadmap ambitions, or v2 directions.
-This section shapes HOW the current phase should be implemented so later phases remain possible.
-It must NOT be used to pull future scope into the current phase.]
+### Protected Seams
+[Interfaces, abstractions, schemas, or authored-shape boundaries that current work must preserve so later phases remain possible.]
 
-[If none: "No additional future-facing constraints identified beyond the decisions and constraints above"]
+### Explicit Non-Decisions
+[Choices that should stay intentionally open in this phase rather than being silently fixed.]
+
+### Current Posture
+[The current trust, visibility, and service-obligation posture in project terms. For this repo, prefer concrete framing such as private-room use, trusted-circle assumptions, and what public obligations are still intentionally absent.]
+
+### Future Shape Notes
+[Constrained notes about plausible wrapper, sibling-surface, or later-shape evolution that should influence present seams without pulling that scope forward.]
+
+[If none: state that no additional future-facing constraints were identified beyond the decisions and constraints above, and still include the four bucket headings with `None` entries.]
 
 </future_awareness>
 
@@ -1320,7 +1329,7 @@ The power user mode generates ALL questions upfront into machine-readable and hu
 - CONTEXT.md captures actual decisions, assumptions, and open questions rather than vague vision
 - CONTEXT.md includes canonical_refs section with full file paths to every spec/ADR/doc downstream agents need (MANDATORY — never omit)
 - CONTEXT.md includes code_context section with reusable assets and patterns
-- CONTEXT.md includes future_awareness section that captures downstream constraints without expanding current scope
+- CONTEXT.md includes future_awareness with explicit protected seams, non-decisions, posture, and future-shape notes without expanding current scope
 - Deferred ideas preserved for future phases
 - STATE.md updated with session info
 - User knows next steps

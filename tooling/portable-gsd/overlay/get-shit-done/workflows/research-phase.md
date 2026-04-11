@@ -45,6 +45,8 @@ if [[ "$INIT" == @file:* ]]; then INIT=$(cat "${INIT#@file:}"); fi
 AGENT_SKILLS_RESEARCHER=$(node "__PROJECT_ROOT__/.codex/get-shit-done/bin/gsd-tools.cjs" agent-skills gsd-researcher 2>/dev/null)
 ```
 
+If `context_path` exists, resolve the `<canonical_refs>` entries in `CONTEXT.md` into a deduplicated internal `context_canonical_refs` list and include those files in the researcher's `<files_to_read>` block below when they exist in the repo.
+
 ## Step 4: Spawn Researcher
 
 ```
@@ -58,6 +60,7 @@ Treat CONTEXT.md as a steering brief, not just a list of locked choices.
 - {context_path} (Phase steering brief from /gsd-discuss-phase — decisions, assumptions, open questions, future awareness)
 - {requirements_path} (Project requirements)
 - {state_path} (Project decisions and history)
+- {context_canonical_refs} (Resolved files from CONTEXT.md `<canonical_refs>` — MUST be read when present)
 </files_to_read>
 
 ${AGENT_SKILLS_RESEARCHER}
@@ -69,6 +72,10 @@ Research guidance:
 - Respect locked decisions in `<decisions>`
 - Treat `<working_model>` and `<open_questions>` as things to investigate, validate, or narrow
 - Treat `<derived_constraints>` and `<future_awareness>` as implementation guardrails
+- Treat `Protected Seams` as things research should preserve unless evidence forces a different conclusion
+- Treat `Explicit Non-Decisions` as intentionally open rather than accidentally missing
+- Treat `Current Posture` as a real trust/visibility/service constraint
+- Use `Future Shape Notes` to inform seams and interfaces without pulling future scope into the current phase
 - Treat `<epistemic_guardrails>` as standards for how much confidence/evidence the research should establish
 </additional_context>
 

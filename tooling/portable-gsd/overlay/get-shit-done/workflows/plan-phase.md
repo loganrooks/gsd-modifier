@@ -46,11 +46,13 @@ Parse JSON for: `researcher_model`, `planner_model`, `checker_model`, `research_
 
 ## 2. Parse and Normalize Arguments
 
-Extract from {{GSD_ARGS}}: phase number (integer or decimal like `2.1`), flags (`--research`, `--skip-research`, `--gaps`, `--skip-verify`, `--prd <filepath>`, `--reviews`, `--text`).
+Extract from {{GSD_ARGS}}: phase number (integer or decimal like `2.1`), flags (`--research`, `--skip-research`, `--gaps`, `--skip-verify`, `--prd <filepath>`, `--reviews`, `--text`, `--allow-no-context`).
 
 Set `TEXT_MODE=true` if `--text` is present in {{GSD_ARGS}} OR `text_mode` from init JSON is `true`. When `TEXT_MODE` is active, replace every `AskUserQuestion` call with a plain-text numbered list and ask the user to type their choice number. This is required for Claude Code remote sessions (`/rc` mode) where TUI menus don't work through the the agent App.
 
 Extract `--prd <filepath>` from {{GSD_ARGS}}. If present, set PRD_FILE to the filepath.
+
+Extract `--allow-no-context` from {{GSD_ARGS}}. If present, set `ALLOW_NO_CONTEXT=true`; otherwise `false`.
 
 **If no phase number:** Detect next unplanned phase from roadmap.
 
@@ -164,9 +166,19 @@ Use full relative paths. Group by topic area.]
 <future_awareness>
 ## Future Awareness
 
-[Architectural or product constraints imposed by downstream phases, known roadmap ambitions, or future directions referenced in the PRD.]
+### Protected Seams
+[Interfaces, abstractions, schemas, or authored-shape boundaries the PRD implies should stay open for later phases.]
 
-[If none: "No additional future-facing constraints identified beyond the PRD requirements above"]
+### Explicit Non-Decisions
+[Choices the PRD leaves intentionally open and that planning should avoid silently fixing.]
+
+### Current Posture
+[The current trust, visibility, and service-obligation posture implied by the PRD and project docs.]
+
+### Future Shape Notes
+[Constrained notes about later wrapper, sibling-surface, or future-shape evolution that should influence seams now without importing that scope.]
+
+[If none: still include the four headings above and write `None` under each.]
 
 </future_awareness>
 
@@ -215,6 +227,32 @@ Read discuss mode for context gate label:
 DISCUSS_MODE=$(node "__PROJECT_ROOT__/.codex/get-shit-done/bin/gsd-tools.cjs" config-get workflow.discuss_mode 2>/dev/null || echo "exploratory")
 ```
 
+If `DISCUSS_MODE` is `exploratory` and `ALLOW_NO_CONTEXT` is `false`:
+
+- Hard stop. Do not offer "continue without context".
+- Display that exploratory planning requires `CONTEXT.md` because decisions, working assumptions, open questions, canonical refs, and future-preservation constraints are part of the planning input.
+- Tell the operator to run:
+  ```
+  /gsd-discuss-phase {X} ${GSD_WS}
+  ```
+  or re-run:
+  ```
+  /gsd-plan-phase {X} --allow-no-context ${GSD_WS}
+  ```
+- State plainly that `--allow-no-context` reduces future-aware planning guarantees.
+- Exit workflow.
+
+If `ALLOW_NO_CONTEXT` is `true`:
+
+- Display a warning before proceeding:
+  ```
+  Proceeding without CONTEXT.md because --allow-no-context was supplied.
+  Future-aware guarantees are reduced: no steering brief, no canonical_refs from context, and no preserved-seam review input.
+  ```
+- Proceed to step 5.
+
+Otherwise, retain the existing softer choice flow for non-exploratory modes:
+
 If `TEXT_MODE` is true, present as a plain-text numbered list:
 ```
 No CONTEXT.md found for Phase {X}. Plans will use research and requirements only — the steering brief (decisions, assumptions, open questions, future-awareness constraints) won't be included.
@@ -249,6 +287,21 @@ If "Run discuss-phase first":
   /gsd-discuss-phase {X} ${GSD_WS}
   ```
   **Exit the plan-phase workflow. Do not continue.**
+
+## 4.5. Resolve Canonical Refs For Downstream Reads
+
+Skip if `context_path` is null.
+
+Read the `<canonical_refs>` block from `CONTEXT.md` and resolve every path-like entry that exists in the repo into an internal `context_canonical_refs` list.
+
+Rules:
+
+- Preserve the same paths the context cites; do not paraphrase them back into prose.
+- Only include readable repo-local files.
+- Deduplicate repeated paths.
+- If no listed paths resolve, set `context_canonical_refs` to empty.
+
+Every downstream researcher, planner, and checker prompt below must include the resolved `context_canonical_refs` entries in `<files_to_read>` when present. `canonical_refs` are not advisory garnish; they are source-of-truth inputs.
 
 ## 5. Handle Research
 
@@ -318,6 +371,7 @@ Treat CONTEXT.md as a steering brief, not just a list of locked choices.
 - {context_path} (Phase steering brief from /gsd-discuss-phase — decisions, assumptions, open questions, future awareness)
 - {requirements_path} (Project requirements)
 - {state_path} (Project decisions and history)
+- {context_canonical_refs} (Resolved files from CONTEXT.md `<canonical_refs>` — MUST be read when present)
 </files_to_read>
 
 ${AGENT_SKILLS_RESEARCHER}
@@ -330,6 +384,10 @@ Research guidance:
 - Respect locked decisions in `<decisions>`
 - Investigate, validate, or narrow items in `<working_model>` and `<open_questions>`
 - Preserve constraints in `<derived_constraints>` and `<future_awareness>`
+- Treat `Protected Seams` as things research must not casually collapse
+- Treat `Explicit Non-Decisions` as open by default unless evidence strongly justifies narrowing them
+- Treat `Current Posture` as a real operating constraint, not a branding note
+- Use `Future Shape Notes` to inform seams and interfaces without importing future scope
 - Use `<epistemic_guardrails>` to decide what evidence is needed before recommending an approach
 
 **Project instructions:** Read ./AGENTS.md if exists — follow project-specific guidelines
@@ -616,6 +674,7 @@ Planner prompt:
 - {roadmap_path} (Roadmap)
 - {requirements_path} (Requirements)
 - {context_path} (Phase steering brief from /gsd-discuss-phase)
+- {context_canonical_refs} (Resolved files from CONTEXT.md `<canonical_refs>` — MUST be read when present)
 - {research_path} (Technical Research)
 - {verification_path} (Verification Gaps - if --gaps)
 - {uat_path} (UAT Gaps - if --gaps)
@@ -637,6 +696,9 @@ Planning guidance:
 - Treat `<working_model>` as the current best model, but do not confuse it with confirmed truth
 - Convert `<open_questions>` into research dependencies, explicit validation work, or early plan tasks rather than silently ignoring them
 - Treat `<derived_constraints>` and `<future_awareness>` as architectural guardrails that should shape interfaces, data models, and abstractions now
+- For every material item in `<future_awareness>`, map it to exactly one of: preserved seam, sequencing choice, validation task, or explicit non-action rationale
+- Do not silently collapse an `Explicit Non-Decision` into a decision unless the context or research justifies it
+- Reflect preserved seams, non-decisions, and posture assumptions in the plan artifact's `future_preservation` frontmatter
 - Honor `<epistemic_guardrails>` when defining proof, validation, and acceptance criteria
 
 **Project instructions:** Read ./AGENTS.md if exists — follow project-specific guidelines
@@ -647,6 +709,7 @@ Planning guidance:
 <downstream_consumer>
 Output consumed by /gsd-execute-phase. Plans need:
 - Frontmatter (wave, depends_on, files_modified, autonomous)
+- `future_preservation` frontmatter capturing preserved seams, non-decisions, and posture assumptions when context future-awareness is non-empty
 - Tasks in XML format with read_first and acceptance_criteria fields (MANDATORY on every task)
 - Verification criteria
 - must_haves for goal-backward verification
@@ -691,6 +754,7 @@ Every task MUST include these fields — they are NOT optional:
 - [ ] Dependencies correctly identified
 - [ ] Waves assigned for parallel execution
 - [ ] must_haves derived from phase goal
+- [ ] If context future-awareness is non-empty, each plan includes meaningful `future_preservation` data
 </quality_gate>
 ```
 
@@ -765,6 +829,7 @@ Checker prompt:
 - {roadmap_path} (Roadmap)
 - {requirements_path} (Requirements)
 - {context_path} (Phase steering brief from /gsd-discuss-phase)
+- {context_canonical_refs} (Resolved files from CONTEXT.md `<canonical_refs>` — MUST be read when present)
 - {research_path} (Technical Research — includes Validation Architecture)
 </files_to_read>
 
@@ -775,6 +840,8 @@ ${AGENT_SKILLS_CHECKER}
 Verification guidance:
 - Flag plans that ignore material `<open_questions>` without resolving or sequencing them
 - Flag plans that violate `<future_awareness>` or `<derived_constraints>`
+- Flag plans that silently drop a material future-awareness item instead of preserving it, sequencing it, validating it, or explicitly justifying non-action now
+- If context future-awareness is non-empty, fail plans whose `future_preservation` frontmatter is missing, empty, or generic enough to be non-auditable
 - Distinguish between acceptable provisionality and sloppy unresolved ambiguity
 
 **Project instructions:** Read ./AGENTS.md if exists — verify plans honor project guidelines
