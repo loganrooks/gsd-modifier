@@ -51,7 +51,7 @@ Create `CONTEXT.md` as a phase steering brief that downstream research and plann
 Extract the implementation decisions, working assumptions, constraints, open questions, and future-facing guardrails that downstream agents need.
 
 **How it works:**
-1. Load prior context (PROJECT.md, REQUIREMENTS.md, STATE.md, prior CONTEXT.md files)
+1. Load prior context (PROJECT.md, REQUIREMENTS.md, STATE.md, prior CONTEXT.md files, and any durable doctrine docs such as `.planning/LONG-ARC.md` when present)
 2. Scout codebase for reusable assets and patterns
 3. Analyze phase — skip gray areas already decided in prior phases
 4. Present remaining gray areas — user selects which to discuss

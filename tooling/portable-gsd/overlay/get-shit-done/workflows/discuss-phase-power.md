@@ -17,7 +17,7 @@ Begin at **Step 1** immediately.
 <step name="analyze">
 Run the same gray area identification as standard discuss-phase mode.
 
-1. Load prior context (PROJECT.md, REQUIREMENTS.md, STATE.md, prior CONTEXT.md files)
+1. Load prior context (PROJECT.md, REQUIREMENTS.md, STATE.md, prior CONTEXT.md files, and `.planning/LONG-ARC.md` when it exists)
 2. Scout codebase for reusable assets and patterns relevant to this phase
 3. Read the phase goal from ROADMAP.md
 4. Identify ALL gray areas — specific implementation decisions the user should weigh in on
@@ -262,7 +262,7 @@ Process all answered questions from the JSON file and generate CONTEXT.md.
    - `<specifics>` section for any chat_more content that adds nuance
    - `<code_context>` section with reusable assets found during analysis
    - `<derived_constraints>` / `<epistemic_guardrails>` when analysis surfaced them
-   - `<canonical_refs>` section (MANDATORY — paths to relevant specs/docs)
+   - `<canonical_refs>` section (MANDATORY — paths to relevant specs/docs, including `.planning/LONG-ARC.md` when it exists and materially constrains the phase)
 
 6. If fewer than 50% of questions were answered, warn the user:
 ```

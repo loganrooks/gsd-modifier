@@ -328,12 +328,14 @@ Read project-level and prior phase context to avoid re-asking decided questions 
 cat .planning/PROJECT.md 2>/dev/null || true
 cat .planning/REQUIREMENTS.md 2>/dev/null || true
 cat .planning/STATE.md 2>/dev/null || true
+[[ -f .planning/LONG-ARC.md ]] && cat .planning/LONG-ARC.md 2>/dev/null || true
 ```
 
 Extract from these:
 - **PROJECT.md** — Vision, principles, non-negotiables, user preferences
 - **REQUIREMENTS.md** — Acceptance criteria, constraints, must-haves vs nice-to-haves
 - **STATE.md** — Current progress, any flags or session notes
+- **LONG-ARC.md** — When present, durable long-arc doctrine about product shape, visibility, hosting, support, and wrapper preservation
 
 **Step 2: Read all prior CONTEXT.md files**
 ```bash
@@ -467,12 +469,13 @@ Analyze the phase to identify gray areas worth discussing. **Use both `prior_dec
 
    **Source 1 (now):** Copy `Canonical refs:` from ROADMAP.md for this phase. Expand each to a full relative path.
    **Source 2 (now):** Check REQUIREMENTS.md and PROJECT.md for any specs/ADRs referenced for this phase.
+   **Source 2b (now):** If `.planning/LONG-ARC.md` exists and materially constrains the phase, add it as a doctrine reference rather than leaving it ambient.
    **Source 3 (scout_codebase):** If existing code references docs (e.g., comments citing ADRs), add those.
    **Source 4 (discuss_areas):** When the user says "read X", "check Y", or references any doc/spec/ADR during discussion — add it immediately. These are often the MOST important refs because they represent docs the user specifically wants followed.
 
    This list is MANDATORY in CONTEXT.md. Every ref must have a full relative path so downstream agents can read it directly. If no external docs exist, note that explicitly.
 
-1c. **Derive future awareness** — Scan ROADMAP.md for the next few downstream phases and any explicit future or v2 ambitions referenced in PROJECT.md, REQUIREMENTS.md, backlog/todos, or prior context.
+1c. **Derive future awareness** — Scan ROADMAP.md for the next few downstream phases and any explicit future or v2 ambitions referenced in PROJECT.md, REQUIREMENTS.md, `.planning/LONG-ARC.md` when present, backlog/todos, or prior context.
 
    Build an internal `<future_awareness>` accumulator using these buckets:
    - **Protected Seams** — interfaces, data contracts, abstractions, or authored-shape boundaries that current work must not close off
@@ -1033,7 +1036,8 @@ Note where evidence is weak, what must be validated, and which assumptions shoul
 [MANDATORY section. Write the FULL accumulated canonical refs list here.
 Sources: ROADMAP.md refs + REQUIREMENTS.md refs + user-referenced docs during
 discussion + any docs discovered during codebase scout. Group by topic area.
-Every entry needs a full relative path — not just a name.]
+Every entry needs a full relative path — not just a name. Durable doctrine docs
+such as `.planning/LONG-ARC.md` belong here when they actively constrain the phase.]
 
 ### [Topic area 1]
 - `path/to/adr-or-spec.md` — [What it decides/defines that's relevant]

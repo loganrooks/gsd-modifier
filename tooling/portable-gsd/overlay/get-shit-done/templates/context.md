@@ -96,6 +96,7 @@ Template for `.planning/phases/XX-name/{phase_num}-CONTEXT.md` - captures the ph
 **Downstream agents MUST read these before planning or implementing.**
 
 [List every spec, ADR, feature doc, or design doc that defines requirements or constraints for this phase. Use full relative paths so agents can read them directly. Group by topic area when the phase has multiple concerns.]
+[Include durable doctrine docs when they actively constrain the phase, for example `.planning/LONG-ARC.md` or another project-level long-arc or transition-doctrine file. Do not treat such docs as universal requirements when they are absent or irrelevant.]
 
 ### [Topic area 1]
 - `path/to/spec-or-adr.md` — [What this doc decides/defines that's relevant]
