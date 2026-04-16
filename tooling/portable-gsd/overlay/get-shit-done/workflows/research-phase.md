@@ -89,8 +89,10 @@ Write to: .planning/phases/${PHASE}-{slug}/${PHASE}-RESEARCH.md
 
 ## Step 5: Handle Return
 
-- `## RESEARCH COMPLETE` — Display summary, offer: Plan/Dig deeper/Review/Done
+- `## RESEARCH COMPLETE` — Display summary and disposition accounting, offer: Plan/Dig deeper/Review/Done
 - `## CHECKPOINT REACHED` — Present to user, spawn continuation
-- `## RESEARCH INCONCLUSIVE` — Show attempts, offer: Add context/Try different mode/Manual
+- `## RESEARCH BLOCKED` — Show attempts, offer: Add context/Try different mode/Manual
+
+When research completes with preserved non-decisions or inconclusive items, do not treat that as a failure by default. Carry those items forward into planning as named consequences rather than forcing fake closure.
 
 </process>

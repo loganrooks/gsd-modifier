@@ -391,7 +391,7 @@ Research guidance:
 - Use `<epistemic_guardrails>` to decide what evidence is needed before recommending an approach
 
 **Project instructions:** Read ./AGENTS.md if exists — follow project-specific guidelines
-**Project skills:** Check .claude/skills/ or .agents/skills/ directory (if either exists) — read SKILL.md files, research should account for project skill patterns
+**Project skills/runtime:** Check repo-local `.codex/skills/` and relevant repo-local workflow/reference surfaces under `.codex/get-shit-done/`. Do not rely on `.claude/skills/` or `.agents/skills/` as governing truth for this repo.
 </additional_context>
 
 <output>
@@ -702,7 +702,7 @@ Planning guidance:
 - Honor `<epistemic_guardrails>` when defining proof, validation, and acceptance criteria
 
 **Project instructions:** Read ./AGENTS.md if exists — follow project-specific guidelines
-**Project skills:** Check .claude/skills/ or .agents/skills/ directory (if either exists) — read SKILL.md files, plans should account for project skill rules
+**Project skills/runtime:** Check repo-local `.codex/skills/` and relevant repo-local workflow/reference surfaces under `.codex/get-shit-done/`. Do not rely on `.claude/skills/` or `.agents/skills/` as governing truth for this repo.
 
 </planning_context>
 
@@ -845,7 +845,7 @@ Verification guidance:
 - Distinguish between acceptable provisionality and sloppy unresolved ambiguity
 
 **Project instructions:** Read ./AGENTS.md if exists — verify plans honor project guidelines
-**Project skills:** Check .claude/skills/ or .agents/skills/ directory (if either exists) — verify plans account for project skill rules
+**Project skills/runtime:** Check repo-local `.codex/skills/` and relevant repo-local workflow/reference surfaces under `.codex/get-shit-done/`. Do not rely on `.claude/skills/` or `.agents/skills/` as governing truth for this repo.
 </verification_context>
 
 <expected_output>

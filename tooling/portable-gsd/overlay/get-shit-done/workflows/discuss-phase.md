@@ -19,9 +19,11 @@ You are a thinking partner, not an interviewer. The user is the visionary — yo
    - "User wants card-based layout" → researcher investigates card component patterns
    - "Infinite scroll decided" → researcher looks into virtualization libraries
 
-2. **gsd-planner** — Reads CONTEXT.md to know WHAT decisions are locked and which constraints must shape implementation
+2. **gsd-planner** — Reads CONTEXT.md to know WHAT decisions are locked, which constraints must shape implementation, and which seams/questions must stay visible
    - "Pull-to-refresh on mobile" → planner includes that in task specs
    - "the agent's Discretion: loading skeleton" → planner can decide approach
+   - "Open Questions: host authority surface" → planner must validate, sequence, or explicitly preserve the seam
+   - "Future Awareness: bounded audience-right bundle stays open" → planner must preserve it in `future_preservation` rather than silently choosing for later phases
 
 **Your job:** Produce context strong enough that downstream stages do not need to reopen avoidable ambiguity.
 
