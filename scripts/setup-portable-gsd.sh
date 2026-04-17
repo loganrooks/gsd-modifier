@@ -4,27 +4,40 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 OVERLAY_ROOT="${REPO_ROOT}/tooling/portable-gsd/overlay"
+DEFAULT_COMPACT_PROMPT_FILE="tooling/compact-prompts/project.md"
+LOCAL_COMPACT_PROMPT_SELECTOR="${REPO_ROOT}/.codex.local/compact-prompt.txt"
 
 cd "${REPO_ROOT}"
+
+COMPACT_PROMPT_FILE="${PRIX_COMPACT_PROMPT_FILE:-}"
+if [[ -z "${COMPACT_PROMPT_FILE}" && -f "${LOCAL_COMPACT_PROMPT_SELECTOR}" ]]; then
+  COMPACT_PROMPT_FILE="$(head -n 1 "${LOCAL_COMPACT_PROMPT_SELECTOR}" | tr -d '\r')"
+fi
+if [[ -z "${COMPACT_PROMPT_FILE}" ]]; then
+  COMPACT_PROMPT_FILE="${DEFAULT_COMPACT_PROMPT_FILE}"
+fi
 
 echo "Installing repo-local regular GSD for Codex..."
 npx get-shit-done-cc --codex --local
 
 echo "Applying tracked prix-guesser GSD overlay..."
+echo "Using compact prompt: ${COMPACT_PROMPT_FILE}"
 
 while IFS= read -r -d '' file; do
   rel="${file#${OVERLAY_ROOT}/}"
   target="${REPO_ROOT}/.codex/${rel}"
   mkdir -p "$(dirname "${target}")"
-  python - <<'PY' "${file}" "${target}" "${REPO_ROOT}"
+  python - <<'PY' "${file}" "${target}" "${REPO_ROOT}" "${COMPACT_PROMPT_FILE}"
 import pathlib, sys
 
 src = pathlib.Path(sys.argv[1])
 dst = pathlib.Path(sys.argv[2])
 repo_root = sys.argv[3]
+compact_prompt_file = sys.argv[4]
 
 text = src.read_text()
 text = text.replace("__PROJECT_ROOT__", repo_root)
+text = text.replace("__COMPACT_PROMPT_FILE__", compact_prompt_file)
 dst.write_text(text)
 PY
   echo "  patched .codex/${rel}"
