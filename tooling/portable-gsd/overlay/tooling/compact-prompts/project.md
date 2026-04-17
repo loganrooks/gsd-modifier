@@ -10,8 +10,9 @@ Prioritize, in order:
 4. current blockers, open findings, unresolved questions, and open opportunities
 5. current branch/worktree/session boundaries if they matter
 6. the latest meaningful commit or checkpoint boundary if it is load-bearing
-7. user corrections or policy changes that changed how the work must proceed
-8. distinctions that must not flatten in summary:
+7. recent lessons learned, failed approaches, and mistakes not to repeat if they still constrain the next move
+8. user corrections or policy changes that changed how the work must proceed
+9. distinctions that must not flatten in summary:
    - decided vs open
    - active vs parked
    - canon vs exploratory or audit
@@ -44,6 +45,12 @@ If the session includes external CLI runs, subagents, or background processes, p
 - whether they are still alive
 - exact output, log, or artifact paths if they still matter
 - the next decision needed about them
+
+If the session exposed a real failure mode or operator correction, preserve it tersely as:
+
+- `lesson learned`
+- `avoid repeating`
+- `replacement approach`
 
 Do not waste space on:
 
