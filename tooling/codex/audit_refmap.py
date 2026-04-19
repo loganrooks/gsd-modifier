@@ -11,6 +11,7 @@ import subprocess
 import sys
 from collections import Counter, defaultdict
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 
 
@@ -101,11 +102,45 @@ def parse_args() -> argparse.Namespace:
     )
     move_parser.add_argument("--output", help="Write the markdown report here.")
 
+    retire_parser = subparsers.add_parser(
+        "retire",
+        help=(
+            "Retire one markdown artifact by optionally rewriting local references to "
+            "a replacement and writing a tombstone in place."
+        ),
+    )
+    retire_parser.add_argument("root", help="Directory whose markdown files should be rewritten.")
+    retire_parser.add_argument(
+        "--target",
+        required=True,
+        help="Repo-relative markdown file to retire.",
+    )
+    retire_parser.add_argument(
+        "--replacement",
+        help="Repo-relative replacement markdown file, if references should be redirected.",
+    )
+    retire_parser.add_argument(
+        "--reason",
+        help="Optional short reason recorded in the tombstone.",
+    )
+    retire_parser.add_argument("--output", help="Write the markdown report here.")
+
     return parser.parse_args()
 
 
 def repo_relative(path: Path) -> str:
-    return path.resolve().relative_to(REPO_ROOT).as_posix()
+    resolved = path.resolve()
+    try:
+        return resolved.relative_to(REPO_ROOT).as_posix()
+    except ValueError:
+        return resolved.as_posix()
+
+
+def resolve_input_path(raw: str) -> Path:
+    candidate = Path(raw)
+    if candidate.is_absolute():
+        return candidate.resolve()
+    return (REPO_ROOT / raw).resolve()
 
 
 def normalize_local_path(raw: str, source_file: Path) -> tuple[Path | None, str]:
@@ -417,6 +452,91 @@ def execute_move(root: Path, moves: list[Move], skip_git_mv: bool) -> str:
     return "\n".join(lines) + "\n"
 
 
+def build_tombstone(target: Path, replacement: Path | None, reason: str | None) -> str:
+    lines = [
+        f"# Retired: {target.name}",
+        "",
+        "Status: retired artifact",
+        f"Date: {date.today().isoformat()}",
+        "",
+        "## Disposition",
+        "",
+    ]
+    if replacement is not None:
+        relative = os.path.relpath(replacement, start=target.parent).replace(os.sep, "/")
+        lines.append(
+            f"- This artifact has been retired and replaced by [{replacement.name}]({relative})."
+        )
+    else:
+        lines.append("- This artifact has been retired without a direct replacement.")
+    if reason:
+        lines.append(f"- Reason: {reason}")
+    lines.extend(
+        [
+            "",
+            "## Note",
+            "",
+            "- Historical references should treat this file as a tombstone rather than an active source of truth.",
+            "",
+        ]
+    )
+    return "\n".join(lines)
+
+
+def execute_retire(
+    root: Path,
+    target_rel: str,
+    replacement_rel: str | None,
+    reason: str | None,
+) -> str:
+    target = resolve_input_path(target_rel)
+    if not target.exists():
+        raise SystemExit(f"Retire target not found: {target_rel}")
+    if target.suffix.lower() != ".md":
+        raise SystemExit("Retire currently supports markdown targets only.")
+
+    replacement_path: Path | None = None
+    rewrite_report = ""
+    if replacement_rel:
+        replacement_path = resolve_input_path(replacement_rel)
+        if not replacement_path.exists():
+            raise SystemExit(f"Replacement not found: {replacement_rel}")
+        synthetic_move = Move(
+            old_abs=target.as_posix(),
+            new_abs=replacement_path.as_posix(),
+            old_rel=target_rel,
+            new_rel=replacement_rel,
+            old_name=target.name,
+        )
+        rewrite_report = rewrite_workspace(root, [synthetic_move], apply=True).strip()
+
+    target.write_text(
+        build_tombstone(target, replacement_path, reason),
+        encoding="utf-8",
+    )
+
+    links = collect_links(root)
+    missing = missing_local_links(links)
+    lines = [
+        "# Audit Retire Report",
+        "",
+        f"- Root: `{repo_relative(root)}`",
+        f"- Target: `{target_rel}`",
+        f"- Replacement: `{replacement_rel or '-'}`",
+        f"- Post-retire missing local links: `{len(missing)}`",
+        "",
+    ]
+    if rewrite_report:
+        lines.extend(["## Rewrite Pass", "", rewrite_report, ""])
+    lines.extend(["## Verify Pass", ""])
+    if not missing:
+        lines.append("- no missing local links")
+    else:
+        for link in missing:
+            lines.append(f"- `{link.source}` line `{link.line}` -> `{link.target_text}`")
+    return "\n".join(lines) + "\n"
+
+
 def write_output(text: str, output: str | None) -> None:
     if output:
         Path(output).write_text(text, encoding="utf-8")
@@ -440,6 +560,11 @@ def main() -> int:
         report = render_map_report(root, links)
         write_output(report, args.output)
         return 1 if missing_local_links(links) else 0
+
+    if args.command == "retire":
+        report = execute_retire(root, args.target, args.replacement, args.reason)
+        write_output(report, args.output)
+        return 0
 
     moves = load_moves(Path(args.moves))
     if args.command == "rewrite":
