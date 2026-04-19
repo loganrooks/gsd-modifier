@@ -52,6 +52,12 @@ python3 tooling/codex/run_claude_probe.py \
 
 ## Utilities
 
+- `audit_refmap.py`
+  - manages markdown-heavy audit/planning topology work with `map`, `snapshot`, `verify`, `rewrite`, `move`, and `retire`
+  - use it instead of hand-editing large reference rewrites across `.planning/`
+- `verify_touched_audit_refs.py`
+  - runs `audit_refmap.py verify` against touched audit roots by default
+  - use `--staged` for staged-only checks and `--all` for a broader audit sweep
 - `run_claude_probe.py`
   - runs a headless Claude probe and prints a compact summary: exit code, runtime, event counts, final text, stderr/debug tail
 - `extract_stream_text.py`

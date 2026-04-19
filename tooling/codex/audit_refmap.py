@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import re
 import subprocess
@@ -57,6 +58,13 @@ def parse_args() -> argparse.Namespace:
     map_parser = subparsers.add_parser("map", help="Summarize local markdown links.")
     map_parser.add_argument("root", help="Directory to scan.")
     map_parser.add_argument("--output", help="Write the markdown report here.")
+
+    snapshot_parser = subparsers.add_parser(
+        "snapshot",
+        help="Emit a machine-readable JSON snapshot of the local markdown reference graph.",
+    )
+    snapshot_parser.add_argument("root", help="Directory to scan.")
+    snapshot_parser.add_argument("--output", help="Write the JSON snapshot here.")
 
     verify_parser = subparsers.add_parser(
         "verify",
@@ -274,6 +282,63 @@ def render_map_report(root: Path, links: list[LinkOccurrence]) -> str:
 
 def missing_local_links(links: list[LinkOccurrence]) -> list[LinkOccurrence]:
     return [link for link in links if link.status == "local-missing"]
+
+
+def build_snapshot(root: Path, links: list[LinkOccurrence]) -> dict[str, object]:
+    markdown_files = iter_markdown_files(root)
+    inbound_counter: Counter[str] = Counter()
+    outbound_counter: Counter[str] = Counter()
+    local_edges: list[dict[str, object]] = []
+    external_links: list[dict[str, object]] = []
+    missing_links: list[dict[str, object]] = []
+
+    for link in links:
+        if link.status == "local-existing":
+            assert link.resolved is not None
+            inbound_counter[link.resolved] += 1
+            outbound_counter[link.source] += 1
+            local_edges.append(
+                {
+                    "source": link.source,
+                    "target": link.resolved,
+                    "line": link.line,
+                    "raw_target": link.target_text,
+                }
+            )
+        elif link.status == "local-missing":
+            missing_links.append(
+                {
+                    "source": link.source,
+                    "line": link.line,
+                    "raw_target": link.target_text,
+                    "resolved": link.resolved,
+                }
+            )
+        else:
+            external_links.append(
+                {
+                    "source": link.source,
+                    "line": link.line,
+                    "raw_target": link.target_text,
+                }
+            )
+
+    return {
+        "root": repo_relative(root),
+        "markdown_files": [repo_relative(path) for path in markdown_files],
+        "stats": {
+            "markdown_files": len(markdown_files),
+            "links_scanned": len(links),
+            "local_existing_links": len(local_edges),
+            "local_missing_links": len(missing_links),
+            "external_links": len(external_links),
+        },
+        "inbound_counts": dict(sorted(inbound_counter.items())),
+        "outbound_counts": dict(sorted(outbound_counter.items())),
+        "local_edges": local_edges,
+        "external_links": external_links,
+        "missing_links": missing_links,
+    }
 
 
 def load_moves(path: Path) -> list[Move]:
@@ -553,6 +618,11 @@ def main() -> int:
     if args.command == "map":
         report = render_map_report(root, collect_links(root))
         write_output(report, args.output)
+        return 0
+
+    if args.command == "snapshot":
+        snapshot = build_snapshot(root, collect_links(root))
+        write_output(json.dumps(snapshot, indent=2, sort_keys=True) + "\n", args.output)
         return 0
 
     if args.command == "verify":
