@@ -68,3 +68,6 @@ python3 tooling/codex/run_claude_probe.py \
   - reports final repo-local GSD runtime truth for selected high-leverage families without rewriting updater/custom-file manifest semantics
   - use it when live-vs-overlay differences need classification (`intentional materialized carry`, `repo-local config carry`, `selective overlay boundary`, `obsolete live residue`, `unknown live drift`) rather than a blunt mismatch list
   - report output now records whether normalized overlay hashes are checkout-local, distinguishes live-only residue from live-only surfaces that are still explained by manifest, backup-meta, or install-mutation carry, and exposes stable per-entry `subclassification` / top-level `subclassification_summary` fields so selective boundaries do not collapse into one undifferentiated bucket
+- `capture_runtime_visibility_snapshot.py`
+  - captures a durable selected-lane snapshot around `runtime_visibility.py` with label, timestamp, branch, basis commit, dirty-worktree flag, and the full classified report payload
+  - use it when an audit or intervention lane needs a frozen runtime-truth record instead of only ephemeral terminal output
