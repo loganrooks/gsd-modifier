@@ -71,3 +71,7 @@ python3 tooling/codex/run_claude_probe.py \
 - `capture_runtime_visibility_snapshot.py`
   - captures a durable selected-lane snapshot around `runtime_visibility.py` with label, timestamp, branch, basis commit, dirty-worktree flag, and the full classified report payload
   - use it when an audit or intervention lane needs a frozen runtime-truth record instead of only ephemeral terminal output
+- `manifest_install_coherence.py`
+  - compares updater/custom-file boundary truth (`gsd-file-manifest.json`), tracked carried-subset truth (`backup-meta.json`), and a frozen selected-lane runtime snapshot
+  - use it for manifest/install coherence passes when the question is whether any real contradiction remains after semantic separation, not whether one file can be forced to stand in for all three surfaces
+  - `--strict` is the preferred mode for audit checkpoints because it fails on dirty current state, dirty snapshot boundaries, unknown live drift, or currently evidenced obsolete residue inside the selected runtime scope
