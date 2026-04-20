@@ -64,3 +64,6 @@ python3 tooling/codex/run_claude_probe.py \
   - extracts just text-bearing content from `stream-json` logs with `--head`, `--tail`, `--range`, and `--last-message`
 - `capture_launch_truth.py`
   - captures requested-vs-effective Codex launch settings from `~/.codex/state_5.sqlite`
+- `runtime_visibility.py`
+  - reports final repo-local GSD runtime truth for selected high-leverage families without rewriting updater/custom-file manifest semantics
+  - use it when live-vs-overlay differences need classification (`intentional materialized carry`, `repo-local config carry`, `selective overlay boundary`, `unknown live drift`) rather than a blunt mismatch list
