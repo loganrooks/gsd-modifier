@@ -66,4 +66,5 @@ python3 tooling/codex/run_claude_probe.py \
   - captures requested-vs-effective Codex launch settings from `~/.codex/state_5.sqlite`
 - `runtime_visibility.py`
   - reports final repo-local GSD runtime truth for selected high-leverage families without rewriting updater/custom-file manifest semantics
-  - use it when live-vs-overlay differences need classification (`intentional materialized carry`, `repo-local config carry`, `selective overlay boundary`, `unknown live drift`) rather than a blunt mismatch list
+  - use it when live-vs-overlay differences need classification (`intentional materialized carry`, `repo-local config carry`, `selective overlay boundary`, `obsolete live residue`, `unknown live drift`) rather than a blunt mismatch list
+  - report output now records whether normalized overlay hashes are checkout-local and distinguishes live-only residue from live-only surfaces that are still explained by manifest, backup-meta, or install-mutation carry

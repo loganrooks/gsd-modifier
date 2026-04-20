@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import pathlib
+import re
 import sys
 from dataclasses import dataclass
 
@@ -16,6 +17,7 @@ LOCAL_COMPACT_PROMPT_SELECTOR = ".codex.local/compact-prompt.txt"
 INTENTIONAL = "intentional materialized carry"
 REPO_LOCAL = "repo-local config carry"
 SELECTIVE = "selective overlay boundary"
+OBSOLETE = "obsolete live residue"
 UNKNOWN = "unknown live drift"
 
 
@@ -62,6 +64,43 @@ def read_text(path: pathlib.Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
+def load_manifest_paths(codex_root: pathlib.Path) -> set[str]:
+    manifest_path = codex_root / "gsd-file-manifest.json"
+    if not manifest_path.exists():
+        return set()
+    manifest = json.loads(read_text(manifest_path))
+    files = manifest.get("files", {})
+    if isinstance(files, dict):
+        return set(files.keys())
+    if isinstance(files, list):
+        return set(files)
+    return set()
+
+
+def load_backup_paths(codex_root: pathlib.Path) -> set[str]:
+    backup_meta_path = codex_root / "gsd-local-patches" / "backup-meta.json"
+    if not backup_meta_path.exists():
+        return set()
+    backup_meta = json.loads(read_text(backup_meta_path))
+    files = backup_meta.get("files", [])
+    if isinstance(files, list):
+        return set(files)
+    if isinstance(files, dict):
+        return set(files.keys())
+    return set()
+
+
+def load_install_mutation_targets(repo_root: pathlib.Path) -> set[str]:
+    targets = {"config.toml"}
+    setup_script = repo_root / "scripts" / "setup-portable-gsd.sh"
+    if not setup_script.exists():
+        return targets
+    script_text = read_text(setup_script)
+    for match in re.finditer(r'"([^"]+)":\s*"[^"]+"', script_text):
+        targets.add(f"agents/{match.group(1)}.toml")
+    return targets
+
+
 def compact_prompt_file(repo_root: pathlib.Path) -> str:
     selector = repo_root / LOCAL_COMPACT_PROMPT_SELECTOR
     if selector.exists():
@@ -83,12 +122,36 @@ def classify(
     rel_path: str,
     overlay_exists: bool,
     live_exists: bool,
+    in_manifest: bool,
+    in_backup_meta: bool,
+    is_install_mutation_target: bool,
     raw_equal: bool,
     normalized_equal: bool,
     overlay_text: str | None,
     live_text: str | None,
 ) -> tuple[str, str]:
     if not overlay_exists and live_exists:
+        supports_obsolete_detection = family in {"workflow", "reference", "bin_lib"}
+        if supports_obsolete_detection and not in_manifest and not in_backup_meta and not is_install_mutation_target:
+            return (
+                OBSOLETE,
+                "live-only surface is outside overlay, manifest, carried-subset metadata, and install-script mutation targets",
+            )
+        if in_manifest:
+            return (
+                SELECTIVE,
+                "upstream-shipped surface exists outside the tracked overlay subset for this family",
+            )
+        if in_backup_meta:
+            return (
+                SELECTIVE,
+                "live-only surface is carried in backup metadata outside the tracked overlay subset for this family",
+            )
+        if is_install_mutation_target:
+            return (
+                SELECTIVE,
+                "live-only surface is an install-script mutation target outside the tracked overlay subset for this family",
+            )
         return (
             SELECTIVE,
             "live surface exists outside the tracked overlay subset for this family",
@@ -139,6 +202,9 @@ def build_report(repo_root: pathlib.Path) -> dict:
     overlay_root = repo_root / "tooling" / "portable-gsd" / "overlay"
     live_root = repo_root / ".codex"
     compact_prompt = compact_prompt_file(repo_root)
+    manifest_paths = load_manifest_paths(live_root)
+    backup_paths = load_backup_paths(live_root)
+    install_mutation_targets = load_install_mutation_targets(repo_root)
     entries = []
 
     if not overlay_root.exists():
@@ -154,6 +220,9 @@ def build_report(repo_root: pathlib.Path) -> dict:
             live_path = live_root / rel_path
             overlay_exists = overlay_path.exists()
             live_exists = live_path.exists()
+            in_manifest = rel_path in manifest_paths
+            in_backup_meta = rel_path in backup_paths
+            is_install_mutation_target = rel_path in install_mutation_targets
             overlay_text = None
             live_text = None
             normalized_overlay = None
@@ -176,6 +245,9 @@ def build_report(repo_root: pathlib.Path) -> dict:
                 rel_path=rel_path,
                 overlay_exists=overlay_exists,
                 live_exists=live_exists,
+                in_manifest=in_manifest,
+                in_backup_meta=in_backup_meta,
+                is_install_mutation_target=is_install_mutation_target,
                 raw_equal=raw_equal,
                 normalized_equal=normalized_equal,
                 overlay_text=normalized_overlay if normalized_overlay is not None else overlay_text,
@@ -190,6 +262,9 @@ def build_report(repo_root: pathlib.Path) -> dict:
                     "live_exists": live_exists,
                     "overlay_path": str(overlay_path) if overlay_exists else None,
                     "live_path": str(live_path) if live_exists else None,
+                    "in_manifest": in_manifest,
+                    "in_backup_meta": in_backup_meta,
+                    "is_install_mutation_target": is_install_mutation_target,
                     "overlay_sha256": sha256_text(overlay_text) if overlay_text is not None else None,
                     "normalized_overlay_sha256": sha256_text(normalized_overlay) if normalized_overlay is not None else None,
                     "live_sha256": sha256_text(live_text) if live_text is not None else None,
@@ -205,6 +280,7 @@ def build_report(repo_root: pathlib.Path) -> dict:
         "intentional_materialized_carry": sum(1 for e in entries if e["classification"] == INTENTIONAL),
         "repo_local_config_carry": sum(1 for e in entries if e["classification"] == REPO_LOCAL),
         "selective_overlay_boundary": sum(1 for e in entries if e["classification"] == SELECTIVE),
+        "obsolete_live_residue": sum(1 for e in entries if e["classification"] == OBSOLETE),
         "unknown_live_drift": sum(1 for e in entries if e["classification"] == UNKNOWN),
     }
 
@@ -213,6 +289,7 @@ def build_report(repo_root: pathlib.Path) -> dict:
         "overlay_root": str(overlay_root),
         "live_root": str(live_root),
         "compact_prompt_file": compact_prompt,
+        "normalized_overlay_sha_scope": "checkout-local",
         "summary": summary,
         "entries": entries,
     }
