@@ -1,6 +1,7 @@
 import json
 import pathlib
 import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -139,6 +140,95 @@ class ManifestInstallCoherenceTests(unittest.TestCase):
 
             self.assertIn("snapshot_clean_boundary", failed)
             self.assertIn("selected_scope_unknown_drift_zero", failed)
+
+    def test_script_invocation_by_path_writes_report(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmp_path = pathlib.Path(tmpdir)
+            repo_root = tmp_path / "repo"
+            repo_root.mkdir()
+            self._init_repo(repo_root)
+            live_root = repo_root / ".codex"
+            (live_root / "gsd-local-patches").mkdir(parents=True)
+            (repo_root / "scripts").mkdir(parents=True)
+
+            (repo_root / "scripts" / "setup-portable-gsd.sh").write_text(
+                'quality_reasoning = {"gsd-planner": "xhigh"}\n',
+                encoding="utf-8",
+            )
+            (live_root / "gsd-file-manifest.json").write_text(
+                json.dumps({"files": ["get-shit-done/workflows/plan-phase.md"]}),
+                encoding="utf-8",
+            )
+            (live_root / "gsd-local-patches" / "backup-meta.json").write_text(
+                json.dumps({"files": []}),
+                encoding="utf-8",
+            )
+            (repo_root / "README.md").write_text("test\n", encoding="utf-8")
+            subprocess.run(["git", "add", "."], cwd=repo_root, check=True, capture_output=True)
+            subprocess.run(["git", "commit", "-m", "init"], cwd=repo_root, check=True, capture_output=True)
+
+            snapshot = {
+                "label": "baseline",
+                "basis_commit": subprocess.run(
+                    ["git", "rev-parse", "HEAD"],
+                    cwd=repo_root,
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                ).stdout.strip(),
+                "dirty_worktree": False,
+                "runtime_visibility_report": {
+                    "summary": {
+                        "total_entries": 1,
+                        "intentional_materialized_carry": 1,
+                        "repo_local_config_carry": 0,
+                        "selective_overlay_boundary": 0,
+                        "obsolete_live_residue": 0,
+                        "unknown_live_drift": 0,
+                    },
+                    "subclassification_summary": {
+                        rv.SUB_TEMPLATE_MATERIALIZATION: 1,
+                    },
+                    "entries": [
+                        {
+                            "family": "workflow",
+                            "rel_path": "get-shit-done/workflows/plan-phase.md",
+                            "overlay_exists": True,
+                            "live_exists": True,
+                            "in_manifest": True,
+                            "in_backup_meta": False,
+                            "is_install_mutation_target": False,
+                            "classification": rv.INTENTIONAL,
+                            "subclassification": rv.SUB_TEMPLATE_MATERIALIZATION,
+                        },
+                    ],
+                },
+            }
+            snapshot_path = tmp_path / "snapshot.json"
+            snapshot_path.write_text(json.dumps(snapshot), encoding="utf-8")
+            output_path = tmp_path / "report.json"
+            script_path = pathlib.Path(mic.__file__).resolve()
+
+            subprocess.run(
+                [
+                    sys.executable,
+                    str(script_path),
+                    str(repo_root),
+                    "--snapshot",
+                    str(snapshot_path),
+                    "--output",
+                    str(output_path),
+                    "--strict",
+                ],
+                cwd=repo_root,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+
+            payload = output_path.read_text(encoding="utf-8")
+            self.assertIn('"hard_failures": []', payload)
+            self.assertIn('"selected_scope_entries_in_manifest": 1', payload)
 
 
 if __name__ == "__main__":
