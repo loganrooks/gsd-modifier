@@ -7,7 +7,11 @@ import argparse
 import json
 import pathlib
 import subprocess
+import sys
 from datetime import datetime, timezone
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[2]))
 
 from tooling.codex import runtime_visibility
 
