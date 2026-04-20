@@ -42,6 +42,7 @@ This doc describes what IS, not what should be. Casing inconsistencies are docum
 5. Markers must appear as H2 headings (`## `) at the start of a line in the agent's final output
 6. `## RESEARCH COMPLETE` is compatible with unresolved uncertainty only when the agent also provides explicit disposition accounting for what was resolved, what planning must carry forward, what remains intentionally open, and what is still inconclusive
 7. `## RESEARCH BLOCKED` is reserved for cases where no reviewable research artifact can yet guide planning
+8. `## PLAN COMPLETE` means execution finished and a SUMMARY exists; it does **not** mean the phase reached clean completion. Routing must read `completion_mode` / debt metadata from SUMMARY and VERIFICATION artifacts rather than inferring clean closure from the marker alone.
 
 ## Key Handoff Contracts
 
@@ -72,9 +73,21 @@ This doc describes what IS, not what should be. Casing inconsistencies are docum
 | Field | Required | Description |
 |-------|----------|-------------|
 | Frontmatter | Yes | phase, plan, subsystem, tags, key-files, metrics |
+| `completion_mode` | Yes | `clean_execution` or `debt_carrying_execution` so downstream consumers know whether execution itself carried known debt before verification |
+| `completion_debt` | Yes when `completion_mode=debt_carrying_execution` | Structured reasons carried out of execution (auth gates, intentional stubs, failed self-check, other known debt) |
 | Commits table | Yes | Per-task commit hashes and descriptions |
 | Deviations section | Yes | Auto-fixed issues or "None" |
 | Self-Check | Yes | PASSED or FAILED with details |
+
+### Verifier -> Routing (via VERIFICATION.md)
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `status` | Yes | `passed`, `gaps_found`, or `human_needed` |
+| `completion_mode` | Yes | `clean_completion` or `debt_carrying_completion`; distinguishes clean closure from accepted or unresolved carried debt |
+| `debt_bearing` | Yes | Boolean mirror of `completion_mode` for consumers that only need a quick debt flag |
+| `overrides_applied` | Yes | Count of accepted verification overrides contributing to the final result |
+| `gaps` / `human_verification` | Yes when applicable | Structured downstream debt details for routing and planning |
 
 ## Workflow Regex Patterns
 
@@ -91,3 +104,5 @@ Workflows match these markers to detect agent completion:
 - `## Self-Check: FAILED` (summary self-check)
 
 > **NOTE:** `## PLAN COMPLETE` is the gsd-executor's completion marker but execute-phase.md does not regex-match it. Instead, it detects executor completion via spot-checks (SUMMARY.md existence, git commit state). This is intentional behavior, not a mismatch.
+>
+> **NOTE:** Clean-versus-debt-carrying completion must be read from `completion_mode` and verification artifacts, not from the presence of `## PLAN COMPLETE` or a SUMMARY file alone.

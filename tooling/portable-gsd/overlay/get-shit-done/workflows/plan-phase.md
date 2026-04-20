@@ -10,6 +10,7 @@ Read all files referenced by the invoking prompt's execution_context before star
 @__PROJECT_ROOT__/.codex/get-shit-done/references/gate-prompts.md
 @__PROJECT_ROOT__/.codex/get-shit-done/references/agent-contracts.md
 @__PROJECT_ROOT__/.codex/get-shit-done/references/gates.md
+@__PROJECT_ROOT__/.codex/get-shit-done/references/planner-reviews.md
 </required_reading>
 
 <available_agent_types>
@@ -679,6 +680,7 @@ Planner prompt:
 - {verification_path} (Verification Gaps - if --gaps)
 - {uat_path} (UAT Gaps - if --gaps)
 - {reviews_path} (Cross-AI Review Feedback - if --reviews)
+- __PROJECT_ROOT__/.codex/get-shit-done/references/planner-reviews.md (Review-consumer contract - if --reviews)
 - {UI_SPEC_PATH} (UI Design Contract — visual/interaction specs, if exists)
 ${CONTEXT_WINDOW >= 500000 ? `
 **Cross-phase context (1M model enrichment):**
@@ -700,6 +702,11 @@ Planning guidance:
 - Do not silently collapse an `Explicit Non-Decision` into a decision unless the context or research justifies it
 - Reflect preserved seams, non-decisions, and posture assumptions in the plan artifact's `future_preservation` frontmatter
 - Honor `<epistemic_guardrails>` when defining proof, validation, and acceptance criteria
+- In reviews mode, treat REVIEWS.md as adversarial input, not a consensus poll
+- In reviews mode, build the must-address set from the Review Consumer Contract first, then from strong individual criticisms if the synthesis under-specifies them
+- In reviews mode, do not downgrade a lone high-signal criticism just because only one reviewer raised it
+- In reviews mode, do not leave plans materially unchanged unless you can cite the exact existing plan/task that already satisfies each must-address concern
+- In reviews mode, when a task exists primarily because of review feedback, include `Addresses review concern: {concern}` in the task action or rationale for traceability
 
 **Project instructions:** Read ./AGENTS.md if exists — follow project-specific guidelines
 **Project skills/runtime:** Check repo-local `.codex/skills/` and relevant repo-local workflow/reference surfaces under `.codex/get-shit-done/`. Do not rely on `.claude/skills/` or `.agents/skills/` as governing truth for this repo.
@@ -713,6 +720,7 @@ Output consumed by /gsd-execute-phase. Plans need:
 - Tasks in XML format with read_first and acceptance_criteria fields (MANDATORY on every task)
 - Verification criteria
 - must_haves for goal-backward verification
+- When Mode is `reviews`, the return also needs `### Review Feedback Addressed`, plus `Deferred` / `Rejected` tables when any review concern is not directly absorbed into the plans
 </downstream_consumer>
 
 <deep_work_rules>
@@ -769,7 +777,7 @@ Task(
 
 ## 9. Handle Planner Return
 
-- **`## PLANNING COMPLETE`:** Display plan count. If `--skip-verify` or `plan_checker_enabled` is false (from init): skip to step 13. Otherwise: step 10.
+- **`## PLANNING COMPLETE`:** Display plan count. If `--reviews` is active, do not accept this state unless the planner return includes `### Review Feedback Addressed`. If must-address concerns were deferred or rejected, the return must also include the corresponding tables with reasons on the merits. Missing review-disposition sections mean the review consumer contract was not actually consumed; treat that as `## PLANNING INCONCLUSIVE` and request a review-aware retry. If `--skip-verify` or `plan_checker_enabled` is false (from init): skip to step 13. Otherwise: step 10.
 - **`## PHASE SPLIT RECOMMENDED`:** The planner determined the phase is too complex to implement all user decisions without simplifying them. Handle in step 9b.
 - **`## CHECKPOINT REACHED`:** Present to user, get response, spawn continuation (step 12)
 - **`## PLANNING INCONCLUSIVE`:** Show attempts, offer: Add context / Retry / Manual
@@ -831,6 +839,7 @@ Checker prompt:
 - {context_path} (Phase steering brief from /gsd-discuss-phase)
 - {context_canonical_refs} (Resolved files from CONTEXT.md `<canonical_refs>` — MUST be read when present)
 - {research_path} (Technical Research — includes Validation Architecture)
+- {reviews_path} (Cross-AI Review Feedback — if --reviews)
 </files_to_read>
 
 ${AGENT_SKILLS_CHECKER}
@@ -843,6 +852,9 @@ Verification guidance:
 - Flag plans that silently drop a material future-awareness item instead of preserving it, sequencing it, validating it, or explicitly justifying non-action now
 - If context future-awareness is non-empty, fail plans whose `future_preservation` frontmatter is missing, empty, or generic enough to be non-auditable
 - Distinguish between acceptable provisionality and sloppy unresolved ambiguity
+- In reviews mode, fail plans that omit a must-address review concern without plan coverage or an explicit rebuttal on the merits
+- In reviews mode, fail plans that dismiss a lone high-signal criticism only because it lacks consensus support
+- In reviews mode, fail plans that leave materially weak "merely adequate" areas or later-audit risks untouched without an explicit rationale for why they are safe to defer now
 
 **Project instructions:** Read ./AGENTS.md if exists — verify plans honor project guidelines
 **Project skills/runtime:** Check repo-local `.codex/skills/` and relevant repo-local workflow/reference surfaces under `.codex/get-shit-done/`. Do not rely on `.claude/skills/` or `.agents/skills/` as governing truth for this repo.
@@ -929,6 +941,8 @@ Revision prompt:
 <files_to_read>
 - {PHASE_DIR}/*-PLAN.md (Existing plans)
 - {context_path} (Phase steering brief from /gsd-discuss-phase)
+- {reviews_path} (Cross-AI Review Feedback — if --reviews)
+- __PROJECT_ROOT__/.codex/get-shit-done/references/planner-reviews.md (Review-consumer contract — if --reviews)
 </files_to_read>
 
 ${AGENT_SKILLS_PLANNER}
@@ -939,6 +953,7 @@ ${AGENT_SKILLS_PLANNER}
 <instructions>
 Make targeted updates to address checker issues.
 Do NOT replan from scratch unless issues are fundamental.
+If `--reviews` is active, preserve or improve must-address review coverage; do not drop a lone high-signal criticism or later-audit risk just because the checker focused elsewhere.
 Return what changed.
 </instructions>
 ```

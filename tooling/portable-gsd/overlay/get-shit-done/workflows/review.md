@@ -2,7 +2,9 @@
 Cross-AI peer review — invoke external AI CLIs to independently review phase plans.
 Each CLI gets the same prompt (PROJECT.md context, phase plans, requirements) and
 produces structured feedback. Results are combined into REVIEWS.md for the planner
-to incorporate via --reviews flag.
+to incorporate via --reviews flag. The synthesis is a consumer contract, not a soft
+consensus summary: lone high-signal criticism, merely-adequate areas, and later-audit
+risks stay visible even when they are not majority views.
 
 This implements adversarial review: different AI models catch different blind spots.
 A plan that survives review from 2-3 independent AI systems is more robust.
@@ -134,9 +136,12 @@ Focus on:
 - Security considerations
 - Performance implications
 - Whether the plans actually achieve the phase goals
+- What must change before a later strong-engineer audit could honestly pass
 - The strongest justified criticism, even if no other reviewer is likely to agree
 - What is merely adequate but would not withstand a higher standard
 - What could look closure-ready now but fail under later stringent audit
+- Do not soften a criticism because the overall plan looks solid or because you expect disagreement from other reviewers
+- If you think a concern can be deferred safely, say why it is non-load-bearing rather than leaving it implicit
 
 Output your review in markdown format.
 ```
@@ -236,7 +241,18 @@ plans_reviewed: [{list of PLAN.md files}]
 
 ## Review Synthesis
 
-{synthesize overlap, lone high-signal criticism, and meaningful disagreement without flattening them into false consensus}
+{synthesize overlap, lone high-signal criticism, merely-adequate areas, later-audit risks, and meaningful disagreement without flattening them into false consensus. Name source reviewer(s) for each synthesized item.}
+
+### Review Consumer Contract
+
+#### Must Address In Replan
+{all HIGH-severity agreed concerns, any lone high-signal criticism that would likely fail later audit if ignored, and any merely-adequate area or later-audit risk that leaves the plan weak against the repo quality bar}
+
+#### Explicit Rebuttal Required If Not Accepted
+{criticisms that may be rejected only on the merits. Silence or "no consensus" is not a valid disposition.}
+
+#### Safe To Defer
+{non-load-bearing improvements or low-severity ideas that can wait without misrepresenting plan readiness}
 
 ### Agreed Strengths
 {strengths mentioned by 2+ reviewers}
@@ -273,8 +289,11 @@ Display summary:
 
 Phase {N} reviewed by {count} AI systems.
 
-Consensus concerns:
+Shared concerns:
 {top 3 shared concerns}
+
+Top lone high-signal concern:
+{single strongest well-justified criticism that is not just a consensus item}
 
 Full review: {padded_phase}-REVIEWS.md
 
@@ -290,7 +309,7 @@ Clean up temp files.
 <success_criteria>
 - [ ] At least one external CLI invoked successfully
 - [ ] REVIEWS.md written with structured feedback
-- [ ] Consensus summary synthesized from multiple reviewers
+- [ ] Review synthesis preserves shared concerns, lone high-signal criticism, and divergent views
 - [ ] Temp files cleaned up
 - [ ] User knows how to use feedback (/gsd-plan-phase --reviews)
 </success_criteria>
