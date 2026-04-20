@@ -17,7 +17,7 @@ class RuntimeVisibilityTests(unittest.TestCase):
         )
 
     def test_classify_marks_obsolete_live_residue(self) -> None:
-        classification, note = rv.classify(
+        classification, subclassification, note = rv.classify(
             family="workflow",
             rel_path="get-shit-done/workflows/legacy.md",
             overlay_exists=False,
@@ -31,10 +31,11 @@ class RuntimeVisibilityTests(unittest.TestCase):
             live_text="legacy",
         )
         self.assertEqual(classification, rv.OBSOLETE)
+        self.assertEqual(subclassification, rv.SUB_OBSOLETE_UNTRACKED)
         self.assertIn("outside overlay, manifest", note)
 
     def test_classify_keeps_manifest_tracked_live_only_as_selective(self) -> None:
-        classification, note = rv.classify(
+        classification, subclassification, note = rv.classify(
             family="workflow",
             rel_path="get-shit-done/workflows/plan-phase.md",
             overlay_exists=False,
@@ -48,9 +49,10 @@ class RuntimeVisibilityTests(unittest.TestCase):
             live_text="live",
         )
         self.assertEqual(classification, rv.SELECTIVE)
+        self.assertEqual(subclassification, rv.SUB_SELECTIVE_UPSTREAM)
         self.assertIn("upstream-shipped surface", note)
 
-    def test_build_report_records_scope_and_obsolete_count(self) -> None:
+    def test_build_report_records_scope_and_subclassification_counts(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             repo_root = pathlib.Path(tmpdir)
             overlay_workflows = repo_root / "tooling" / "portable-gsd" / "overlay" / "get-shit-done" / "workflows"
@@ -94,6 +96,8 @@ class RuntimeVisibilityTests(unittest.TestCase):
             self.assertEqual(report["summary"]["intentional_materialized_carry"], 1)
             self.assertEqual(report["summary"]["obsolete_live_residue"], 1)
             self.assertEqual(report["summary"]["unknown_live_drift"], 0)
+            self.assertEqual(report["subclassification_summary"][rv.SUB_TEMPLATE_MATERIALIZATION], 1)
+            self.assertEqual(report["subclassification_summary"][rv.SUB_OBSOLETE_UNTRACKED], 1)
 
 
 if __name__ == "__main__":

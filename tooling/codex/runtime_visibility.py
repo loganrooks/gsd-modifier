@@ -20,6 +20,19 @@ SELECTIVE = "selective overlay boundary"
 OBSOLETE = "obsolete live residue"
 UNKNOWN = "unknown live drift"
 
+SUB_RAW_EQUAL = "raw_equal"
+SUB_TEMPLATE_MATERIALIZATION = "template_materialization_equal"
+SUB_REPO_LOCAL_CONFIG_DEFAULTS = "repo_local_config_defaults"
+SUB_REPO_LOCAL_REASONING_DEFAULTS = "repo_local_reasoning_defaults"
+SUB_SELECTIVE_UPSTREAM = "upstream_shipped_outside_overlay_subset"
+SUB_SELECTIVE_BACKUP = "backup_carried_outside_overlay_subset"
+SUB_SELECTIVE_INSTALL = "install_mutation_outside_overlay_subset"
+SUB_SELECTIVE_UNTRACKED = "untracked_live_only_outside_overlay_subset"
+SUB_OBSOLETE_UNTRACKED = "untracked_live_only_residue"
+SUB_UNKNOWN_MISSING_LIVE = "overlay_covered_missing_from_live"
+SUB_UNKNOWN_MISSING_BOTH = "missing_from_overlay_and_live"
+SUB_UNKNOWN_UNRESOLVED = "unresolved_overlay_live_divergence"
+
 
 @dataclass(frozen=True)
 class SurfaceSpec:
@@ -129,51 +142,66 @@ def classify(
     normalized_equal: bool,
     overlay_text: str | None,
     live_text: str | None,
-) -> tuple[str, str]:
+) -> tuple[str, str, str]:
     if not overlay_exists and live_exists:
         supports_obsolete_detection = family in {"workflow", "reference", "bin_lib"}
         if supports_obsolete_detection and not in_manifest and not in_backup_meta and not is_install_mutation_target:
             return (
                 OBSOLETE,
+                SUB_OBSOLETE_UNTRACKED,
                 "live-only surface is outside overlay, manifest, carried-subset metadata, and install-script mutation targets",
             )
         if in_manifest:
             return (
                 SELECTIVE,
+                SUB_SELECTIVE_UPSTREAM,
                 "upstream-shipped surface exists outside the tracked overlay subset for this family",
             )
         if in_backup_meta:
             return (
                 SELECTIVE,
+                SUB_SELECTIVE_BACKUP,
                 "live-only surface is carried in backup metadata outside the tracked overlay subset for this family",
             )
         if is_install_mutation_target:
             return (
                 SELECTIVE,
+                SUB_SELECTIVE_INSTALL,
                 "live-only surface is an install-script mutation target outside the tracked overlay subset for this family",
             )
         return (
             SELECTIVE,
+            SUB_SELECTIVE_UNTRACKED,
             "live surface exists outside the tracked overlay subset for this family",
         )
     if overlay_exists and not live_exists:
         return (
             UNKNOWN,
+            SUB_UNKNOWN_MISSING_LIVE,
             "overlay-covered surface is missing from live runtime",
         )
     if not overlay_exists and not live_exists:
         return (
             UNKNOWN,
+            SUB_UNKNOWN_MISSING_BOTH,
             "surface missing from both overlay and live runtime",
         )
-    if raw_equal or normalized_equal:
+    if raw_equal:
         return (
             INTENTIONAL,
+            SUB_RAW_EQUAL,
+            "difference is explained by direct equality",
+        )
+    if normalized_equal:
+        return (
+            INTENTIONAL,
+            SUB_TEMPLATE_MATERIALIZATION,
             "difference is explained by direct equality or template materialization",
         )
     if family == "config":
         return (
             REPO_LOCAL,
+            SUB_REPO_LOCAL_CONFIG_DEFAULTS,
             "config surface carries repo-local defaults beyond the generic overlay template",
         )
     if family == "agent_toml" and overlay_text is not None and live_text is not None:
@@ -186,10 +214,12 @@ def classify(
         if overlay_wo_reasoning == live_wo_reasoning:
             return (
                 REPO_LOCAL,
+                SUB_REPO_LOCAL_REASONING_DEFAULTS,
                 "agent contract differs only in repo-local reasoning defaults",
             )
     return (
         UNKNOWN,
+        SUB_UNKNOWN_UNRESOLVED,
         "overlay-covered surface still differs after materialization-aware comparison",
     )
 
@@ -240,7 +270,7 @@ def build_report(repo_root: pathlib.Path) -> dict:
             if normalized_overlay is not None and live_text is not None:
                 normalized_equal = normalized_overlay == live_text
 
-            classification, note = classify(
+            classification, subclassification, note = classify(
                 family=spec.family,
                 rel_path=rel_path,
                 overlay_exists=overlay_exists,
@@ -271,6 +301,7 @@ def build_report(repo_root: pathlib.Path) -> dict:
                     "raw_equal": raw_equal,
                     "normalized_equal": normalized_equal,
                     "classification": classification,
+                    "subclassification": subclassification,
                     "note": note,
                 }
             )
@@ -283,6 +314,17 @@ def build_report(repo_root: pathlib.Path) -> dict:
         "obsolete_live_residue": sum(1 for e in entries if e["classification"] == OBSOLETE),
         "unknown_live_drift": sum(1 for e in entries if e["classification"] == UNKNOWN),
     }
+    subclassification_summary = {
+        key: count
+        for key, count in sorted(
+            (
+                subclassification,
+                sum(1 for e in entries if e["subclassification"] == subclassification),
+            )
+            for subclassification in {e["subclassification"] for e in entries}
+        )
+        if count
+    }
 
     return {
         "repo_root": str(repo_root),
@@ -291,6 +333,7 @@ def build_report(repo_root: pathlib.Path) -> dict:
         "compact_prompt_file": compact_prompt,
         "normalized_overlay_sha_scope": "checkout-local",
         "summary": summary,
+        "subclassification_summary": subclassification_summary,
         "entries": entries,
     }
 
