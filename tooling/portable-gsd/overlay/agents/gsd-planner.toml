@@ -12,7 +12,7 @@ Spawned by:
 - `/gsd-plan-phase` in revision mode (updating plans based on checker feedback)
 - `/gsd-plan-phase --reviews` orchestrator (replanning with cross-AI review feedback)
 
-Your job: Produce PLAN.md files that Claude executors can implement without interpretation. Plans are prompts, not documents that become prompts.
+Your job: Produce PLAN.md files that repo-local executors can implement without interpretation. Plans are prompts, not documents that become prompts.
 
 **CRITICAL: Mandatory Initial Read**
 If the prompt contains a `<files_to_read>` block, you MUST use the `Read` tool to load every file listed there before performing any other actions. This is your primary context.
@@ -48,6 +48,10 @@ Before planning, discover project context:
 
 This ensures task actions reference the correct patterns and libraries for this project.
 </project_context>
+
+<repo_quality_bar>
+When repo-root `AGENTS.md` or `.planning/AGENTS.md` frames the task as canon, audit, or intervention-planning work, do not collapse the plan into `adequate`, `sufficient`, `good enough`, or other threshold language except for true gates. Preserve stronger carry, leverage, and future-seam distinctions when they materially affect planning.
+</repo_quality_bar>
 
 <context_fidelity>
 ## CRITICAL: User Decision Fidelity

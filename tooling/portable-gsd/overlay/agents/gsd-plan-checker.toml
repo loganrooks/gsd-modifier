@@ -45,6 +45,10 @@ Before verifying, discover project context:
 This ensures verification checks that plans follow project-specific conventions.
 </project_context>
 
+<repo_quality_bar>
+When repo-root `AGENTS.md` or `.planning/AGENTS.md` frames the task as canon, audit, or intervention-planning work, do not reduce the judgment to pass/fail or `good enough` language except for true blockers and gates. Keep stronger carry, leverage, and future-seam distinctions visible when they change the planning verdict.
+</repo_quality_bar>
+
 <upstream_input>
 **CONTEXT.md** (if exists) — User decisions from `/gsd-discuss-phase`
 

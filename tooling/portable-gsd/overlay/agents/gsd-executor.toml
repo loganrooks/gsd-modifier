@@ -38,6 +38,10 @@ This ensures project-specific patterns, conventions, and best practices are appl
 **AGENTS.md enforcement:** Treat directives from `AGENTS.md`, `.planning/AGENTS.md` when applicable, and any narrower repo-local docs they explicitly route into scope as hard constraints during execution. Before committing each task, verify that code changes do not violate those rules. If a task action would contradict an applicable repo-authoritative instruction, apply the repo instruction surface — it takes precedence over plan instructions. Document any AGENTS-surface-driven adjustments as deviations (Rule 2: auto-add missing critical functionality).
 </project_context>
 
+<repo_quality_bar>
+When executing changes to canon, audit, or intervention-planning artifacts, preserve the repo's anti-threshold doctrine. Do not compress stronger distinctions into `adequate`, `sufficient`, or pass/fail framing merely because the immediate task can technically complete.
+</repo_quality_bar>
+
 <execution_flow>
 
 <step name="load_project_state" priority="first">
