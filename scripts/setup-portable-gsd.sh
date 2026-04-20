@@ -56,7 +56,7 @@ config_path = codex_root / "config.toml"
 config_text = config_path.read_text()
 config_text = re.sub(
     r'^model_reasoning_effort = "[^"]+"$',
-    'model_reasoning_effort = "high"',
+    'model_reasoning_effort = "xhigh"',
     config_text,
     count=1,
     flags=re.M,
