@@ -82,7 +82,11 @@ python3 tooling/codex/run_claude_probe.py \
 - `project_uplift.py`
   - detects repo-local project uplift posture and can write first-slice uplift memory
   - detect mode writes `.planning/UPLIFT-REPORT.md`, `.planning/UPLIFT-MANIFEST.json`, and a `STATE.md` uplift section when `--write` is used
-  - progress-note mode is the thin read-only hook for `gsd-progress`; it reads structured uplift memory and current doctrine fingerprints rather than prose
+  - progress-note mode is the thin read-only hook for the live routed consumers `gsd-progress` and `gsd-resume-work`; it reads structured uplift memory and current doctrine fingerprints rather than prose
   - the current harden slice now carries multi-axis posture (`project_class` plus `secondary_signals`), marker-local section hashes for strengthening carriers, normalized TOML hashes for runtime registry carriers, structured doctrine-sensitive proposal states (`absent` vs `drifted`), and phase-boundary signal capture from active `CONTEXT.md`
+  - the current network-carry chain now includes:
+    - workflow consumers: `uplift-project`, `progress`, `resume-project`
+    - durable outputs: `.planning/UPLIFT-REPORT.md`, `.planning/UPLIFT-MANIFEST.json`, and the `Project Uplift` section in `.planning/STATE.md`
+    - audit lineage: `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/`
 - `UPLIFT-HELD-LATER.md`
   - named reference for the uplift families the current detect-only slice keeps explicit rather than absorbing

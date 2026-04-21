@@ -2,11 +2,11 @@
 
 These are later families the current uplift slice should keep explicit rather than silently absorbing.
 
-- required-reading installation practice
-- cross-runtime uplift composition
-- upstream-template drift machinery
-- aged-bespoke deep merge
-- audit-subtree aging carry
-- routed-entry hooks beyond `progress`
-- forensics / archived-milestone integration
-- workstream parent/child posture reconciliation
+- required-reading installation practice — held
+- cross-runtime uplift composition — held
+- upstream-template drift machinery — held
+- aged-bespoke deep merge — held
+- audit-subtree aging carry — held
+- routed-entry hooks beyond `progress` — partially landed: propagation-audit/04-resume-project-second-consumer-implementation.md
+- forensics / archived-milestone integration — held
+- workstream parent/child posture reconciliation — held

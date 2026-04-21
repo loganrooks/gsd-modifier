@@ -44,7 +44,9 @@ class ProjectUpliftTests(unittest.TestCase):
         self._write(
             root,
             "tooling/codex/UPLIFT-HELD-LATER.md",
-            "- required-reading installation practice\n- cross-runtime uplift composition\n",
+            "- required-reading installation practice — held\n"
+            "- cross-runtime uplift composition — held\n"
+            "- routed-entry hooks beyond `progress` — partially landed: propagation-audit/04-resume-project-second-consumer-implementation.md\n",
         )
 
     def _write_strengthening_carriers(self, root: pathlib.Path) -> None:
@@ -137,6 +139,52 @@ class ProjectUpliftTests(unittest.TestCase):
                 any(
                     proposal["label"] == "Root AGENTS" and proposal["proposal_state"] == "drifted"
                     for proposal in changed_note["pending_doctrine_sensitive_proposals"]
+                )
+            )
+
+    def test_progress_note_render_contract_matches_overlay_consumers(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="completed")
+            self._write_doctrine_stack(repo_root)
+            pu.write_outputs(repo_root, pu.analyze_repo(repo_root))
+
+            note = pu.build_progress_note(repo_root)
+            for key, _label in pu.PROGRESS_NOTE_RENDER_FIELDS:
+                self.assertIn(key, note)
+
+            progress_workflow = pathlib.Path(
+                "tooling/portable-gsd/overlay/get-shit-done/workflows/progress.md"
+            ).read_text(encoding="utf-8")
+            resume_workflow = pathlib.Path(
+                "tooling/portable-gsd/overlay/get-shit-done/workflows/resume-project.md"
+            ).read_text(encoding="utf-8")
+
+            for _key, label in pu.PROGRESS_NOTE_RENDER_FIELDS:
+                self.assertIn(f"{label}:", progress_workflow)
+                self.assertIn(f"{label}:", resume_workflow)
+            self.assertIn(f"{pu.PROGRESS_NOTE_REASON_LABEL}:", progress_workflow)
+            self.assertIn(f"{pu.PROGRESS_NOTE_REASON_LABEL}:", resume_workflow)
+
+    def test_write_outputs_preserves_typed_held_later_statuses(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="completed")
+            self._write_doctrine_stack(repo_root)
+
+            analysis = pu.analyze_repo(repo_root)
+            pu.write_outputs(repo_root, analysis)
+
+            manifest = json.loads((repo_root / ".planning/UPLIFT-MANIFEST.json").read_text(encoding="utf-8"))
+            held_later = manifest["held_later_families"]
+            self.assertEqual(manifest["schema_version"], 3)
+            self.assertTrue(any(item["status"] == "held" for item in held_later))
+            self.assertTrue(
+                any(
+                    item["family"] == "routed-entry hooks beyond `progress`"
+                    and item["status"] == "partially landed"
+                    and item["pointer"] == "propagation-audit/04-resume-project-second-consumer-implementation.md"
+                    for item in held_later
                 )
             )
 

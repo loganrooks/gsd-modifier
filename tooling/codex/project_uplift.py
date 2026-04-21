@@ -18,6 +18,14 @@ STATE_HEADING = "## Project Uplift"
 REPORT_REL_PATH = ".planning/UPLIFT-REPORT.md"
 MANIFEST_REL_PATH = ".planning/UPLIFT-MANIFEST.json"
 HELD_LATER_REL_PATH = "tooling/codex/UPLIFT-HELD-LATER.md"
+PROGRESS_NOTE_RENDER_FIELDS = (
+    ("last_uplift_class", "Last uplift class"),
+    ("last_uplift_secondary_signals", "Secondary signals"),
+    ("recommendation", "Recommendation"),
+    ("report_path", "Report"),
+    ("manifest_path", "Manifest"),
+)
+PROGRESS_NOTE_REASON_LABEL = "Reason"
 
 RUNTIME_DIRS = [
     ".codex",
@@ -191,12 +199,47 @@ def load_manifest(repo_root: pathlib.Path) -> dict | None:
     return json.loads(manifest_path.read_text(encoding="utf-8"))
 
 
-def load_held_later_families(repo_root: pathlib.Path) -> list[str]:
+def parse_held_later_family_line(line: str) -> dict:
+    body = line[2:].strip()
+    if " — " not in body:
+        return {
+            "family": body,
+            "status": "held",
+            "pointer": None,
+        }
+    family, remainder = body.split(" — ", 1)
+    if ": " in remainder:
+        status, pointer = remainder.split(": ", 1)
+        pointer = pointer.strip() or None
+    else:
+        status = remainder
+        pointer = None
+    return {
+        "family": family.strip(),
+        "status": status.strip(),
+        "pointer": pointer,
+    }
+
+
+def format_held_later_family(entry: dict) -> str:
+    text = f"{entry['family']} — {entry['status']}"
+    if entry.get("pointer"):
+        text += f": {entry['pointer']}"
+    return text
+
+
+def load_held_later_families(repo_root: pathlib.Path) -> list[dict]:
     text = read_text(repo_root / HELD_LATER_REL_PATH)
     if text is None:
-        return [f"held-later reference missing: {HELD_LATER_REL_PATH}"]
+        return [
+            {
+                "family": f"held-later reference missing: {HELD_LATER_REL_PATH}",
+                "status": "missing",
+                "pointer": None,
+            }
+        ]
     items = [
-        line[2:].strip()
+        parse_held_later_family_line(line)
         for line in text.splitlines()
         if line.startswith("- ")
     ]
@@ -735,7 +778,7 @@ def render_report(analysis: dict) -> str:
             "",
         ]
     )
-    lines.extend(f"- {item}" for item in analysis["held_later_families"])
+    lines.extend(f"- {format_held_later_family(item)}" for item in analysis["held_later_families"])
     return "\n".join(lines) + "\n"
 
 
@@ -822,7 +865,7 @@ def write_outputs(repo_root: pathlib.Path, analysis: dict) -> dict:
     manifest_path = repo_root / MANIFEST_REL_PATH
     report_path.write_text(render_report(written_analysis), encoding="utf-8")
     manifest_payload = {
-        "schema_version": 2,
+        "schema_version": 3,
         "generated_at": written_analysis["generated_at"],
         "mode": "detect-only",
         "last_uplift_class": written_analysis["project_class"],
