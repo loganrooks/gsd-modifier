@@ -38,6 +38,7 @@ Read and parse STATE.md, then PROJECT.md:
 ```bash
 cat .planning/STATE.md
 cat .planning/PROJECT.md
+STATE_SNAPSHOT=$(node "__PROJECT_ROOT__/.codex/get-shit-done/bin/gsd-tools.cjs" state-snapshot)
 ```
 
 **From STATE.md extract:**
@@ -48,7 +49,14 @@ cat .planning/PROJECT.md
 - **Recent Decisions**: Key decisions affecting current work
 - **Pending Todos**: Ideas captured during sessions
 - **Blockers/Concerns**: Issues carried forward
+- **Future Carry Forward**: still-live preserved seams, keep-open non-decisions, posture assumptions, and seeded later routes
 - **Session Continuity**: Where we left off, any resume files
+
+Use `STATE_SNAPSHOT` as the structured companion for:
+- `decisions[]`
+- `blockers[]`
+- `future_carry`
+- `session`
 
 **From PROJECT.md extract:**
 
@@ -152,6 +160,13 @@ Present complete project status to user:
 ⚠️  Carried concerns:
     - [blocker 1]
     - [blocker 2]
+
+[If any `STATE_SNAPSHOT.future_carry` bucket is non-empty:]
+🧭 Future Carry Forward:
+    - Preserve: [comma-separated preserve items when present]
+    - Keep open: [comma-separated keep_open items when present]
+    - Posture: [comma-separated posture items when present]
+    - Seeded: [comma-separated seeded items when present]
 
 [If UPLIFT_NOTE.show is true:]
 ## Uplift Posture

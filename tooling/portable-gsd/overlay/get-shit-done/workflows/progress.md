@@ -125,6 +125,18 @@ CONTEXT: [✓ if has_context | - if not]
 - [extract from $STATE.blockers[]]
 - [e.g. jq -r '.blockers[].text' from state-snapshot]
 
+If any `$STATE.future_carry` bucket is non-empty, add:
+
+```markdown
+## Future Carry Forward
+- Preserve: {comma-separated preserve items when present}
+- Keep open: {comma-separated keep_open items when present}
+- Posture: {comma-separated posture items when present}
+- Seeded: {comma-separated seeded items when present}
+```
+
+Only show the lines whose buckets are non-empty.
+
 ## Pending Todos
 - [count] pending — $gsd-check-todos to review
 
