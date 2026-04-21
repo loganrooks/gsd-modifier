@@ -39,6 +39,8 @@ class ProjectUpliftTests(unittest.TestCase):
         self._write(root, "AGENTS.md", "# Agents\n")
         self._write(root, ".planning/AGENTS.md", "# Planning Agents\n")
         self._write(root, ".codex/config.toml", 'model = "gpt-5.4"\n')
+        self._write(root, ".codex/gsd-file-manifest.json", json.dumps({"version": "1.38.1"}) + "\n")
+        self._write(root, ".codex/get-shit-done/VERSION", "1.38.1\n")
         self._write(root, ".codex/agents/gsd-planner.toml", 'description = "planner"\n')
         self._write(root, ".codex/agents/gsd-plan-checker.toml", 'description = "checker"\n')
         self._write(
@@ -75,6 +77,7 @@ class ProjectUpliftTests(unittest.TestCase):
         self._write(root, "CLAUDE.md", "# Claude\n")
         self._write(root, ".planning/CLAUDE.md", "# Planning Claude\n")
         self._write(root, ".planning/CLAIM-TYPES.md", "# Claim Types\n")
+        self._write(root, "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json", json.dumps({"schema_version": 1, "entries": {}}) + "\n")
         self._write(
             root,
             ".planning/LONG-ARC.md",
@@ -177,7 +180,7 @@ class ProjectUpliftTests(unittest.TestCase):
 
             manifest = json.loads((repo_root / ".planning/UPLIFT-MANIFEST.json").read_text(encoding="utf-8"))
             held_later = manifest["held_later_families"]
-            self.assertEqual(manifest["schema_version"], 3)
+            self.assertEqual(manifest["schema_version"], 4)
             self.assertTrue(any(item["status"] == "held" for item in held_later))
             self.assertTrue(
                 any(
@@ -187,6 +190,26 @@ class ProjectUpliftTests(unittest.TestCase):
                     for item in held_later
                 )
             )
+            self.assertEqual(manifest["compatibility_basis"]["compatibility_posture"], "observed_basis_only")
+            self.assertEqual(manifest["compatibility_basis"]["observed_runtime_version"], "1.38.1")
+            self.assertTrue(manifest["compatibility_basis"]["observed_runtime_version_aligned"])
+
+    def test_compatibility_basis_anchors_to_observed_runtime_sources(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="completed")
+            self._write_doctrine_stack(repo_root)
+
+            analysis = pu.analyze_repo(repo_root)
+
+            compatibility = analysis["compatibility_basis"]
+            self.assertEqual(compatibility["compatibility_posture"], "observed_basis_only")
+            self.assertEqual(compatibility["observed_runtime_version"], "1.38.1")
+            self.assertEqual(compatibility["observed_runtime_manifest_version"], "1.38.1")
+            self.assertTrue(compatibility["observed_runtime_version_aligned"])
+            self.assertEqual(compatibility["overlay_manifest_schema_version"], 1)
+            self.assertEqual(compatibility["uplift_manifest_schema_version"], 4)
+            self.assertIn("version-window claims beyond the observed runtime basis", compatibility["held_later"])
 
     def test_cross_runtime_primary_class_preserves_mid_phase_secondary_signal(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:

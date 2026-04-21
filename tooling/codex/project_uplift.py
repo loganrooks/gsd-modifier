@@ -18,6 +18,19 @@ STATE_HEADING = "## Project Uplift"
 REPORT_REL_PATH = ".planning/UPLIFT-REPORT.md"
 MANIFEST_REL_PATH = ".planning/UPLIFT-MANIFEST.json"
 HELD_LATER_REL_PATH = "tooling/codex/UPLIFT-HELD-LATER.md"
+RUNTIME_MANIFEST_REL_PATH = ".codex/gsd-file-manifest.json"
+RUNTIME_VERSION_REL_PATHS = [
+    ".codex/get-shit-done/VERSION",
+    ".codex/VERSION",
+]
+OVERLAY_MANIFEST_REL_PATH = "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json"
+UPLIFT_MANIFEST_SCHEMA_VERSION = 4
+COMPATIBILITY_POSTURE = "observed_basis_only"
+COMPATIBILITY_HELD_LATER = [
+    "version-window claims beyond the observed runtime basis",
+    "cross-runtime compatibility matrix",
+    "upstream-template drift compatibility",
+]
 PROGRESS_NOTE_RENDER_FIELDS = (
     ("last_uplift_class", "Last uplift class"),
     ("last_uplift_secondary_signals", "Secondary signals"),
@@ -135,6 +148,13 @@ def read_text(path: pathlib.Path) -> str | None:
     return path.read_text(encoding="utf-8")
 
 
+def read_json(path: pathlib.Path) -> dict | None:
+    text = read_text(path)
+    if text is None:
+        return None
+    return json.loads(text)
+
+
 def now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
@@ -193,10 +213,58 @@ def runtime_dirs_present(repo_root: pathlib.Path) -> list[str]:
 
 
 def load_manifest(repo_root: pathlib.Path) -> dict | None:
-    manifest_path = repo_root / MANIFEST_REL_PATH
-    if not manifest_path.exists():
-        return None
-    return json.loads(manifest_path.read_text(encoding="utf-8"))
+    return read_json(repo_root / MANIFEST_REL_PATH)
+
+
+def load_runtime_manifest(repo_root: pathlib.Path) -> dict | None:
+    return read_json(repo_root / RUNTIME_MANIFEST_REL_PATH)
+
+
+def load_overlay_manifest(repo_root: pathlib.Path) -> dict | None:
+    return read_json(repo_root / OVERLAY_MANIFEST_REL_PATH)
+
+
+def runtime_version_source(repo_root: pathlib.Path) -> tuple[str | None, str | None]:
+    for rel_path_str in RUNTIME_VERSION_REL_PATHS:
+        text = read_text(repo_root / rel_path_str)
+        if text is not None:
+            return text.strip(), rel_path_str
+    return None, None
+
+
+def build_compatibility_basis(repo_root: pathlib.Path) -> dict:
+    runtime_manifest = load_runtime_manifest(repo_root) or {}
+    overlay_manifest = load_overlay_manifest(repo_root) or {}
+    runtime_version, runtime_version_source_path = runtime_version_source(repo_root)
+    runtime_manifest_version = runtime_manifest.get("version")
+    aligned = (
+        runtime_version is not None
+        and runtime_manifest_version is not None
+        and runtime_version == runtime_manifest_version
+    )
+    observed_versions = [
+        version
+        for version in [runtime_version, runtime_manifest_version]
+        if isinstance(version, str) and version
+    ]
+    return {
+        "compatibility_posture": COMPATIBILITY_POSTURE,
+        "observed_runtime_version": runtime_version,
+        "observed_runtime_version_source": runtime_version_source_path,
+        "observed_runtime_manifest_version": runtime_manifest_version,
+        "observed_runtime_manifest_source": RUNTIME_MANIFEST_REL_PATH if runtime_manifest_version else None,
+        "observed_runtime_version_aligned": aligned,
+        "observed_runtime_version_set": sorted(set(observed_versions)),
+        "overlay_manifest_schema_version": overlay_manifest.get("schema_version"),
+        "uplift_manifest_schema_version": UPLIFT_MANIFEST_SCHEMA_VERSION,
+        "check_protocol": [
+            "compare candidate runtime version to observed_runtime_version",
+            "compare candidate runtime manifest version to observed_runtime_manifest_version when present",
+            "rerun ./scripts/setup-portable-gsd.sh before refreshing durable uplift memory after runtime movement",
+            "rerun $gsd-uplift-project --write after runtime movement so compatibility anchors and uplift posture stay in tune",
+        ],
+        "held_later": COMPATIBILITY_HELD_LATER,
+    }
 
 
 def parse_held_later_family_line(line: str) -> dict:
@@ -667,6 +735,7 @@ def analyze_repo(repo_root: pathlib.Path) -> dict:
     )
     recommend_detect_only = bool(reasons) and primary_class != "current-aligned posture"
     held_later = load_held_later_families(repo_root)
+    compatibility_basis = build_compatibility_basis(repo_root)
     return {
         "repo_root": str(repo_root),
         "generated_at": now_iso(),
@@ -692,6 +761,7 @@ def analyze_repo(repo_root: pathlib.Path) -> dict:
         "absent_additive_carriers": absent_additive,
         "pending_doctrine_sensitive_proposals": pending_doctrine_sensitive,
         "held_later_families": held_later,
+        "compatibility_basis": compatibility_basis,
         "recommend_detect_only": recommend_detect_only,
         "recommendation_reasons": reasons,
         "carriers": carriers,
@@ -726,7 +796,35 @@ def render_report(analysis: dict) -> str:
     if analysis["recommendation_reasons"]:
         lines.extend(f"- {reason}" for reason in analysis["recommendation_reasons"])
     else:
-        lines.append("- Current uplift memory and current carrier posture are already carrying ordinary routing cleanly.")
+        lines.append("- Current uplift memory keeps ordinary routing explicit without queuing another detect-only pass.")
+
+    compatibility = analysis["compatibility_basis"]
+    version_alignment = "aligned" if compatibility["observed_runtime_version_aligned"] else "split-or-partial"
+    lines.extend(
+        [
+            "",
+            "## Compatibility Basis",
+            "",
+            f"- Compatibility posture: {compatibility['compatibility_posture']}",
+            f"- Observed runtime version: {compatibility['observed_runtime_version'] or 'unrecorded'}",
+            f"- Observed runtime manifest version: {compatibility['observed_runtime_manifest_version'] or 'unrecorded'}",
+            f"- Runtime version alignment: {version_alignment}",
+            f"- Overlay manifest schema version: {compatibility['overlay_manifest_schema_version'] or 'unrecorded'}",
+            f"- Uplift manifest schema version: {compatibility['uplift_manifest_schema_version']}",
+            "",
+            "### Compatibility Check Protocol",
+            "",
+        ]
+    )
+    lines.extend(f"- {step}" for step in compatibility["check_protocol"])
+    lines.extend(
+        [
+            "",
+            "### Wider Compatibility Claims Held",
+            "",
+        ]
+    )
+    lines.extend(f"- {item}" for item in compatibility["held_later"])
     lines.extend(
         [
             "",
@@ -817,10 +915,11 @@ def state_section_text(analysis: dict) -> str:
     recommendation = (
         "Run `$gsd-uplift-project --detect-only` before treating ordinary routing as settled."
         if analysis["recommend_detect_only"]
-        else "Continue with ordinary routing; uplift memory is already carrying this posture."
+        else "Continue with ordinary routing; uplift memory keeps this posture explicit."
     )
     pending_count = len(analysis["pending_doctrine_sensitive_proposals"])
     secondary = ", ".join(analysis["secondary_signals"]) if analysis["secondary_signals"] else "none"
+    compatibility = analysis["compatibility_basis"]
     return "\n".join(
         [
             STATE_HEADING,
@@ -830,6 +929,8 @@ def state_section_text(analysis: dict) -> str:
             f"Last uplift secondary signals: {secondary}",
             f"Phase boundary signal: {analysis['phase_boundary_signal']['note']}",
             f"Doctrine reference changed since prior uplift: {'yes' if analysis['doctrine_reference_changed'] else 'no'}",
+            f"Compatibility posture: {compatibility['compatibility_posture']}",
+            f"Observed runtime basis: {', '.join(compatibility['observed_runtime_version_set']) if compatibility['observed_runtime_version_set'] else 'unrecorded'}",
             f"Pending doctrine-sensitive proposals: {pending_count}",
             f"Current recommendation: {recommendation}",
             f"Current uplift report: {REPORT_REL_PATH}",
@@ -865,7 +966,7 @@ def write_outputs(repo_root: pathlib.Path, analysis: dict) -> dict:
     manifest_path = repo_root / MANIFEST_REL_PATH
     report_path.write_text(render_report(written_analysis), encoding="utf-8")
     manifest_payload = {
-        "schema_version": 3,
+        "schema_version": UPLIFT_MANIFEST_SCHEMA_VERSION,
         "generated_at": written_analysis["generated_at"],
         "mode": "detect-only",
         "last_uplift_class": written_analysis["project_class"],
@@ -880,6 +981,7 @@ def write_outputs(repo_root: pathlib.Path, analysis: dict) -> dict:
         "absent_additive_carriers": written_analysis["absent_additive_carriers"],
         "pending_doctrine_sensitive_proposals": written_analysis["pending_doctrine_sensitive_proposals"],
         "held_later_families": written_analysis["held_later_families"],
+        "compatibility_basis": written_analysis["compatibility_basis"],
         "carriers": written_analysis["carriers"],
     }
     manifest_path.write_text(json.dumps(manifest_payload, indent=2) + "\n", encoding="utf-8")

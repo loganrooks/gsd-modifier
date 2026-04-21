@@ -30,6 +30,7 @@ Parse the JSON for:
 - `secondary_signals`
 - `current_status`
 - `runtime_dirs`
+- `compatibility_basis`
 - `recommend_detect_only`
 - `recommendation_reasons`
 - `absent_additive_carriers`
@@ -47,7 +48,12 @@ Present a compact result:
 - Secondary signals: {secondary_signals or "none"}
 - Current state status: {current_status}
 - Runtime directories: {runtime_dirs}
+- Compatibility posture: {compatibility_basis.compatibility_posture}
+- Observed runtime basis: {compatibility_basis.observed_runtime_version_set or "unrecorded"}
 - Recommendation: {recommendation}
+
+## Compatibility Check Protocol
+- {compatibility step}
 
 ## Additive Install Routes
 - {carrier}

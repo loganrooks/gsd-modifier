@@ -79,8 +79,10 @@ python3 tooling/codex/run_claude_probe.py \
   - see also `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/` for the broader producer/consumer/carrier map that decides when coherence belongs in a wider propagation slice
 - `scan_threshold_language.py`
   - heuristically scans docs/specs/prompts/reviews for threshold framing, deficit-oriented pseudo-positive residue, and selected static-positive `enough` phrasing
-  - use it when auditing older artifacts for framing regressions rather than trusting memory or ad hoc rereads
+  - use it only when the task is explicitly a framing-residue audit or a doctrine-sensitive reread already warrants it
+  - do not use it as a routine `clean batch` gate for ordinary work
   - treat it as intake, not adjudication: findings still need contextual reread and disposition
+  - do not rewrite explicit prohibitions, quoted examples, or historical evidence solely to quiet a scanner hit
   - a clean result only means no heuristic hits were found; it does not certify the surface as contextually clean
   - `--ignore-meta-instruction-lines` is useful when scanning doctrine or instruction files that deliberately quote forbidden phrasing
   - exit code `1` means findings were detected, not that the scanner crashed
@@ -88,7 +90,8 @@ python3 tooling/codex/run_claude_probe.py \
   - detects repo-local project uplift posture and can write first-slice uplift memory
   - detect mode writes `.planning/UPLIFT-REPORT.md`, `.planning/UPLIFT-MANIFEST.json`, and a `STATE.md` uplift section when `--write` is used
   - progress-note mode is the thin read-only hook for the live routed consumers `gsd-progress` and `gsd-resume-work`; it reads structured uplift memory and current doctrine fingerprints rather than prose
-  - the current harden slice now carries multi-axis posture (`project_class` plus `secondary_signals`), marker-local section hashes for strengthening carriers, normalized TOML hashes for runtime registry carriers, structured doctrine-sensitive proposal states (`absent` vs `drifted`), and phase-boundary signal capture from active `CONTEXT.md`
+  - the current harden slice now carries multi-axis posture (`project_class` plus `secondary_signals`), marker-local section hashes for strengthening carriers, normalized TOML hashes for runtime registry carriers, structured doctrine-sensitive proposal states (`absent` vs `drifted`), phase-boundary signal capture from active `CONTEXT.md`, and an explicit observed-basis compatibility block
+  - the compatibility block records the currently observed GSD runtime basis (`.codex/get-shit-done/VERSION`, `.codex/gsd-file-manifest.json` when present), overlay schema anchor, uplift schema anchor, and the check protocol for later runtime movement without overclaiming a broad version window
   - the current network-carry chain now includes:
     - workflow consumers: `uplift-project`, `progress`, `resume-project`
     - durable outputs: `.planning/UPLIFT-REPORT.md`, `.planning/UPLIFT-MANIFEST.json`, and the `Project Uplift` section in `.planning/STATE.md`
