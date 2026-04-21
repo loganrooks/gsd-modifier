@@ -109,7 +109,11 @@ python3 tooling/codex/run_claude_probe.py \
   - use `--strict` when the caller wants a real gate on those bounded invariants rather than a read-only report
 - `portable_gsd_contract.py`
   - owns the tracked overlay install contract for repo-local GSD materialization
-  - validates [OVERLAY-MANIFEST.json](/home/rookslog/workspace/projects/prix-guesser/tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json), applies overlay files, applies repo-local reasoning defaults, and verifies post-materialization coherence
+  - validates [OVERLAY-MANIFEST.json](/home/rookslog/workspace/projects/prix-guesser/tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json), captures fresh-install pristine overwrite copies when upstream no longer leaves them behind, applies overlay files, applies repo-local reasoning defaults, and verifies post-materialization coherence
   - use it when the question is whether overlay ownership, backup-carried overwrite truth, and additive repo-local owners are still aligned
+- `ensure_gsd_sdk_runtime.py`
+  - verifies the repo-local `gsd-sdk` runtime under `/bin/sh` after upstream local install and repairs the known executable-bit failure when the installed launcher target has a shebang but lost execute bits
+  - use it as a narrow recovery surface after `get-shit-done-cc --codex --local` exits through the misleading `gsd-sdk` PATH banner
+  - it does not hide real off-PATH cases or broader upstream install failures; it only recovers the bounded local executability case and then proves `gsd-sdk --version` under `/bin/sh`
 - `UPLIFT-HELD-LATER.md`
   - named reference for the uplift families the current detect-only slice keeps explicit rather than absorbing

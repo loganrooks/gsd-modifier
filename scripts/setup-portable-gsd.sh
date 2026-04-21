@@ -17,7 +17,26 @@ if [[ -z "${COMPACT_PROMPT_FILE}" ]]; then
 fi
 
 echo "Installing repo-local regular GSD for Codex..."
-npx get-shit-done-cc --codex --local
+set +e
+GSD_ALLOW_OFF_PATH=1 npx get-shit-done-cc --codex --local
+INSTALL_EXIT=$?
+set -e
+
+if [[ "${INSTALL_EXIT}" -ne 0 && "${INSTALL_EXIT}" -ne 2 ]]; then
+  echo "Upstream local GSD install failed with unrecoverable exit code ${INSTALL_EXIT}."
+  exit "${INSTALL_EXIT}"
+fi
+
+echo "Verifying repo-local gsd-sdk runtime..."
+python3 "${REPO_ROOT}/tooling/codex/ensure_gsd_sdk_runtime.py" --pretty
+
+if [[ "${INSTALL_EXIT}" -eq 2 ]]; then
+  echo "Recovered from upstream gsd-sdk self-check failure via repo-local runtime verification."
+fi
+
+echo "Capturing fresh-install pristine copies for overwrite-mode carriers..."
+python3 "${REPO_ROOT}/tooling/codex/portable_gsd_contract.py" \
+  capture-pristine-overwrites "${REPO_ROOT}" --strict
 
 echo "Validating tracked prix-guesser GSD overlay contract..."
 python3 "${REPO_ROOT}/tooling/codex/portable_gsd_contract.py" \

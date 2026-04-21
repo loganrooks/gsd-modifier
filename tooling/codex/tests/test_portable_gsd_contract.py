@@ -110,6 +110,44 @@ class PortableGsdContractTests(unittest.TestCase):
             self.assertEqual(report["backup_copy_missing"], [])
             self.assertEqual(report["hard_failures"], [])
 
+    def test_capture_pristine_overwrites_synthesizes_backup_meta_from_fresh_install(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._write(repo_root, "tooling/portable-gsd/overlay/get-shit-done/workflows/plan-phase.md", "overlay\n")
+            self._write(
+                repo_root,
+                "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
+                json.dumps(
+                    {
+                        "schema_version": 1,
+                        "entries": {"get-shit-done/workflows/plan-phase.md": "overwrite"},
+                    }
+                )
+                + "\n",
+            )
+            self._write(
+                repo_root,
+                ".codex/gsd-file-manifest.json",
+                json.dumps({"version": "1.38.3", "files": {"get-shit-done/workflows/plan-phase.md": {}}}) + "\n",
+            )
+            self._write(repo_root, ".codex/get-shit-done/workflows/plan-phase.md", "upstream\n")
+
+            report = pgc.capture_pristine_overwrites(repo_root)
+
+            self.assertEqual(report["hard_failures"], [])
+            self.assertEqual(report["copied"], ["get-shit-done/workflows/plan-phase.md"])
+            backup_meta = json.loads(
+                (repo_root / ".codex/gsd-local-patches/backup-meta.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(backup_meta["files"], ["get-shit-done/workflows/plan-phase.md"])
+            self.assertEqual(
+                (repo_root / ".codex/gsd-local-patches/get-shit-done/workflows/plan-phase.md").read_text(encoding="utf-8"),
+                "upstream\n",
+            )
+
+            validation = pgc.build_manifest_validation_report(repo_root)
+            self.assertEqual(validation["hard_failures"], [])
+
     def test_script_invocation_by_path_verifies_materialized_contract(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             repo_root = pathlib.Path(tmpdir)

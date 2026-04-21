@@ -51,6 +51,15 @@ def parse_args() -> argparse.Namespace:
     apply_overlay_parser.add_argument("repo_root", nargs="?", default=".")
     apply_overlay_parser.add_argument("--compact-prompt-file")
 
+    capture_pristine = subparsers.add_parser(
+        "capture-pristine-overwrites",
+        help="Capture fresh-install pristine copies for overwrite-mode overlay entries.",
+    )
+    capture_pristine.add_argument("repo_root", nargs="?", default=".")
+    capture_pristine.add_argument("--output")
+    capture_pristine.add_argument("--pretty", action="store_true")
+    capture_pristine.add_argument("--strict", action="store_true")
+
     reasoning = subparsers.add_parser("apply-reasoning-defaults", help="Apply repo-local reasoning defaults.")
     reasoning.add_argument("repo_root", nargs="?", default=".")
 
@@ -110,6 +119,19 @@ def load_backup_meta_paths(codex_root: pathlib.Path) -> set[str]:
         return set()
     payload = json.loads(read_text(backup_meta_path))
     files = payload.get("files", [])
+    if isinstance(files, dict):
+        return set(files.keys())
+    if isinstance(files, list):
+        return set(files)
+    return set()
+
+
+def load_runtime_manifest_paths(codex_root: pathlib.Path) -> set[str]:
+    manifest_path = codex_root / "gsd-file-manifest.json"
+    if not manifest_path.exists():
+        return set()
+    payload = json.loads(read_text(manifest_path))
+    files = payload.get("files", {})
     if isinstance(files, dict):
         return set(files.keys())
     if isinstance(files, list):
@@ -192,6 +214,66 @@ def build_manifest_validation_report(repo_root: pathlib.Path) -> dict[str, Any]:
         "overwrite_missing_in_backup": overwrite_missing_in_backup,
         "add_present_in_backup": add_present_in_backup,
         "backup_overlay_not_overwrite": backup_overlay_not_overwrite,
+        "hard_failures": hard_failures,
+    }
+
+
+def capture_pristine_overwrites(repo_root: pathlib.Path) -> dict[str, Any]:
+    codex_root = repo_root / ".codex"
+    backup_root = codex_root / "gsd-local-patches"
+    entries = load_overlay_manifest(repo_root)
+    overwrite_paths = sorted(path for path, mode in entries.items() if mode == "overwrite")
+    runtime_manifest_paths = load_runtime_manifest_paths(codex_root)
+    copied: list[str] = []
+    missing_live: list[str] = []
+    missing_runtime_manifest: list[str] = []
+
+    for rel_path in overwrite_paths:
+        live_path = codex_root / rel_path
+        if not live_path.exists():
+            missing_live.append(rel_path)
+            continue
+        if runtime_manifest_paths and rel_path not in runtime_manifest_paths:
+            missing_runtime_manifest.append(rel_path)
+            continue
+        target = backup_root / rel_path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(live_path.read_bytes())
+        copied.append(rel_path)
+
+    backup_root.mkdir(parents=True, exist_ok=True)
+    backup_meta_path = backup_root / "backup-meta.json"
+    backup_meta_path.write_text(
+        json.dumps(
+            {
+                "source": "repo-local pristine overwrite capture",
+                "files": copied,
+            },
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    hard_failures: list[str] = []
+    if missing_live:
+        hard_failures.append(f"{len(missing_live)} overwrite entries are missing from fresh live .codex")
+    if missing_runtime_manifest:
+        hard_failures.append(f"{len(missing_runtime_manifest)} overwrite entries are absent from gsd-file-manifest")
+
+    return {
+        "repo_root": str(repo_root),
+        "backup_meta_path": str(backup_meta_path),
+        "summary": {
+            "overwrite_count": len(overwrite_paths),
+            "copied_count": len(copied),
+            "missing_live_count": len(missing_live),
+            "missing_runtime_manifest_count": len(missing_runtime_manifest),
+        },
+        "copied": copied,
+        "missing_live": missing_live,
+        "missing_runtime_manifest": missing_runtime_manifest,
         "hard_failures": hard_failures,
     }
 
@@ -301,6 +383,11 @@ def main() -> int:
         for rel_path in written:
             print(f"  patched .codex/{rel_path}")
         return 0
+
+    if args.command == "capture-pristine-overwrites":
+        report = capture_pristine_overwrites(repo_root)
+        write_json(report, pathlib.Path(args.output) if args.output else None, pretty=args.pretty or not args.output)
+        return 1 if args.strict and report["hard_failures"] else 0
 
     if args.command == "apply-reasoning-defaults":
         apply_reasoning_defaults(repo_root)
