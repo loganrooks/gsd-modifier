@@ -31,6 +31,7 @@ Parse the JSON for:
 - `current_status`
 - `runtime_dirs`
 - `compatibility_basis`
+- `recommend_write`
 - `recommend_detect_only`
 - `recommendation_reasons`
 - `absent_additive_carriers`
@@ -80,6 +81,8 @@ Route next action explicitly:
 
 - If `recommend_detect_only` is `true` and `--write` was not used:
   - recommend rerunning with `--write` when the operator wants durable uplift memory
+- If `recommend_write` is `true`:
+  - route directly to `--write`, because runtime-basis movement means the durable uplift memory is now stale
 - If additive carriers remain absent:
   - keep those as future install routes, not silent edits
 - If doctrine-sensitive proposal routes remain:

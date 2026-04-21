@@ -58,4 +58,5 @@ Execute the uplift-project workflow from @/home/rookslog/workspace/projects/prix
 
 Default posture is detect-only.
 Pass `--write` only when the caller explicitly wants durable uplift memory written.
+If the workflow reports runtime-basis movement, prefer rerunning with `--write` so the durable uplift memory and live routed note stay in tune.
 </process>

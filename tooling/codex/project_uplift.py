@@ -19,10 +19,7 @@ REPORT_REL_PATH = ".planning/UPLIFT-REPORT.md"
 MANIFEST_REL_PATH = ".planning/UPLIFT-MANIFEST.json"
 HELD_LATER_REL_PATH = "tooling/codex/UPLIFT-HELD-LATER.md"
 RUNTIME_MANIFEST_REL_PATH = ".codex/gsd-file-manifest.json"
-RUNTIME_VERSION_REL_PATHS = [
-    ".codex/get-shit-done/VERSION",
-    ".codex/VERSION",
-]
+RUNTIME_VERSION_REL_PATH = ".codex/get-shit-done/VERSION"
 OVERLAY_MANIFEST_REL_PATH = "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json"
 UPLIFT_MANIFEST_SCHEMA_VERSION = 4
 COMPATIBILITY_POSTURE = "observed_basis_only"
@@ -225,11 +222,10 @@ def load_overlay_manifest(repo_root: pathlib.Path) -> dict | None:
 
 
 def runtime_version_source(repo_root: pathlib.Path) -> tuple[str | None, str | None]:
-    for rel_path_str in RUNTIME_VERSION_REL_PATHS:
-        text = read_text(repo_root / rel_path_str)
-        if text is not None:
-            return text.strip(), rel_path_str
-    return None, None
+    text = read_text(repo_root / RUNTIME_VERSION_REL_PATH)
+    if text is None:
+        return None, None
+    return text.strip(), RUNTIME_VERSION_REL_PATH
 
 
 def build_compatibility_basis(repo_root: pathlib.Path) -> dict:
@@ -265,6 +261,26 @@ def build_compatibility_basis(repo_root: pathlib.Path) -> dict:
         ],
         "held_later": COMPATIBILITY_HELD_LATER,
     }
+
+
+def compatibility_drift_reasons(previous: dict, current: dict) -> list[str]:
+    reasons: list[str] = []
+    fields = (
+        ("observed_runtime_version", "observed runtime version"),
+        ("observed_runtime_manifest_version", "observed runtime manifest version"),
+        ("observed_runtime_version_source", "observed runtime version source"),
+        ("observed_runtime_manifest_source", "observed runtime manifest source"),
+        ("observed_runtime_version_aligned", "runtime version alignment state"),
+    )
+    for key, label in fields:
+        before = previous.get(key)
+        after = current.get(key)
+        if before == after:
+            continue
+        before_text = "unrecorded" if before in (None, "") else str(before)
+        after_text = "unrecorded" if after in (None, "") else str(after)
+        reasons.append(f"{label} moved from {before_text} to {after_text}")
+    return reasons
 
 
 def parse_held_later_family_line(line: str) -> dict:
@@ -1015,7 +1031,12 @@ def build_progress_note(repo_root: pathlib.Path) -> dict:
     analysis = analyze_repo(repo_root)
     pending = analysis["pending_doctrine_sensitive_proposals"]
     doctrine_changed = manifest.get("doctrine_reference_hash") != analysis["doctrine_reference_hash"]
-    recommend_detect_only = bool(doctrine_changed or pending)
+    manifest_compatibility = manifest.get("compatibility_basis") or {}
+    current_compatibility = analysis["compatibility_basis"]
+    compatibility_reasons = compatibility_drift_reasons(manifest_compatibility, current_compatibility)
+    compatibility_basis_changed = bool(compatibility_reasons)
+    recommend_write = compatibility_basis_changed
+    recommend_detect_only = bool((doctrine_changed or pending) and not recommend_write)
     reasons: list[str] = []
     if doctrine_changed:
         reasons.append("current doctrine reference fingerprint moved after the last uplift pass")
@@ -1024,19 +1045,26 @@ def build_progress_note(repo_root: pathlib.Path) -> dict:
             "doctrine-sensitive proposals still recorded: "
             + ", ".join(summarize_proposal_route(proposal) for proposal in pending)
         )
+    reasons.extend(compatibility_reasons)
     recommendation = (
-        "Run `$gsd-uplift-project --detect-only` to refresh uplift memory."
-        if recommend_detect_only
-        else "Continue with current routing."
+        "Run `$gsd-uplift-project --write` to refresh uplift memory after runtime basis movement."
+        if recommend_write
+        else (
+            "Run `$gsd-uplift-project --detect-only` to refresh uplift memory."
+            if recommend_detect_only
+            else "Continue with current routing."
+        )
     )
     return {
         "show": True,
         "manifest_present": True,
+        "recommend_write": recommend_write,
         "recommend_detect_only": recommend_detect_only,
         "last_uplift_class": manifest.get("last_uplift_class"),
         "last_uplift_secondary_signals": manifest.get("last_uplift_secondary_signals", []),
         "last_uplift_at": manifest.get("generated_at"),
         "doctrine_reference_changed": doctrine_changed,
+        "compatibility_basis_changed": compatibility_basis_changed,
         "pending_doctrine_sensitive_proposals": pending,
         "recommendation": recommendation,
         "reasons": reasons,

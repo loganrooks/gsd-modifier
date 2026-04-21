@@ -133,10 +133,12 @@ class ProjectUpliftTests(unittest.TestCase):
             note = pu.build_progress_note(repo_root)
             self.assertTrue(note["show"])
             self.assertFalse(note["recommend_detect_only"])
+            self.assertFalse(note["recommend_write"])
 
             self._write(repo_root, "AGENTS.md", "# Agents changed\n")
             changed_note = pu.build_progress_note(repo_root)
             self.assertTrue(changed_note["recommend_detect_only"])
+            self.assertFalse(changed_note["recommend_write"])
             self.assertTrue(changed_note["doctrine_reference_changed"])
             self.assertTrue(
                 any(
@@ -210,6 +212,41 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertEqual(compatibility["overlay_manifest_schema_version"], 1)
             self.assertEqual(compatibility["uplift_manifest_schema_version"], 4)
             self.assertIn("version-window claims beyond the observed runtime basis", compatibility["held_later"])
+
+    def test_progress_note_recommends_write_after_runtime_basis_movement(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="completed")
+            self._write_doctrine_stack(repo_root)
+            pu.write_outputs(repo_root, pu.analyze_repo(repo_root))
+
+            self._write(repo_root, ".codex/get-shit-done/VERSION", "1.38.3\n")
+            self._write(repo_root, ".codex/gsd-file-manifest.json", json.dumps({"version": "1.38.3"}) + "\n")
+
+            note = pu.build_progress_note(repo_root)
+
+            self.assertTrue(note["recommend_write"])
+            self.assertFalse(note["recommend_detect_only"])
+            self.assertTrue(note["compatibility_basis_changed"])
+            self.assertIn("--write", note["recommendation"])
+            self.assertTrue(
+                any("observed runtime version moved from 1.38.1 to 1.38.3" in reason for reason in note["reasons"])
+            )
+
+    def test_compatibility_basis_ignores_noncanonical_runtime_version_file(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="completed")
+            self._write_doctrine_stack(repo_root)
+            (repo_root / ".codex/get-shit-done/VERSION").unlink()
+            self._write(repo_root, ".codex/VERSION", "9.99.9\n")
+
+            compatibility = pu.analyze_repo(repo_root)["compatibility_basis"]
+
+            self.assertIsNone(compatibility["observed_runtime_version"])
+            self.assertIsNone(compatibility["observed_runtime_version_source"])
+            self.assertEqual(compatibility["observed_runtime_manifest_version"], "1.38.1")
+            self.assertFalse(compatibility["observed_runtime_version_aligned"])
 
     def test_cross_runtime_primary_class_preserves_mid_phase_secondary_signal(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
