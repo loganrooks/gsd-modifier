@@ -64,6 +64,7 @@ python3 tooling/codex/run_claude_probe.py \
   - extracts just text-bearing content from `stream-json` logs with `--head`, `--tail`, `--range`, and `--last-message`
 - `capture_launch_truth.py`
   - captures requested-vs-effective Codex launch settings from `~/.codex/state_5.sqlite`
+  - see also the propagation-family lane records under `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/` when launch-truth becomes part of a wider contract-carry question
 - `runtime_visibility.py`
   - reports final repo-local GSD runtime truth for selected high-leverage families without rewriting updater/custom-file manifest semantics
   - use it when live-vs-overlay differences need classification (`intentional materialized carry`, `repo-local config carry`, `selective overlay boundary`, `obsolete live residue`, `unknown live drift`) rather than a blunt mismatch list
@@ -75,6 +76,7 @@ python3 tooling/codex/run_claude_probe.py \
   - compares updater/custom-file boundary truth (`gsd-file-manifest.json`), tracked carried-subset truth (`backup-meta.json`), and a frozen selected-lane runtime snapshot
   - use it for manifest/install coherence passes when the question is whether any real contradiction remains after semantic separation, not whether one file can be forced to stand in for all three surfaces
   - `--strict` is the preferred mode for audit checkpoints because it fails on dirty current state, dirty snapshot boundaries, unknown live drift, or currently evidenced obsolete residue inside the selected runtime scope
+  - see also `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/` for the broader producer/consumer/carrier map that decides when coherence belongs in a wider propagation slice
 - `scan_threshold_language.py`
   - scans docs/specs/prompts/reviews for threshold framing and deficit-oriented pseudo-positive residue
   - use it when auditing older artifacts for threshold-style or deficit-oriented framing regressions rather than trusting memory or ad hoc rereads
