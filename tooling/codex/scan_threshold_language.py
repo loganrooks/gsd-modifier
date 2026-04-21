@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Scan docs/specs/prompts/reviews for threshold, deficit, or static-positive framing residue."""
+"""Heuristically scan docs/specs/prompts/reviews for framing residue.
+
+This tool widens contextual reread. It does not replace contextual
+interpretation, classification, or final disposition.
+"""
 
 from __future__ import annotations
 
@@ -68,7 +72,10 @@ def is_meta_instruction_line(line: str) -> bool:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Scan markdown/text artifacts for threshold, deficit-oriented, or static-positive framing."
+        description=(
+            "Heuristically scan markdown/text artifacts for threshold, deficit-oriented, "
+            "or static-positive framing. Findings require contextual reread."
+        )
     )
     parser.add_argument("paths", nargs="+", help="Files or directories to scan")
     parser.add_argument(
@@ -94,7 +101,7 @@ def main() -> int:
                         findings.append((str(path), line_no, category, line.rstrip()))
 
     if not findings:
-        print("No threshold-language residue found.")
+        print("No scanner findings. Contextual reread still required.")
         return 0
 
     current_path = None
@@ -108,6 +115,7 @@ def main() -> int:
 
     print()
     print(f"Findings: {len(findings)}")
+    print("Interpretation: heuristic hits only; contextual review and disposition still required.")
     return 1
 
 

@@ -78,8 +78,11 @@ python3 tooling/codex/run_claude_probe.py \
   - `--strict` is the preferred mode for audit checkpoints because it fails on dirty current state, dirty snapshot boundaries, unknown live drift, or currently evidenced obsolete residue inside the selected runtime scope
   - see also `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/` for the broader producer/consumer/carrier map that decides when coherence belongs in a wider propagation slice
 - `scan_threshold_language.py`
-  - scans docs/specs/prompts/reviews for threshold framing and deficit-oriented pseudo-positive residue
-  - use it when auditing older artifacts for threshold-style or deficit-oriented framing regressions rather than trusting memory or ad hoc rereads
+  - heuristically scans docs/specs/prompts/reviews for threshold framing, deficit-oriented pseudo-positive residue, and selected static-positive `enough` phrasing
+  - use it when auditing older artifacts for framing regressions rather than trusting memory or ad hoc rereads
+  - treat it as intake, not adjudication: findings still need contextual reread and disposition
+  - a clean result only means no heuristic hits were found; it does not certify the surface as contextually clean
+  - `--ignore-meta-instruction-lines` is useful when scanning doctrine or instruction files that deliberately quote forbidden phrasing
   - exit code `1` means findings were detected, not that the scanner crashed
 - `project_uplift.py`
   - detects repo-local project uplift posture and can write first-slice uplift memory
