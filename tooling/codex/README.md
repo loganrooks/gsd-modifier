@@ -97,6 +97,16 @@ python3 tooling/codex/run_claude_probe.py \
     - workflow consumers: `uplift-project`, `progress`, `resume-project`
     - durable outputs: `.planning/UPLIFT-REPORT.md`, `.planning/UPLIFT-MANIFEST.json`, and the `Project Uplift` section in `.planning/STATE.md`
     - audit lineage: `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/`
+- `harness_canary.py`
+  - emits a bounded machine-checkable report for current runtime/install invariants
+  - the first slice checks:
+    - canonical runtime version anchor presence
+    - overlay manifest validation
+    - post-materialization coherence
+    - runtime config reasoning default
+    - selected high-stakes agent reasoning defaults
+    - uplift compatibility-anchor freshness when uplift memory exists
+  - use `--strict` when the caller wants a real gate on those bounded invariants rather than a read-only report
 - `portable_gsd_contract.py`
   - owns the tracked overlay install contract for repo-local GSD materialization
   - validates [OVERLAY-MANIFEST.json](/home/rookslog/workspace/projects/prix-guesser/tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json), applies overlay files, applies repo-local reasoning defaults, and verifies post-materialization coherence
