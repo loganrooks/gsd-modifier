@@ -5,10 +5,25 @@ Start a new milestone cycle for an existing project. Loads project context, gath
 </purpose>
 
 <required_reading>
+@__PROJECT_ROOT__/.codex/get-shit-done/references/mandatory-initial-read.md
 
 Read all files referenced by the invoking prompt's execution_context before starting.
 
 </required_reading>
+
+<supporting_reading>
+Start from the narrow milestone-opening packet this workflow already names:
+- `PROJECT.md`
+- `MILESTONES.md`
+- `STATE.md`
+- `.planning/LONG-ARC.md` when present
+- `MILESTONE-CONTEXT.md` when present
+- matched seed files only after the milestone-goal route points there
+</supporting_reading>
+
+<deeper_reading>
+Only widen into broader research, archive, or governance families when the milestone-opening route, conflict, or later planning choice depends on them. Do not reopen the whole project or audit workspace before the milestone route is clear.
+</deeper_reading>
 
 <available_agent_types>
 Valid GSD subagent types (use exact names — do not fall back to 'general-purpose'):
@@ -20,6 +35,12 @@ Valid GSD subagent types (use exact names — do not fall back to 'general-purpo
 <process>
 
 ## 1. Load Context
+
+Keep the milestone-opening packet layered:
+
+- Primary packet: `PROJECT.md`, `MILESTONES.md`, `STATE.md`, and `LONG-ARC.md` when present
+- Supporting packet: `MILESTONE-CONTEXT.md`, matched seeds, and milestone-local research only when those routes activate
+- Deeper packet: broader archive/governance rereads only when the chosen milestone route actually depends on them
 
 Parse `{{GSD_ARGS}}` before doing anything else:
 - `--reset-phase-numbers` flag → opt into restarting roadmap phase numbering at `1`
