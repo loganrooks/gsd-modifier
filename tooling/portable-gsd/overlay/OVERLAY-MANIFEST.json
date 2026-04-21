@@ -51,6 +51,7 @@
     "get-shit-done/workflows/spec-phase.md": "overwrite",
     "get-shit-done/workflows/transition.md": "overwrite",
     "get-shit-done/workflows/uplift-project.md": "add",
+    "get-shit-done/workflows/update.md": "overwrite",
     "get-shit-done/workflows/verify-phase.md": "overwrite",
     "skills/gsd-discuss-phase/SKILL.md": "overwrite",
     "skills/gsd-do/SKILL.md": "overwrite",
@@ -64,6 +65,7 @@
     "skills/gsd-rigorous-research/references/method.md": "add",
     "skills/gsd-rigorous-research/references/output-template.md": "add",
     "skills/gsd-rigorous-research/references/repo-canon.md": "add",
+    "skills/gsd-update/SKILL.md": "overwrite",
     "skills/gsd-uplift-project/SKILL.md": "add",
     "tooling/compact-prompts/project.md": "add",
     "tooling/compact-prompts/readiness.md": "add"
