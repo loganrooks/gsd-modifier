@@ -88,5 +88,9 @@ python3 tooling/codex/run_claude_probe.py \
     - workflow consumers: `uplift-project`, `progress`, `resume-project`
     - durable outputs: `.planning/UPLIFT-REPORT.md`, `.planning/UPLIFT-MANIFEST.json`, and the `Project Uplift` section in `.planning/STATE.md`
     - audit lineage: `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/`
+- `portable_gsd_contract.py`
+  - owns the tracked overlay install contract for repo-local GSD materialization
+  - validates [OVERLAY-MANIFEST.json](/home/rookslog/workspace/projects/prix-guesser/tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json), applies overlay files, applies repo-local reasoning defaults, and verifies post-materialization coherence
+  - use it when the question is whether overlay ownership, backup-carried overwrite truth, and additive repo-local owners are still aligned
 - `UPLIFT-HELD-LATER.md`
   - named reference for the uplift families the current detect-only slice keeps explicit rather than absorbing

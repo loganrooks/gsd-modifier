@@ -7,13 +7,14 @@ import argparse
 import hashlib
 import json
 import pathlib
-import re
 import sys
 from dataclasses import dataclass
 
+from tooling.codex import portable_gsd_contract as pgc
 
-DEFAULT_COMPACT_PROMPT_FILE = "tooling/compact-prompts/project.md"
-LOCAL_COMPACT_PROMPT_SELECTOR = ".codex.local/compact-prompt.txt"
+
+DEFAULT_COMPACT_PROMPT_FILE = pgc.DEFAULT_COMPACT_PROMPT_FILE
+LOCAL_COMPACT_PROMPT_SELECTOR = pgc.LOCAL_COMPACT_PROMPT_SELECTOR
 INTENTIONAL = "intentional materialized carry"
 REPO_LOCAL = "repo-local config carry"
 SELECTIVE = "selective overlay boundary"
@@ -104,30 +105,15 @@ def load_backup_paths(codex_root: pathlib.Path) -> set[str]:
 
 
 def load_install_mutation_targets(repo_root: pathlib.Path) -> set[str]:
-    targets = {"config.toml"}
-    setup_script = repo_root / "scripts" / "setup-portable-gsd.sh"
-    if not setup_script.exists():
-        return targets
-    script_text = read_text(setup_script)
-    for match in re.finditer(r'"([^"]+)":\s*"[^"]+"', script_text):
-        targets.add(f"agents/{match.group(1)}.toml")
-    return targets
+    return pgc.install_mutation_targets()
 
 
 def compact_prompt_file(repo_root: pathlib.Path) -> str:
-    selector = repo_root / LOCAL_COMPACT_PROMPT_SELECTOR
-    if selector.exists():
-        first_line = selector.read_text(encoding="utf-8").splitlines()
-        if first_line and first_line[0].strip():
-            return first_line[0].strip()
-    return DEFAULT_COMPACT_PROMPT_FILE
+    return pgc.compact_prompt_file(repo_root)
 
 
 def normalize_overlay_text(text: str, repo_root: pathlib.Path, compact_prompt: str) -> str:
-    return (
-        text.replace("__PROJECT_ROOT__", str(repo_root))
-        .replace("__COMPACT_PROMPT_FILE__", compact_prompt)
-    )
+    return pgc.render_overlay_text(text, repo_root, compact_prompt)
 
 
 def classify(
