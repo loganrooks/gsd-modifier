@@ -79,6 +79,18 @@ STATIC_FILE_CARRIERS = [
     FileCarrierSpec("planning_agents", "doctrine_sensitive", ".planning/AGENTS.md", "Planning AGENTS"),
     FileCarrierSpec("root_claude", "doctrine_sensitive", "CLAUDE.md", "Root CLAUDE"),
     FileCarrierSpec("planning_claude", "doctrine_sensitive", ".planning/CLAUDE.md", "Planning CLAUDE"),
+    FileCarrierSpec(
+        "verification_workflow",
+        "doctrine_sensitive",
+        ".codex/get-shit-done/workflows/verify-phase.md",
+        "Verification Workflow",
+    ),
+    FileCarrierSpec(
+        "verification_report_template",
+        "doctrine_sensitive",
+        ".codex/get-shit-done/templates/verification-report.md",
+        "Verification Report Template",
+    ),
     FileCarrierSpec("claim_types", "additive_install", ".planning/CLAIM-TYPES.md", "Claim Types"),
     FileCarrierSpec(
         "long_arc",

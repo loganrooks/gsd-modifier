@@ -72,6 +72,16 @@ class ProjectUpliftTests(unittest.TestCase):
             ".codex/skills/gsd-rigorous-research/references/output-template.md",
             "# Output Template\n\n### Strengthening Opportunities\n- Intensify route.\n",
         )
+        self._write(
+            root,
+            ".codex/get-shit-done/workflows/verify-phase.md",
+            "# Verify\n\n## Future-Preservation Carry Review\n- Protected seams stay carried.\n",
+        )
+        self._write(
+            root,
+            ".codex/get-shit-done/templates/verification-report.md",
+            "# Verification Report\n\n## Future-Preservation Carry\n- carried\n",
+        )
 
     def _write_doctrine_stack(self, root: pathlib.Path) -> None:
         self._write(root, "CLAUDE.md", "# Claude\n")

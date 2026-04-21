@@ -87,6 +87,7 @@ Set `is_re_verification = false`, proceed with Step 1.
 ```bash
 ls "$PHASE_DIR"/*-PLAN.md 2>/dev/null
 ls "$PHASE_DIR"/*-SUMMARY.md 2>/dev/null
+ls "$PHASE_DIR"/CONTEXT.md 2>/dev/null
 node "__PROJECT_ROOT__/.codex/get-shit-done/bin/gsd-tools.cjs" roadmap get-phase "$PHASE_NUM"
 grep -E "^| $PHASE_NUM" .planning/REQUIREMENTS.md 2>/dev/null
 ```
@@ -137,6 +138,25 @@ Combine all sources into a single must-haves list:
 4. **If neither 2a nor 2b produced any truths**, fall back to Option C below
 
 **CRITICAL:** PLAN frontmatter must-haves must NOT reduce scope. If ROADMAP.md defines 5 Success Criteria but the plan only lists 3 in must_haves, all 5 must still be verified. The plan can ADD must-haves but never subtract roadmap SCs.
+
+**Step 2d: Load future_preservation carry (when present)**
+
+For each plan, check whether planning carried structured future-preservation:
+
+```bash
+for plan in "$PHASE_DIR"/*-PLAN.md; do
+  FUTURE=$(node "__PROJECT_ROOT__/.codex/get-shit-done/bin/gsd-tools.cjs" frontmatter get "$plan" --field future_preservation 2>/dev/null || true)
+  echo "=== $plan ===" && echo "$FUTURE"
+done
+```
+
+`future_preservation` normally carries:
+- `protected_seams`
+- `non_decisions`
+- `posture_assumptions`
+- `strengthening_routes`
+
+If no plan carries `future_preservation`, record that the review is omitted for this phase and continue. If any plan carries it, later verification MUST review whether execution preserved that carry instead of only satisfying present-tense behavior.
 
 **Option C: Derive from phase goal (fallback)**
 
@@ -387,6 +407,26 @@ grep -E "Phase $PHASE_NUM" .planning/REQUIREMENTS.md 2>/dev/null
 
 If REQUIREMENTS.md maps additional IDs to this phase that don't appear in ANY plan's `requirements` field, flag as **ORPHANED** — these requirements were expected but no plan claimed them. ORPHANED requirements MUST appear in the verification report.
 
+## Step 6d: Verify Future-Preservation Carry
+
+If any source plan carries `future_preservation`, run an explicit carry review before determining overall status.
+
+Review each item against the implemented code, SUMMARY artifacts, planted seeds, and any explicit later-routing evidence:
+
+- `protected_seams` — did execution preserve the intended interface/schema/abstraction boundary, or silently collapse it?
+- `non_decisions` — did execution keep the choice intentionally open, or silently hard-fix it without explicit accounting?
+- `posture_assumptions` — does execution still match the planned trust/visibility/service posture, or did it drift without being named?
+- `strengthening_routes` — was the route realized, or explicitly held-and-seeded, instead of disappearing from execution memory?
+
+**Carry statuses:**
+- `carried` — the planned carry is still visible in execution/reporting evidence
+- `thinned` — execution achieved present-tense behavior but collapsed or lost the planned future-preservation item
+- `uncertain` — you cannot responsibly adjudicate the item programmatically or from the artifacts alone
+
+**Important:** A phase can satisfy current behavioral truths and still `thin` future-preservation carry. Treat that as a real verification concern, not a side note.
+
+Record a structured `future_preservation_review` block for the report when this step runs.
+
 ## Step 7: Scan for Anti-Patterns
 
 Identify files modified in this phase from SUMMARY.md key-files section, or extract commits and verify:
@@ -491,17 +531,17 @@ npm test -- --grep "$PHASE_TEST_PATTERN" 2>&1 | grep -q "passing"
 
 Classify status using this decision tree IN ORDER (most restrictive first):
 
-1. IF any truth FAILED, artifact MISSING/STUB, key link NOT_WIRED, or blocker anti-pattern found:
+1. IF any truth FAILED, artifact MISSING/STUB, key link NOT_WIRED, blocker anti-pattern found, or any future-preservation item is `thinned`:
    → **status: gaps_found**
 
-2. IF Step 8 produced ANY human verification items (section is non-empty):
+2. IF Step 8 produced ANY human verification items (section is non-empty), or any future-preservation item is `uncertain`:
    → **status: human_needed**
    (Even if all truths are VERIFIED and score is N/N — human items take priority)
 
-3. IF all truths VERIFIED, all artifacts pass, all links WIRED, no blockers, AND no human verification items:
+3. IF all truths VERIFIED, all artifacts pass, all links WIRED, no blockers, no thinned future-preservation items, AND no human verification items:
    → **status: passed**
 
-**passed is ONLY valid when the human verification section is empty.** If you identified items requiring human testing in Step 8, status MUST be human_needed.
+**passed is ONLY valid when the human verification section is empty and future-preservation review found no `thinned` or `uncertain` items.**
 
 **Score:** `verified_truths / total_truths`
 
@@ -624,6 +664,19 @@ human_verification: # Only if status: human_needed
   - test: "What to do"
     expected: "What should happen"
     why_human: "Why can't verify programmatically"
+future_preservation_review: # Only if any source PLAN carries future_preservation
+  status: carried | carry_gaps_found | human_judgment_needed
+  reviewed_items: 0
+  carried_items: 0
+  carry_gaps:
+    - bucket: "protected_seams"
+      item: "Named preserved seam"
+      reason: "Why the carry thinned"
+      evidence: "Code/report evidence"
+  human_items:
+    - bucket: "posture_assumptions"
+      item: "Named posture assumption"
+      why_human: "Why the carry needs human judgment"
 ---
 
 # Phase {X}: {Name} Verification Report
@@ -643,6 +696,19 @@ human_verification: # Only if status: human_needed
 | 2   | {truth} | ✗ FAILED   | {what's wrong} |
 
 **Score:** {N}/{M} truths verified
+
+### Future-Preservation Carry
+
+Only include this section when any source plan carries `future_preservation`.
+
+| Bucket | Item | Planned Route | Status | Evidence |
+| ------ | ---- | ------------- | ------ | -------- |
+| protected_seams | {item} | preserve seam | carried | {evidence} |
+| non_decisions | {item} | keep open | thinned | {reason/evidence} |
+| posture_assumptions | {item} | carry posture | uncertain | {why_human} |
+| strengthening_routes | {item} | intensify now / explicit hold-and-seed | carried | {evidence} |
+
+**Carry review summary:** {carried_count}/{reviewed_count} items carried; {gap_count} thinned; {human_count} uncertain.
 
 ### Deferred Items
 
@@ -809,6 +875,8 @@ return <div>No messages</div>  // Always shows "no messages"
 - [ ] If re-verification: must-haves loaded from previous, focus on failed items
 - [ ] If initial: must-haves established (from frontmatter or derived)
 - [ ] All truths verified with status and evidence
+- [ ] `future_preservation` loaded when any source plan carries it
+- [ ] Future-preservation carry reviewed when loaded
 - [ ] All artifacts checked at all three levels (exists, substantive, wired)
 - [ ] Data-flow trace (Level 4) run on wired artifacts that render dynamic data
 - [ ] All key links verified
@@ -819,6 +887,7 @@ return <div>No messages</div>  // Always shows "no messages"
 - [ ] Overall status determined
 - [ ] Deferred items filtered against later milestone phases (Step 9b)
 - [ ] Gaps structured in YAML frontmatter (if gaps_found)
+- [ ] Future-preservation review structured in YAML frontmatter (if loaded)
 - [ ] Deferred items structured in YAML frontmatter (if deferred items exist)
 - [ ] Re-verification metadata included (if previous existed)
 - [ ] VERIFICATION.md created with complete report

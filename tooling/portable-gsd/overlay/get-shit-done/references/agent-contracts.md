@@ -87,6 +87,7 @@ This doc describes what IS, not what should be. Casing inconsistencies are docum
 | `completion_mode` | Yes | `clean_completion` or `debt_carrying_completion`; distinguishes clean closure from accepted or unresolved carried debt |
 | `debt_bearing` | Yes | Boolean mirror of `completion_mode` for consumers that only need a quick debt flag |
 | `overrides_applied` | Yes | Count of accepted verification overrides contributing to the final result |
+| `future_preservation_review` | Yes when any source PLAN carries `future_preservation` | Structured verifier review of whether preserved seams, explicit non-decisions, posture assumptions, and strengthening routes were carried, thinned, or still need human judgment |
 | `gaps` / `human_verification` | Yes when applicable | Structured downstream debt details for routing and planning |
 
 ## Workflow Regex Patterns
