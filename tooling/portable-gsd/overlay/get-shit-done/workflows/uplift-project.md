@@ -3,8 +3,20 @@ Detect repo-local project uplift posture, compose the strongest current doctrine
 </purpose>
 
 <required_reading>
+@__PROJECT_ROOT__/.codex/get-shit-done/references/mandatory-initial-read.md
 Read all files referenced by the invoking prompt's execution_context before starting.
 </required_reading>
+
+<supporting_reading>
+Use the helper and the current uplift outputs as the first packet:
+- `project_uplift.py` detect output
+- `.planning/UPLIFT-REPORT.md`, `.planning/UPLIFT-MANIFEST.json`, and `STATE.md` uplift section when they already exist or when `--write` is in play
+- runtime/version surfaces only when compatibility movement is active
+</supporting_reading>
+
+<deeper_reading>
+Only widen into entry-uplift audit artifacts, doctrine-sensitive proposal notes, or broader governance docs when the helper returns a route that actually depends on them.
+</deeper_reading>
 
 <process>
 
@@ -16,6 +28,16 @@ Supported flags for the first slice:
 - `--json` — print helper JSON verbatim after the human summary
 
 All other uplift refresh/install routes stay held for later slices.
+</step>
+
+<step name="reading_control">
+Keep uplift reading layered:
+
+- Primary packet: execution-context paths plus helper detect output
+- Supporting packet: existing uplift report/manifest/state outputs when they already exist or are being refreshed
+- Deeper packet: doctrine-sensitive proposal or audit-family rereads only when the helper surfaces that route
+
+Do not reopen the full uplift audit family just to deliver an ordinary detect-only result.
 </step>
 
 <step name="run_detect">
@@ -86,7 +108,7 @@ Route next action explicitly:
 - If additive carriers remain absent:
   - keep those as future install routes, not silent edits
 - If doctrine-sensitive proposal routes remain:
-  - keep them for explicit later review rather than folding them into detect-only
+  - keep them for explicit later review rather than folding them into detect-only, and only then widen into the supporting proposal/audit packet
 - If the helper classifies the repo as `mid-phase uplift`:
   - keep uplift composition separate from current execution/verification routing
 </step>

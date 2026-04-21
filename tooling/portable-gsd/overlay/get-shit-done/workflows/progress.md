@@ -3,8 +3,21 @@ Check project progress, summarize recent work and what's ahead, then intelligent
 </purpose>
 
 <required_reading>
+@__PROJECT_ROOT__/.codex/get-shit-done/references/mandatory-initial-read.md
 Read all files referenced by the invoking prompt's execution_context before starting.
 </required_reading>
+
+<supporting_reading>
+Prefer the route-local surfaces this workflow already computes before widening:
+- `roadmap analyze`
+- `state-snapshot`
+- recent `SUMMARY.md` one-liners
+- `.planning/UPLIFT-MANIFEST.json` only when the uplift note says it should surface
+</supporting_reading>
+
+<deeper_reading>
+Only widen into broader family or governance docs when the active route, anomaly, or user request points there. Do not reopen the full workspace just to report ordinary progress.
+</deeper_reading>
 
 <process>
 
@@ -49,6 +62,8 @@ Instead of reading full files, use targeted tools to get only the data needed fo
 - `STATE=$(node "__PROJECT_ROOT__/.codex/get-shit-done/bin/gsd-tools.cjs" state-snapshot)`
 
 This minimizes orchestrator context usage.
+
+Treat these structured outputs as the primary read packet for ordinary progress routing. Only widen into full project or family docs when a later route actually needs that depth.
 </step>
 
 <step name="analyze_roadmap">
@@ -171,6 +186,10 @@ When `UPLIFT_NOTE.show` is `true`, add:
 
 <step name="route">
 **Determine next action based on verified counts.**
+
+Before widening the read set, keep the route narrow:
+- ordinary progress output should stay on the structured packet plus the phase-local files surfaced below
+- if a route points into one family such as uplift, verification debt, or milestone-open planning, reread that family deliberately rather than loading unrelated workspace history
 
 **Step 1: Count plans, summaries, and issues in current phase**
 

@@ -11,8 +11,22 @@ Instantly restore full project context so "Where were we?" has an immediate, com
 </purpose>
 
 <required_reading>
+@__PROJECT_ROOT__/.codex/get-shit-done/references/mandatory-initial-read.md
 Read all files referenced by the invoking prompt's execution_context before starting.
 </required_reading>
+
+<supporting_reading>
+Start from the narrow re-entry packet this workflow already owns:
+- init resume JSON
+- `STATE.md`
+- `PROJECT.md`
+- `HANDOFF.json` or `.continue-here*` when present
+- uplift note / manifest only when it surfaces
+</supporting_reading>
+
+<deeper_reading>
+Only widen into broader family or governance docs when the chosen next action actually points there. Resume should restore the current route first, not reopen the whole workspace by reflex.
+</deeper_reading>
 
 <process>
 
@@ -29,6 +43,16 @@ Parse JSON for: `state_exists`, `roadmap_exists`, `project_exists`, `planning_ex
 **If `state_exists` is true:** Proceed to load_state
 **If `state_exists` is false but `roadmap_exists` or `project_exists` is true:** Offer to reconstruct STATE.md
 **If `planning_exists` is false:** This is a new project - route to $gsd-new-project
+</step>
+
+<step name="reading_control">
+Keep the entry packet layered:
+
+- Primary packet: `init.resume`, `STATE.md`, `PROJECT.md`, and any structured handoff artifact
+- Supporting packet: current phase checkpoint files, uplift note, and interrupted-agent details only when they actually surface
+- Deeper packet: broader family/governance docs only when the next chosen route depends on them
+
+Do not flatten the whole project or audit workspace into startup context before you know which route the resume is taking.
 </step>
 
 <step name="load_state">
@@ -57,6 +81,8 @@ Use `STATE_SNAPSHOT` as the structured companion for:
 - `blockers[]`
 - `future_carry`
 - `session`
+
+Use the snapshot to keep the first resume read compact. Only widen into additional phase or family artifacts when the later route actually needs them.
 
 **From PROJECT.md extract:**
 
@@ -186,6 +212,12 @@ Present complete project status to user:
 
 <step name="determine_next_action">
 Based on project state, determine the most logical next action:
+
+When a route becomes clear, keep the follow-up reread specific to that route:
+- incomplete execution -> current phase plan/summary/checkpoint files
+- planning route -> current phase CONTEXT/ROADMAP surfaces
+- uplift route -> uplift report/manifest
+- interrupted agent route -> agent-history plus the interrupted task boundary
 
 **If interrupted agent exists:**
 → Primary: Resume interrupted agent (Task tool with resume parameter)
