@@ -65,7 +65,10 @@ def is_meta_instruction_line(line: str) -> bool:
     lowered = line.lower()
     if "`" not in line:
         return False
-    if not re.search(r"\b(do not|avoid|prefer|keep)\b", lowered):
+    if not re.search(
+        r"\b(do not|avoid|prefer|keep|forbid|forbidden|prohibit|prohibited|ban|banned|disallow|must not|should not)\b",
+        lowered,
+    ):
         return False
     return True
 
