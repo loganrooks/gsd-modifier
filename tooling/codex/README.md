@@ -79,3 +79,7 @@ python3 tooling/codex/run_claude_probe.py \
   - scans docs/specs/prompts/reviews for threshold framing and deficit-oriented pseudo-positive residue
   - use it when auditing older artifacts for `adequate` / `sufficient` / `good enough` / `not lacking` / `no longer missing` style regressions
   - exit code `1` means findings were detected, not that the scanner crashed
+- `project_uplift.py`
+  - detects repo-local project uplift posture and can write first-slice uplift memory
+  - detect mode writes `.planning/UPLIFT-REPORT.md`, `.planning/UPLIFT-MANIFEST.json`, and a `STATE.md` uplift section when `--write` is used
+  - progress-note mode is the thin read-only hook for `gsd-progress`; it reads structured uplift memory and current doctrine fingerprints rather than prose

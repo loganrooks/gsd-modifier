@@ -128,6 +128,24 @@ CONTEXT: [✓ if has_context | - if not]
 ## Pending Todos
 - [count] pending — $gsd-check-todos to review
 
+If `.planning/UPLIFT-MANIFEST.json` exists, or `.planning/` exists without any uplift manifest yet, load the uplift note:
+
+```bash
+UPLIFT_NOTE=$(python3 "__PROJECT_ROOT__/tooling/codex/project_uplift.py" progress-note "__PROJECT_ROOT__" --json 2>/dev/null || true)
+```
+
+When `UPLIFT_NOTE.show` is `true`, add:
+
+```markdown
+## Uplift Posture
+- Last uplift class: {last_uplift_class or "none recorded yet"}
+- Recommendation: {recommendation}
+- Reason: {reason 1}
+- Reason: {reason 2}
+- Report: `.planning/UPLIFT-REPORT.md`
+- Manifest: `.planning/UPLIFT-MANIFEST.json`
+```
+
 ## Active Debug Sessions
 - [count] active — $gsd-debug to continue
 (Only show this section if count > 0)
