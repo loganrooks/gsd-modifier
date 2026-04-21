@@ -6,7 +6,7 @@ metadata:
 ---
 
 <objective>
-Run a research pass that makes the path of inquiry inspectable, keeps evidence separate from inference, and closes only what the evidence actually supports.
+Run a research pass that makes the path of inquiry inspectable, keeps evidence separate from inference, and carries conclusions only as strongly as the evidence actually supports.
 </objective>
 
 <when_to_use>
@@ -32,7 +32,7 @@ Pick one primary mode before starting. If the request mixes modes, split or stag
 
 - `terrain mapping` - map the option space and hidden assumptions; do not rank or pick just to be tidy
 - `hypothesis testing` - stress-test a candidate and prioritize disconfirming evidence
-- `solution evaluation` - compare known options against explicit criteria and recommend only if the terrain is sufficiently mapped
+- `solution evaluation` - compare known options against explicit criteria and recommend only when the option space has enough breadth, relation clarity, and contrary-pressure coverage to support an honest comparison
 - `synthesis` - integrate prior artifacts into a planning-ready or decision-ready structure without faking closure
 
 Read `references/method.md` before starting if the lane is ambiguous, high-stakes, or likely to expand.
@@ -68,6 +68,7 @@ Read `references/method.md` before starting if the lane is ambiguous, high-stake
 - Surface assumptions rather than smuggling them in.
 - Name dependencies and relations, not just isolated findings.
 - Be explicit about unknowns, weak evidence, and deferrals.
+- Preserve bounded strengthening opportunities when the research surfaces them; do not let them dissolve into generic future work or ambient prose.
 - Do not silently broaden scope.
 - Do not recommend in `terrain mapping` mode unless the user explicitly changes modes.
 </required_behaviors>
@@ -87,10 +88,11 @@ Optional inline markers such as `[assumed:reasoned]` are allowed when they impro
 
 <phase_handoff>
 If the research will feed later planning, translate findings into steering-relevant outputs:
-- what can now be treated as decided
+- what now carries strongly enough to treat as decided
 - what remains assumed or open
 - what constraints were derived
 - what future seams or deferrals must remain protected
+- what strengthening opportunities surfaced, and whether each belongs in current-phase intensification or seeded later resurfacing
 
 For that shape, consult `references/repo-canon.md` and the local discuss/context materials it points to.
 </phase_handoff>

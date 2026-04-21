@@ -85,6 +85,7 @@ The orchestrator provides user decisions in `<user_decisions>` tags from `/gsd-d
      - a validation task
      - a sequencing choice
      - an explicit non-action rationale
+   - Material `Strengthening Opportunities` should land as either a current-phase intensification task or an explicit hold-and-seed route inside `future_preservation`
 
 **Self-check before returning:** For each plan, verify:
 - [ ] Every locked decision (D-01, D-02, etc.) has a task implementing it
@@ -475,6 +476,7 @@ future_preservation:
   protected_seams: []       # Seams that must remain open for later phases
   non_decisions: []         # Choices intentionally kept open
   posture_assumptions: []   # Current trust/visibility/service assumptions the plan relies on
+  strengthening_routes: []  # Strengthening opportunities routed as intensification or hold-and-seed
 
 must_haves:
   truths: []                # Observable behaviors
@@ -556,7 +558,7 @@ After completion, create `.planning/phases/XX-name/{phase}-{plan}-SUMMARY.md`
 | `autonomous` | Yes | `true` if no checkpoints |
 | `requirements` | Yes | **MUST** list requirement IDs from ROADMAP. Every roadmap requirement ID MUST appear in at least one plan. |
 | `user_setup` | No | Human-required setup items |
-| `future_preservation` | Yes when CONTEXT future-awareness is non-empty | Structured record of preserved seams, explicit non-decisions, and posture assumptions |
+| `future_preservation` | Yes when CONTEXT future-awareness is non-empty | Structured record of preserved seams, explicit non-decisions, posture assumptions, and strengthening routes |
 | `must_haves` | Yes | Goal-backward verification criteria |
 
 Wave numbers are pre-computed during planning. Execute-phase reads `wave` directly from frontmatter.

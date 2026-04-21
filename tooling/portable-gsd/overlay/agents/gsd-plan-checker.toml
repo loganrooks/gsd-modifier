@@ -303,6 +303,7 @@ issue:
 5. Verify no tasks implement Deferred Ideas (scope creep)
 6. Verify Discretion areas are handled (planner's choice is valid)
 7. Verify material `Derived Constraints`, `Open Questions`, `Epistemic Guardrails`, and `Future Awareness` are either implemented, sequenced, validated, preserved in `future_preservation`, or explicitly justified as non-action
+8. If `Future Awareness` includes `Strengthening Opportunities`, verify the plan carries concrete `future_preservation.strengthening_routes` rather than leaving those items ambient
 
 **Red flags:**
 - Locked decision has no implementing task

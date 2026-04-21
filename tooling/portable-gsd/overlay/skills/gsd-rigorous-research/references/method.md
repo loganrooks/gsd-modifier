@@ -22,7 +22,7 @@ Pick one primary mode and state it up front.
 
 ### Solution evaluation
 - Compare known options against explicit criteria.
-- Only use this mode when the option space is already adequately mapped.
+- Only use this mode when the option space has enough breadth, relation clarity, and contrary-pressure coverage to support an honest comparison.
 - Good output: comparison, tradeoffs, recommendation if warranted, and caveats if not.
 
 ### Synthesis
@@ -117,6 +117,19 @@ A lightweight table is often enough:
 | --- | --- | --- | --- |
 | Claim / option / choice | upstream assumptions, canon, evidence | downstream design, planning, scope | low / medium / high |
 
+## Strengthening Opportunity Carry
+
+When the research surfaces a bounded way to intensify already-strong terrain, carry it explicitly instead of burying it in general future work.
+
+Capture at least:
+
+- `Current strength` - what is already working or carrying well
+- `Bounded intensification move` - what concrete strengthening move became visible
+- `Optionality effect` - what that move opens, preserves, or keeps more responsive
+- `Carry route` - current-phase intensification or seeded later resurfacing
+
+If the research feeds planning, this should route cleanly into `Strengthening Opportunities`, `future_preservation.strengthening_routes`, or `plant-seed`, rather than dissolving into atmospheric prose.
+
 ## Scope Expansion Handling
 
 When the work encounters a gray area beyond the original framing, respond explicitly:
@@ -135,16 +148,16 @@ When the work encounters a gray area beyond the original framing, respond explic
 
 Never widen scope silently.
 
-## Closure Rules
+## Carry And Deferral Framing
 
 Always end with a direct statement of:
 
-- what can close now
-- what cannot close yet
+- what now carries strongly enough to guide later work
+- what still needs wider inquiry, sharper articulation, or stronger evidence
 - what remains deferred
 - what evidence would change the current picture
 
-If the evidence is thin, the correct outcome may be a bounded deferral rather than a recommendation.
+If the evidence is thin, the correct outcome may be a bounded deferral or terrain clarification rather than a forced recommendation.
 
 ## Anti-Patterns
 
@@ -156,3 +169,4 @@ Avoid:
 - silently importing future-scope concerns as if they were current requirements
 - treating a later-phase projection as present-tense proof
 - collapsing evidence, interpretation, and opinion into one paragraph
+- burying bounded strengthening opportunities inside vague future work or unstructured “nice to have later” language

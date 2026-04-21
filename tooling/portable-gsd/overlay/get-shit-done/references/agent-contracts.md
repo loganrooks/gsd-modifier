@@ -62,7 +62,7 @@ This doc describes what IS, not what should be. Casing inconsistencies are docum
 | Field | Required | Description |
 |-------|----------|-------------|
 | Frontmatter | Yes | phase, plan, type, wave, depends_on, files_modified, autonomous, requirements |
-| `future_preservation` | Yes when CONTEXT future-awareness is non-empty | Preserved seams, explicit non-decisions, and posture assumptions |
+| `future_preservation` | Yes when CONTEXT future-awareness is non-empty | Preserved seams, explicit non-decisions, posture assumptions, and strengthening routes |
 | `<objective>` | Yes | What the plan achieves |
 | `<tasks>` | Yes | Ordered task list with type, files, action, verify, acceptance_criteria |
 | `<verification>` | Yes | Overall verification steps |

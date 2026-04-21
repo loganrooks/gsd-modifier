@@ -42,10 +42,13 @@ Use this as a lightweight contract, not a rigid form. Keep the sections that add
 ## Scope Expansions And Deferrals
 - Defer / Follow-and-mark / Revisit later entries as needed
 
-## What Can Close Now
+## Strengthening Opportunities
+- [current strength] - bounded intensification move, optionality effect, proposed carry route
+
+## What Has Strong Carry Now
 - decisions or conclusions supported by the current evidence
 
-## What Must Stay Open
+## What Still Needs Wider Carry
 - unresolved questions, weakly supported areas, future work
 
 ## Sources
@@ -79,8 +82,9 @@ Use this as a lightweight contract, not a rigid form. Keep the sections that add
 If this research is feeding later GSD planning, add:
 
 - `Planning Handoff`
-  - what can now be treated as decided
+  - what now carries strongly enough to treat as decided
   - what remains assumed or open
   - derived constraints
   - future-awareness seams to preserve
+  - strengthening opportunities plus carry route (`current-phase intensification` or `seeded later resurfacing`)
   - deferred ideas or follow-up research lanes

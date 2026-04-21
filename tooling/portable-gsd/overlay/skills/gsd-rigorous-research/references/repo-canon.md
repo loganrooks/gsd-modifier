@@ -61,7 +61,7 @@ If the work is phase-steering or planning-adjacent, use these local GSD material
 - `.codex/get-shit-done/workflows/discuss-phase.md`
 - `.codex/get-shit-done/templates/context.md`
 
-They define the steering categories downstream planning expects: decisions, assumptions, derived constraints, open questions, epistemic guardrails, future awareness, and deferred ideas.
+They define the steering categories downstream planning expects: decisions, assumptions, derived constraints, open questions, epistemic guardrails, future awareness (including strengthening opportunities), and deferred ideas.
 
 ## Canon Rules
 
