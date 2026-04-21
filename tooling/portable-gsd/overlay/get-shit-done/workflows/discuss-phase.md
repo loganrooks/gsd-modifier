@@ -25,7 +25,7 @@ You are a thinking partner, not an interviewer. The user is the visionary — yo
    - "Open Questions: host authority surface" → planner must validate, sequence, or explicitly preserve the seam
    - "Future Awareness: bounded audience-right bundle stays open" → planner must preserve it in `future_preservation` rather than silently choosing for later phases
 
-**Your job:** Produce context strong enough that downstream stages do not need to reopen avoidable ambiguity.
+**Your job:** Produce context that downstream stages can rely on without reopening avoidable ambiguity.
 
 **Not your job:** Do exhaustive technical research or break the work into executable tasks.
 </downstream_awareness>
@@ -327,6 +327,8 @@ Read project-level and prior phase context to avoid re-asking decided questions 
 **Step 1: Read project-level files**
 ```bash
 # Core project files
+SPEC_FILE=$(ls ${phase_dir}/*-SPEC.md 2>/dev/null | grep -v AI-SPEC | head -1 || true)
+[[ -n "$SPEC_FILE" ]] && cat "$SPEC_FILE" 2>/dev/null || true
 cat .planning/PROJECT.md 2>/dev/null || true
 cat .planning/REQUIREMENTS.md 2>/dev/null || true
 cat .planning/STATE.md 2>/dev/null || true
@@ -334,6 +336,7 @@ cat .planning/STATE.md 2>/dev/null || true
 ```
 
 Extract from these:
+- **SPEC.md** — When present, locked goal/requirements/boundaries/constraints/acceptance plus any upstream `Future-Aware Notes`
 - **PROJECT.md** — Vision, principles, non-negotiables, user preferences
 - **REQUIREMENTS.md** — Acceptance criteria, constraints, must-haves vs nice-to-haves
 - **STATE.md** — Current progress, any flags or session notes
@@ -355,6 +358,9 @@ For each CONTEXT.md where phase number < current phase:
 Structure the extracted information:
 ```
 <prior_decisions>
+## Upstream Spec Contract
+- [Locked requirement, boundary, constraint, acceptance, or future-aware note from SPEC.md when present]
+
 ## Project-Level
 - [Key principle or constraint from PROJECT.md]
 - [Requirement that affects this phase from REQUIREMENTS.md]
@@ -370,6 +376,7 @@ Structure the extracted information:
 ```
 
 **Usage in subsequent steps:**
+- `analyze_phase`: When SPEC exists, treat it as the primary WHAT/WHY contract and avoid reopening it
 - `analyze_phase`: Skip gray areas already decided in prior phases
 - `present_gray_areas`: Annotate options with prior decisions ("You chose X in Phase 5")
 - `discuss_areas`: Pre-fill answers or flag conflicts ("This contradicts Phase 3 — same here or different?")
@@ -467,8 +474,11 @@ Analyze the phase to identify gray areas worth discussing. **Use both `prior_dec
 
 1. **Domain boundary** — What capability is this phase delivering? State it clearly.
 
+   **If `SPEC_FILE` exists:** Use SPEC Goal, Requirements, Boundaries, Constraints, Acceptance Criteria, and `Future-Aware Notes` as the primary WHAT/WHY steering surface. Discuss-phase should clarify HOW to implement that locked contract rather than silently narrowing or reopening it.
+
 1b. **Initialize canonical refs accumulator** — Start building the `<canonical_refs>` list for CONTEXT.md. This accumulates throughout the entire discussion, not just this step.
 
+   **Source 0 (now):** If `SPEC_FILE` exists, add it immediately as an upstream phase contract with its full relative path.
    **Source 1 (now):** Copy `Canonical refs:` from ROADMAP.md for this phase. Expand each to a full relative path.
    **Source 2 (now):** Check REQUIREMENTS.md and PROJECT.md for any specs/ADRs referenced for this phase.
    **Source 2b (now):** If `.planning/LONG-ARC.md` exists and materially constrains the phase, add it as a doctrine reference rather than leaving it ambient.
@@ -477,14 +487,16 @@ Analyze the phase to identify gray areas worth discussing. **Use both `prior_dec
 
    This list is MANDATORY in CONTEXT.md. Every ref must have a full relative path so downstream agents can read it directly. If no external docs exist, note that explicitly.
 
-1c. **Derive future awareness** — Scan ROADMAP.md for the next few downstream phases and any explicit future or v2 ambitions referenced in PROJECT.md, REQUIREMENTS.md, `.planning/LONG-ARC.md` when present, backlog/todos, or prior context.
+1c. **Derive future awareness** — Scan `SPEC.md` when present, ROADMAP.md for the next few downstream phases, and any explicit future or v2 ambitions referenced in PROJECT.md, REQUIREMENTS.md, `.planning/LONG-ARC.md` when present, backlog/todos, or prior context.
+
+   **Seed rule:** If `SPEC_FILE` carries `Future-Aware Notes`, seed the internal `<future_awareness>` accumulator from that upstream section first. Treat later synthesis as sharpening or extending that carry, not silently replacing it.
 
    Build an internal `<future_awareness>` accumulator using these buckets:
    - **Protected Seams** — interfaces, data contracts, abstractions, or authored-shape boundaries that current work must not close off
    - **Explicit Non-Decisions** — things that should stay intentionally undecided in this phase rather than being silently locked
    - **Current Posture** — the project's present trust, visibility, and service-obligation stance that downstream work must respect
    - **Future Shape Notes** — constrained notes about plausible wrappers, sibling surfaces, or later product shapes that should influence present seams without pulling future scope in
-   - **Strengthening Opportunities** — bounded moves that intensify already-strong terrain, open or preserve more optionality, and should route either into current-phase work or durable later resurfacing
+   - **Strengthening Opportunities** — bounded moves that intensify already-useful terrain, open or preserve more optionality, and should route either into current-phase work or durable later resurfacing
 
    **Important:** Future awareness is not a place to smuggle future scope into the current phase. It only captures constraints on HOW current work should be shaped so later phases remain possible.
 
@@ -556,6 +568,11 @@ Domain: [What this phase delivers — from your analysis]
 
 We'll clarify HOW to implement this.
 (New capabilities belong in other phases.)
+
+[If `SPEC_FILE` exists:]
+**Upstream spec already locked:**
+- Requirements, boundaries, constraints, acceptance criteria, and any `Future-Aware Notes` from SPEC.md stay in force here.
+- This discussion should sharpen implementation decisions, not reopen the upstream WHAT/WHY contract.
 
 [If prior decisions apply:]
 **Carrying forward from earlier phases:**
@@ -1092,7 +1109,7 @@ such as `.planning/LONG-ARC.md` belong here when they actively constrain the pha
 [Constrained notes about plausible wrapper, sibling-surface, or later-shape evolution that should influence present seams without pulling that scope forward.]
 
 ### Strengthening Opportunities
-[Bounded moves that intensify already-strong terrain, open or preserve more optionality, and should route either into current-phase work or durable later resurfacing.]
+[Bounded moves that intensify already-useful terrain, open or preserve more optionality, and should route either into current-phase work or durable later resurfacing.]
 
 [If none: state that no additional future-facing constraints or strengthening moves were identified beyond the decisions and constraints above, and still include the five bucket headings with `None` entries.]
 
