@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Scan docs/specs/prompts/reviews for threshold or deficit-oriented framing residue."""
+"""Scan docs/specs/prompts/reviews for threshold, deficit, or static-positive framing residue."""
 
 from __future__ import annotations
 
@@ -20,9 +20,23 @@ PATTERNS: list[tuple[str, re.Pattern[str]]] = [
         ),
     ),
     (
+        "selected_enough_language",
+        re.compile(
+            r"\b(strong enough|clear enough|safe enough|stable enough|specific enough)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
         "deficit_oriented_pseudopositive",
         re.compile(
             r"\b(not lacking|no longer missing|no longer best described as|not the real problem|not merely deficient|not mainly|not primarily)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "static_positive_evaluative_language",
+        re.compile(
+            r"\b(already[- ]strong(?: here)?|directionally strong|the family (?:is|shape is) (?:already )?strong|proposal direction is strong)\b",
             re.IGNORECASE,
         ),
     ),
@@ -43,11 +57,25 @@ def iter_files(root: pathlib.Path) -> list[pathlib.Path]:
     return sorted(paths)
 
 
+def is_meta_instruction_line(line: str) -> bool:
+    lowered = line.lower()
+    if "`" not in line:
+        return False
+    if not re.search(r"\b(do not|avoid|prefer|keep)\b", lowered):
+        return False
+    return True
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Scan markdown/text artifacts for threshold or deficit-oriented framing."
+        description="Scan markdown/text artifacts for threshold, deficit-oriented, or static-positive framing."
     )
     parser.add_argument("paths", nargs="+", help="Files or directories to scan")
+    parser.add_argument(
+        "--ignore-meta-instruction-lines",
+        action="store_true",
+        help="Skip lines that mention forbidden phrases only as anti-threshold instruction examples.",
+    )
     args = parser.parse_args()
 
     findings: list[tuple[str, int, str, str]] = []
@@ -59,6 +87,8 @@ def main() -> int:
             except UnicodeDecodeError:
                 continue
             for line_no, line in enumerate(text.splitlines(), start=1):
+                if args.ignore_meta_instruction_lines and is_meta_instruction_line(line):
+                    continue
                 for category, pattern in PATTERNS:
                     if pattern.search(line):
                         findings.append((str(path), line_no, category, line.rstrip()))
