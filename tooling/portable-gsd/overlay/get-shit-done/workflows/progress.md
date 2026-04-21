@@ -139,6 +139,7 @@ When `UPLIFT_NOTE.show` is `true`, add:
 ```markdown
 ## Uplift Posture
 - Last uplift class: {last_uplift_class or "none recorded yet"}
+- Secondary signals: {last_uplift_secondary_signals or "none"}
 - Recommendation: {recommendation}
 - Reason: {reason 1}
 - Reason: {reason 2}

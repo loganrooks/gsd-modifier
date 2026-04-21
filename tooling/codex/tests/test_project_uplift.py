@@ -41,6 +41,45 @@ class ProjectUpliftTests(unittest.TestCase):
         self._write(root, ".codex/config.toml", 'model = "gpt-5.4"\n')
         self._write(root, ".codex/agents/gsd-planner.toml", 'description = "planner"\n')
         self._write(root, ".codex/agents/gsd-plan-checker.toml", 'description = "checker"\n')
+        self._write(
+            root,
+            "tooling/codex/UPLIFT-HELD-LATER.md",
+            "- required-reading installation practice\n- cross-runtime uplift composition\n",
+        )
+
+    def _write_strengthening_carriers(self, root: pathlib.Path) -> None:
+        self._write(
+            root,
+            ".codex/get-shit-done/workflows/discuss-phase.md",
+            "# Discuss\n\nIntro.\n\n### Strengthening Opportunities\n- Keep this route.\n\n## Later\nLater text.\n",
+        )
+        self._write(
+            root,
+            ".codex/get-shit-done/templates/context.md",
+            "# Context\n\n### Strengthening Opportunities\n- Carry route.\n",
+        )
+        self._write(
+            root,
+            ".codex/get-shit-done/workflows/plan-phase.md",
+            "# Plan\n\n### Strengthening Opportunities\n- Preserve route.\n",
+        )
+        self._write(
+            root,
+            ".codex/skills/gsd-rigorous-research/references/output-template.md",
+            "# Output Template\n\n### Strengthening Opportunities\n- Intensify route.\n",
+        )
+
+    def _write_doctrine_stack(self, root: pathlib.Path) -> None:
+        self._write(root, "CLAUDE.md", "# Claude\n")
+        self._write(root, ".planning/CLAUDE.md", "# Planning Claude\n")
+        self._write(root, ".planning/CLAIM-TYPES.md", "# Claim Types\n")
+        self._write(
+            root,
+            ".planning/LONG-ARC.md",
+            "---\ndocument: LONG-ARC\nstatus: canonical\n---\n\n# Long Arc\n",
+        )
+        self._write(root, "tooling/codex/README.md", "# Codex Tooling Notes\n\n## Utilities\n- `audit_refmap.py`\n- `project_uplift.py`\n")
+        self._write_strengthening_carriers(root)
 
     def test_detect_classifies_vanilla_project(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -52,54 +91,33 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertEqual(analysis["project_class"], "vanilla uplift")
             self.assertTrue(analysis["recommend_detect_only"])
             self.assertIn("Claim Types", analysis["absent_additive_carriers"])
-            self.assertIn("Root CLAUDE", analysis["pending_doctrine_sensitive_proposals"])
+            self.assertTrue(
+                any(
+                    proposal["label"] == "Root CLAUDE" and proposal["proposal_state"] == "absent"
+                    for proposal in analysis["pending_doctrine_sensitive_proposals"]
+                )
+            )
 
     def test_detect_classifies_lightly_aged_project(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             repo_root = pathlib.Path(tmpdir)
             self._minimal_project(repo_root, status="completed")
-            self._write(repo_root, "CLAUDE.md", "# Claude\n")
-            self._write(repo_root, ".planning/CLAUDE.md", "# Planning Claude\n")
-            self._write(repo_root, ".planning/CLAIM-TYPES.md", "# Claim Types\n")
-            self._write(repo_root, ".planning/LONG-ARC.md", "# Long Arc\n")
-            self._write(repo_root, "tooling/codex/README.md", "# Tooling\n")
+            self._write_doctrine_stack(repo_root)
 
             analysis = pu.analyze_repo(repo_root)
 
             self.assertEqual(analysis["project_class"], "lightly aged uplift")
             self.assertTrue(analysis["recommend_detect_only"])
             self.assertEqual(analysis["absent_additive_carriers"], [])
-            self.assertIn("Discuss Strengthening Route", analysis["pending_doctrine_sensitive_proposals"])
+            self.assertTrue(
+                all(proposal["proposal_state"] != "absent" for proposal in analysis["pending_doctrine_sensitive_proposals"])
+            )
 
     def test_write_outputs_and_progress_note_detect_doctrine_change(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             repo_root = pathlib.Path(tmpdir)
             self._minimal_project(repo_root, status="completed")
-            self._write(repo_root, "CLAUDE.md", "# Claude\n")
-            self._write(repo_root, ".planning/CLAUDE.md", "# Planning Claude\n")
-            self._write(repo_root, ".planning/CLAIM-TYPES.md", "# Claim Types\n")
-            self._write(repo_root, ".planning/LONG-ARC.md", "# Long Arc\n")
-            self._write(repo_root, "tooling/codex/README.md", "# Tooling\n")
-            self._write(
-                repo_root,
-                ".codex/get-shit-done/workflows/discuss-phase.md",
-                "Strengthening Opportunities\n",
-            )
-            self._write(
-                repo_root,
-                ".codex/get-shit-done/templates/context.md",
-                "Strengthening Opportunities\n",
-            )
-            self._write(
-                repo_root,
-                ".codex/get-shit-done/workflows/plan-phase.md",
-                "Strengthening Opportunities\n",
-            )
-            self._write(
-                repo_root,
-                ".codex/skills/gsd-rigorous-research/references/output-template.md",
-                "Strengthening Opportunities\n",
-            )
+            self._write_doctrine_stack(repo_root)
 
             analysis = pu.analyze_repo(repo_root)
             written = pu.write_outputs(repo_root, analysis)
@@ -115,6 +133,73 @@ class ProjectUpliftTests(unittest.TestCase):
             changed_note = pu.build_progress_note(repo_root)
             self.assertTrue(changed_note["recommend_detect_only"])
             self.assertTrue(changed_note["doctrine_reference_changed"])
+            self.assertTrue(
+                any(
+                    proposal["label"] == "Root AGENTS" and proposal["proposal_state"] == "drifted"
+                    for proposal in changed_note["pending_doctrine_sensitive_proposals"]
+                )
+            )
+
+    def test_cross_runtime_primary_class_preserves_mid_phase_secondary_signal(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="planning")
+            self._write_doctrine_stack(repo_root)
+            self._write(
+                repo_root,
+                ".planning/phases/01-test-phase/01-CONTEXT.md",
+                "# Context\n\n**Status:** Pre-rerun steering snapshot; fresh discuss + plan required before execution\n",
+            )
+            (repo_root / ".claude").mkdir(parents=True, exist_ok=True)
+
+            analysis = pu.analyze_repo(repo_root)
+
+            self.assertEqual(analysis["project_class"], "cross-runtime uplift")
+            self.assertIn("mid_phase", analysis["secondary_signals"])
+            self.assertEqual(
+                analysis["phase_boundary_signal"]["note"],
+                "phase CONTEXT carries explicit rerun-boundary posture",
+            )
+
+    def test_marker_block_fingerprint_ignores_unrelated_whitespace(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="completed")
+            self._write_doctrine_stack(repo_root)
+
+            first = pu.analyze_repo(repo_root)
+            first_fingerprint = next(
+                carrier["fingerprint"]
+                for carrier in first["carriers"]
+                if carrier["key"] == "strengthening_discuss"
+            )
+
+            self._write(
+                repo_root,
+                ".codex/get-shit-done/workflows/discuss-phase.md",
+                "# Discuss\n\nIntro with extra whitespace.   \n\n### Strengthening Opportunities\n- Keep this route.\n\n## Later\nLater text with spacing.\n\n",
+            )
+            second = pu.analyze_repo(repo_root)
+            second_fingerprint = next(
+                carrier["fingerprint"]
+                for carrier in second["carriers"]
+                if carrier["key"] == "strengthening_discuss"
+            )
+
+            self.assertEqual(first_fingerprint, second_fingerprint)
+
+    def test_runtime_agent_inventory_uses_globbed_contracts(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="completed")
+            self._write_doctrine_stack(repo_root)
+            self._write(repo_root, ".codex/agents/gsd-extra.toml", 'description = "extra"\n')
+
+            analysis = pu.analyze_repo(repo_root)
+
+            self.assertTrue(
+                any(carrier["key"] == "runtime_agent_gsd-extra" for carrier in analysis["carriers"])
+            )
 
 
 if __name__ == "__main__":

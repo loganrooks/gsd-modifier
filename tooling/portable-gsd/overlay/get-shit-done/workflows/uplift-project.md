@@ -27,6 +27,7 @@ UPLIFT_JSON=$(python3 "__PROJECT_ROOT__/tooling/codex/project_uplift.py" detect 
 
 Parse the JSON for:
 - `project_class`
+- `secondary_signals`
 - `current_status`
 - `runtime_dirs`
 - `recommend_detect_only`
@@ -43,6 +44,7 @@ Present a compact result:
 # Project Uplift
 
 - Project class: {project_class}
+- Secondary signals: {secondary_signals or "none"}
 - Current state status: {current_status}
 - Runtime directories: {runtime_dirs}
 - Recommendation: {recommendation}
@@ -51,7 +53,7 @@ Present a compact result:
 - {carrier}
 
 ## Doctrine-Sensitive Proposal Routes
-- {carrier}
+- {carrier} — {proposal_state}
 
 ## Reasons
 - {reason}

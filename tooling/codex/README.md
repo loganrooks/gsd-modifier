@@ -77,9 +77,12 @@ python3 tooling/codex/run_claude_probe.py \
   - `--strict` is the preferred mode for audit checkpoints because it fails on dirty current state, dirty snapshot boundaries, unknown live drift, or currently evidenced obsolete residue inside the selected runtime scope
 - `scan_threshold_language.py`
   - scans docs/specs/prompts/reviews for threshold framing and deficit-oriented pseudo-positive residue
-  - use it when auditing older artifacts for `adequate` / `sufficient` / `good enough` / `not lacking` / `no longer missing` style regressions
+  - use it when auditing older artifacts for threshold-style or deficit-oriented framing regressions rather than trusting memory or ad hoc rereads
   - exit code `1` means findings were detected, not that the scanner crashed
 - `project_uplift.py`
   - detects repo-local project uplift posture and can write first-slice uplift memory
   - detect mode writes `.planning/UPLIFT-REPORT.md`, `.planning/UPLIFT-MANIFEST.json`, and a `STATE.md` uplift section when `--write` is used
   - progress-note mode is the thin read-only hook for `gsd-progress`; it reads structured uplift memory and current doctrine fingerprints rather than prose
+  - the current harden slice now carries multi-axis posture (`project_class` plus `secondary_signals`), marker-local section hashes for strengthening carriers, normalized TOML hashes for runtime registry carriers, structured doctrine-sensitive proposal states (`absent` vs `drifted`), and phase-boundary signal capture from active `CONTEXT.md`
+- `UPLIFT-HELD-LATER.md`
+  - named reference for the uplift families the current detect-only slice keeps explicit rather than absorbing
