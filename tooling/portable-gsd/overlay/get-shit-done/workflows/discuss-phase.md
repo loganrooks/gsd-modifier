@@ -484,6 +484,7 @@ Analyze the phase to identify gray areas worth discussing. **Use both `prior_dec
    - **Explicit Non-Decisions** — things that should stay intentionally undecided in this phase rather than being silently locked
    - **Current Posture** — the project's present trust, visibility, and service-obligation stance that downstream work must respect
    - **Future Shape Notes** — constrained notes about plausible wrappers, sibling surfaces, or later product shapes that should influence present seams without pulling future scope in
+   - **Strengthening Opportunities** — bounded moves that intensify already-strong terrain, open or preserve more optionality, and should route either into current-phase work or durable later resurfacing
 
    **Important:** Future awareness is not a place to smuggle future scope into the current phase. It only captures constraints on HOW current work should be shaped so later phases remain possible.
 
@@ -1090,7 +1091,10 @@ such as `.planning/LONG-ARC.md` belong here when they actively constrain the pha
 ### Future Shape Notes
 [Constrained notes about plausible wrapper, sibling-surface, or later-shape evolution that should influence present seams without pulling that scope forward.]
 
-[If none: state that no additional future-facing constraints were identified beyond the decisions and constraints above, and still include the four bucket headings with `None` entries.]
+### Strengthening Opportunities
+[Bounded moves that intensify already-strong terrain, open or preserve more optionality, and should route either into current-phase work or durable later resurfacing.]
+
+[If none: state that no additional future-facing constraints or strengthening moves were identified beyond the decisions and constraints above, and still include the five bucket headings with `None` entries.]
 
 </future_awareness>
 
@@ -1335,7 +1339,7 @@ The power user mode generates ALL questions upfront into machine-readable and hu
 - CONTEXT.md captures actual decisions, assumptions, and open questions rather than vague vision
 - CONTEXT.md includes canonical_refs section with full file paths to every spec/ADR/doc downstream agents need (MANDATORY — never omit)
 - CONTEXT.md includes code_context section with reusable assets and patterns
-- CONTEXT.md includes future_awareness with explicit protected seams, non-decisions, posture, and future-shape notes without expanding current scope
+- CONTEXT.md includes future_awareness with explicit protected seams, non-decisions, posture, future-shape notes, and bounded strengthening opportunities without expanding current scope
 - Deferred ideas preserved for future phases
 - STATE.md updated with session info
 - User knows next steps

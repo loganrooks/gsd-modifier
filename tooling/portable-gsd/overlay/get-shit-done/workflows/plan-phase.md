@@ -179,7 +179,10 @@ Use full relative paths. Group by topic area.]
 ### Future Shape Notes
 [Constrained notes about later wrapper, sibling-surface, or future-shape evolution that should influence seams now without importing that scope.]
 
-[If none: still include the four headings above and write `None` under each.]
+### Strengthening Opportunities
+[Bounded moves that intensify already-strong terrain, open or preserve more optionality, and should route either into current-phase work or durable later resurfacing.]
+
+[If none: still include the five headings above and write `None` under each.]
 
 </future_awareness>
 
@@ -698,9 +701,12 @@ Planning guidance:
 - Treat `<working_model>` as the current best model, but do not confuse it with confirmed truth
 - Convert `<open_questions>` into research dependencies, explicit validation work, or early plan tasks rather than silently ignoring them
 - Treat `<derived_constraints>` and `<future_awareness>` as architectural guardrails that should shape interfaces, data models, and abstractions now
-- For every material item in `<future_awareness>`, map it to exactly one of: preserved seam, sequencing choice, validation task, or explicit non-action rationale
+- For every material item in `<future_awareness>`, map it to exactly one auditable carry route
+- `Protected Seams`, `Explicit Non-Decisions`, `Current Posture`, and `Future Shape Notes` typically map to: preserved seam, sequencing choice, validation task, or explicit non-action rationale
+- `Strengthening Opportunities` must map to exactly one of: intensification task or explicit hold-and-seed
 - Do not silently collapse an `Explicit Non-Decision` into a decision unless the context or research justifies it
-- Reflect preserved seams, non-decisions, and posture assumptions in the plan artifact's `future_preservation` frontmatter
+- Reflect preserved seams, non-decisions, posture assumptions, and strengthening routes in the plan artifact's `future_preservation` frontmatter
+- When a `Strengthening Opportunities` item is routed as `explicit hold-and-seed`, include a concrete seed handoff instead of leaving the route implicit
 - Honor `<epistemic_guardrails>` when defining proof, validation, and acceptance criteria
 - In reviews mode, treat REVIEWS.md as adversarial input, not a consensus poll
 - In reviews mode, build the must-address set from the Review Consumer Contract first, then from strong individual criticisms if the synthesis under-specifies them
@@ -716,7 +722,7 @@ Planning guidance:
 <downstream_consumer>
 Output consumed by /gsd-execute-phase. Plans need:
 - Frontmatter (wave, depends_on, files_modified, autonomous)
-- `future_preservation` frontmatter capturing preserved seams, non-decisions, and posture assumptions when context future-awareness is non-empty
+- `future_preservation` frontmatter capturing preserved seams, non-decisions, posture assumptions, and strengthening routes when context future-awareness is non-empty
 - Tasks in XML format with read_first and acceptance_criteria fields (MANDATORY on every task)
 - Verification criteria
 - must_haves for goal-backward verification
@@ -763,6 +769,7 @@ Every task MUST include these fields — they are NOT optional:
 - [ ] Waves assigned for parallel execution
 - [ ] must_haves derived from phase goal
 - [ ] If context future-awareness is non-empty, each plan includes meaningful `future_preservation` data
+- [ ] If context future-awareness includes `Strengthening Opportunities`, each plan includes non-generic `future_preservation.strengthening_routes`
 </quality_gate>
 ```
 
@@ -851,10 +858,11 @@ Verification guidance:
 - Flag plans that violate `<future_awareness>` or `<derived_constraints>`
 - Flag plans that silently drop a material future-awareness item instead of preserving it, sequencing it, validating it, or explicitly justifying non-action now
 - If context future-awareness is non-empty, fail plans whose `future_preservation` frontmatter is missing, empty, or generic enough to be non-auditable
+- If context future-awareness includes `Strengthening Opportunities`, fail plans whose `future_preservation.strengthening_routes` is missing, empty, generic, or lacks a concrete seed handoff when the route is `explicit hold-and-seed`
 - Distinguish between acceptable provisionality and sloppy unresolved ambiguity
 - In reviews mode, fail plans that omit a must-address review concern without plan coverage or an explicit rebuttal on the merits
 - In reviews mode, fail plans that dismiss a lone high-signal criticism only because it lacks consensus support
-- In reviews mode, fail plans that leave materially weak "merely adequate" areas or later-audit risks untouched without an explicit rationale for why they are safe to defer now
+- In reviews mode, fail plans that leave materially stronger available moves or later-audit risks untouched without an explicit rationale for why they are safe to defer now
 
 **Project instructions:** Read ./AGENTS.md if exists — verify plans honor project guidelines
 **Project skills/runtime:** Check repo-local `.codex/skills/` and relevant repo-local workflow/reference surfaces under `.codex/get-shit-done/`. Do not rely on `.claude/skills/` or `.agents/skills/` as governing truth for this repo.

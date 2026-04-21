@@ -138,7 +138,10 @@ Template for `.planning/phases/XX-name/{phase_num}-CONTEXT.md` - captures the ph
 ### Future Shape Notes
 [Constrained notes about wrapper, sibling-surface, or later-shape evolution that should influence present seams without pulling future scope forward.]
 
-[If none: still include the four headings above and write `None` under each.]
+### Strengthening Opportunities
+[Bounded moves that intensify already-strong terrain, open or preserve more optionality, and should route either into current-phase work or durable later resurfacing.]
+
+[If none: still include the five headings above and write `None` under each.]
 
 </future_awareness>
 
@@ -415,5 +418,6 @@ The output should answer:
 **CRITICAL — Future awareness:**
 - `<future_awareness>` is distinct from `<deferred>`
 - `<future_awareness>` = constraints on how current work should be shaped so later phases remain possible
+- `Strengthening Opportunities` = bounded intensification moves that belong in planning carry, not generic deferred ideas
 - `<deferred>` = future features or ideas that are out of scope now
 </guidelines>

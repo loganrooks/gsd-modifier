@@ -26,6 +26,7 @@ future_preservation:
   protected_seams: []
   non_decisions: []
   posture_assumptions: []
+  strengthening_routes: []
 
 must_haves:
   truths: []
@@ -140,12 +141,12 @@ After completion, create `.planning/phases/XX-name/{phase}-{plan}-SUMMARY.md`
 | `autonomous` | Yes | `true` if no checkpoints, `false` if the plan includes blocking checkpoints |
 | `requirements` | Yes | Requirement IDs from ROADMAP covered by this plan |
 | `user_setup` | No | Human-required setup the agent cannot automate |
-| `future_preservation` | Yes when CONTEXT future-awareness is non-empty | Structured record of preserved seams, explicit non-decisions, and posture assumptions carried forward from planning |
+| `future_preservation` | Yes when CONTEXT future-awareness is non-empty | Structured record of preserved seams, explicit non-decisions, posture assumptions, and strengthening routes carried forward from planning |
 | `must_haves` | Yes | Goal-backward verification criteria |
 
 **Wave is pre-computed:** execute-phase reads `wave` directly from frontmatter and groups plans by wave number.
 
-**Future-preservation keeps planning intent reviewable:** when `CONTEXT.md` carries future-awareness, planners should capture the protected seams they preserved, the choices they intentionally left open, and the posture assumptions they relied on. This makes later review and replanning auditable.
+**Future-preservation keeps planning intent reviewable:** when `CONTEXT.md` carries future-awareness, planners should capture the protected seams they preserved, the choices they intentionally left open, the posture assumptions they relied on, and any strengthening routes they exposed. This makes later review and replanning auditable.
 
 ---
 
@@ -163,6 +164,7 @@ After completion, create `.planning/phases/XX-name/{phase}-{plan}-SUMMARY.md`
 - Every `<action>` must include exact identifiers, values, signatures, commands, or file paths.
 - Every `<acceptance_criteria>` item must be verifiable by reading a file, running a command, or observing an exact output.
 - If the phase steering brief includes future-awareness, the plan body and frontmatter should both reflect how that future-aware item was preserved or intentionally deferred.
+- If the steering brief includes `Strengthening Opportunities`, the plan should show whether each one becomes an `intensification task` or an `explicit hold-and-seed` route.
 
 ---
 
