@@ -26,6 +26,7 @@
     "get-shit-done/templates/context.md": "overwrite",
     "get-shit-done/templates/phase-prompt.md": "overwrite",
     "get-shit-done/templates/research.md": "overwrite",
+    "get-shit-done/templates/state.md": "overwrite",
     "get-shit-done/templates/verification-report.md": "overwrite",
     "get-shit-done/workflows/discuss-phase-assumptions.md": "overwrite",
     "get-shit-done/workflows/discuss-phase-power.md": "overwrite",

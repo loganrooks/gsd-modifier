@@ -21,8 +21,10 @@ verification. Users should never be told to run `$gsd-transition`.
 1. `.planning/STATE.md`
 2. `.planning/PROJECT.md`
 3. `.planning/ROADMAP.md`
-4. Current phase's plan files (`*-PLAN.md`)
-5. Current phase's summary files (`*-SUMMARY.md`)
+4. `.planning/LONG-ARC.md` when it exists
+5. Current phase's plan files (`*-PLAN.md`)
+6. Current phase's summary files (`*-SUMMARY.md`)
+7. Current phase's `CONTEXT.md` when it exists
 
 </required_reading>
 
@@ -47,6 +49,38 @@ cat .planning/PROJECT.md 2>/dev/null || true
 
 Parse current position to verify we're transitioning the right phase.
 Note accumulated context that may need updating after transition.
+
+</step>
+
+<step name="load_future_preservation_carry">
+
+If any current-phase plan carries `future_preservation`, collect it now before the phase is marked complete.
+
+Use the current phase plan files from the earlier verification step:
+
+```bash
+for plan in .planning/phases/XX-current/*-PLAN.md; do
+  [ -f "$plan" ] || continue
+  FUTURE=$(node "__PROJECT_ROOT__/.codex/get-shit-done/bin/gsd-tools.cjs" frontmatter get "$plan" --field future_preservation 2>/dev/null || true)
+  [ -n "$FUTURE" ] && printf "\nPLAN: %s\n%s\n" "$(basename "$plan")" "$FUTURE"
+done
+```
+
+Review four buckets when present:
+
+- `protected_seams`
+- `non_decisions`
+- `posture_assumptions`
+- `strengthening_routes`
+
+For each item, decide whether it should:
+
+- stay live into the next immediate phase
+- be kept explicit at project/state level even if not active next phase work
+- be closed with an explicit note
+- move to explicit seed handoff because it is a strengthening route outside the next immediate phase
+
+Do not let phase completion silently erase this carry just because current execution is done.
 
 </step>
 
@@ -347,6 +381,17 @@ Review and update Accumulated Context section in STATE.md.
 - If still relevant for future: Keep with "Phase X" prefix
 - Add any new concerns from completed phase's summaries
 
+**Future Carry Forward:**
+
+- Keep only still-live future-preservation items here
+- Use terse prefixes so the bucket stays legible:
+  - `Preserve:` for `protected_seams`
+  - `Keep open:` for `non_decisions`
+  - `Posture:` for `posture_assumptions`
+  - `Seeded:` for `strengthening_routes` that were explicitly routed out of phase
+- If a strengthening route belongs later rather than next phase, capture it through `plant-seed` and note the seed handoff instead of leaving a vague prose reminder
+- Remove items that are no longer live
+
 **Example:**
 
 Before:
@@ -372,6 +417,7 @@ After (if database indexing was addressed in Phase 2):
 - [ ] Resolved blockers removed from list
 - [ ] Unresolved blockers kept with phase prefix
 - [ ] New concerns from completed phase added
+- [ ] `Future Carry Forward` reflects still-live preserved seams, open non-decisions, posture assumptions, and any explicit seed handoff
 
 </step>
 
@@ -681,6 +727,7 @@ Transition is complete when:
 - [ ] ROADMAP.md updated with completion status and plan count
 - [ ] PROJECT.md evolved (requirements, decisions, description if needed)
 - [ ] STATE.md updated (position, project reference, context, session)
+- [ ] Future-preservation carry reviewed and kept explicit where still live
 - [ ] Progress table updated
 - [ ] User knows next steps
 
