@@ -16,6 +16,9 @@ class SeedOperatorConsumerFollowThroughContractTests(unittest.TestCase):
             self.assertIn("UPLIFT_NOTE.show_seed_corpus_posture", text)
             self.assertIn("Seed corpus posture:", text)
             self.assertIn("Seed posture reason:", text)
+            self.assertIn("UPLIFT_NOTE.show_seed_migration_pointer", text)
+            self.assertIn("Seed migration candidates:", text)
+            self.assertIn("Seed migration packet:", text)
             self.assertIn("project_uplift.py\" progress-note", text)
 
 

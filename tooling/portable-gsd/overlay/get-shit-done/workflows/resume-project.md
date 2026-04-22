@@ -209,6 +209,13 @@ Present complete project status to user:
 
 Only show the `Seed corpus posture` and `Seed posture reason` lines when `UPLIFT_NOTE.show_seed_corpus_posture` is `true`.
 
+Only show these lines when `UPLIFT_NOTE.show_seed_migration_pointer` is `true`:
+
+```markdown
+- Seed migration candidates: {seed_migration_candidate_count}
+- Seed migration packet: {seed_migration_pointer}
+```
+
 [If alignment is not ✓:]
 ⚠️  Brief alignment: [status] - [assessment]
 ```

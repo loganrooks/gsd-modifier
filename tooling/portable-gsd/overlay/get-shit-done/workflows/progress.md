@@ -179,6 +179,13 @@ When `UPLIFT_NOTE.show` is `true`, add:
 
 Only show the `Seed corpus posture` and `Seed posture reason` lines when `UPLIFT_NOTE.show_seed_corpus_posture` is `true`.
 
+Only show these lines when `UPLIFT_NOTE.show_seed_migration_pointer` is `true`:
+
+```markdown
+- Seed migration candidates: {seed_migration_candidate_count}
+- Seed migration packet: {seed_migration_pointer}
+```
+
 ## Active Debug Sessions
 - [count] active — $gsd-debug to continue
 (Only show this section if count > 0)

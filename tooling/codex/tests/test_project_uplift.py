@@ -236,6 +236,9 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertFalse(note["show_seed_corpus_posture"])
             self.assertIsNone(note["seed_corpus_posture"])
             self.assertEqual(note["seed_corpus_reasons"], [])
+            self.assertFalse(note["show_seed_migration_pointer"])
+            self.assertEqual(note["seed_migration_candidate_count"], 0)
+            self.assertIsNone(note["seed_migration_pointer"])
 
             self._write(repo_root, "AGENTS.md", "# Agents changed\n")
             changed_note = pu.build_progress_note(repo_root)
@@ -274,6 +277,10 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertIn(f"{pu.PROGRESS_NOTE_REASON_LABEL}:", resume_workflow)
             self.assertIn(f"{pu.SEED_POSTURE_REASON_LABEL}:", progress_workflow)
             self.assertIn(f"{pu.SEED_POSTURE_REASON_LABEL}:", resume_workflow)
+            self.assertIn(f"{pu.SEED_MIGRATION_CANDIDATE_LABEL}:", progress_workflow)
+            self.assertIn(f"{pu.SEED_MIGRATION_CANDIDATE_LABEL}:", resume_workflow)
+            self.assertIn(f"{pu.SEED_MIGRATION_POINTER_LABEL}:", progress_workflow)
+            self.assertIn(f"{pu.SEED_MIGRATION_POINTER_LABEL}:", resume_workflow)
 
     def test_progress_note_surfaces_seed_corpus_without_manifest(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -309,6 +316,11 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertFalse(note["recommend_write"])
             self.assertTrue(note["show_seed_corpus_posture"])
             self.assertIn("legacy_unversioned_only", note["seed_corpus_posture"])
+            self.assertTrue(note["show_seed_migration_pointer"])
+            self.assertEqual(note["seed_migration_candidate_count"], 1)
+            self.assertEqual(
+                note["seed_migration_pointer"], "$gsd-seed-migration-inventory --write"
+            )
             self.assertTrue(
                 any(
                     "legacy-unversioned seeds still present: 1" == reason
@@ -410,6 +422,11 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertTrue(note["seed_corpus_basis_changed"])
             self.assertTrue(note["show_seed_corpus_posture"])
             self.assertIn("legacy_unversioned_only", note["seed_corpus_posture"])
+            self.assertTrue(note["show_seed_migration_pointer"])
+            self.assertEqual(note["seed_migration_candidate_count"], 1)
+            self.assertEqual(
+                note["seed_migration_pointer"], "$gsd-seed-migration-inventory --write"
+            )
             self.assertTrue(
                 any(
                     "legacy-unversioned seeds still present: 1" == reason
@@ -419,6 +436,37 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertIn("--write", note["recommendation"])
             self.assertTrue(
                 any("seed file count moved from 0 to 1" in reason for reason in note["reasons"])
+            )
+
+    def test_progress_note_surfaces_pointer_for_current_contract_shape_gaps(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="completed")
+            self._write_doctrine_stack(repo_root)
+            self._write_seed(
+                repo_root,
+                "005",
+                "shape-gap",
+                pu.CURRENT_SEED_CONTRACT_VERSION,
+                include_current_shape=False,
+            )
+
+            note = pu.build_progress_note(repo_root)
+
+            self.assertTrue(note["show"])
+            self.assertTrue(note["recommend_detect_only"])
+            self.assertTrue(note["show_seed_corpus_posture"])
+            self.assertIn("current_contract_only", note["seed_corpus_posture"])
+            self.assertTrue(note["show_seed_migration_pointer"])
+            self.assertEqual(note["seed_migration_candidate_count"], 1)
+            self.assertEqual(
+                note["seed_migration_pointer"], "$gsd-seed-migration-inventory --write"
+            )
+            self.assertTrue(
+                any(
+                    "current-contract seed shape gaps still present: 1" == reason
+                    for reason in note["seed_corpus_reasons"]
+                )
             )
 
     def test_cross_runtime_primary_class_preserves_mid_phase_secondary_signal(self) -> None:

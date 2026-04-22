@@ -57,6 +57,8 @@ PROGRESS_NOTE_RENDER_FIELDS = (
 )
 PROGRESS_NOTE_REASON_LABEL = "Reason"
 SEED_POSTURE_REASON_LABEL = "Seed posture reason"
+SEED_MIGRATION_CANDIDATE_LABEL = "Seed migration candidates"
+SEED_MIGRATION_POINTER_LABEL = "Seed migration packet"
 
 RUNTIME_DIRS = [
     ".codex",
@@ -755,9 +757,17 @@ def progress_note_seed_fields(seed_corpus_posture: dict | None) -> dict:
             "show_seed_corpus_posture": False,
             "seed_corpus_posture": None,
             "seed_corpus_reasons": [],
+            "show_seed_migration_pointer": False,
+            "seed_migration_candidate_count": 0,
+            "seed_migration_pointer": None,
         }
     seed_file_count = seed_corpus_posture.get("seed_file_count", 0)
     show_seed_corpus_posture = seed_file_count > 0
+    migration_candidate_count = (
+        seed_corpus_posture.get("legacy_unversioned_count", 0)
+        + seed_corpus_posture.get("noncurrent_version_total", 0)
+        + seed_corpus_posture.get("current_contract_shape_gap_count", 0)
+    )
     return {
         "show_seed_corpus_posture": show_seed_corpus_posture,
         "seed_corpus_posture": (
@@ -765,6 +775,14 @@ def progress_note_seed_fields(seed_corpus_posture: dict | None) -> dict:
         ),
         "seed_corpus_reasons": (
             seed_corpus_reasons(seed_corpus_posture) if show_seed_corpus_posture else []
+        ),
+        "show_seed_migration_pointer": show_seed_corpus_posture
+        and migration_candidate_count > 0,
+        "seed_migration_candidate_count": migration_candidate_count,
+        "seed_migration_pointer": (
+            "$gsd-seed-migration-inventory --write"
+            if show_seed_corpus_posture and migration_candidate_count > 0
+            else None
         ),
     }
 
