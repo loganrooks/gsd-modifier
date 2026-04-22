@@ -20,6 +20,7 @@ class SeedConsumerFollowThroughContractTests(unittest.TestCase):
             ROOT
             / "tooling/portable-gsd/overlay/get-shit-done/workflows/plant-seed.md"
         ).read_text()
+        self.assertIn("seed_contract_version: 2", text)
         self.assertIn("header: \"Strengthening\"", text)
         self.assertIn("## Strengthening Carry", text)
         self.assertIn("$STRENGTHENING_CARRY", text)
@@ -29,6 +30,8 @@ class SeedConsumerFollowThroughContractTests(unittest.TestCase):
             ROOT
             / "tooling/portable-gsd/overlay/get-shit-done/workflows/new-milestone.md"
         ).read_text()
+        self.assertIn("seed_contract_version", text)
+        self.assertIn("legacy_unversioned", text)
         self.assertIn("Why This Matters", text)
         self.assertIn("Strengthening Carry", text)
         self.assertIn("Selected seeds become additional context", text)
@@ -38,5 +41,5 @@ class SeedConsumerFollowThroughContractTests(unittest.TestCase):
             ROOT / "tooling/portable-gsd/overlay/skills/gsd-plant-seed/SKILL.md"
         ).read_text()
         self.assertIn("strengthening carry", text)
+        self.assertIn("seed_contract_version: 2", text)
         self.assertIn("$gsd-new-milestone", text)
-

@@ -80,6 +80,7 @@ ls .planning/seeds/SEED-*.md 2>/dev/null
 
 **If seed files exist:** Read each `SEED-*.md` file and extract from its frontmatter and body:
 - **Idea** — the seed title (heading after frontmatter, e.g. `# SEED-001: <idea>`)
+- **Contract vintage** — `seed_contract_version` when present; if absent, treat the seed as `legacy_unversioned` rather than invalid
 - **Trigger conditions** — the `trigger_when` frontmatter field and the "When to Surface" section's bullet list
 - **Planted during** — the `planted_during` frontmatter field (for context)
 - **Why This Matters** — the bounded motivation from that section
@@ -96,8 +97,8 @@ Compare each seed's trigger conditions against the milestone goals from step 2. 
 **Text mode (`TEXT_MODE=true`):** Present matching seeds as a plain-text numbered list:
 ```
 Seeds that match your milestone goals:
-1. SEED-001: <idea> (trigger: <trigger_when>)
-2. SEED-003: <idea> (trigger: <trigger_when>)
+1. SEED-001: <idea> (trigger: <trigger_when> | vintage: <2/legacy_unversioned>)
+2. SEED-003: <idea> (trigger: <trigger_when> | vintage: <2/legacy_unversioned>)
 
 Enter numbers to include (comma-separated), or "none" to skip:
 ```
@@ -109,14 +110,14 @@ AskUserQuestion(
   question: "These planted seeds match your milestone goals. Include any in this milestone's scope?",
   multiSelect: true,
   options: [
-    { label: "SEED-001: <idea>", description: "Trigger: <trigger_when> | Planted during: <planted_during> | Strengthening carry: <present/none>" },
+    { label: "SEED-001: <idea>", description: "Trigger: <trigger_when> | Vintage: <2/legacy_unversioned> | Planted during: <planted_during> | Strengthening carry: <present/none>" },
     ...
   ]
 )
 ```
 
 **After selection:**
-- Selected seeds become additional context for requirement definition in step 9. Store them in an accumulator (e.g. `$SELECTED_SEEDS`) so step 9 can reference the ideas, their "Why This Matters" sections, and any explicit "Strengthening Carry" sections when defining requirements.
+- Selected seeds become additional context for requirement definition in step 9. Store them in an accumulator (e.g. `$SELECTED_SEEDS`) so step 9 can reference the ideas, their "Why This Matters" sections, any explicit "Strengthening Carry" sections, and current-versus-legacy seed vintage when later compatibility or carry questions matter.
 - Unselected seeds remain untouched in `.planning/seeds/` — never delete or modify seed files during this workflow.
 
 ## 3. Determine Milestone Version

@@ -10,6 +10,7 @@ Seeds beat deferred items because they:
 - Auto-present at the right time via new-milestone scan
 - Carry bounded strengthening opportunities that belong outside the current phase without letting them dissolve into generic deferred prose
 - Preserve strengthening carry in a dedicated section so later consumers can surface it without guessing from ambient notes
+- Stamp the current seed contract vintage explicitly so later consumers can distinguish current seeds from legacy-unversioned ones
 </purpose>
 
 <process>
@@ -115,6 +116,7 @@ Write `.planning/seeds/SEED-{PADDED}-{slug}.md`:
 ```markdown
 ---
 id: SEED-{PADDED}
+seed_contract_version: 2
 status: dormant
 planted: {ISO date}
 planted_during: {current milestone/phase from STATE.md}
@@ -168,6 +170,7 @@ gsd-sdk query commit "docs: plant seed — {$IDEA}" .planning/seeds/SEED-{PADDED
 ✅ Seed planted: SEED-{PADDED}
 
 "{$IDEA}"
+Contract vintage: 2
 Trigger: {$TRIGGER}
 Scope: {$SCOPE}
 File: .planning/seeds/SEED-{PADDED}-{slug}.md

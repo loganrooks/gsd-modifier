@@ -52,6 +52,7 @@ reads, a seed preserves the full WHY, WHEN to surface, breadcrumbs to details, a
 
 Creates: .planning/seeds/SEED-NNN-slug.md
 Consumed by: $gsd-new-milestone (scans seeds and presents matches)
+Current contract vintage: writes `seed_contract_version: 2`
 </objective>
 
 <execution_context>
@@ -61,4 +62,5 @@ Consumed by: $gsd-new-milestone (scans seeds and presents matches)
 <process>
 Execute the plant-seed workflow from @/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/plant-seed.md end-to-end.
 Keep the strengthening-carry section explicit when it applies so later seed consumers do not need to infer it from ambient notes.
+Keep the current seed contract vintage explicit too so later consumers can distinguish current seeds from legacy-unversioned ones.
 </process>
