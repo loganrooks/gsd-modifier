@@ -33,11 +33,13 @@ COMPATIBILITY_HELD_LATER = [
 PROGRESS_NOTE_RENDER_FIELDS = (
     ("last_uplift_class", "Last uplift class"),
     ("last_uplift_secondary_signals", "Secondary signals"),
+    ("seed_corpus_posture", "Seed corpus posture"),
     ("recommendation", "Recommendation"),
     ("report_path", "Report"),
     ("manifest_path", "Manifest"),
 )
 PROGRESS_NOTE_REASON_LABEL = "Reason"
+SEED_POSTURE_REASON_LABEL = "Seed posture reason"
 
 RUNTIME_DIRS = [
     ".codex",
@@ -678,6 +680,26 @@ def seed_corpus_drift_reasons(previous: dict, current: dict) -> list[str]:
     return reasons
 
 
+def progress_note_seed_fields(seed_corpus_posture: dict | None) -> dict:
+    if seed_corpus_posture is None:
+        return {
+            "show_seed_corpus_posture": False,
+            "seed_corpus_posture": None,
+            "seed_corpus_reasons": [],
+        }
+    seed_file_count = seed_corpus_posture.get("seed_file_count", 0)
+    show_seed_corpus_posture = seed_file_count > 0
+    return {
+        "show_seed_corpus_posture": show_seed_corpus_posture,
+        "seed_corpus_posture": (
+            seed_corpus_summary(seed_corpus_posture) if show_seed_corpus_posture else None
+        ),
+        "seed_corpus_reasons": (
+            seed_corpus_reasons(seed_corpus_posture) if show_seed_corpus_posture else []
+        ),
+    }
+
+
 def project_fingerprint_hash(
     carriers: list[dict],
     status: str,
@@ -1187,6 +1209,10 @@ def build_progress_note(repo_root: pathlib.Path) -> dict:
     if manifest is None:
         planning_root = repo_root / ".planning"
         show = planning_root.exists()
+        analysis = analyze_repo(repo_root) if show else None
+        seed_fields = progress_note_seed_fields(
+            analysis["seed_corpus_posture"] if analysis is not None else None
+        )
         return {
             "show": show,
             "manifest_present": False,
@@ -1200,6 +1226,7 @@ def build_progress_note(repo_root: pathlib.Path) -> dict:
             "reasons": ["no uplift manifest recorded yet"] if show else [],
             "report_path": REPORT_REL_PATH,
             "manifest_path": MANIFEST_REL_PATH,
+            **seed_fields,
         }
 
     analysis = analyze_repo(repo_root)
@@ -1213,6 +1240,7 @@ def build_progress_note(repo_root: pathlib.Path) -> dict:
     current_seed_corpus = analysis["seed_corpus_posture"]
     seed_corpus_rewrite_reasons = seed_corpus_drift_reasons(manifest_seed_corpus, current_seed_corpus)
     seed_corpus_basis_changed = bool(seed_corpus_rewrite_reasons)
+    seed_fields = progress_note_seed_fields(current_seed_corpus)
     recommend_write = compatibility_basis_changed or seed_corpus_basis_changed
     recommend_detect_only = bool((doctrine_changed or pending) and not recommend_write)
     reasons: list[str] = []
@@ -1250,6 +1278,7 @@ def build_progress_note(repo_root: pathlib.Path) -> dict:
         "reasons": reasons,
         "report_path": REPORT_REL_PATH,
         "manifest_path": MANIFEST_REL_PATH,
+        **seed_fields,
     }
 
 

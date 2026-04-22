@@ -95,6 +95,7 @@ python3 tooling/codex/run_claude_probe.py \
   - the seed-corpus block records whether `.planning/seeds/` is absent, current-contract-only, legacy-unversioned, or mixed, and keeps later migration explicit rather than silently absorbing it into detect-only
   - when that observed runtime basis moves after the last durable uplift write, progress-note now routes the live consumers toward `$gsd-uplift-project --write` so compatibility drift reaches the active consumer chain instead of remaining only in stored uplift memory
   - the same write route now activates after seed-corpus posture movement too, so legacy seed shape does not stay buried only in the last stored uplift manifest
+  - progress-note now also carries operator-facing seed posture fields for `progress` and `resume-project`, so ordinary re-entry can see active seed corpus posture without reopening milestone-open logic or widening into audit routes
   - the current network-carry chain now includes:
     - workflow consumers: `uplift-project`, `progress`, `resume-project`
     - durable outputs: `.planning/UPLIFT-REPORT.md`, `.planning/UPLIFT-MANIFEST.json`, and the `Project Uplift` section in `.planning/STATE.md`

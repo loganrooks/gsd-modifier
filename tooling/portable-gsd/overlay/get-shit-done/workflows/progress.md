@@ -167,12 +167,17 @@ When `UPLIFT_NOTE.show` is `true`, add:
 ## Uplift Posture
 - Last uplift class: {last_uplift_class or "none recorded yet"}
 - Secondary signals: {last_uplift_secondary_signals or "none"}
+- Seed corpus posture: {seed_corpus_posture}
+- Seed posture reason: {seed_corpus_reason 1}
+- Seed posture reason: {seed_corpus_reason 2}
 - Recommendation: {recommendation}
 - Reason: {reason 1}
 - Reason: {reason 2}
 - Report: `.planning/UPLIFT-REPORT.md`
 - Manifest: `.planning/UPLIFT-MANIFEST.json`
 ```
+
+Only show the `Seed corpus posture` and `Seed posture reason` lines when `UPLIFT_NOTE.show_seed_corpus_posture` is `true`.
 
 ## Active Debug Sessions
 - [count] active — $gsd-debug to continue

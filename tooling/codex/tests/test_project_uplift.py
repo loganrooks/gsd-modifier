@@ -179,6 +179,9 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertTrue(note["show"])
             self.assertFalse(note["recommend_detect_only"])
             self.assertFalse(note["recommend_write"])
+            self.assertFalse(note["show_seed_corpus_posture"])
+            self.assertIsNone(note["seed_corpus_posture"])
+            self.assertEqual(note["seed_corpus_reasons"], [])
 
             self._write(repo_root, "AGENTS.md", "# Agents changed\n")
             changed_note = pu.build_progress_note(repo_root)
@@ -215,6 +218,49 @@ class ProjectUpliftTests(unittest.TestCase):
                 self.assertIn(f"{label}:", resume_workflow)
             self.assertIn(f"{pu.PROGRESS_NOTE_REASON_LABEL}:", progress_workflow)
             self.assertIn(f"{pu.PROGRESS_NOTE_REASON_LABEL}:", resume_workflow)
+            self.assertIn(f"{pu.SEED_POSTURE_REASON_LABEL}:", progress_workflow)
+            self.assertIn(f"{pu.SEED_POSTURE_REASON_LABEL}:", resume_workflow)
+
+    def test_progress_note_surfaces_seed_corpus_without_manifest(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="completed")
+            self._write_doctrine_stack(repo_root)
+            self._write_seed(repo_root, "003", "current-route", pu.CURRENT_SEED_CONTRACT_VERSION)
+
+            note = pu.build_progress_note(repo_root)
+
+            self.assertTrue(note["show"])
+            self.assertFalse(note["manifest_present"])
+            self.assertTrue(note["recommend_detect_only"])
+            self.assertTrue(note["show_seed_corpus_posture"])
+            self.assertIn("current_contract_only", note["seed_corpus_posture"])
+            self.assertEqual(note["seed_corpus_reasons"], [])
+            self.assertTrue(
+                any("no uplift manifest recorded yet" == reason for reason in note["reasons"])
+            )
+
+    def test_progress_note_keeps_seed_attention_visible_without_basis_movement(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="completed")
+            self._write_doctrine_stack(repo_root)
+            self._write_seed(repo_root, "004", "legacy-route", None)
+            pu.write_outputs(repo_root, pu.analyze_repo(repo_root))
+
+            note = pu.build_progress_note(repo_root)
+
+            self.assertTrue(note["show"])
+            self.assertTrue(note["manifest_present"])
+            self.assertFalse(note["recommend_write"])
+            self.assertTrue(note["show_seed_corpus_posture"])
+            self.assertIn("legacy_unversioned_only", note["seed_corpus_posture"])
+            self.assertTrue(
+                any(
+                    "legacy-unversioned seeds still present: 1" == reason
+                    for reason in note["seed_corpus_reasons"]
+                )
+            )
 
     def test_write_outputs_preserves_typed_held_later_statuses(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -308,6 +354,14 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertTrue(note["recommend_write"])
             self.assertFalse(note["recommend_detect_only"])
             self.assertTrue(note["seed_corpus_basis_changed"])
+            self.assertTrue(note["show_seed_corpus_posture"])
+            self.assertIn("legacy_unversioned_only", note["seed_corpus_posture"])
+            self.assertTrue(
+                any(
+                    "legacy-unversioned seeds still present: 1" == reason
+                    for reason in note["seed_corpus_reasons"]
+                )
+            )
             self.assertIn("--write", note["recommendation"])
             self.assertTrue(
                 any("seed file count moved from 0 to 1" in reason for reason in note["reasons"])
