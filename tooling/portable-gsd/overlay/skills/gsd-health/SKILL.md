@@ -48,7 +48,7 @@ Result parsing:
 <objective>
 Validate `.planning/` directory integrity and report actionable issues. Checks for missing files, invalid configurations, inconsistent state, and orphaned plans.
 
-This skill owns structural planning health and low-risk repair. It does not by itself own broader runtime, governing-doc, or doctrine uplift for older projects.
+This skill owns structural planning health and low-risk repair. It can surface read-only uplift continuity after validation when route-local posture pressure is still live. It does not by itself own broader runtime, governing-doc, or doctrine uplift refresh for older projects.
 </objective>
 
 <execution_context>
@@ -59,5 +59,8 @@ This skill owns structural planning health and low-risk repair. It does not by i
 Execute the health workflow from @/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/health.md end-to-end.
 Parse `--repair` flag from arguments and pass to workflow.
 
-If the result shows structural planning state is present but repo-local runtime, governing-doc, or doctrine posture still deserves refresh, route to `$gsd-uplift-project --write` as a separate follow-through rather than blending that work into structural repair.
+Keep the ownership split explicit:
+- structural planning health remains the primary objective
+- read-only uplift continuity reread may follow once validation is complete and route-local posture pressure is still live
+- `$gsd-uplift-project --write` remains a later separate follow-through rather than part of structural repair
 </process>

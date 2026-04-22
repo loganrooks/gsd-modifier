@@ -12,11 +12,11 @@ Read all files referenced by the invoking prompt's execution_context before star
 Start from the narrow structural-health packet:
 - `.planning/PROJECT.md`, `.planning/ROADMAP.md`, `.planning/STATE.md`, and `.planning/config.json` when present
 - command arguments and any immediately previous health output when this is a rerun
-- `.planning/UPLIFT-MANIFEST.json` or `.planning/UPLIFT-REPORT.md` only when the route shifts from structural health toward later repo-local posture refresh
+- `.planning/UPLIFT-REPORT.md` or `.planning/UPLIFT-MANIFEST.json` only inside the dedicated uplift follow-through step, and only after the compact `STATE.md` `## Project Uplift` reread has shown that route-local posture pressure is still live
 </supporting_reading>
 
 <deeper_reading>
-Only widen into broader runtime, governing-doc, or audit carriers when structural health is already understood and the next route actually becomes repo-local posture uplift. Do not blend structural repair, runtime update, and doctrine refresh into one unbounded pass.
+Only widen into broader runtime, governing-doc, or audit carriers when structural health is already understood and the next route actually becomes repo-local posture uplift. Keep the widening order compact first, narrative second, typed last. Do not blend structural repair, runtime update, and doctrine refresh into one unbounded pass.
 </deeper_reading>
 
 <process>
@@ -56,6 +56,109 @@ Parse JSON output:
 - `health` owns structural planning integrity and limited low-risk repair.
 - If core planning state is missing entirely, route to `$gsd-new-project` or `$gsd-ingest-docs` as appropriate rather than treating the problem as project uplift.
 - If planning structure is present but the project still carries older or thinner repo-local runtime, governing-doc, or doctrine posture, route separately to `$gsd-uplift-project --write` after health instead of mutating that posture inside repair.
+</step>
+
+<step name="offer_repair">
+**If repairable issues exist and --repair was NOT used:**
+
+Ask user if they want to run repairs:
+
+```
+Would you like to run $gsd-health --repair to fix N issues automatically?
+```
+
+If yes, re-run with --repair flag and display results.
+</step>
+
+<step name="verify_repairs">
+**If repairs were performed:**
+
+Re-run health check without --repair to confirm issues are resolved:
+
+```bash
+gsd-sdk query validate.health
+```
+
+Report final status.
+</step>
+
+<step name="review_project_uplift_health_follow_through">
+**Review Project Uplift Health Follow-Through:**
+
+Only surface this step after all structural health validation is complete, including `verify_repairs` when `--repair` was used.
+
+This step is read-only and route-local. Do not run `$gsd-uplift-project --write` from inside it.
+
+Only surface the step when:
+- structural planning state is present
+- the route is no longer broken or missing-planning
+- the compact `STATE.md` `## Project Uplift` block still shows live posture pressure rather than ordinary steady-state continuation
+
+Treat the following as live posture pressure signals:
+- `Compatibility posture` needs active interpretation instead of simple observed-basis continuation
+- `Observed runtime basis` carries route-local relevance after structural validation
+- `Held runtime annotation` is present and materially affects route-local interpretation
+- `Current recommendation` names later repo-local refresh rather than ordinary routing
+
+## Primary Compact Read
+
+Start with `.planning/STATE.md` and reread `## Project Uplift` first.
+
+Keep this compact digest primary over deeper widening. Use it to read:
+- `Last uplift pass`
+- `Last uplift class`
+- `Compatibility posture: observed_basis_only`
+- `Observed runtime basis`
+- `Held runtime annotation`
+- `Current recommendation`
+
+If the compact digest already resolves the route-local posture question, stop here.
+
+## Supporting Narrative Read
+
+Only widen into `.planning/UPLIFT-REPORT.md` when the compact digest does not carry enough route-local context.
+
+Use the report to understand:
+- `Before-State Posture`
+- `Recommendation Reasons`
+- `Compatibility Basis`
+- `Held Runtime Annotation`
+- `Wider Compatibility Claims Held`
+- `Carrier Posture`
+
+## Deeper Typed Read
+
+Only widen into `.planning/UPLIFT-MANIFEST.json` when basis or annotation ambiguity remains after the compact and narrative reads.
+
+Use the typed manifest to resolve:
+- `compatibility_basis`
+- `held_runtime_annotation`
+- `held_later_families`
+- per-carrier fingerprints and typed posture fields
+
+Do not mirror manifest content into a new health-local cache or output surface.
+
+## Interpretation Frame
+
+Keep the ownership split explicit:
+- `gsd-sdk query validate.health` remains the structural-health authority
+- this step owns only read-only uplift-continuity surfacing after validation
+- `$gsd-uplift-project --write` remains the later write-side posture-refresh authority
+
+Do not compute compatibility drift here.
+Do not widen the health footer into a second uplift workflow.
+Do not relabel held runtime annotation into a top-level compatibility posture row.
+
+## When To Surface
+
+Place this step:
+- after all structural health validation, including `verify_repairs` when `--repair` was used
+- before `format_output`
+
+Keep it silent when:
+- planning structure is missing and the correct route is `$gsd-new-project` or `$gsd-ingest-docs`
+- structural health itself is still the unresolved question
+- the compact `Project Uplift` block resolves to ordinary routing without later posture pressure
 </step>
 
 <step name="format_output">
@@ -120,30 +223,6 @@ N issues can be auto-repaired. Run: $gsd-health --repair
 Structural health is not the same thing as repo-local posture refresh.
 If runtime/governing-doc/doctrine posture is the live issue, run: $gsd-uplift-project --write
 ```
-</step>
-
-<step name="offer_repair">
-**If repairable issues exist and --repair was NOT used:**
-
-Ask user if they want to run repairs:
-
-```
-Would you like to run $gsd-health --repair to fix N issues automatically?
-```
-
-If yes, re-run with --repair flag and display results.
-</step>
-
-<step name="verify_repairs">
-**If repairs were performed:**
-
-Re-run health check without --repair to confirm issues are resolved:
-
-```bash
-gsd-sdk query validate.health
-```
-
-Report final status.
 </step>
 
 </process>
