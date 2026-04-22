@@ -146,25 +146,105 @@ Focus on:
 Output your review in markdown format.
 ```
 
-Write to a temp file: `/tmp/gsd-review-prompt-{phase}.md`
+Prepare one durable run-home before reviewer invocation:
+
+```bash
+RUN_HOME_JSON=$(python3 "__PROJECT_ROOT__/tooling/codex/run_review_reviewer.py" prepare-run-home \
+  --phase-dir "$phase_dir" \
+  --padded-phase "$padded_phase")
+RUN_HOME=$(python3 - <<'PY' "$RUN_HOME_JSON"
+import json, sys
+print(json.loads(sys.argv[1])["run_home"])
+PY
+)
+PROMPT_PATH=$(python3 - <<'PY' "$RUN_HOME_JSON"
+import json, sys
+print(json.loads(sys.argv[1])["prompt_path"])
+PY
+)
+mkdir -p "$RUN_HOME/raw" "$RUN_HOME/launch-truth"
+```
+
+Write the prompt to `"$PROMPT_PATH"` rather than to `/tmp`.
+The canonical run-home shape is `.planning/phases/{padded_phase}/reviews/{run_id}/`.
 </step>
 
 <step name="invoke_reviewers">
-For each selected CLI, invoke in sequence (not parallel — avoid rate limits):
+For each selected CLI, invoke in sequence (not parallel — avoid rate limits) and preserve the raw reviewer trail under `"$RUN_HOME"` instead of `/tmp`.
+
+Record one pre-launch estimate per reviewer before invocation. The first estimate may be naive; the route still has to preserve it for later calibration.
 
 **Gemini:**
 ```bash
-gemini -p "$(cat /tmp/gsd-review-prompt-{phase}.md)" 2>/dev/null > /tmp/gsd-review-gemini-{phase}.md
+gemini -p "$(cat "$PROMPT_PATH")" \
+  > "$RUN_HOME/raw/gemini.stdout.md" \
+  2> "$RUN_HOME/raw/gemini.stderr.log"
+python3 "__PROJECT_ROOT__/tooling/codex/run_review_reviewer.py" record-reviewer \
+  --run-home "$RUN_HOME" \
+  --reviewer gemini \
+  --shape plain \
+  --stdout-file "$RUN_HOME/raw/gemini.stdout.md" \
+  --stderr-file "$RUN_HOME/raw/gemini.stderr.log" \
+  --estimated-duration "operator estimate here" \
+  --invocation 'gemini -p "$(cat "$PROMPT_PATH")"' \
+  --exit-code "$?" \
+  --elapsed-seconds "measured elapsed here"
 ```
 
 **the agent (separate session):**
 ```bash
-claude -p "$(cat /tmp/gsd-review-prompt-{phase}.md)" 2>/dev/null > /tmp/gsd-review-claude-{phase}.md
+python3 "__PROJECT_ROOT__/tooling/codex/run_claude_probe.py" \
+  --label "review-claude-${padded_phase}" \
+  --model 'opus[1m]' \
+  --effort high \
+  --dangerously-skip-permissions \
+  --output-dir "$RUN_HOME/raw/claude" \
+  --prompt-file "$PROMPT_PATH" \
+  > "$RUN_HOME/raw/claude/probe-summary.txt"
+python3 "__PROJECT_ROOT__/tooling/codex/run_review_reviewer.py" record-reviewer \
+  --run-home "$RUN_HOME" \
+  --reviewer claude \
+  --shape claude \
+  --stream-file "$RUN_HOME/raw/claude/latest.stream.jsonl" \
+  --stderr-file "$RUN_HOME/raw/claude/latest.stderr.log" \
+  --probe-summary-file "$RUN_HOME/raw/claude/probe-summary.txt" \
+  --estimated-duration "operator estimate here" \
+  --requested-model "opus[1m]" \
+  --requested-reasoning "high" \
+  --requested-sandbox "danger-full-access" \
+  --exit-code "probe exit code here" \
+  --elapsed-seconds "measured elapsed here"
 ```
 
 **Codex:**
 ```bash
-codex exec --skip-git-repo-check "$(cat /tmp/gsd-review-prompt-{phase}.md)" 2>/dev/null > /tmp/gsd-review-codex-{phase}.md
+SINCE=$(date +%s)
+codex exec --skip-git-repo-check "$(cat "$PROMPT_PATH")" \
+  > "$RUN_HOME/raw/codex.stdout.md" \
+  2> "$RUN_HOME/raw/codex.stderr.log"
+python3 "__PROJECT_ROOT__/tooling/codex/capture_launch_truth.py" \
+  --since "$SINCE" \
+  --label "review-codex-${padded_phase}" \
+  --requested-model gpt-5.4 \
+  --requested-reasoning high \
+  --requested-approval never \
+  --requested-sandbox danger-full-access \
+  --output "$RUN_HOME/raw/codex-launch-truth.md"
+python3 "__PROJECT_ROOT__/tooling/codex/run_review_reviewer.py" record-reviewer \
+  --run-home "$RUN_HOME" \
+  --reviewer codex \
+  --shape codex \
+  --stdout-file "$RUN_HOME/raw/codex.stdout.md" \
+  --stderr-file "$RUN_HOME/raw/codex.stderr.log" \
+  --launch-truth-markdown "$RUN_HOME/raw/codex-launch-truth.md" \
+  --estimated-duration "operator estimate here" \
+  --requested-model "gpt-5.4" \
+  --requested-reasoning "high" \
+  --requested-approval "never" \
+  --requested-sandbox "danger-full-access" \
+  --invocation 'codex exec --skip-git-repo-check "$(cat "$PROMPT_PATH")"' \
+  --exit-code "$?" \
+  --elapsed-seconds "measured elapsed here"
 ```
 
 **CodeRabbit:**
@@ -172,18 +252,39 @@ codex exec --skip-git-repo-check "$(cat /tmp/gsd-review-prompt-{phase}.md)" 2>/d
 Note: CodeRabbit reviews the current git diff/working tree — it does not accept a prompt. It may take up to 5 minutes. Use `timeout: 360000` on the Bash tool call.
 
 ```bash
-coderabbit review --prompt-only 2>/dev/null > /tmp/gsd-review-coderabbit-{phase}.md
+coderabbit review --prompt-only \
+  > "$RUN_HOME/raw/coderabbit.stdout.md" \
+  2> "$RUN_HOME/raw/coderabbit.stderr.log"
+python3 "__PROJECT_ROOT__/tooling/codex/run_review_reviewer.py" record-reviewer \
+  --run-home "$RUN_HOME" \
+  --reviewer coderabbit \
+  --shape plain \
+  --stdout-file "$RUN_HOME/raw/coderabbit.stdout.md" \
+  --stderr-file "$RUN_HOME/raw/coderabbit.stderr.log" \
+  --estimated-duration "operator estimate here" \
+  --invocation "coderabbit review --prompt-only" \
+  --exit-code "$?" \
+  --elapsed-seconds "measured elapsed here"
 ```
 
 **OpenCode (via GitHub Copilot):**
 ```bash
-cat /tmp/gsd-review-prompt-{phase}.md | opencode run - 2>/dev/null > /tmp/gsd-review-opencode-{phase}.md
-if [ ! -s /tmp/gsd-review-opencode-{phase}.md ]; then
-  echo "OpenCode review failed or returned empty output." > /tmp/gsd-review-opencode-{phase}.md
-fi
+cat "$PROMPT_PATH" | opencode run - \
+  > "$RUN_HOME/raw/opencode.stdout.md" \
+  2> "$RUN_HOME/raw/opencode.stderr.log"
+python3 "__PROJECT_ROOT__/tooling/codex/run_review_reviewer.py" record-reviewer \
+  --run-home "$RUN_HOME" \
+  --reviewer opencode \
+  --shape plain \
+  --stdout-file "$RUN_HOME/raw/opencode.stdout.md" \
+  --stderr-file "$RUN_HOME/raw/opencode.stderr.log" \
+  --estimated-duration "operator estimate here" \
+  --invocation 'cat "$PROMPT_PATH" | opencode run -' \
+  --exit-code "$?" \
+  --elapsed-seconds "measured elapsed here"
 ```
 
-If a CLI fails, log the error and continue with remaining CLIs.
+If a CLI fails, preserve the raw artifacts anyway and let `record-reviewer` classify the result as `partial` or `absent`. Do not collapse recoverable last-message text into a blank heading.
 
 Display progress:
 ```
@@ -211,31 +312,31 @@ plans_reviewed: [{list of PLAN.md files}]
 
 ## Gemini Review
 
-{gemini review content}
+{gemini review content or absence note from $RUN_HOME/gemini.review.md and gemini.status.md}
 
 ---
 
 ## the agent Review
 
-{claude review content}
+{claude review content or partial-state note from $RUN_HOME/claude.review.md and claude.status.md}
 
 ---
 
 ## Codex Review
 
-{codex review content}
+{codex review content or partial/absence note from $RUN_HOME/codex.review.md and codex.status.md}
 
 ---
 
 ## CodeRabbit Review
 
-{coderabbit review content}
+{coderabbit review content or absence note}
 
 ---
 
 ## OpenCode Review
 
-{opencode review content}
+{opencode review content or absence note}
 
 ---
 
@@ -296,12 +397,13 @@ Top lone high-signal concern:
 {single strongest well-justified criticism that is not just a consensus item}
 
 Full review: {padded_phase}-REVIEWS.md
+Durable reviewer trail: {RUN_HOME}
 
 To incorporate feedback into planning:
   /gsd-plan-phase {N} --reviews
 ```
 
-Clean up temp files.
+Do not delete the run-home. It is the canonical raw reviewer trail for launch truth, timing, salvage, and later reread.
 </step>
 
 </process>
@@ -310,6 +412,6 @@ Clean up temp files.
 - [ ] At least one external CLI invoked successfully
 - [ ] REVIEWS.md written with structured feedback
 - [ ] Review synthesis preserves shared concerns, lone high-signal criticism, and divergent views
-- [ ] Temp files cleaned up
+- [ ] Durable run-home populated with per-reviewer artifacts
 - [ ] User knows how to use feedback (/gsd-plan-phase --reviews)
 </success_criteria>

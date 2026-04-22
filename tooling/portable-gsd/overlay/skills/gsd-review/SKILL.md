@@ -49,7 +49,8 @@ Result parsing:
 Invoke external AI CLIs (Gemini, the agent, Codex, OpenCode, Qwen Code, Cursor) to independently review phase plans.
 Produces a structured REVIEWS.md with per-reviewer feedback plus a planning-consumer
 contract that preserves lone high-signal criticism, merely-adequate areas, and later-audit
-risks for $gsd-plan-phase --reviews.
+risks for $gsd-plan-phase --reviews, while also preserving a durable per-run reviewer trail
+for launch truth, timing calibration, partial/absent classification, and last-message salvage.
 
 **Flow:** Detect CLIs → Build adversarial review prompt → Invoke each CLI → Collect responses → Write REVIEWS.md for strict review-aware replanning
 </objective>
