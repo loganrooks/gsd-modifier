@@ -21,7 +21,9 @@ HELD_LATER_REL_PATH = "tooling/codex/UPLIFT-HELD-LATER.md"
 RUNTIME_MANIFEST_REL_PATH = ".codex/gsd-file-manifest.json"
 RUNTIME_VERSION_REL_PATH = ".codex/get-shit-done/VERSION"
 OVERLAY_MANIFEST_REL_PATH = "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json"
-UPLIFT_MANIFEST_SCHEMA_VERSION = 4
+SEED_DIR_REL_PATH = ".planning/seeds"
+CURRENT_SEED_CONTRACT_VERSION = "2"
+UPLIFT_MANIFEST_SCHEMA_VERSION = 5
 COMPATIBILITY_POSTURE = "observed_basis_only"
 COMPATIBILITY_HELD_LATER = [
     "version-window claims beyond the observed runtime basis",
@@ -439,6 +441,15 @@ def inventory_items(text: str) -> list[str]:
     return items
 
 
+def parse_seed_contract_version(text: str | None) -> str | None:
+    if text is None:
+        return None
+    match = re.search(r"^seed_contract_version:\s*(.+)$", text, re.M)
+    if not match:
+        return None
+    return match.group(1).strip().strip('"').strip("'")
+
+
 def normalized_toml_fingerprint(text: str) -> str:
     data = tomllib.loads(text)
     return sha256_text(json.dumps(data, sort_keys=True, separators=(",", ":")))
@@ -551,6 +562,122 @@ def doctrine_reference_hash(carriers: list[dict]) -> str:
     return sha256_text("\n".join(sorted(selected)))
 
 
+def build_seed_corpus_posture(repo_root: pathlib.Path) -> dict:
+    seed_root = repo_root / SEED_DIR_REL_PATH
+    seed_paths = sorted(seed_root.glob("SEED-*.md")) if seed_root.exists() else []
+    current_contract_count = 0
+    legacy_unversioned_count = 0
+    noncurrent_version_counts: dict[str, int] = {}
+    legacy_unversioned_examples: list[str] = []
+    noncurrent_version_examples: list[dict] = []
+    fingerprint_rows: list[str] = []
+
+    for path in seed_paths:
+        rel = rel_path(repo_root, path)
+        version = parse_seed_contract_version(frontmatter_text(read_text(path) or ""))
+        if version is None:
+            legacy_unversioned_count += 1
+            if len(legacy_unversioned_examples) < 5:
+                legacy_unversioned_examples.append(rel)
+            fingerprint_rows.append(f"{rel}:legacy_unversioned")
+            continue
+        if version == CURRENT_SEED_CONTRACT_VERSION:
+            current_contract_count += 1
+            fingerprint_rows.append(f"{rel}:current:{version}")
+            continue
+        noncurrent_version_counts[version] = noncurrent_version_counts.get(version, 0) + 1
+        if len(noncurrent_version_examples) < 5:
+            noncurrent_version_examples.append({"version": version, "path": rel})
+        fingerprint_rows.append(f"{rel}:noncurrent:{version}")
+
+    seed_file_count = len(seed_paths)
+    noncurrent_version_total = sum(noncurrent_version_counts.values())
+    if seed_file_count == 0:
+        posture = "no_seed_corpus"
+    elif legacy_unversioned_count == 0 and noncurrent_version_total == 0:
+        posture = "current_contract_only"
+    elif legacy_unversioned_count > 0 and current_contract_count == 0 and noncurrent_version_total == 0:
+        posture = "legacy_unversioned_only"
+    elif legacy_unversioned_count > 0 and noncurrent_version_total == 0:
+        posture = "mixed_current_and_legacy_unversioned"
+    elif legacy_unversioned_count == 0 and current_contract_count == 0:
+        posture = "noncurrent_versions_only"
+    else:
+        posture = "mixed_with_noncurrent_versions"
+
+    return {
+        "seed_dir_present": seed_root.exists(),
+        "seed_file_count": seed_file_count,
+        "current_contract_version": CURRENT_SEED_CONTRACT_VERSION,
+        "posture": posture,
+        "current_contract_count": current_contract_count,
+        "legacy_unversioned_count": legacy_unversioned_count,
+        "noncurrent_version_total": noncurrent_version_total,
+        "noncurrent_version_counts": dict(sorted(noncurrent_version_counts.items())),
+        "legacy_unversioned_examples": legacy_unversioned_examples,
+        "noncurrent_version_examples": noncurrent_version_examples,
+        "corpus_fingerprint": sha256_text("\n".join(fingerprint_rows)) if fingerprint_rows else None,
+    }
+
+
+def seed_corpus_needs_attention(seed_corpus_posture: dict) -> bool:
+    return (
+        seed_corpus_posture["legacy_unversioned_count"] > 0
+        or seed_corpus_posture["noncurrent_version_total"] > 0
+    )
+
+
+def seed_corpus_summary(seed_corpus_posture: dict) -> str:
+    noncurrent = seed_corpus_posture["noncurrent_version_counts"]
+    noncurrent_text = (
+        ", ".join(f"v{version}={count}" for version, count in noncurrent.items())
+        if noncurrent
+        else "none"
+    )
+    return (
+        f"{seed_corpus_posture['posture']} "
+        f"(total {seed_corpus_posture['seed_file_count']}; "
+        f"current {seed_corpus_posture['current_contract_count']}; "
+        f"legacy {seed_corpus_posture['legacy_unversioned_count']}; "
+        f"noncurrent {noncurrent_text})"
+    )
+
+
+def seed_corpus_reasons(seed_corpus_posture: dict) -> list[str]:
+    reasons: list[str] = []
+    if seed_corpus_posture["legacy_unversioned_count"] > 0:
+        reasons.append(
+            f"legacy-unversioned seeds still present: {seed_corpus_posture['legacy_unversioned_count']}"
+        )
+    if seed_corpus_posture["noncurrent_version_total"] > 0:
+        versions = ", ".join(
+            f"v{version}={count}"
+            for version, count in seed_corpus_posture["noncurrent_version_counts"].items()
+        )
+        reasons.append(f"noncurrent seed contract versions still present: {versions}")
+    return reasons
+
+
+def seed_corpus_drift_reasons(previous: dict, current: dict) -> list[str]:
+    reasons: list[str] = []
+    fields = (
+        ("posture", "seed corpus posture"),
+        ("seed_file_count", "seed file count"),
+        ("current_contract_count", "current-contract seed count"),
+        ("legacy_unversioned_count", "legacy-unversioned seed count"),
+        ("noncurrent_version_counts", "noncurrent seed version counts"),
+    )
+    for key, label in fields:
+        before = previous.get(key)
+        after = current.get(key)
+        if before == after:
+            continue
+        before_text = "none" if before in (None, "", [], {}) else json.dumps(before, sort_keys=True) if isinstance(before, dict) else str(before)
+        after_text = "none" if after in (None, "", [], {}) else json.dumps(after, sort_keys=True) if isinstance(after, dict) else str(after)
+        reasons.append(f"{label} moved from {before_text} to {after_text}")
+    return reasons
+
+
 def project_fingerprint_hash(
     carriers: list[dict],
     status: str,
@@ -637,6 +764,7 @@ def secondary_signals(
     boundary_signal: dict,
     doctrine_changed: bool,
     pending_proposals: list[dict],
+    seed_corpus_posture: dict,
 ) -> list[str]:
     signals: list[str] = []
     if any(runtime_dir != ".codex" for runtime_dir in runtime_dirs) and primary_class != "cross-runtime uplift":
@@ -647,6 +775,8 @@ def secondary_signals(
         signals.append("doctrine_changed")
     if pending_proposals:
         signals.append("has_pending_proposals")
+    if seed_corpus_needs_attention(seed_corpus_posture):
+        signals.append("legacy_seed_corpus")
     return signals
 
 
@@ -661,6 +791,7 @@ def classify_project(
     doctrine_changed: bool,
     absent_additive: list[str],
     pending_doctrine_sensitive: list[dict],
+    seed_corpus_posture: dict,
 ) -> str:
     if not planning_exists or not state_exists or not project_exists or not roadmap_exists:
         return "pre-uplift structural initialization"
@@ -670,7 +801,13 @@ def classify_project(
         return "mid-phase uplift"
     if not has_manifest and len(absent_additive) + len(pending_doctrine_sensitive) >= 5:
         return "vanilla uplift"
-    if doctrine_changed or absent_additive or pending_doctrine_sensitive or not has_manifest:
+    if (
+        doctrine_changed
+        or absent_additive
+        or pending_doctrine_sensitive
+        or not has_manifest
+        or seed_corpus_needs_attention(seed_corpus_posture)
+    ):
         return "lightly aged uplift"
     return "current-aligned posture"
 
@@ -681,6 +818,7 @@ def recommendation_reasons(
     absent_additive: list[str],
     pending_doctrine_sensitive: list[dict],
     primary_class: str,
+    seed_corpus_posture: dict,
 ) -> list[str]:
     reasons: list[str] = []
     if not has_manifest:
@@ -694,6 +832,7 @@ def recommendation_reasons(
             "doctrine-sensitive carriers still need review: "
             + ", ".join(summarize_proposal_route(proposal) for proposal in pending_doctrine_sensitive)
         )
+    reasons.extend(seed_corpus_reasons(seed_corpus_posture))
     if primary_class == "mid-phase uplift":
         reasons.append("phase work is active, so uplift should stay detect-only and composition-first")
     return reasons
@@ -721,6 +860,7 @@ def analyze_repo(repo_root: pathlib.Path) -> dict:
     doctrine_hash = doctrine_reference_hash(carriers)
     doctrine_changed = bool(manifest and manifest.get("doctrine_reference_hash") != doctrine_hash)
     boundary_signal = phase_boundary_signal(repo_root, active_phase, doctrine_changed)
+    seed_corpus_posture = build_seed_corpus_posture(repo_root)
     absent_additive = [
         carrier["label"]
         for carrier in carriers
@@ -738,6 +878,7 @@ def analyze_repo(repo_root: pathlib.Path) -> dict:
         doctrine_changed=doctrine_changed,
         absent_additive=absent_additive,
         pending_doctrine_sensitive=pending_doctrine_sensitive,
+        seed_corpus_posture=seed_corpus_posture,
     )
     secondary = secondary_signals(
         primary_class=primary_class,
@@ -745,6 +886,7 @@ def analyze_repo(repo_root: pathlib.Path) -> dict:
         boundary_signal=boundary_signal,
         doctrine_changed=doctrine_changed,
         pending_proposals=pending_doctrine_sensitive,
+        seed_corpus_posture=seed_corpus_posture,
     )
     project_hash = project_fingerprint_hash(
         carriers=carriers,
@@ -760,6 +902,7 @@ def analyze_repo(repo_root: pathlib.Path) -> dict:
         absent_additive=absent_additive,
         pending_doctrine_sensitive=pending_doctrine_sensitive,
         primary_class=primary_class,
+        seed_corpus_posture=seed_corpus_posture,
     )
     recommend_detect_only = bool(reasons) and primary_class != "current-aligned posture"
     held_later = load_held_later_families(repo_root)
@@ -790,6 +933,7 @@ def analyze_repo(repo_root: pathlib.Path) -> dict:
         "pending_doctrine_sensitive_proposals": pending_doctrine_sensitive,
         "held_later_families": held_later,
         "compatibility_basis": compatibility_basis,
+        "seed_corpus_posture": seed_corpus_posture,
         "recommend_detect_only": recommend_detect_only,
         "recommendation_reasons": reasons,
         "carriers": carriers,
@@ -853,6 +997,19 @@ def render_report(analysis: dict) -> str:
         ]
     )
     lines.extend(f"- {item}" for item in compatibility["held_later"])
+    seed_posture = analysis["seed_corpus_posture"]
+    lines.extend(
+        [
+            "",
+            "## Seed Corpus Posture",
+            "",
+            f"- Summary: {seed_corpus_summary(seed_posture)}",
+            f"- Current contract version: {seed_posture['current_contract_version']}",
+            f"- Legacy-unversioned examples: {', '.join(seed_posture['legacy_unversioned_examples']) if seed_posture['legacy_unversioned_examples'] else 'none'}",
+            f"- Noncurrent-version examples: {json.dumps(seed_posture['noncurrent_version_examples'], sort_keys=True) if seed_posture['noncurrent_version_examples'] else 'none'}",
+            "",
+        ]
+    )
     lines.extend(
         [
             "",
@@ -920,6 +1077,7 @@ def post_write_analysis(analysis: dict) -> dict:
         absent_additive=analysis["absent_additive_carriers"],
         pending_doctrine_sensitive=retained_pending,
         primary_class=analysis["project_class"],
+        seed_corpus_posture=analysis["seed_corpus_posture"],
     )
     retained_secondary = secondary_signals(
         primary_class=analysis["project_class"],
@@ -927,6 +1085,7 @@ def post_write_analysis(analysis: dict) -> dict:
         boundary_signal=analysis["phase_boundary_signal"],
         doctrine_changed=False,
         pending_proposals=retained_pending,
+        seed_corpus_posture=analysis["seed_corpus_posture"],
     )
     return {
         **analysis,
@@ -959,6 +1118,7 @@ def state_section_text(analysis: dict) -> str:
             f"Doctrine reference changed since prior uplift: {'yes' if analysis['doctrine_reference_changed'] else 'no'}",
             f"Compatibility posture: {compatibility['compatibility_posture']}",
             f"Observed runtime basis: {', '.join(compatibility['observed_runtime_version_set']) if compatibility['observed_runtime_version_set'] else 'unrecorded'}",
+            f"Seed corpus posture: {seed_corpus_summary(analysis['seed_corpus_posture'])}",
             f"Pending doctrine-sensitive proposals: {pending_count}",
             f"Current recommendation: {recommendation}",
             f"Current uplift report: {REPORT_REL_PATH}",
@@ -1010,6 +1170,7 @@ def write_outputs(repo_root: pathlib.Path, analysis: dict) -> dict:
         "pending_doctrine_sensitive_proposals": written_analysis["pending_doctrine_sensitive_proposals"],
         "held_later_families": written_analysis["held_later_families"],
         "compatibility_basis": written_analysis["compatibility_basis"],
+        "seed_corpus_posture": written_analysis["seed_corpus_posture"],
         "carriers": written_analysis["carriers"],
     }
     manifest_path.write_text(json.dumps(manifest_payload, indent=2) + "\n", encoding="utf-8")
@@ -1033,6 +1194,7 @@ def build_progress_note(repo_root: pathlib.Path) -> dict:
             "last_uplift_class": None,
             "last_uplift_secondary_signals": [],
             "doctrine_reference_changed": False,
+            "seed_corpus_basis_changed": False,
             "pending_doctrine_sensitive_proposals": [],
             "recommendation": "Run `$gsd-uplift-project --detect-only` to record uplift memory." if show else "No uplift memory available.",
             "reasons": ["no uplift manifest recorded yet"] if show else [],
@@ -1047,7 +1209,11 @@ def build_progress_note(repo_root: pathlib.Path) -> dict:
     current_compatibility = analysis["compatibility_basis"]
     compatibility_reasons = compatibility_drift_reasons(manifest_compatibility, current_compatibility)
     compatibility_basis_changed = bool(compatibility_reasons)
-    recommend_write = compatibility_basis_changed
+    manifest_seed_corpus = manifest.get("seed_corpus_posture") or {}
+    current_seed_corpus = analysis["seed_corpus_posture"]
+    seed_corpus_rewrite_reasons = seed_corpus_drift_reasons(manifest_seed_corpus, current_seed_corpus)
+    seed_corpus_basis_changed = bool(seed_corpus_rewrite_reasons)
+    recommend_write = compatibility_basis_changed or seed_corpus_basis_changed
     recommend_detect_only = bool((doctrine_changed or pending) and not recommend_write)
     reasons: list[str] = []
     if doctrine_changed:
@@ -1058,8 +1224,9 @@ def build_progress_note(repo_root: pathlib.Path) -> dict:
             + ", ".join(summarize_proposal_route(proposal) for proposal in pending)
         )
     reasons.extend(compatibility_reasons)
+    reasons.extend(seed_corpus_rewrite_reasons)
     recommendation = (
-        "Run `$gsd-uplift-project --write` to refresh uplift memory after runtime basis movement."
+        "Run `$gsd-uplift-project --write` to refresh uplift memory after runtime or seed-corpus movement."
         if recommend_write
         else (
             "Run `$gsd-uplift-project --detect-only` to refresh uplift memory."
@@ -1077,6 +1244,7 @@ def build_progress_note(repo_root: pathlib.Path) -> dict:
         "last_uplift_at": manifest.get("generated_at"),
         "doctrine_reference_changed": doctrine_changed,
         "compatibility_basis_changed": compatibility_basis_changed,
+        "seed_corpus_basis_changed": seed_corpus_basis_changed,
         "pending_doctrine_sensitive_proposals": pending,
         "recommendation": recommendation,
         "reasons": reasons,

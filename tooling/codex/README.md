@@ -90,9 +90,11 @@ python3 tooling/codex/run_claude_probe.py \
   - detects repo-local project uplift posture and can write first-slice uplift memory
   - detect mode writes `.planning/UPLIFT-REPORT.md`, `.planning/UPLIFT-MANIFEST.json`, and a `STATE.md` uplift section when `--write` is used
   - progress-note mode is the thin read-only hook for the live routed consumers `gsd-progress` and `gsd-resume-work`; it reads structured uplift memory and current doctrine fingerprints rather than prose
-  - the current harden slice now carries multi-axis posture (`project_class` plus `secondary_signals`), marker-local section hashes for strengthening carriers, normalized TOML hashes for runtime registry carriers, structured doctrine-sensitive proposal states (`absent` vs `drifted`), phase-boundary signal capture from active `CONTEXT.md`, and an explicit observed-basis compatibility block
+  - the current harden slice now carries multi-axis posture (`project_class` plus `secondary_signals`), marker-local section hashes for strengthening carriers, normalized TOML hashes for runtime registry carriers, structured doctrine-sensitive proposal states (`absent` vs `drifted`), phase-boundary signal capture from active `CONTEXT.md`, an explicit observed-basis compatibility block, and bounded seed-corpus posture scanning
   - the compatibility block records the currently observed GSD runtime basis from the canonical repo-local runtime path (`.codex/get-shit-done/VERSION`) plus `.codex/gsd-file-manifest.json` when present, alongside the overlay schema anchor, uplift schema anchor, and the check protocol for later runtime movement without overclaiming a broad version window
+  - the seed-corpus block records whether `.planning/seeds/` is absent, current-contract-only, legacy-unversioned, or mixed, and keeps later migration explicit rather than silently absorbing it into detect-only
   - when that observed runtime basis moves after the last durable uplift write, progress-note now routes the live consumers toward `$gsd-uplift-project --write` so compatibility drift reaches the active consumer chain instead of remaining only in stored uplift memory
+  - the same write route now activates after seed-corpus posture movement too, so legacy seed shape does not stay buried only in the last stored uplift manifest
   - the current network-carry chain now includes:
     - workflow consumers: `uplift-project`, `progress`, `resume-project`
     - durable outputs: `.planning/UPLIFT-REPORT.md`, `.planning/UPLIFT-MANIFEST.json`, and the `Project Uplift` section in `.planning/STATE.md`

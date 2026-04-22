@@ -11,6 +11,7 @@ Read all files referenced by the invoking prompt's execution_context before star
 Use the helper and the current uplift outputs as the first packet:
 - `project_uplift.py` detect output
 - `.planning/UPLIFT-REPORT.md`, `.planning/UPLIFT-MANIFEST.json`, and `STATE.md` uplift section when they already exist or when `--write` is in play
+- `.planning/seeds/SEED-*.md` only when the helper surfaces legacy-unversioned or noncurrent seed posture
 - runtime/version surfaces only when compatibility movement is active
 </supporting_reading>
 
@@ -53,6 +54,7 @@ Parse the JSON for:
 - `current_status`
 - `runtime_dirs`
 - `compatibility_basis`
+- `seed_corpus_posture`
 - `recommend_write`
 - `recommend_detect_only`
 - `recommendation_reasons`
@@ -73,6 +75,7 @@ Present a compact result:
 - Runtime directories: {runtime_dirs}
 - Compatibility posture: {compatibility_basis.compatibility_posture}
 - Observed runtime basis: {compatibility_basis.observed_runtime_version_set or "unrecorded"}
+- Seed corpus posture: {seed_corpus_posture.posture} | current {seed_corpus_posture.current_contract_count} | legacy {seed_corpus_posture.legacy_unversioned_count} | noncurrent {seed_corpus_posture.noncurrent_version_counts or "none"}
 - Recommendation: {recommendation}
 
 ## Compatibility Check Protocol
@@ -109,6 +112,9 @@ Route next action explicitly:
   - keep those as future install routes, not silent edits
 - If doctrine-sensitive proposal routes remain:
   - keep them for explicit later review rather than folding them into detect-only, and only then widen into the supporting proposal/audit packet
+- If seed corpus posture shows `legacy_unversioned` or noncurrent seed versions:
+  - keep migration or rewrite separate from detect-only
+  - preserve the posture in durable uplift memory with `--write` when the route activates
 - If the helper classifies the repo as `mid-phase uplift`:
   - keep uplift composition separate from current execution/verification routing
 </step>

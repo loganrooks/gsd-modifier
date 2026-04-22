@@ -48,6 +48,7 @@ class ProjectUpliftTests(unittest.TestCase):
             "tooling/codex/UPLIFT-HELD-LATER.md",
             "- required-reading installation practice — held\n"
             "- cross-runtime uplift composition — held\n"
+            "- legacy seed corpus migration — held\n"
             "- routed-entry hooks beyond `progress` — partially landed: propagation-audit/04-resume-project-second-consumer-implementation.md\n",
         )
 
@@ -81,6 +82,20 @@ class ProjectUpliftTests(unittest.TestCase):
             root,
             ".codex/get-shit-done/templates/verification-report.md",
             "# Verification Report\n\n## Future-Preservation Carry\n- carried\n",
+        )
+
+    def _write_seed(self, root: pathlib.Path, seed_id: str, slug: str, version: str | None) -> None:
+        version_line = f"seed_contract_version: {version}\n" if version is not None else ""
+        self._write(
+            root,
+            f".planning/seeds/SEED-{seed_id}-{slug}.md",
+            "---\n"
+            f"id: SEED-{seed_id}\n"
+            f"{version_line}"
+            "status: dormant\n"
+            "trigger_when: later\n"
+            "---\n\n"
+            f"# SEED-{seed_id}: {slug}\n",
         )
 
     def _write_doctrine_stack(self, root: pathlib.Path) -> None:
@@ -126,6 +141,26 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertEqual(analysis["absent_additive_carriers"], [])
             self.assertTrue(
                 all(proposal["proposal_state"] != "absent" for proposal in analysis["pending_doctrine_sensitive_proposals"])
+            )
+
+    def test_detect_surfaces_legacy_seed_corpus_posture(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="completed")
+            self._write_doctrine_stack(repo_root)
+            self._write_seed(repo_root, "001", "legacy-route", None)
+            self._write_seed(repo_root, "002", "current-route", pu.CURRENT_SEED_CONTRACT_VERSION)
+
+            analysis = pu.analyze_repo(repo_root)
+
+            self.assertEqual(analysis["project_class"], "lightly aged uplift")
+            self.assertIn("legacy_seed_corpus", analysis["secondary_signals"])
+            self.assertEqual(analysis["seed_corpus_posture"]["posture"], "mixed_current_and_legacy_unversioned")
+            self.assertEqual(analysis["seed_corpus_posture"]["seed_file_count"], 2)
+            self.assertEqual(analysis["seed_corpus_posture"]["current_contract_count"], 1)
+            self.assertEqual(analysis["seed_corpus_posture"]["legacy_unversioned_count"], 1)
+            self.assertTrue(
+                any("legacy-unversioned seeds still present: 1" == reason for reason in analysis["recommendation_reasons"])
             )
 
     def test_write_outputs_and_progress_note_detect_doctrine_change(self) -> None:
@@ -192,7 +227,7 @@ class ProjectUpliftTests(unittest.TestCase):
 
             manifest = json.loads((repo_root / ".planning/UPLIFT-MANIFEST.json").read_text(encoding="utf-8"))
             held_later = manifest["held_later_families"]
-            self.assertEqual(manifest["schema_version"], 4)
+            self.assertEqual(manifest["schema_version"], 5)
             self.assertTrue(any(item["status"] == "held" for item in held_later))
             self.assertTrue(
                 any(
@@ -205,6 +240,7 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertEqual(manifest["compatibility_basis"]["compatibility_posture"], "observed_basis_only")
             self.assertEqual(manifest["compatibility_basis"]["observed_runtime_version"], "1.38.1")
             self.assertTrue(manifest["compatibility_basis"]["observed_runtime_version_aligned"])
+            self.assertEqual(manifest["seed_corpus_posture"]["posture"], "no_seed_corpus")
 
     def test_compatibility_basis_anchors_to_observed_runtime_sources(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -220,7 +256,7 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertEqual(compatibility["observed_runtime_manifest_version"], "1.38.1")
             self.assertTrue(compatibility["observed_runtime_version_aligned"])
             self.assertEqual(compatibility["overlay_manifest_schema_version"], 1)
-            self.assertEqual(compatibility["uplift_manifest_schema_version"], 4)
+            self.assertEqual(compatibility["uplift_manifest_schema_version"], 5)
             self.assertIn("version-window claims beyond the observed runtime basis", compatibility["held_later"])
 
     def test_progress_note_recommends_write_after_runtime_basis_movement(self) -> None:
@@ -257,6 +293,25 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertIsNone(compatibility["observed_runtime_version_source"])
             self.assertEqual(compatibility["observed_runtime_manifest_version"], "1.38.1")
             self.assertFalse(compatibility["observed_runtime_version_aligned"])
+
+    def test_progress_note_recommends_write_after_seed_corpus_movement(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="completed")
+            self._write_doctrine_stack(repo_root)
+            pu.write_outputs(repo_root, pu.analyze_repo(repo_root))
+
+            self._write_seed(repo_root, "003", "legacy-drift", None)
+
+            note = pu.build_progress_note(repo_root)
+
+            self.assertTrue(note["recommend_write"])
+            self.assertFalse(note["recommend_detect_only"])
+            self.assertTrue(note["seed_corpus_basis_changed"])
+            self.assertIn("--write", note["recommendation"])
+            self.assertTrue(
+                any("seed file count moved from 0 to 1" in reason for reason in note["reasons"])
+            )
 
     def test_cross_runtime_primary_class_preserves_mid_phase_secondary_signal(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
