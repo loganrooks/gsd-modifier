@@ -9,6 +9,7 @@ Seeds beat deferred items because they:
 - Track breadcrumbs (code references, related decisions)
 - Auto-present at the right time via new-milestone scan
 - Carry bounded strengthening opportunities that belong outside the current phase without letting them dissolve into generic deferred prose
+- Preserve strengthening carry in a dedicated section so later consumers can surface it without guessing from ambient notes
 </purpose>
 
 <process>
@@ -69,6 +70,16 @@ AskUserQuestion(
 ```
 
 Store as `$SCOPE`.
+
+```
+AskUserQuestion(
+  header: "Strengthening",
+  question: "If this idea should preserve or intensify already-useful terrain later, name that carry. What current strength matters, what bounded intensification move should resurface, and what optionality should stay open? If this does not apply, answer `None`.",
+  options: []
+)
+```
+
+Store as `$STRENGTHENING_CARRY`.
 </step>
 
 <step name="collect_breadcrumbs">
@@ -130,6 +141,10 @@ scope matches any of these conditions:
 
 **{$SCOPE}** — {elaboration based on scope choice}
 
+## Strengthening Carry
+
+{$STRENGTHENING_CARRY}
+
 ## Breadcrumbs
 
 Related code and decisions found in the current codebase:
@@ -139,11 +154,6 @@ Related code and decisions found in the current codebase:
 ## Notes
 
 {any additional context from the current session}
-
-[If this seed came from a `Strengthening Opportunities` route, also note:
-- current strength being preserved or intensified
-- bounded intensification move being held
-- optionality effect you want to keep open]
 ```
 </step>
 
@@ -172,6 +182,7 @@ and the milestone scope matches the trigger condition.
 <success_criteria>
 - [ ] Seed file created in .planning/seeds/
 - [ ] Frontmatter includes status, trigger, scope
+- [ ] Strengthening carry captured explicitly when it applies
 - [ ] Breadcrumbs collected from codebase
 - [ ] Committed to git
 - [ ] User shown confirmation with trigger info

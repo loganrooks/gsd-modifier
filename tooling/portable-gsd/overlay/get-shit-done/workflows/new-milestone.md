@@ -82,6 +82,8 @@ ls .planning/seeds/SEED-*.md 2>/dev/null
 - **Idea** — the seed title (heading after frontmatter, e.g. `# SEED-001: <idea>`)
 - **Trigger conditions** — the `trigger_when` frontmatter field and the "When to Surface" section's bullet list
 - **Planted during** — the `planted_during` frontmatter field (for context)
+- **Why This Matters** — the bounded motivation from that section
+- **Strengthening Carry** — the `## Strengthening Carry` section when present and not `None`
 
 Compare each seed's trigger conditions against the milestone goals from step 2. A seed matches when its trigger conditions are relevant to any of the milestone's target features or goals.
 
@@ -107,14 +109,14 @@ AskUserQuestion(
   question: "These planted seeds match your milestone goals. Include any in this milestone's scope?",
   multiSelect: true,
   options: [
-    { label: "SEED-001: <idea>", description: "Trigger: <trigger_when> | Planted during: <planted_during>" },
+    { label: "SEED-001: <idea>", description: "Trigger: <trigger_when> | Planted during: <planted_during> | Strengthening carry: <present/none>" },
     ...
   ]
 )
 ```
 
 **After selection:**
-- Selected seeds become additional context for requirement definition in step 9. Store them in an accumulator (e.g. `$SELECTED_SEEDS`) so step 9 can reference the ideas and their "Why This Matters" sections when defining requirements.
+- Selected seeds become additional context for requirement definition in step 9. Store them in an accumulator (e.g. `$SELECTED_SEEDS`) so step 9 can reference the ideas, their "Why This Matters" sections, and any explicit "Strengthening Carry" sections when defining requirements.
 - Unselected seeds remain untouched in `.planning/seeds/` — never delete or modify seed files during this workflow.
 
 ## 3. Determine Milestone Version
@@ -143,6 +145,7 @@ Before writing any files, present a summary of what was gathered and ask for con
 
 **Key context:** [Any important constraints, decisions, or notes from questioning]
 **Carry-forward pressure:** [Any preserved seams, keep-open decisions, posture assumptions, or seeded strengthening routes that remain relevant at milestone open]
+**Selected seeds:** [Only show when seed selection is non-empty; include names and note when strengthening carry is present]
 ```
 
 AskUserQuestion:
@@ -378,7 +381,7 @@ Read PROJECT.md: core value, current milestone goals, validated requirements (wh
 
 When they exist, read `.planning/LONG-ARC.md` and the `Future Carry Forward` digest in `STATE.md` too. Keep preserved seams, keep-open decisions, posture assumptions, and seeded strengthening routes explicit instead of letting milestone framing silently narrow them.
 
-**If `$SELECTED_SEEDS` is non-empty (from step 2.5):** Include selected seed ideas and their "Why This Matters" sections as additional input when defining requirements. Seeds provide user-validated feature ideas that should be incorporated into the requirement categories alongside research findings or conversation-gathered features.
+**If `$SELECTED_SEEDS` is non-empty (from step 2.5):** Include selected seed ideas, their "Why This Matters" sections, and any explicit "Strengthening Carry" sections as additional input when defining requirements. Seeds provide user-validated feature ideas and bounded longer-horizon carry that should be incorporated into requirement definition alongside research findings or conversation-gathered features.
 
 **If research exists:** Read FEATURES.md, extract feature categories.
 
