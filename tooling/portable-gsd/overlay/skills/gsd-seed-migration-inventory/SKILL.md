@@ -1,14 +1,14 @@
 ---
-name: "gsd-uplift-project"
-description: "Detect repo-local project uplift posture and optionally write durable uplift memory"
+name: "gsd-seed-migration-inventory"
+description: "Inventory legacy or drifted seed corpora and optionally write a bounded migration-planning packet"
 metadata:
-  short-description: "Detect repo-local project uplift posture and optionally write durable uplift memory"
+  short-description: "Inventory legacy or drifted seed corpora and optionally write a bounded migration-planning packet"
 ---
 
 <codex_skill_adapter>
 ## A. Skill Invocation
-- This skill is invoked by mentioning `$gsd-uplift-project`.
-- Treat all user text after `$gsd-uplift-project` as `{{GSD_ARGS}}`.
+- This skill is invoked by mentioning `$gsd-seed-migration-inventory`.
+- Treat all user text after `$gsd-seed-migration-inventory` as `{{GSD_ARGS}}`.
 - If no arguments are present, treat `{{GSD_ARGS}}` as empty.
 
 ## B. AskUserQuestion → request_user_input Mapping
@@ -46,19 +46,17 @@ Result parsing:
 </codex_skill_adapter>
 
 <objective>
-Detect repo-local project uplift posture and, when explicitly requested, write a bounded detect-only uplift record (`UPLIFT-REPORT.md`, `UPLIFT-MANIFEST.json`, `STATE.md` uplift section).
+Produce a detect-only inventory for legacy or drifted seed corpora and, when explicitly requested, write `.planning/SEED-MIGRATION-REPORT.md` plus `.planning/SEED-MIGRATION-MANIFEST.json` as a compact migration-planning packet.
 </objective>
 
 <execution_context>
-@/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/uplift-project.md
+@/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/seed-migration-inventory.md
 </execution_context>
 
 <process>
-Execute the uplift-project workflow from @/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/uplift-project.md end-to-end.
+Execute the seed-migration-inventory workflow from @/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/seed-migration-inventory.md end-to-end.
 
 Default posture is detect-only.
-Pass `--write` only when the caller explicitly wants durable uplift memory written.
-If the workflow reports runtime-basis movement, prefer rerunning with `--write` so the durable uplift memory and live routed note stay in tune.
-If the workflow surfaces legacy or noncurrent seed posture, keep migration separate but prefer `--write` once the operator wants that posture preserved in durable uplift memory too.
-If the operator wants the deeper detect-only migration packet rather than only uplift-side posture, point them at `$gsd-seed-migration-inventory --write`.
+Pass `--write` only when the caller explicitly wants durable migration-planning memory.
+Keep direct seed rewrites or normalization separate from this workflow; the first slice is a detect-only inventory.
 </process>

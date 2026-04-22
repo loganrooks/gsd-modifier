@@ -100,6 +100,11 @@ python3 tooling/codex/run_claude_probe.py \
     - workflow consumers: `uplift-project`, `progress`, `resume-project`
     - durable outputs: `.planning/UPLIFT-REPORT.md`, `.planning/UPLIFT-MANIFEST.json`, and the `Project Uplift` section in `.planning/STATE.md`
     - audit lineage: `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/`
+- `seed_migration_inventory.py`
+  - inventories legacy or drifted seed-corpus posture without rewriting seed files
+  - detect mode can write `.planning/SEED-MIGRATION-REPORT.md` and `.planning/SEED-MIGRATION-MANIFEST.json` when `--write` is used
+  - keeps seed-corpus posture, per-seed vintage, contract-shape gaps, and migration moves explicit as a separate planning packet instead of crowding those semantics into uplift memory alone
+  - treat it as the specialist detect-only route once uplift or milestone-open surfaces point at older seed corpora
 - `harness_canary.py`
   - emits a bounded machine-checkable report for current runtime/install invariants
   - the first slice checks:

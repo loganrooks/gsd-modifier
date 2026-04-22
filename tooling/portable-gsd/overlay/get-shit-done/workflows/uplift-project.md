@@ -115,6 +115,7 @@ Route next action explicitly:
 - If seed corpus posture shows `legacy_unversioned` or noncurrent seed versions:
   - keep migration or rewrite separate from detect-only
   - preserve the posture in durable uplift memory with `--write` when the route activates
+  - point the operator at `$gsd-seed-migration-inventory --write` when they want a durable detect-only migration packet instead of only counts and examples
 - If the helper classifies the repo as `mid-phase uplift`:
   - keep uplift composition separate from current execution/verification routing
 </step>
