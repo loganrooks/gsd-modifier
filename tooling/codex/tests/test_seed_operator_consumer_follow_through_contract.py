@@ -1,3 +1,4 @@
+import re
 import unittest
 from pathlib import Path
 
@@ -18,8 +19,21 @@ class SeedOperatorConsumerFollowThroughContractTests(unittest.TestCase):
             self.assertIn("Seed posture reason:", text)
             self.assertIn("UPLIFT_NOTE.show_seed_migration_pointer", text)
             self.assertIn("Seed migration candidates:", text)
-            self.assertIn("Seed migration packet:", text)
+            self.assertIn("Seed migration breakdown:", text)
+            self.assertIn("Seed migration inventory:", text)
+            self.assertIn("Seed migration write packet:", text)
             self.assertIn("project_uplift.py\" progress-note", text)
+            self.assertRegex(
+                text,
+                re.compile(
+                    r"Only show these lines when `UPLIFT_NOTE\.show_seed_migration_pointer` is `true`:"
+                    r"[\s\S]*?- Seed migration candidates: \{seed_migration_candidate_count\}"
+                    r"[\s\S]*?- Seed migration breakdown: \{seed_migration_candidate_breakdown\}"
+                    r"[\s\S]*?- Seed migration inventory: \{seed_migration_inspect_pointer\}"
+                    r"[\s\S]*?- Seed migration write packet: \{seed_migration_write_pointer\}",
+                    re.MULTILINE,
+                ),
+            )
 
 
 if __name__ == "__main__":

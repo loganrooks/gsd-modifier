@@ -36,6 +36,14 @@ class SeedMigrationInventoryFollowThroughContractTests(unittest.TestCase):
         self.assertIn("$gsd-seed-migration-inventory", skill)
         self.assertIn("$gsd-seed-migration-inventory --write", skill)
 
+    def test_project_uplift_pointer_commands_stay_bound_to_specialist_skill(self) -> None:
+        skill = (
+            ROOT
+            / "tooling/portable-gsd/overlay/skills/gsd-seed-migration-inventory/SKILL.md"
+        ).read_text(encoding="utf-8")
+        self.assertIn(pu.SEED_MIGRATION_SKILL_COMMAND, skill)
+        self.assertIn(pu.SEED_MIGRATION_WRITE_COMMAND, skill)
+
     def test_seed_migration_inventory_workflow_keeps_rewrite_separate(self) -> None:
         workflow = (
             ROOT

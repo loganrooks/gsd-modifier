@@ -58,7 +58,11 @@ PROGRESS_NOTE_RENDER_FIELDS = (
 PROGRESS_NOTE_REASON_LABEL = "Reason"
 SEED_POSTURE_REASON_LABEL = "Seed posture reason"
 SEED_MIGRATION_CANDIDATE_LABEL = "Seed migration candidates"
-SEED_MIGRATION_POINTER_LABEL = "Seed migration packet"
+SEED_MIGRATION_BREAKDOWN_LABEL = "Seed migration breakdown"
+SEED_MIGRATION_INSPECT_POINTER_LABEL = "Seed migration inventory"
+SEED_MIGRATION_WRITE_POINTER_LABEL = "Seed migration write packet"
+SEED_MIGRATION_SKILL_COMMAND = "$gsd-seed-migration-inventory"
+SEED_MIGRATION_WRITE_COMMAND = f"{SEED_MIGRATION_SKILL_COMMAND} --write"
 
 RUNTIME_DIRS = [
     ".codex",
@@ -330,6 +334,8 @@ def parse_held_later_family_line(line: str) -> dict:
     if ": " in remainder:
         status, pointer = remainder.split(": ", 1)
         pointer = pointer.strip() or None
+        if pointer and " | " in pointer:
+            pointer = [item.strip() for item in pointer.split(" | ") if item.strip()]
     else:
         status = remainder
         pointer = None
@@ -342,8 +348,13 @@ def parse_held_later_family_line(line: str) -> dict:
 
 def format_held_later_family(entry: dict) -> str:
     text = f"{entry['family']} — {entry['status']}"
-    if entry.get("pointer"):
-        text += f": {entry['pointer']}"
+    pointer = entry.get("pointer")
+    if isinstance(pointer, list):
+        pointer_text = " | ".join(pointer)
+    else:
+        pointer_text = pointer
+    if pointer_text:
+        text += f": {pointer_text}"
     return text
 
 
@@ -655,6 +666,11 @@ def build_seed_corpus_posture(repo_root: pathlib.Path) -> dict:
 
     seed_file_count = len(seed_paths)
     noncurrent_version_total = sum(noncurrent_version_counts.values())
+    migration_candidate_count = (
+        legacy_unversioned_count
+        + noncurrent_version_total
+        + current_contract_shape_gap_count
+    )
     if seed_file_count == 0:
         posture = "no_seed_corpus"
     elif legacy_unversioned_count == 0 and noncurrent_version_total == 0:
@@ -681,16 +697,18 @@ def build_seed_corpus_posture(repo_root: pathlib.Path) -> dict:
         "noncurrent_version_examples": noncurrent_version_examples,
         "current_contract_shape_gap_count": current_contract_shape_gap_count,
         "current_contract_shape_gap_examples": current_contract_shape_gap_examples,
+        "migration_candidate_count": migration_candidate_count,
+        "migration_candidate_breakdown": {
+            "legacy_unversioned": legacy_unversioned_count,
+            "noncurrent_version": noncurrent_version_total,
+            "current_contract_shape_gap": current_contract_shape_gap_count,
+        },
         "corpus_fingerprint": sha256_text("\n".join(fingerprint_rows)) if fingerprint_rows else None,
     }
 
 
 def seed_corpus_needs_attention(seed_corpus_posture: dict) -> bool:
-    return (
-        seed_corpus_posture["legacy_unversioned_count"] > 0
-        or seed_corpus_posture["noncurrent_version_total"] > 0
-        or seed_corpus_posture.get("current_contract_shape_gap_count", 0) > 0
-    )
+    return seed_corpus_posture.get("migration_candidate_count", 0) > 0
 
 
 def seed_corpus_summary(seed_corpus_posture: dict) -> str:
@@ -730,6 +748,17 @@ def seed_corpus_reasons(seed_corpus_posture: dict) -> list[str]:
     return reasons
 
 
+def seed_migration_candidate_breakdown_text(seed_corpus_posture: dict) -> str:
+    breakdown = seed_corpus_posture.get("migration_candidate_breakdown") or {}
+    legacy = breakdown.get("legacy_unversioned", seed_corpus_posture.get("legacy_unversioned_count", 0))
+    noncurrent = breakdown.get("noncurrent_version", seed_corpus_posture.get("noncurrent_version_total", 0))
+    shape_gap = breakdown.get(
+        "current_contract_shape_gap",
+        seed_corpus_posture.get("current_contract_shape_gap_count", 0),
+    )
+    return f"legacy {legacy} / noncurrent {noncurrent} / shape-gap {shape_gap}"
+
+
 def seed_corpus_drift_reasons(previous: dict, current: dict) -> list[str]:
     reasons: list[str] = []
     fields = (
@@ -739,6 +768,8 @@ def seed_corpus_drift_reasons(previous: dict, current: dict) -> list[str]:
         ("legacy_unversioned_count", "legacy-unversioned seed count"),
         ("noncurrent_version_counts", "noncurrent seed version counts"),
         ("current_contract_shape_gap_count", "current-contract seed shape-gap count"),
+        ("migration_candidate_count", "seed migration candidate count"),
+        ("migration_candidate_breakdown", "seed migration candidate breakdown"),
     )
     for key, label in fields:
         before = previous.get(key)
@@ -759,15 +790,14 @@ def progress_note_seed_fields(seed_corpus_posture: dict | None) -> dict:
             "seed_corpus_reasons": [],
             "show_seed_migration_pointer": False,
             "seed_migration_candidate_count": 0,
-            "seed_migration_pointer": None,
+            "seed_migration_candidate_breakdown": None,
+            "seed_migration_inspect_pointer": None,
+            "seed_migration_write_pointer": None,
         }
     seed_file_count = seed_corpus_posture.get("seed_file_count", 0)
     show_seed_corpus_posture = seed_file_count > 0
-    migration_candidate_count = (
-        seed_corpus_posture.get("legacy_unversioned_count", 0)
-        + seed_corpus_posture.get("noncurrent_version_total", 0)
-        + seed_corpus_posture.get("current_contract_shape_gap_count", 0)
-    )
+    migration_candidate_count = seed_corpus_posture.get("migration_candidate_count", 0)
+    show_seed_migration_pointer = show_seed_corpus_posture and migration_candidate_count > 0
     return {
         "show_seed_corpus_posture": show_seed_corpus_posture,
         "seed_corpus_posture": (
@@ -776,13 +806,18 @@ def progress_note_seed_fields(seed_corpus_posture: dict | None) -> dict:
         "seed_corpus_reasons": (
             seed_corpus_reasons(seed_corpus_posture) if show_seed_corpus_posture else []
         ),
-        "show_seed_migration_pointer": show_seed_corpus_posture
-        and migration_candidate_count > 0,
+        "show_seed_migration_pointer": show_seed_migration_pointer,
         "seed_migration_candidate_count": migration_candidate_count,
-        "seed_migration_pointer": (
-            "$gsd-seed-migration-inventory --write"
-            if show_seed_corpus_posture and migration_candidate_count > 0
+        "seed_migration_candidate_breakdown": (
+            seed_migration_candidate_breakdown_text(seed_corpus_posture)
+            if show_seed_migration_pointer
             else None
+        ),
+        "seed_migration_inspect_pointer": (
+            SEED_MIGRATION_SKILL_COMMAND if show_seed_migration_pointer else None
+        ),
+        "seed_migration_write_pointer": (
+            SEED_MIGRATION_WRITE_COMMAND if show_seed_migration_pointer else None
         ),
     }
 

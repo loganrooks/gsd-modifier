@@ -48,7 +48,7 @@ class ProjectUpliftTests(unittest.TestCase):
             "tooling/codex/UPLIFT-HELD-LATER.md",
             "- required-reading installation practice — held\n"
             "- cross-runtime uplift composition — held\n"
-            "- legacy seed corpus migration — held\n"
+            "- legacy seed corpus migration — partially landed: tooling/portable-gsd/overlay/get-shit-done/workflows/seed-migration-inventory.md | intervention-proposals/92-seed-migration-pointer-bridge-harden-follow-through-implementation.md | propagation-audit/38-seed-migration-pointer-bridge-harden-change-triggered-refresh.md\n"
             "- routed-entry hooks beyond `progress` — partially landed: propagation-audit/04-resume-project-second-consumer-implementation.md\n",
         )
 
@@ -238,7 +238,9 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertEqual(note["seed_corpus_reasons"], [])
             self.assertFalse(note["show_seed_migration_pointer"])
             self.assertEqual(note["seed_migration_candidate_count"], 0)
-            self.assertIsNone(note["seed_migration_pointer"])
+            self.assertIsNone(note["seed_migration_candidate_breakdown"])
+            self.assertIsNone(note["seed_migration_inspect_pointer"])
+            self.assertIsNone(note["seed_migration_write_pointer"])
 
             self._write(repo_root, "AGENTS.md", "# Agents changed\n")
             changed_note = pu.build_progress_note(repo_root)
@@ -279,8 +281,12 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertIn(f"{pu.SEED_POSTURE_REASON_LABEL}:", resume_workflow)
             self.assertIn(f"{pu.SEED_MIGRATION_CANDIDATE_LABEL}:", progress_workflow)
             self.assertIn(f"{pu.SEED_MIGRATION_CANDIDATE_LABEL}:", resume_workflow)
-            self.assertIn(f"{pu.SEED_MIGRATION_POINTER_LABEL}:", progress_workflow)
-            self.assertIn(f"{pu.SEED_MIGRATION_POINTER_LABEL}:", resume_workflow)
+            self.assertIn(f"{pu.SEED_MIGRATION_BREAKDOWN_LABEL}:", progress_workflow)
+            self.assertIn(f"{pu.SEED_MIGRATION_BREAKDOWN_LABEL}:", resume_workflow)
+            self.assertIn(f"{pu.SEED_MIGRATION_INSPECT_POINTER_LABEL}:", progress_workflow)
+            self.assertIn(f"{pu.SEED_MIGRATION_INSPECT_POINTER_LABEL}:", resume_workflow)
+            self.assertIn(f"{pu.SEED_MIGRATION_WRITE_POINTER_LABEL}:", progress_workflow)
+            self.assertIn(f"{pu.SEED_MIGRATION_WRITE_POINTER_LABEL}:", resume_workflow)
 
     def test_progress_note_surfaces_seed_corpus_without_manifest(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -319,8 +325,11 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertTrue(note["show_seed_migration_pointer"])
             self.assertEqual(note["seed_migration_candidate_count"], 1)
             self.assertEqual(
-                note["seed_migration_pointer"], "$gsd-seed-migration-inventory --write"
+                note["seed_migration_candidate_breakdown"],
+                "legacy 1 / noncurrent 0 / shape-gap 0",
             )
+            self.assertEqual(note["seed_migration_inspect_pointer"], pu.SEED_MIGRATION_SKILL_COMMAND)
+            self.assertEqual(note["seed_migration_write_pointer"], pu.SEED_MIGRATION_WRITE_COMMAND)
             self.assertTrue(
                 any(
                     "legacy-unversioned seeds still present: 1" == reason
@@ -343,6 +352,19 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertTrue(any(item["status"] == "held" for item in held_later))
             self.assertTrue(
                 any(
+                    item["family"] == "legacy seed corpus migration"
+                    and item["status"] == "partially landed"
+                    and item["pointer"]
+                    == [
+                        "tooling/portable-gsd/overlay/get-shit-done/workflows/seed-migration-inventory.md",
+                        "intervention-proposals/92-seed-migration-pointer-bridge-harden-follow-through-implementation.md",
+                        "propagation-audit/38-seed-migration-pointer-bridge-harden-change-triggered-refresh.md",
+                    ]
+                    for item in held_later
+                )
+            )
+            self.assertTrue(
+                any(
                     item["family"] == "routed-entry hooks beyond `progress`"
                     and item["status"] == "partially landed"
                     and item["pointer"] == "propagation-audit/04-resume-project-second-consumer-implementation.md"
@@ -353,6 +375,15 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertEqual(manifest["compatibility_basis"]["observed_runtime_version"], "1.38.1")
             self.assertTrue(manifest["compatibility_basis"]["observed_runtime_version_aligned"])
             self.assertEqual(manifest["seed_corpus_posture"]["posture"], "no_seed_corpus")
+            self.assertEqual(manifest["seed_corpus_posture"]["migration_candidate_count"], 0)
+            self.assertEqual(
+                manifest["seed_corpus_posture"]["migration_candidate_breakdown"],
+                {
+                    "legacy_unversioned": 0,
+                    "noncurrent_version": 0,
+                    "current_contract_shape_gap": 0,
+                },
+            )
 
     def test_compatibility_basis_anchors_to_observed_runtime_sources(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -425,8 +456,11 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertTrue(note["show_seed_migration_pointer"])
             self.assertEqual(note["seed_migration_candidate_count"], 1)
             self.assertEqual(
-                note["seed_migration_pointer"], "$gsd-seed-migration-inventory --write"
+                note["seed_migration_candidate_breakdown"],
+                "legacy 1 / noncurrent 0 / shape-gap 0",
             )
+            self.assertEqual(note["seed_migration_inspect_pointer"], pu.SEED_MIGRATION_SKILL_COMMAND)
+            self.assertEqual(note["seed_migration_write_pointer"], pu.SEED_MIGRATION_WRITE_COMMAND)
             self.assertTrue(
                 any(
                     "legacy-unversioned seeds still present: 1" == reason
@@ -460,8 +494,11 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertTrue(note["show_seed_migration_pointer"])
             self.assertEqual(note["seed_migration_candidate_count"], 1)
             self.assertEqual(
-                note["seed_migration_pointer"], "$gsd-seed-migration-inventory --write"
+                note["seed_migration_candidate_breakdown"],
+                "legacy 0 / noncurrent 0 / shape-gap 1",
             )
+            self.assertEqual(note["seed_migration_inspect_pointer"], pu.SEED_MIGRATION_SKILL_COMMAND)
+            self.assertEqual(note["seed_migration_write_pointer"], pu.SEED_MIGRATION_WRITE_COMMAND)
             self.assertTrue(
                 any(
                     "current-contract seed shape gaps still present: 1" == reason

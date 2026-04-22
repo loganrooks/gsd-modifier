@@ -183,7 +183,9 @@ Only show these lines when `UPLIFT_NOTE.show_seed_migration_pointer` is `true`:
 
 ```markdown
 - Seed migration candidates: {seed_migration_candidate_count}
-- Seed migration packet: {seed_migration_pointer}
+- Seed migration breakdown: {seed_migration_candidate_breakdown}
+- Seed migration inventory: {seed_migration_inspect_pointer}
+- Seed migration write packet: {seed_migration_write_pointer}
 ```
 
 ## Active Debug Sessions
