@@ -192,6 +192,101 @@ class PortableGsdContractTests(unittest.TestCase):
             self.assertEqual(payload["summary"]["content_mismatch_count"], 0)
             self.assertEqual(payload["hard_failures"], [])
 
+    def test_materialization_report_classifies_known_runtime_specific_reference_hits(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            update_example = "# RUNTIME_DIR is the resolved config directory (e.g. ~/.claude, ~/.config/opencode)\n"
+            self._write(repo_root, "tooling/portable-gsd/overlay/get-shit-done/workflows/update.md", update_example)
+            self._write(
+                repo_root,
+                "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
+                json.dumps(
+                    {
+                        "schema_version": 1,
+                        "entries": {
+                            "get-shit-done/workflows/update.md": "overwrite",
+                        },
+                    }
+                )
+                + "\n",
+            )
+            self._write(
+                repo_root,
+                ".codex/gsd-local-patches/backup-meta.json",
+                json.dumps({"files": ["get-shit-done/workflows/update.md"]}) + "\n",
+            )
+            self._write(repo_root, ".codex/get-shit-done/workflows/update.md", update_example)
+            self._write(repo_root, ".codex/gsd-local-patches/get-shit-done/workflows/update.md", update_example)
+            self._write(repo_root, ".codex/agents/gsd-debugger.toml", "configDir = ~/.claude\n")
+
+            report = pgc.build_materialization_report(repo_root, pgc.DEFAULT_COMPACT_PROMPT_FILE)
+
+            runtime_scan = report["runtime_specific_reference_scan"]
+            self.assertEqual(runtime_scan["summary"]["total_hits"], 3)
+            self.assertEqual(runtime_scan["summary"]["expected_baseline_count"], 3)
+            self.assertEqual(runtime_scan["summary"]["review_needed_count"], 0)
+            self.assertFalse(runtime_scan["requires_contextual_reread"])
+            classifications = {hit["path"]: hit["classification"] for hit in runtime_scan["hits"]}
+            self.assertEqual(classifications["agents/gsd-debugger.toml"], "upstream_only_contextual_carry")
+            self.assertEqual(classifications["get-shit-done/workflows/update.md"], "overlay_owned_comment_example")
+            self.assertEqual(
+                classifications["gsd-local-patches/get-shit-done/workflows/update.md"],
+                "pristine_backup_mirror",
+            )
+            self.assertEqual(report["summary"]["runtime_specific_reference_hit_count"], 3)
+            self.assertEqual(report["summary"]["runtime_specific_reference_review_needed_count"], 0)
+            self.assertEqual(report["hard_failures"], [])
+
+    def test_materialization_report_marks_unreviewed_runtime_specific_reference_hits_for_contextual_reread(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            update_runtime_reference = "See ~/.claude/runtime.md for more.\n"
+            self._write(repo_root, "tooling/portable-gsd/overlay/get-shit-done/workflows/update.md", update_runtime_reference)
+            self._write(
+                repo_root,
+                "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
+                json.dumps(
+                    {
+                        "schema_version": 1,
+                        "entries": {
+                            "get-shit-done/workflows/update.md": "overwrite",
+                        },
+                    }
+                )
+                + "\n",
+            )
+            self._write(
+                repo_root,
+                ".codex/gsd-local-patches/backup-meta.json",
+                json.dumps({"files": ["get-shit-done/workflows/update.md"]}) + "\n",
+            )
+            self._write(repo_root, ".codex/gsd-local-patches/get-shit-done/workflows/update.md", update_runtime_reference)
+            self._write(repo_root, ".codex/get-shit-done/workflows/update.md", update_runtime_reference)
+
+            report = pgc.build_materialization_report(repo_root, pgc.DEFAULT_COMPACT_PROMPT_FILE)
+
+            runtime_scan = report["runtime_specific_reference_scan"]
+            self.assertTrue(runtime_scan["requires_contextual_reread"])
+            self.assertEqual(runtime_scan["summary"]["total_hits"], 2)
+            self.assertEqual(runtime_scan["summary"]["review_needed_count"], 2)
+            self.assertEqual(
+                [hit["path"] for hit in runtime_scan["hits"]],
+                [
+                    "get-shit-done/workflows/update.md",
+                    "gsd-local-patches/get-shit-done/workflows/update.md",
+                ],
+            )
+            self.assertEqual(
+                {hit["classification"] for hit in runtime_scan["hits"]},
+                {"unreviewed_runtime_specific_reference_hit"},
+            )
+            self.assertEqual(
+                {hit["family"] for hit in runtime_scan["hits"]},
+                {"needs_contextual_reread"},
+            )
+            self.assertTrue(all(hit["requires_contextual_reread"] for hit in runtime_scan["hits"]))
+            self.assertEqual(report["hard_failures"], [])
+
 
 if __name__ == "__main__":
     unittest.main()

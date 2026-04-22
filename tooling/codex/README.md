@@ -118,6 +118,10 @@ python3 tooling/codex/run_claude_probe.py \
 - `portable_gsd_contract.py`
   - owns the tracked overlay install contract for repo-local GSD materialization
   - validates [OVERLAY-MANIFEST.json](/home/rookslog/workspace/projects/prix-guesser/tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json), captures fresh-install pristine overwrite copies when upstream no longer leaves them behind, applies overlay files, applies repo-local reasoning defaults, and verifies post-materialization coherence
+  - `verify-materialized` now also reports typed runtime-specific `.claude` reference hits inside live `.codex/` materialization:
+    - preserves the current known baseline explicitly
+    - keeps contextual hits separate from unreviewed hits
+    - leaves final judgment to contextual reread rather than pretending the helper can settle every warning by itself
   - use it when the question is whether overlay ownership, backup-carried overwrite truth, and additive repo-local owners are still aligned
 - `ensure_gsd_sdk_runtime.py`
   - verifies the repo-local `gsd-sdk` runtime under `/bin/sh` after upstream local install and repairs the known executable-bit failure when the installed launcher target has a shebang but lost execute bits

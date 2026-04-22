@@ -15,6 +15,9 @@ LOCAL_COMPACT_PROMPT_SELECTOR = ".codex.local/compact-prompt.txt"
 OVERLAY_REL_PATH = "tooling/portable-gsd/overlay"
 OVERLAY_MANIFEST_REL_PATH = "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json"
 VALID_MODES = {"add", "overwrite"}
+RUNTIME_SPECIFIC_REFERENCE_PATTERN = re.compile(r"(?:~|\$HOME)\/\.claude\b")
+RUNTIME_SPECIFIC_REFERENCE_SUFFIXES = {".md", ".toml"}
+RUNTIME_SPECIFIC_REFERENCE_EXCLUDED = {"CHANGELOG.md"}
 
 QUALITY_REASONING = {
     "gsd-planner": "xhigh",
@@ -154,6 +157,107 @@ def load_overlay_manifest(repo_root: pathlib.Path) -> dict[str, str]:
     if not isinstance(entries, dict):
         raise ValueError("overlay manifest entries must be an object")
     return {str(key): str(value) for key, value in entries.items()}
+
+
+def iter_runtime_specific_reference_hits(codex_root: pathlib.Path) -> list[dict[str, Any]]:
+    hits: list[dict[str, Any]] = []
+    for path in sorted(codex_root.rglob("*")):
+        if not path.is_file():
+            continue
+        if path.suffix not in RUNTIME_SPECIFIC_REFERENCE_SUFFIXES:
+            continue
+        if path.name in RUNTIME_SPECIFIC_REFERENCE_EXCLUDED:
+            continue
+        rel_path = str(path.relative_to(codex_root)).replace("\\", "/")
+        for line_number, line in enumerate(read_text(path).splitlines(), start=1):
+            if not RUNTIME_SPECIFIC_REFERENCE_PATTERN.search(line):
+                continue
+            hits.append(
+                {
+                    "path": rel_path,
+                    "line": line_number,
+                    "text": line.strip(),
+                }
+            )
+    return hits
+
+
+def classify_runtime_specific_reference_hit(
+    hit: dict[str, Any], overlay_entries: dict[str, str]
+) -> dict[str, Any]:
+    rel_path = str(hit["path"])
+    line_number = int(hit["line"])
+    line_text = str(hit["text"])
+    overlay_mode = overlay_entries.get(rel_path)
+
+    classification = "unreviewed_runtime_specific_reference_hit"
+    family = "needs_contextual_reread"
+    ownership = "untyped"
+    expected_baseline = False
+    requires_contextual_reread = True
+    note = "net-new or unclassified runtime-specific reference hit; reread context before taking action"
+
+    if rel_path == "agents/gsd-debugger.toml" and line_text == "configDir = ~/.claude":
+        classification = "upstream_only_contextual_carry"
+        family = "comment_or_debugging_example"
+        ownership = "upstream_pristine"
+        expected_baseline = True
+        requires_contextual_reread = False
+        note = "upstream-only debugging example carried through Codex install output"
+    elif (
+        rel_path == "get-shit-done/workflows/update.md"
+        and "RUNTIME_DIR is the resolved config directory" in line_text
+    ):
+        classification = "overlay_owned_comment_example"
+        family = "comment_or_debugging_example"
+        ownership = "overlay_owned" if overlay_mode else "runtime_only"
+        expected_baseline = True
+        requires_contextual_reread = False
+        note = "overlay-owned runtime comment example inside update-side runtime detection guidance"
+    elif rel_path.startswith("gsd-local-patches/") and "RUNTIME_DIR is the resolved config directory" in line_text:
+        classification = "pristine_backup_mirror"
+        family = "pristine_backup_mirror"
+        ownership = "pristine_backup"
+        expected_baseline = True
+        requires_contextual_reread = False
+        note = "pristine backup mirror of an upstream or overlay-owned comment example"
+
+    return {
+        **hit,
+        "classification": classification,
+        "family": family,
+        "ownership": ownership,
+        "overlay_mode": overlay_mode,
+        "expected_baseline": expected_baseline,
+        "requires_contextual_reread": requires_contextual_reread,
+        "note": note,
+    }
+
+
+def build_runtime_specific_reference_report(
+    codex_root: pathlib.Path, overlay_entries: dict[str, str]
+) -> dict[str, Any]:
+    raw_hits = iter_runtime_specific_reference_hits(codex_root)
+    hits = [classify_runtime_specific_reference_hit(hit, overlay_entries) for hit in raw_hits]
+    expected_baseline_count = sum(1 for hit in hits if hit["expected_baseline"])
+    contextual_count = sum(1 for hit in hits if hit["family"] != "needs_contextual_reread")
+    review_needed_count = sum(1 for hit in hits if hit["requires_contextual_reread"])
+    return {
+        "pattern": RUNTIME_SPECIFIC_REFERENCE_PATTERN.pattern,
+        "scope": "live .codex .md/.toml files excluding CHANGELOG.md",
+        "hits": hits,
+        "summary": {
+            "total_hits": len(hits),
+            "expected_baseline_count": expected_baseline_count,
+            "contextual_count": contextual_count,
+            "review_needed_count": review_needed_count,
+        },
+        "requires_contextual_reread": review_needed_count > 0,
+        "notes": [
+            "This report is a bounded parity-reference aid, not a final defect judge.",
+            "Known baseline hits are classified explicitly; any unreviewed hit requires contextual reread before action.",
+        ],
+    }
 
 
 def build_manifest_validation_report(repo_root: pathlib.Path) -> dict[str, Any]:
@@ -324,6 +428,7 @@ def build_materialization_report(repo_root: pathlib.Path, compact_prompt: str) -
     codex_root = repo_root / ".codex"
     backup_paths = load_backup_meta_paths(codex_root)
     entries = load_overlay_manifest(repo_root)
+    runtime_specific_reference_scan = build_runtime_specific_reference_report(codex_root, entries)
 
     missing_live_targets: list[str] = []
     backup_copy_missing: list[str] = []
@@ -360,10 +465,15 @@ def build_materialization_report(repo_root: pathlib.Path, compact_prompt: str) -
             "missing_live_target_count": len(missing_live_targets),
             "backup_copy_missing_count": len(backup_copy_missing),
             "content_mismatch_count": len(content_mismatch),
+            "runtime_specific_reference_hit_count": runtime_specific_reference_scan["summary"]["total_hits"],
+            "runtime_specific_reference_review_needed_count": runtime_specific_reference_scan["summary"][
+                "review_needed_count"
+            ],
         },
         "missing_live_targets": missing_live_targets,
         "backup_copy_missing": backup_copy_missing,
         "content_mismatch": content_mismatch,
+        "runtime_specific_reference_scan": runtime_specific_reference_scan,
         "hard_failures": hard_failures,
     }
 
