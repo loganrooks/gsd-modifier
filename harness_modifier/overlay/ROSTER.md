@@ -18,7 +18,10 @@ Context rule:
     `harness_modifier/overlay/`
   - explicit manifest source indirection now ties those sources back to the
     stable install targets under `tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json`
+  - the moved skill adapters now use `__PROJECT_ROOT__` source-side execution
+    context tokens instead of host-absolute embedded paths
 - the remaining live blockers are now narrower:
+  - helper-shim versus helper-payload authority
   - overwrite-family workflow/template/reference carriers that still preserve
     host or upstream-boundary coupling
   - host-local compact-prompt bodies that intentionally preserve this host
@@ -31,9 +34,9 @@ splitting host doctrine out of their current text.
 
 | Path | Mode | Current extraction posture | Why it can travel |
 | --- | --- | --- | --- |
-| `skills/gsd-propagation-review/SKILL.md` | `add` | `modifier-owned-source` | Additive specialist skill adapter; authoritative source now lives under `harness_modifier/overlay/skills/` while the stable install target remains declared in the overlay manifest. |
-| `skills/gsd-uplift-project/SKILL.md` | `add` | `modifier-owned-source` | Additive specialist skill adapter; authoritative source now lives under `harness_modifier/overlay/skills/` while the stable install target remains declared in the overlay manifest. |
-| `skills/gsd-seed-migration-inventory/SKILL.md` | `add` | `modifier-owned-source` | Additive specialist skill adapter; authoritative source now lives under `harness_modifier/overlay/skills/` while the stable install target remains declared in the overlay manifest. |
+| `skills/gsd-propagation-review/SKILL.md` | `add` | `modifier-owned-source` | Additive specialist skill adapter; authoritative source now lives under `harness_modifier/overlay/skills/`, source-side execution context now uses `__PROJECT_ROOT__` token abstraction, and the stable install target remains declared in the overlay manifest. |
+| `skills/gsd-uplift-project/SKILL.md` | `add` | `modifier-owned-source` | Additive specialist skill adapter; authoritative source now lives under `harness_modifier/overlay/skills/`, source-side execution context now uses `__PROJECT_ROOT__` token abstraction, and the stable install target remains declared in the overlay manifest. |
+| `skills/gsd-seed-migration-inventory/SKILL.md` | `add` | `modifier-owned-source` | Additive specialist skill adapter; authoritative source now lives under `harness_modifier/overlay/skills/`, source-side execution context now uses `__PROJECT_ROOT__` token abstraction, and the stable install target remains declared in the overlay manifest. |
 | `skills/gsd-rigorous-research/SKILL.md` | `add` | `later-generic-slice` | Additive specialist research adapter with generic route semantics. |
 | `skills/gsd-rigorous-research/references/method.md` | `add` | `later-generic-slice` | Generic research method reference. |
 | `skills/gsd-rigorous-research/references/output-template.md` | `add` | `later-generic-slice` | Generic research output template. |
@@ -159,11 +162,17 @@ Current blocker state:
 - the first specialist source split is now done:
   - the three skill adapters and three workflow shells now live under
     `harness_modifier/overlay/`
+  - the moved skill adapters now use `__PROJECT_ROOT__` source-side execution
+    context tokens instead of host-absolute embedded paths
   - explicit source-path indirection in the overlay manifest keeps the stable
     install targets unchanged
   - package-owned helper shims now bridge the moved workflow shells to the
     current helper authorities
 - the next remaining blockers are no longer the specialist trio:
+  - helper-shim versus helper-payload authority
+  - default-source-root migration pressure
+  - overwrite-family source-indirection readiness before any overwrite carrier
+    split
   - overwrite-family workflow/template/reference carriers that still couple to
     host or upstream-boundary surfaces
   - host-local compact-prompt bodies

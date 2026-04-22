@@ -50,11 +50,11 @@ Review one concrete contract-changing slice against the upstream-pristine baseli
 </objective>
 
 <execution_context>
-@/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/propagation-review.md
+@__PROJECT_ROOT__/.codex/get-shit-done/workflows/propagation-review.md
 </execution_context>
 
 <process>
-Execute the propagation-review workflow from @/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/propagation-review.md end-to-end.
+Execute the propagation-review workflow from @__PROJECT_ROOT__/.codex/get-shit-done/workflows/propagation-review.md end-to-end.
 
 Default posture is read-only.
 Use `--write-note PATH` only when the caller explicitly wants a durable propagation review note.

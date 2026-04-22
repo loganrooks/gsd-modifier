@@ -192,6 +192,41 @@ class PortableGsdContractTests(unittest.TestCase):
             self.assertEqual(payload["summary"]["content_mismatch_count"], 0)
             self.assertEqual(payload["hard_failures"], [])
 
+    def test_apply_overlay_renders_project_root_tokens_for_explicit_source_entries(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._write(
+                repo_root,
+                "harness_modifier/overlay/skills/gsd-uplift-project/SKILL.md",
+                "<execution_context>\n@__PROJECT_ROOT__/.codex/get-shit-done/workflows/uplift-project.md\n</execution_context>\n",
+            )
+            self._write(
+                repo_root,
+                "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
+                json.dumps(
+                    {
+                        "schema_version": 2,
+                        "entries": {
+                            "skills/gsd-uplift-project/SKILL.md": {
+                                "mode": "add",
+                                "source": "harness_modifier/overlay/skills/gsd-uplift-project/SKILL.md",
+                            }
+                        },
+                    }
+                )
+                + "\n",
+            )
+
+            written = pgc.apply_overlay(repo_root, pgc.DEFAULT_COMPACT_PROMPT_FILE)
+
+            self.assertEqual(written, ["skills/gsd-uplift-project/SKILL.md"])
+            live_skill = (repo_root / ".codex/skills/gsd-uplift-project/SKILL.md").read_text(encoding="utf-8")
+            self.assertIn(
+                f"@{repo_root}/.codex/get-shit-done/workflows/uplift-project.md",
+                live_skill,
+            )
+            self.assertNotIn("__PROJECT_ROOT__", live_skill)
+
     def test_materialization_report_classifies_known_runtime_specific_reference_hits(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             repo_root = pathlib.Path(tmpdir)

@@ -50,11 +50,11 @@ Produce a detect-only inventory for legacy or drifted seed corpora and, when exp
 </objective>
 
 <execution_context>
-@/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/seed-migration-inventory.md
+@__PROJECT_ROOT__/.codex/get-shit-done/workflows/seed-migration-inventory.md
 </execution_context>
 
 <process>
-Execute the seed-migration-inventory workflow from @/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/seed-migration-inventory.md end-to-end.
+Execute the seed-migration-inventory workflow from @__PROJECT_ROOT__/.codex/get-shit-done/workflows/seed-migration-inventory.md end-to-end.
 
 Default posture is detect-only.
 Point operators at `$gsd-seed-migration-inventory` when they want the deeper detect-only packet.

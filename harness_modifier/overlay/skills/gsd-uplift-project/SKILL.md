@@ -50,11 +50,11 @@ Detect repo-local project uplift posture and, when explicitly requested, write a
 </objective>
 
 <execution_context>
-@/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/uplift-project.md
+@__PROJECT_ROOT__/.codex/get-shit-done/workflows/uplift-project.md
 </execution_context>
 
 <process>
-Execute the uplift-project workflow from @/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/uplift-project.md end-to-end.
+Execute the uplift-project workflow from @__PROJECT_ROOT__/.codex/get-shit-done/workflows/uplift-project.md end-to-end.
 
 Default posture is detect-only.
 Pass `--write` only when the caller explicitly wants durable uplift memory written.
