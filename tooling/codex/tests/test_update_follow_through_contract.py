@@ -29,6 +29,16 @@ class UpdateFollowThroughContractTests(unittest.TestCase):
         )
         self.assertIn("<supporting_reading>", text)
         self.assertIn("<deeper_reading>", text)
+        self.assertIn(
+            "@__PROJECT_ROOT__/.codex/get-shit-done/references/entry-runtime-uplift-continuity.md",
+            text,
+        )
+        self.assertIn("PREFERRED_RUNTIME` is `codex` or `claude`", text)
+        self.assertIn("Do not run `$gsd-uplift-project --write` from `update.md`", text)
+        self.assertIn(
+            "before the clean-install step below rewrites the runtime copy via overlay rematerialization",
+            text,
+        )
         self.assertIn("$gsd-health", text)
         self.assertIn("$gsd-uplift-project --write", text)
 
@@ -37,6 +47,10 @@ class UpdateFollowThroughContractTests(unittest.TestCase):
     ) -> None:
         text = (ROOT / "tooling/portable-gsd/overlay/skills/gsd-update/SKILL.md").read_text()
         self.assertIn("runtime/package update", text)
+        self.assertIn("only when the active runtime is `.codex` or `.claude`", text)
+        self.assertIn(
+            "It does not translate that continuity into broader parity, matrix, or version-window claims.",
+            text,
+        )
         self.assertIn("$gsd-health", text)
         self.assertIn("$gsd-uplift-project --write", text)
-

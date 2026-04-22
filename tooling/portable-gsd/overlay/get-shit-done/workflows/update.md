@@ -12,6 +12,7 @@ Read all files referenced by the invoking prompt's execution_context before star
 Keep the runtime-update packet narrow:
 - command arguments and any immediately previous update output when this is a rerun
 - the detected runtime/version frontier (`VERSION`, `gsd-file-manifest.json`, and config-dir-local install state) when clarifying package/install movement
+- `@__PROJECT_ROOT__/.codex/get-shit-done/references/entry-runtime-uplift-continuity.md` only when `PREFERRED_RUNTIME` is `codex` or `claude` and repo-local `.codex/` or `.claude/` state is present, so repo-local continuity stays narrower than the broader multi-provider detection block
 - `.planning/UPLIFT-MANIFEST.json` or `.planning/UPLIFT-REPORT.md` only when runtime/package movement is already understood and the next route becomes later repo-local posture refresh
 </supporting_reading>
 
@@ -345,6 +346,20 @@ Keep update ownership explicit:
 - `update` does not own structural planning repair. If the live blocker is missing or damaged `.planning/` state, route to `$gsd-health`.
 - `update` does not by itself refresh governing docs, `.planning/` posture, required-reading carry, seeds, long-horizon doctrine, or other repo-local instruction surfaces.
 - If runtime/package movement is already handled but broader repo-local posture still deserves refresh, route separately to `$gsd-uplift-project --write`.
+</step>
+
+<step name="review_entry_runtime_continuity">
+If `PREFERRED_RUNTIME` is `codex` or `claude` and repo-local `.codex/` or `.claude/` runtime state is present, read:
+
+@__PROJECT_ROOT__/.codex/get-shit-done/references/entry-runtime-uplift-continuity.md
+
+Use it as a read-only continuity surface:
+- read the compact `.planning/STATE.md` `## Project Uplift` digest first when present
+- widen to `.planning/UPLIFT-REPORT.md` and `.planning/UPLIFT-MANIFEST.json` only when ambiguity remains
+- Do not run `$gsd-uplift-project --write` from `update.md`
+- read this continuity surface before the clean-install step below rewrites the runtime copy via overlay rematerialization
+
+If the gate does not hold, keep continuity ambient at the broader runtime/package boundary and do not surface this narrower repo-local reference here.
 </step>
 
 <step name="show_changes_and_confirm">

@@ -57,6 +57,7 @@ Routes to the update workflow which handles:
 - Restart reminder
 
 This skill owns runtime/package update and installer refresh. It does not by itself own structural planning repair or broader repo-local posture uplift.
+This skill may surface repo-local entry/runtime continuity only when the active runtime is `.codex` or `.claude`. It does not translate that continuity into broader parity, matrix, or version-window claims.
 </objective>
 
 <execution_context>
