@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "compatibility_posture": "observed_basis_only",
+  "runtime_basis": {
+    "runtime": ".codex",
+    "basis_mode": "observed_runtime_anchor",
+    "version_source": ".codex/get-shit-done/VERSION",
+    "manifest_version_source": ".codex/gsd-file-manifest.json"
+  },
+  "runtime_held_annotations": [
+    {
+      "runtime": ".claude",
+      "annotation_posture": "held_annotation",
+      "version_source": ".claude/get-shit-done/VERSION",
+      "note": "second runtime is recorded as a held compatibility annotation while the observed basis remains anchored to .codex"
+    }
+  ],
+  "overlay_schema_version": 1,
+  "uplift_manifest_schema_version": 6,
+  "upstream_compatibility_window": {
+    "mode": "observed_basis_only",
+    "state": "unknown",
+    "note": "support-window claims stay anchored to the observed runtime basis until later exercised widening earns more"
+  },
+  "parity_scan_baseline": {
+    "target_runtime": ".codex",
+    "scope": "live .codex .md/.toml files excluding CHANGELOG.md",
+    "rules": [
+      {
+        "path": "agents/gsd-debugger.toml",
+        "path_match_mode": "exact",
+        "text": "configDir = ~/.claude",
+        "text_match_mode": "exact",
+        "classification": "upstream_only_contextual_carry",
+        "family": "comment_or_debugging_example",
+        "ownership": "upstream_pristine",
+        "note": "upstream-only debugging example carried through Codex install output"
+      },
+      {
+        "path": "get-shit-done/workflows/update.md",
+        "path_match_mode": "exact",
+        "text": "RUNTIME_DIR is the resolved config directory",
+        "text_match_mode": "contains",
+        "classification": "overlay_owned_comment_example",
+        "family": "comment_or_debugging_example",
+        "ownership_if_overlay_mode_present": "overlay_owned",
+        "ownership_otherwise": "runtime_only",
+        "note": "overlay-owned runtime comment example inside update-side runtime detection guidance"
+      },
+      {
+        "path": "gsd-local-patches/",
+        "path_match_mode": "prefix",
+        "text": "RUNTIME_DIR is the resolved config directory",
+        "text_match_mode": "contains",
+        "classification": "pristine_backup_mirror",
+        "family": "pristine_backup_mirror",
+        "ownership": "pristine_backup",
+        "note": "pristine backup mirror of an upstream or overlay-owned comment example"
+      }
+    ]
+  },
+  "check_protocol": [
+    "compare candidate runtime version to observed_runtime_version",
+    "compare candidate runtime manifest version to observed_runtime_manifest_version when present",
+    "compare held runtime annotation values when a second runtime is intentionally carried inside the compatibility anchor",
+    "rerun ./scripts/setup-portable-gsd.sh before refreshing durable uplift memory after runtime movement",
+    "rerun $gsd-uplift-project --write after runtime movement so compatibility anchors and uplift posture stay in tune"
+  ],
+  "held_later": [
+    "version-window claims beyond the observed runtime basis",
+    "cross-runtime compatibility matrix",
+    "upstream-template drift compatibility"
+  ]
+}

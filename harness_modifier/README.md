@@ -12,6 +12,10 @@ Current first-slice split:
   - runtime snapshot capture
   - external CLI probe helpers
   - stream extraction helpers
+- `compatibility/`
+  - typed portable compatibility declaration
+  - parity-baseline rules and held-annotation posture
+  - first extraction artifact intended to travel unchanged into a later standalone project
 
 During the in-repo rehome step, the old `tooling/codex/*.py` paths remain as thin compatibility shims.
 Active scripts, docs, and tests should prefer `harness_modifier/...` paths.

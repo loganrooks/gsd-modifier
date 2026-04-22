@@ -398,11 +398,20 @@ class ProjectUpliftTests(unittest.TestCase):
 
             compatibility = analysis["compatibility_basis"]
             self.assertEqual(compatibility["compatibility_posture"], "observed_basis_only")
+            self.assertEqual(
+                compatibility["compatibility_declaration_path"],
+                "harness_modifier/compatibility/declaration.json",
+            )
             self.assertEqual(compatibility["observed_runtime_version"], "1.38.1")
             self.assertEqual(compatibility["observed_runtime_manifest_version"], "1.38.1")
             self.assertTrue(compatibility["observed_runtime_version_aligned"])
+            self.assertEqual(compatibility["runtime_basis"]["runtime"], ".codex")
+            self.assertEqual(compatibility["declared_overlay_schema_version"], 1)
             self.assertEqual(compatibility["overlay_manifest_schema_version"], 1)
+            self.assertTrue(compatibility["overlay_manifest_schema_version_matches_declaration"])
             self.assertEqual(compatibility["uplift_manifest_schema_version"], 6)
+            self.assertEqual(compatibility["upstream_compatibility_window"]["state"], "unknown")
+            self.assertEqual(compatibility["parity_scan_baseline"]["rule_count"], 3)
             self.assertIn("version-window claims beyond the observed runtime basis", compatibility["held_later"])
 
     def test_compatibility_basis_carries_held_claude_annotation_without_relabeling_posture(self) -> None:
@@ -565,9 +574,15 @@ class ProjectUpliftTests(unittest.TestCase):
             note = pu.build_progress_note(repo_root)
 
             self.assertEqual(manifest["schema_version"], 6)
+            self.assertEqual(
+                manifest["compatibility_basis"]["compatibility_declaration_path"],
+                "harness_modifier/compatibility/declaration.json",
+            )
             self.assertEqual(manifest["compatibility_basis"]["held_runtime_annotation_summary"], ".claude 1.34.2 (held_annotation)")
+            self.assertIn("- Compatibility declaration: harness_modifier/compatibility/declaration.json", report_text)
             self.assertIn("### Held Runtime Annotation", report_text)
             self.assertLess(report_text.index("### Compatibility Check Protocol"), report_text.index("### Held Runtime Annotation"))
+            self.assertIn("Compatibility declaration: harness_modifier/compatibility/declaration.json", state_text)
             self.assertIn("Held runtime annotation: .claude 1.34.2 (held_annotation)", state_text)
             self.assertEqual(note["held_runtime_annotation"], ".claude 1.34.2 (held_annotation)")
 

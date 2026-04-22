@@ -13,6 +13,12 @@ import sys
 import tomllib
 from datetime import datetime, timezone
 
+REPO_ROOT_FOR_IMPORTS = pathlib.Path(__file__).resolve().parents[2]
+if str(REPO_ROOT_FOR_IMPORTS) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT_FOR_IMPORTS))
+
+from harness_modifier.compatibility import declaration as compatibility_declaration
+
 
 STATE_HEADING = "## Project Uplift"
 REPORT_REL_PATH = ".planning/UPLIFT-REPORT.md"
@@ -20,7 +26,6 @@ MANIFEST_REL_PATH = ".planning/UPLIFT-MANIFEST.json"
 HELD_LATER_REL_PATH = "tooling/codex/UPLIFT-HELD-LATER.md"
 RUNTIME_MANIFEST_REL_PATH = ".codex/gsd-file-manifest.json"
 RUNTIME_VERSION_REL_PATH = ".codex/get-shit-done/VERSION"
-HELD_CLAUDE_RUNTIME_VERSION_REL_PATH = ".claude/get-shit-done/VERSION"
 OVERLAY_MANIFEST_REL_PATH = "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json"
 SEED_DIR_REL_PATH = ".planning/seeds"
 CURRENT_SEED_CONTRACT_VERSION = "2"
@@ -41,17 +46,17 @@ REQUIRED_SEED_SECTION_HEADINGS = (
     "Breadcrumbs",
     "Notes",
 )
-UPLIFT_MANIFEST_SCHEMA_VERSION = 6
-COMPATIBILITY_POSTURE = "observed_basis_only"
-HELD_RUNTIME_ANNOTATION_POSTURE = "held_annotation"
-HELD_RUNTIME_ANNOTATION_NOTE = (
-    "second runtime is recorded as a held compatibility annotation while the observed basis remains anchored to .codex"
-)
-COMPATIBILITY_HELD_LATER = [
-    "version-window claims beyond the observed runtime basis",
-    "cross-runtime compatibility matrix",
-    "upstream-template drift compatibility",
-]
+COMPATIBILITY_DECLARATION = compatibility_declaration.load_declaration()
+COMPATIBILITY_DECLARATION_REL_PATH = compatibility_declaration.DECLARATION_REL_PATH
+UPLIFT_MANIFEST_SCHEMA_VERSION = int(COMPATIBILITY_DECLARATION["uplift_manifest_schema_version"])
+COMPATIBILITY_POSTURE = str(COMPATIBILITY_DECLARATION["compatibility_posture"])
+RUNTIME_BASIS_DECLARATION = COMPATIBILITY_DECLARATION["runtime_basis"]
+RUNTIME_HELD_ANNOTATIONS_DECLARATION = COMPATIBILITY_DECLARATION["runtime_held_annotations"]
+DECLARED_OVERLAY_SCHEMA_VERSION = COMPATIBILITY_DECLARATION["overlay_schema_version"]
+UPSTREAM_COMPATIBILITY_WINDOW = COMPATIBILITY_DECLARATION["upstream_compatibility_window"]
+PARITY_SCAN_BASELINE_DECLARATION = COMPATIBILITY_DECLARATION["parity_scan_baseline"]
+COMPATIBILITY_CHECK_PROTOCOL = tuple(COMPATIBILITY_DECLARATION["check_protocol"])
+COMPATIBILITY_HELD_LATER = tuple(COMPATIBILITY_DECLARATION["held_later"])
 PROGRESS_NOTE_RENDER_FIELDS = (
     ("last_uplift_class", "Last uplift class"),
     ("last_uplift_secondary_signals", "Secondary signals"),
@@ -278,16 +283,19 @@ def runtime_version_source(repo_root: pathlib.Path) -> tuple[str | None, str | N
 
 
 def held_runtime_annotation(repo_root: pathlib.Path) -> dict | None:
-    version, version_source_path = read_runtime_version_at(repo_root, HELD_CLAUDE_RUNTIME_VERSION_REL_PATH)
-    if version is None:
-        return None
-    return {
-        "runtime": ".claude",
-        "version": version,
-        "version_source": version_source_path,
-        "annotation_posture": HELD_RUNTIME_ANNOTATION_POSTURE,
-        "note": HELD_RUNTIME_ANNOTATION_NOTE,
-    }
+    for declared_annotation in RUNTIME_HELD_ANNOTATIONS_DECLARATION:
+        version_source = declared_annotation["version_source"]
+        version, version_source_path = read_runtime_version_at(repo_root, version_source)
+        if version is None:
+            continue
+        return {
+            "runtime": declared_annotation["runtime"],
+            "version": version,
+            "version_source": version_source_path,
+            "annotation_posture": declared_annotation["annotation_posture"],
+            "note": declared_annotation["note"],
+        }
+    return None
 
 
 def held_runtime_annotation_summary(annotation: dict | None) -> str | None:
@@ -317,6 +325,10 @@ def build_compatibility_basis(repo_root: pathlib.Path) -> dict:
     ]
     return {
         "compatibility_posture": COMPATIBILITY_POSTURE,
+        "compatibility_declaration_path": COMPATIBILITY_DECLARATION_REL_PATH,
+        "compatibility_declaration_schema_version": COMPATIBILITY_DECLARATION["schema_version"],
+        "runtime_basis": json.loads(json.dumps(RUNTIME_BASIS_DECLARATION)),
+        "runtime_held_annotations": json.loads(json.dumps(RUNTIME_HELD_ANNOTATIONS_DECLARATION)),
         "observed_runtime_version": runtime_version,
         "observed_runtime_version_source": runtime_version_source_path,
         "observed_runtime_manifest_version": runtime_manifest_version,
@@ -325,27 +337,33 @@ def build_compatibility_basis(repo_root: pathlib.Path) -> dict:
         "observed_runtime_version_set": sorted(set(observed_versions)),
         "held_runtime_annotation": annotation,
         "held_runtime_annotation_summary": held_runtime_annotation_summary(annotation),
+        "declared_overlay_schema_version": DECLARED_OVERLAY_SCHEMA_VERSION,
         "overlay_manifest_schema_version": overlay_manifest.get("schema_version"),
+        "overlay_manifest_schema_version_matches_declaration": (
+            overlay_manifest.get("schema_version") == DECLARED_OVERLAY_SCHEMA_VERSION
+        ),
         "uplift_manifest_schema_version": UPLIFT_MANIFEST_SCHEMA_VERSION,
-        "check_protocol": [
-            "compare candidate runtime version to observed_runtime_version",
-            "compare candidate runtime manifest version to observed_runtime_manifest_version when present",
-            "compare held runtime annotation values when a second runtime is intentionally carried inside the compatibility anchor",
-            "rerun ./scripts/setup-portable-gsd.sh before refreshing durable uplift memory after runtime movement",
-            "rerun $gsd-uplift-project --write after runtime movement so compatibility anchors and uplift posture stay in tune",
-        ],
-        "held_later": COMPATIBILITY_HELD_LATER,
+        "upstream_compatibility_window": json.loads(json.dumps(UPSTREAM_COMPATIBILITY_WINDOW)),
+        "parity_scan_baseline": {
+            "target_runtime": PARITY_SCAN_BASELINE_DECLARATION["target_runtime"],
+            "rule_count": len(PARITY_SCAN_BASELINE_DECLARATION["rules"]),
+        },
+        "check_protocol": list(COMPATIBILITY_CHECK_PROTOCOL),
+        "held_later": list(COMPATIBILITY_HELD_LATER),
     }
 
 
 def compatibility_drift_reasons(previous: dict, current: dict) -> list[str]:
     reasons: list[str] = []
     fields = (
+        ("compatibility_declaration_schema_version", "compatibility declaration schema version"),
         ("observed_runtime_version", "observed runtime version"),
         ("observed_runtime_manifest_version", "observed runtime manifest version"),
         ("observed_runtime_version_source", "observed runtime version source"),
         ("observed_runtime_manifest_source", "observed runtime manifest source"),
         ("observed_runtime_version_aligned", "runtime version alignment state"),
+        ("declared_overlay_schema_version", "declared overlay schema version"),
+        ("overlay_manifest_schema_version_matches_declaration", "overlay schema declaration alignment"),
     )
     for key, label in fields:
         before = previous.get(key)
@@ -361,6 +379,15 @@ def compatibility_drift_reasons(previous: dict, current: dict) -> list[str]:
         before_text = held_runtime_annotation_summary(before_annotation) or "unrecorded"
         after_text = held_runtime_annotation_summary(after_annotation) or "unrecorded"
         reasons.append(f"held runtime annotation moved from {before_text} to {after_text}")
+    object_fields = (
+        ("runtime_basis", "declared runtime basis"),
+        ("runtime_held_annotations", "declared runtime held annotations"),
+        ("upstream_compatibility_window", "upstream compatibility window"),
+        ("parity_scan_baseline", "parity scan baseline"),
+    )
+    for key, label in object_fields:
+        if previous.get(key) != current.get(key):
+            reasons.append(f"{label} changed")
     return reasons
 
 
@@ -1164,11 +1191,22 @@ def render_report(analysis: dict) -> str:
             "## Compatibility Basis",
             "",
             f"- Compatibility posture: {compatibility['compatibility_posture']}",
+            f"- Compatibility declaration: {compatibility['compatibility_declaration_path']}",
+            f"- Compatibility declaration schema version: {compatibility['compatibility_declaration_schema_version']}",
+            f"- Declared runtime basis: {compatibility['runtime_basis']['runtime']} ({compatibility['runtime_basis']['basis_mode']})",
             f"- Observed runtime version: {compatibility['observed_runtime_version'] or 'unrecorded'}",
             f"- Observed runtime manifest version: {compatibility['observed_runtime_manifest_version'] or 'unrecorded'}",
             f"- Runtime version alignment: {version_alignment}",
+            f"- Declared overlay schema version: {compatibility['declared_overlay_schema_version']}",
             f"- Overlay manifest schema version: {compatibility['overlay_manifest_schema_version'] or 'unrecorded'}",
+            (
+                "- Overlay schema declaration alignment: aligned"
+                if compatibility["overlay_manifest_schema_version_matches_declaration"]
+                else "- Overlay schema declaration alignment: moved"
+            ),
             f"- Uplift manifest schema version: {compatibility['uplift_manifest_schema_version']}",
+            f"- Upstream compatibility window: {compatibility['upstream_compatibility_window']['state']} ({compatibility['upstream_compatibility_window']['mode']})",
+            f"- Parity scan baseline: {compatibility['parity_scan_baseline']['target_runtime']} ({compatibility['parity_scan_baseline']['rule_count']} rules)",
             "",
             "### Compatibility Check Protocol",
             "",
@@ -1318,6 +1356,7 @@ def state_section_text(analysis: dict) -> str:
             f"Phase boundary signal: {analysis['phase_boundary_signal']['note']}",
             f"Doctrine reference changed since prior uplift: {'yes' if analysis['doctrine_reference_changed'] else 'no'}",
             f"Compatibility posture: {compatibility['compatibility_posture']}",
+            f"Compatibility declaration: {compatibility['compatibility_declaration_path']}",
             f"Observed runtime basis: {', '.join(compatibility['observed_runtime_version_set']) if compatibility['observed_runtime_version_set'] else 'unrecorded'}",
             (
                 f"Held runtime annotation: {compatibility['held_runtime_annotation_summary']}"

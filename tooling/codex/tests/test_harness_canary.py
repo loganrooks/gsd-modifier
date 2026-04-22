@@ -4,6 +4,7 @@ import tempfile
 import unittest
 from unittest import mock
 
+from harness_modifier.compatibility import declaration as compatibility_declaration
 from harness_modifier.contract import harness_canary as hc
 from harness_modifier.contract import portable_gsd_contract as pgc
 
@@ -15,6 +16,7 @@ class HarnessCanaryTests(unittest.TestCase):
         path.write_text(text, encoding="utf-8")
 
     def _repo_fixture(self, root: pathlib.Path) -> None:
+        declaration = compatibility_declaration.load_declaration()
         self._write(
             root,
             "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
@@ -53,11 +55,24 @@ class HarnessCanaryTests(unittest.TestCase):
             json.dumps(
                 {
                     "compatibility_basis": {
+                        "compatibility_posture": declaration["compatibility_posture"],
+                        "compatibility_declaration_path": compatibility_declaration.DECLARATION_REL_PATH,
+                        "compatibility_declaration_schema_version": declaration["schema_version"],
+                        "runtime_basis": declaration["runtime_basis"],
+                        "runtime_held_annotations": declaration["runtime_held_annotations"],
                         "observed_runtime_version": "1.38.3",
                         "observed_runtime_manifest_version": "1.38.3",
                         "observed_runtime_version_source": ".codex/get-shit-done/VERSION",
                         "observed_runtime_manifest_source": ".codex/gsd-file-manifest.json",
                         "observed_runtime_version_aligned": True,
+                        "declared_overlay_schema_version": declaration["overlay_schema_version"],
+                        "overlay_manifest_schema_version": 1,
+                        "overlay_manifest_schema_version_matches_declaration": True,
+                        "upstream_compatibility_window": declaration["upstream_compatibility_window"],
+                        "parity_scan_baseline": {
+                            "target_runtime": declaration["parity_scan_baseline"]["target_runtime"],
+                            "rule_count": len(declaration["parity_scan_baseline"]["rules"]),
+                        },
                     }
                 }
             )

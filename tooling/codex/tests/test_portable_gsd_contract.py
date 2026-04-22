@@ -222,10 +222,17 @@ class PortableGsdContractTests(unittest.TestCase):
             report = pgc.build_materialization_report(repo_root, pgc.DEFAULT_COMPACT_PROMPT_FILE)
 
             runtime_scan = report["runtime_specific_reference_scan"]
+            compatibility = report["compatibility_declaration"]
+            self.assertEqual(compatibility["path"], "harness_modifier/compatibility/declaration.json")
+            self.assertEqual(compatibility["runtime_basis"]["runtime"], ".codex")
+            self.assertTrue(compatibility["overlay_schema_version_matches_declaration"])
+            self.assertEqual(report["summary"]["compatibility_declaration_rule_count"], 3)
             self.assertEqual(runtime_scan["summary"]["total_hits"], 3)
             self.assertEqual(runtime_scan["summary"]["expected_baseline_count"], 3)
             self.assertEqual(runtime_scan["summary"]["review_needed_count"], 0)
             self.assertFalse(runtime_scan["requires_contextual_reread"])
+            self.assertEqual(runtime_scan["compatibility_declaration_path"], "harness_modifier/compatibility/declaration.json")
+            self.assertEqual(runtime_scan["baseline_rule_count"], 3)
             classifications = {hit["path"]: hit["classification"] for hit in runtime_scan["hits"]}
             self.assertEqual(classifications["agents/gsd-debugger.toml"], "upstream_only_contextual_carry")
             self.assertEqual(classifications["get-shit-done/workflows/update.md"], "overlay_owned_comment_example")

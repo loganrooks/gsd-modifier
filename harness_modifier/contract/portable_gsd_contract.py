@@ -7,7 +7,14 @@ import argparse
 import json
 import pathlib
 import re
+import sys
 from typing import Any
+
+REPO_ROOT_FOR_IMPORTS = pathlib.Path(__file__).resolve().parents[2]
+if str(REPO_ROOT_FOR_IMPORTS) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT_FOR_IMPORTS))
+
+from harness_modifier.compatibility import declaration as compatibility_declaration
 
 
 DEFAULT_COMPACT_PROMPT_FILE = "tooling/compact-prompts/project.md"
@@ -18,6 +25,7 @@ VALID_MODES = {"add", "overwrite"}
 RUNTIME_SPECIFIC_REFERENCE_PATTERN = re.compile(r"(?:~|\$HOME)\/\.claude\b")
 RUNTIME_SPECIFIC_REFERENCE_SUFFIXES = {".md", ".toml"}
 RUNTIME_SPECIFIC_REFERENCE_EXCLUDED = {"CHANGELOG.md"}
+COMPATIBILITY_DECLARATION = compatibility_declaration.load_declaration()
 
 QUALITY_REASONING = {
     "gsd-planner": "xhigh",
@@ -159,6 +167,11 @@ def load_overlay_manifest(repo_root: pathlib.Path) -> dict[str, str]:
     return {str(key): str(value) for key, value in entries.items()}
 
 
+def load_overlay_manifest_payload(repo_root: pathlib.Path) -> dict[str, Any]:
+    manifest_path = repo_root / OVERLAY_MANIFEST_REL_PATH
+    return json.loads(read_text(manifest_path))
+
+
 def iter_runtime_specific_reference_hits(codex_root: pathlib.Path) -> list[dict[str, Any]]:
     hits: list[dict[str, Any]] = []
     for path in sorted(codex_root.rglob("*")):
@@ -186,7 +199,6 @@ def classify_runtime_specific_reference_hit(
     hit: dict[str, Any], overlay_entries: dict[str, str]
 ) -> dict[str, Any]:
     rel_path = str(hit["path"])
-    line_number = int(hit["line"])
     line_text = str(hit["text"])
     overlay_mode = overlay_entries.get(rel_path)
 
@@ -197,30 +209,29 @@ def classify_runtime_specific_reference_hit(
     requires_contextual_reread = True
     note = "net-new or unclassified runtime-specific reference hit; reread context before taking action"
 
-    if rel_path == "agents/gsd-debugger.toml" and line_text == "configDir = ~/.claude":
-        classification = "upstream_only_contextual_carry"
-        family = "comment_or_debugging_example"
-        ownership = "upstream_pristine"
+    for rule in COMPATIBILITY_DECLARATION["parity_scan_baseline"]["rules"]:
+        path_match_mode = rule.get("path_match_mode", "exact")
+        if path_match_mode == "exact" and rel_path != rule["path"]:
+            continue
+        if path_match_mode == "prefix" and not rel_path.startswith(rule["path"]):
+            continue
+
+        text_match_mode = rule.get("text_match_mode", "exact")
+        if text_match_mode == "exact" and line_text != rule["text"]:
+            continue
+        if text_match_mode == "contains" and rule["text"] not in line_text:
+            continue
+
+        classification = str(rule["classification"])
+        family = str(rule["family"])
+        if "ownership_if_overlay_mode_present" in rule:
+            ownership = str(rule["ownership_if_overlay_mode_present"]) if overlay_mode else str(rule["ownership_otherwise"])
+        else:
+            ownership = str(rule["ownership"])
         expected_baseline = True
         requires_contextual_reread = False
-        note = "upstream-only debugging example carried through Codex install output"
-    elif (
-        rel_path == "get-shit-done/workflows/update.md"
-        and "RUNTIME_DIR is the resolved config directory" in line_text
-    ):
-        classification = "overlay_owned_comment_example"
-        family = "comment_or_debugging_example"
-        ownership = "overlay_owned" if overlay_mode else "runtime_only"
-        expected_baseline = True
-        requires_contextual_reread = False
-        note = "overlay-owned runtime comment example inside update-side runtime detection guidance"
-    elif rel_path.startswith("gsd-local-patches/") and "RUNTIME_DIR is the resolved config directory" in line_text:
-        classification = "pristine_backup_mirror"
-        family = "pristine_backup_mirror"
-        ownership = "pristine_backup"
-        expected_baseline = True
-        requires_contextual_reread = False
-        note = "pristine backup mirror of an upstream or overlay-owned comment example"
+        note = str(rule["note"])
+        break
 
     return {
         **hit,
@@ -244,7 +255,10 @@ def build_runtime_specific_reference_report(
     review_needed_count = sum(1 for hit in hits if hit["requires_contextual_reread"])
     return {
         "pattern": RUNTIME_SPECIFIC_REFERENCE_PATTERN.pattern,
-        "scope": "live .codex .md/.toml files excluding CHANGELOG.md",
+        "scope": COMPATIBILITY_DECLARATION["parity_scan_baseline"]["scope"],
+        "compatibility_declaration_path": compatibility_declaration.DECLARATION_REL_PATH,
+        "target_runtime": COMPATIBILITY_DECLARATION["parity_scan_baseline"]["target_runtime"],
+        "baseline_rule_count": len(COMPATIBILITY_DECLARATION["parity_scan_baseline"]["rules"]),
         "hits": hits,
         "summary": {
             "total_hits": len(hits),
@@ -428,7 +442,16 @@ def build_materialization_report(repo_root: pathlib.Path, compact_prompt: str) -
     codex_root = repo_root / ".codex"
     backup_paths = load_backup_meta_paths(codex_root)
     entries = load_overlay_manifest(repo_root)
+    overlay_manifest_payload = load_overlay_manifest_payload(repo_root)
     runtime_specific_reference_scan = build_runtime_specific_reference_report(codex_root, entries)
+    declared_overlay_schema_version = COMPATIBILITY_DECLARATION["overlay_schema_version"]
+    observed_overlay_schema_version = overlay_manifest_payload.get("schema_version")
+    overlay_schema_version_matches_declaration = observed_overlay_schema_version == declared_overlay_schema_version
+
+    if not overlay_schema_version_matches_declaration:
+        hard_failures.append(
+            "compatibility declaration overlay schema version does not match the live overlay manifest schema version"
+        )
 
     missing_live_targets: list[str] = []
     backup_copy_missing: list[str] = []
@@ -459,6 +482,21 @@ def build_materialization_report(repo_root: pathlib.Path, compact_prompt: str) -
         "repo_root": str(repo_root),
         "compact_prompt_file": compact_prompt,
         "install_mutation_targets": sorted(install_mutation_targets()),
+        "compatibility_declaration": {
+            "path": compatibility_declaration.DECLARATION_REL_PATH,
+            "schema_version": COMPATIBILITY_DECLARATION["schema_version"],
+            "compatibility_posture": COMPATIBILITY_DECLARATION["compatibility_posture"],
+            "runtime_basis": COMPATIBILITY_DECLARATION["runtime_basis"],
+            "runtime_held_annotations": COMPATIBILITY_DECLARATION["runtime_held_annotations"],
+            "declared_overlay_schema_version": declared_overlay_schema_version,
+            "observed_overlay_schema_version": observed_overlay_schema_version,
+            "overlay_schema_version_matches_declaration": overlay_schema_version_matches_declaration,
+            "upstream_compatibility_window": COMPATIBILITY_DECLARATION["upstream_compatibility_window"],
+            "parity_scan_baseline": {
+                "target_runtime": COMPATIBILITY_DECLARATION["parity_scan_baseline"]["target_runtime"],
+                "rule_count": len(COMPATIBILITY_DECLARATION["parity_scan_baseline"]["rules"]),
+            },
+        },
         "summary": {
             **validation["summary"],
             "live_target_count": len(entries),
@@ -469,6 +507,8 @@ def build_materialization_report(repo_root: pathlib.Path, compact_prompt: str) -
             "runtime_specific_reference_review_needed_count": runtime_specific_reference_scan["summary"][
                 "review_needed_count"
             ],
+            "compatibility_declaration_rule_count": len(COMPATIBILITY_DECLARATION["parity_scan_baseline"]["rules"]),
+            "overlay_schema_version_matches_declaration": overlay_schema_version_matches_declaration,
         },
         "missing_live_targets": missing_live_targets,
         "backup_copy_missing": backup_copy_missing,

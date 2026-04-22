@@ -18,7 +18,6 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 MARKDOWN_LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
-LINE_SUFFIX_RE = re.compile(r"^(.*?)(:\d+)?$")
 LOCAL_PATH_RE = re.compile(
     r"(?P<path>"
     r"/home/rookslog/workspace/projects/prix-guesser/[^\s`\"'()<>]+"
@@ -160,10 +159,12 @@ def normalize_local_path(raw: str, source_file: Path) -> tuple[Path | None, str]
     if stripped.startswith("#") or URL_SCHEME_RE.match(stripped):
         return None, ""
 
-    match = LINE_SUFFIX_RE.match(stripped)
-    assert match is not None
-    path_part = match.group(1)
-    line_suffix = match.group(2) or ""
+    path_part = stripped
+    line_suffix = ""
+    head, sep, tail = stripped.rpartition(":")
+    if sep and tail.isdigit():
+        path_part = head
+        line_suffix = f":{tail}"
 
     if path_part.startswith("/"):
         candidate = Path(path_part).resolve()
