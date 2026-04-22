@@ -1,6 +1,9 @@
 import json
+import re
 import unittest
 from pathlib import Path
+
+from tooling.codex import project_uplift as pu
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -27,8 +30,10 @@ class SeedMigrationInventoryFollowThroughContractTests(unittest.TestCase):
         skill = (
             ROOT / "tooling/portable-gsd/overlay/skills/gsd-uplift-project/SKILL.md"
         ).read_text(encoding="utf-8")
+        self.assertIn("$gsd-seed-migration-inventory", workflow)
         self.assertIn("$gsd-seed-migration-inventory --write", workflow)
-        self.assertIn("legacy-unversioned or noncurrent seed posture", workflow)
+        self.assertIn("current-version shape gaps", workflow)
+        self.assertIn("$gsd-seed-migration-inventory", skill)
         self.assertIn("$gsd-seed-migration-inventory --write", skill)
 
     def test_seed_migration_inventory_workflow_keeps_rewrite_separate(self) -> None:
@@ -44,6 +49,25 @@ class SeedMigrationInventoryFollowThroughContractTests(unittest.TestCase):
         self.assertIn("SEED-MIGRATION-REPORT.md", workflow)
         self.assertIn("SEED-MIGRATION-MANIFEST.json", workflow)
         self.assertIn("detect-only inventory", skill)
+
+    def test_seed_migration_helper_shape_contract_tracks_plant_seed_template(self) -> None:
+        workflow = (
+            ROOT / "tooling/portable-gsd/overlay/get-shit-done/workflows/plant-seed.md"
+        ).read_text(encoding="utf-8")
+        self.assertIn("Write `.planning/seeds/SEED-{PADDED}-{slug}.md`:", workflow)
+        template = workflow.split("```markdown\n", 1)[1].split("\n```", 1)[0]
+        frontmatter_match = re.search(r"^---\n([\s\S]+?)\n---", template)
+        self.assertIsNotNone(frontmatter_match)
+        frontmatter_keys = {
+            key
+            for key in re.findall(r"^([A-Za-z0-9_-]+):", frontmatter_match.group(1), re.M)
+        }
+        section_headings = {
+            heading for heading in re.findall(r"^##\s+(.+?)\s*$", template, re.M)
+        }
+
+        self.assertEqual(frontmatter_keys, set(pu.REQUIRED_SEED_FRONTMATTER_KEYS))
+        self.assertEqual(section_headings, set(pu.REQUIRED_SEED_SECTION_HEADINGS))
 
 
 if __name__ == "__main__":

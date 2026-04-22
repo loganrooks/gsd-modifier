@@ -112,10 +112,11 @@ Route next action explicitly:
   - keep those as future install routes, not silent edits
 - If doctrine-sensitive proposal routes remain:
   - keep them for explicit later review rather than folding them into detect-only, and only then widen into the supporting proposal/audit packet
-- If seed corpus posture shows `legacy_unversioned` or noncurrent seed versions:
+- If seed corpus posture shows `legacy_unversioned`, noncurrent seed versions, or current-version shape gaps:
   - keep migration or rewrite separate from detect-only
   - preserve the posture in durable uplift memory with `--write` when the route activates
-  - point the operator at `$gsd-seed-migration-inventory --write` when they want a durable detect-only migration packet instead of only counts and examples
+  - point the operator at `$gsd-seed-migration-inventory` when they want the deeper detect-only migration packet instead of only counts and examples
+  - point the operator at `$gsd-seed-migration-inventory --write` when they want that packet preserved as durable migration-planning memory
 - If the helper classifies the repo as `mid-phase uplift`:
   - keep uplift composition separate from current execution/verification routing
 </step>

@@ -57,6 +57,7 @@ Produce a detect-only inventory for legacy or drifted seed corpora and, when exp
 Execute the seed-migration-inventory workflow from @/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/seed-migration-inventory.md end-to-end.
 
 Default posture is detect-only.
+Point operators at `$gsd-seed-migration-inventory` when they want the deeper detect-only packet.
 Pass `--write` only when the caller explicitly wants durable migration-planning memory.
 Keep direct seed rewrites or normalization separate from this workflow; the first slice is a detect-only inventory.
 </process>

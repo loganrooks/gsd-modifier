@@ -84,8 +84,34 @@ class ProjectUpliftTests(unittest.TestCase):
             "# Verification Report\n\n## Future-Preservation Carry\n- carried\n",
         )
 
-    def _write_seed(self, root: pathlib.Path, seed_id: str, slug: str, version: str | None) -> None:
+    def _write_seed(
+        self,
+        root: pathlib.Path,
+        seed_id: str,
+        slug: str,
+        version: str | None,
+        *,
+        include_current_shape: bool = True,
+    ) -> None:
         version_line = f"seed_contract_version: {version}\n" if version is not None else ""
+        frontmatter_tail = (
+            "planted: 2026-04-22\n"
+            "planted_during: milestone\n"
+            "trigger_when: later\n"
+            "scope: Medium\n"
+            if include_current_shape
+            else "trigger_when: later\n"
+        )
+        sections = (
+            "## Why This Matters\n\n- Keep the route visible.\n\n"
+            "## When to Surface\n\n- later\n\n"
+            "## Scope Estimate\n\n- Medium\n\n"
+            "## Strengthening Carry\n\n- Intensify the route.\n\n"
+            "## Breadcrumbs\n\n- notes\n\n"
+            "## Notes\n\n- context\n"
+            if include_current_shape
+            else "## Why This Matters\n\n- Keep the route visible.\n\n## When to Surface\n\n- later\n"
+        )
         self._write(
             root,
             f".planning/seeds/SEED-{seed_id}-{slug}.md",
@@ -93,9 +119,10 @@ class ProjectUpliftTests(unittest.TestCase):
             f"id: SEED-{seed_id}\n"
             f"{version_line}"
             "status: dormant\n"
-            "trigger_when: later\n"
+            f"{frontmatter_tail}"
             "---\n\n"
-            f"# SEED-{seed_id}: {slug}\n",
+            f"# SEED-{seed_id}: {slug}\n\n"
+            f"{sections}",
         )
 
     def _write_doctrine_stack(self, root: pathlib.Path) -> None:
@@ -159,8 +186,35 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertEqual(analysis["seed_corpus_posture"]["seed_file_count"], 2)
             self.assertEqual(analysis["seed_corpus_posture"]["current_contract_count"], 1)
             self.assertEqual(analysis["seed_corpus_posture"]["legacy_unversioned_count"], 1)
+            self.assertEqual(analysis["seed_corpus_posture"]["current_contract_shape_gap_count"], 0)
             self.assertTrue(
                 any("legacy-unversioned seeds still present: 1" == reason for reason in analysis["recommendation_reasons"])
+            )
+
+    def test_detect_surfaces_current_contract_shape_gaps(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="completed")
+            self._write_doctrine_stack(repo_root)
+            self._write_seed(
+                repo_root,
+                "005",
+                "current-gap",
+                pu.CURRENT_SEED_CONTRACT_VERSION,
+                include_current_shape=False,
+            )
+
+            analysis = pu.analyze_repo(repo_root)
+
+            self.assertEqual(analysis["project_class"], "lightly aged uplift")
+            self.assertIn("legacy_seed_corpus", analysis["secondary_signals"])
+            self.assertEqual(analysis["seed_corpus_posture"]["posture"], "current_contract_only")
+            self.assertEqual(analysis["seed_corpus_posture"]["current_contract_shape_gap_count"], 1)
+            self.assertTrue(
+                any(
+                    "current-contract seed shape gaps still present: 1" == reason
+                    for reason in analysis["recommendation_reasons"]
+                )
             )
 
     def test_write_outputs_and_progress_note_detect_doctrine_change(self) -> None:

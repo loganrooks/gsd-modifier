@@ -23,6 +23,23 @@ RUNTIME_VERSION_REL_PATH = ".codex/get-shit-done/VERSION"
 OVERLAY_MANIFEST_REL_PATH = "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json"
 SEED_DIR_REL_PATH = ".planning/seeds"
 CURRENT_SEED_CONTRACT_VERSION = "2"
+REQUIRED_SEED_FRONTMATTER_KEYS = (
+    "id",
+    "seed_contract_version",
+    "status",
+    "planted",
+    "planted_during",
+    "trigger_when",
+    "scope",
+)
+REQUIRED_SEED_SECTION_HEADINGS = (
+    "Why This Matters",
+    "When to Surface",
+    "Scope Estimate",
+    "Strengthening Carry",
+    "Breadcrumbs",
+    "Notes",
+)
 UPLIFT_MANIFEST_SCHEMA_VERSION = 5
 COMPATIBILITY_POSTURE = "observed_basis_only"
 COMPATIBILITY_HELD_LATER = [
@@ -435,6 +452,22 @@ def frontmatter_text(text: str) -> str | None:
     return match.group(1).strip()
 
 
+def parse_frontmatter_map(text: str | None) -> dict[str, str]:
+    if not text:
+        return {}
+    rows: dict[str, str] = {}
+    for line in text.splitlines():
+        match = re.match(r"^([A-Za-z0-9_-]+):\s*(.*)$", line.strip())
+        if not match:
+            continue
+        rows[match.group(1)] = match.group(2).strip().strip('"').strip("'")
+    return rows
+
+
+def extract_h2_headings(text: str) -> list[str]:
+    return [match.group(1).strip() for match in re.finditer(r"^##\s+(.+?)\s*$", text, re.M)]
+
+
 def inventory_items(text: str) -> list[str]:
     items = [
         match.group(1)
@@ -572,11 +605,15 @@ def build_seed_corpus_posture(repo_root: pathlib.Path) -> dict:
     noncurrent_version_counts: dict[str, int] = {}
     legacy_unversioned_examples: list[str] = []
     noncurrent_version_examples: list[dict] = []
+    current_contract_shape_gap_count = 0
+    current_contract_shape_gap_examples: list[dict] = []
     fingerprint_rows: list[str] = []
 
     for path in seed_paths:
         rel = rel_path(repo_root, path)
-        version = parse_seed_contract_version(frontmatter_text(read_text(path) or ""))
+        text = read_text(path) or ""
+        frontmatter = frontmatter_text(text)
+        version = parse_seed_contract_version(frontmatter)
         if version is None:
             legacy_unversioned_count += 1
             if len(legacy_unversioned_examples) < 5:
@@ -585,7 +622,29 @@ def build_seed_corpus_posture(repo_root: pathlib.Path) -> dict:
             continue
         if version == CURRENT_SEED_CONTRACT_VERSION:
             current_contract_count += 1
-            fingerprint_rows.append(f"{rel}:current:{version}")
+            frontmatter_map = parse_frontmatter_map(frontmatter)
+            headings = extract_h2_headings(text)
+            missing_frontmatter_keys = [
+                key for key in REQUIRED_SEED_FRONTMATTER_KEYS if key not in frontmatter_map
+            ]
+            missing_section_headings = [
+                heading for heading in REQUIRED_SEED_SECTION_HEADINGS if heading not in headings
+            ]
+            if missing_frontmatter_keys or missing_section_headings:
+                current_contract_shape_gap_count += 1
+                if len(current_contract_shape_gap_examples) < 5:
+                    current_contract_shape_gap_examples.append(
+                        {
+                            "path": rel,
+                            "missing_frontmatter_keys": missing_frontmatter_keys,
+                            "missing_section_headings": missing_section_headings,
+                        }
+                    )
+                fingerprint_rows.append(
+                    f"{rel}:current:{version}:shape-gap:{','.join(missing_frontmatter_keys)}:{','.join(missing_section_headings)}"
+                )
+            else:
+                fingerprint_rows.append(f"{rel}:current:{version}")
             continue
         noncurrent_version_counts[version] = noncurrent_version_counts.get(version, 0) + 1
         if len(noncurrent_version_examples) < 5:
@@ -618,6 +677,8 @@ def build_seed_corpus_posture(repo_root: pathlib.Path) -> dict:
         "noncurrent_version_counts": dict(sorted(noncurrent_version_counts.items())),
         "legacy_unversioned_examples": legacy_unversioned_examples,
         "noncurrent_version_examples": noncurrent_version_examples,
+        "current_contract_shape_gap_count": current_contract_shape_gap_count,
+        "current_contract_shape_gap_examples": current_contract_shape_gap_examples,
         "corpus_fingerprint": sha256_text("\n".join(fingerprint_rows)) if fingerprint_rows else None,
     }
 
@@ -626,6 +687,7 @@ def seed_corpus_needs_attention(seed_corpus_posture: dict) -> bool:
     return (
         seed_corpus_posture["legacy_unversioned_count"] > 0
         or seed_corpus_posture["noncurrent_version_total"] > 0
+        or seed_corpus_posture.get("current_contract_shape_gap_count", 0) > 0
     )
 
 
@@ -641,7 +703,8 @@ def seed_corpus_summary(seed_corpus_posture: dict) -> str:
         f"(total {seed_corpus_posture['seed_file_count']}; "
         f"current {seed_corpus_posture['current_contract_count']}; "
         f"legacy {seed_corpus_posture['legacy_unversioned_count']}; "
-        f"noncurrent {noncurrent_text})"
+        f"noncurrent {noncurrent_text}; "
+        f"shape gaps {seed_corpus_posture.get('current_contract_shape_gap_count', 0)})"
     )
 
 
@@ -657,6 +720,11 @@ def seed_corpus_reasons(seed_corpus_posture: dict) -> list[str]:
             for version, count in seed_corpus_posture["noncurrent_version_counts"].items()
         )
         reasons.append(f"noncurrent seed contract versions still present: {versions}")
+    if seed_corpus_posture.get("current_contract_shape_gap_count", 0) > 0:
+        reasons.append(
+            "current-contract seed shape gaps still present: "
+            f"{seed_corpus_posture['current_contract_shape_gap_count']}"
+        )
     return reasons
 
 
@@ -668,6 +736,7 @@ def seed_corpus_drift_reasons(previous: dict, current: dict) -> list[str]:
         ("current_contract_count", "current-contract seed count"),
         ("legacy_unversioned_count", "legacy-unversioned seed count"),
         ("noncurrent_version_counts", "noncurrent seed version counts"),
+        ("current_contract_shape_gap_count", "current-contract seed shape-gap count"),
     )
     for key, label in fields:
         before = previous.get(key)

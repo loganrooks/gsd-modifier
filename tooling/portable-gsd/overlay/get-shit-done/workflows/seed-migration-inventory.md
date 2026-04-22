@@ -10,7 +10,7 @@ Read all files referenced by the invoking prompt's execution_context before star
 <supporting_reading>
 Keep the initial packet narrow:
 - `seed_migration_inventory.py` detect output
-- `.planning/seeds/SEED-*.md` only when a seed corpus exists
+- the specific `.planning/seeds/SEED-*.md` files the detect run flagged as migration candidates, only when such candidates exist
 - `.planning/UPLIFT-REPORT.md` and `.planning/UPLIFT-MANIFEST.json` only when this route was activated from uplift posture
 </supporting_reading>
 
@@ -79,10 +79,12 @@ If `written_outputs` exists, also show:
 <step name="route">
 Route next action explicitly:
 
-- If `route_state` is `dormant`:
+- If `route_state` is `no_corpus`:
+  - continue with current seed routing
+- If `route_state` is `current_only`:
   - continue with current seed routing
 - If `route_state` is `surfaced` and `--write` was not used:
-  - recommend rerunning with `--write` when the operator wants durable migration-planning memory
+  - recommend rerunning with `$gsd-seed-migration-inventory --write` when the operator wants durable migration-planning memory
 - If `route_state` is `surfaced` and `--write` was used:
   - treat the report and manifest as the compact planning packet for any later rewrite or normalization family
 

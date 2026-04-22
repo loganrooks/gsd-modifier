@@ -117,11 +117,14 @@ class SeedMigrationInventoryTests(unittest.TestCase):
             self.assertEqual(entries["SEED-001"]["contract_vintage"], "legacy_unversioned")
             self.assertIn("seed_contract_version", entries["SEED-001"]["missing_frontmatter_keys"])
             self.assertIn("stamp `seed_contract_version: 2`", entries["SEED-001"]["migration_moves"])
+            self.assertIn("stamp_seed_contract_version", entries["SEED-001"]["migration_move_kinds"])
             self.assertEqual(entries["SEED-002"]["contract_vintage"], "current_contract")
             self.assertIn("scope", entries["SEED-002"]["missing_frontmatter_keys"])
             self.assertIn("Strengthening Carry", entries["SEED-002"]["missing_section_headings"])
+            self.assertIn("add_sections", entries["SEED-002"]["migration_move_kinds"])
             self.assertEqual(entries["SEED-003"]["contract_vintage"], "noncurrent:1")
             self.assertIn("move `seed_contract_version` from `1` to `2`", entries["SEED-003"]["migration_moves"])
+            self.assertIn("move_seed_contract_version", entries["SEED-003"]["migration_move_kinds"])
 
     def test_detect_stays_quiet_for_current_contract_only_corpus(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -137,10 +140,21 @@ class SeedMigrationInventoryTests(unittest.TestCase):
 
             analysis = smi.analyze_repo(root)
 
-            self.assertEqual(analysis["route_state"], "dormant")
+            self.assertEqual(analysis["route_state"], "current_only")
             self.assertEqual(analysis["migration_candidate_count"], 0)
             self.assertEqual(analysis["reasons"], [])
             self.assertEqual(analysis["entries"][0]["route_state"], "current_contract_visible")
+
+    def test_detect_distinguishes_no_seed_corpus(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = pathlib.Path(tmpdir)
+
+            analysis = smi.analyze_repo(root)
+
+            self.assertEqual(analysis["route_state"], "no_corpus")
+            self.assertEqual(analysis["seed_count"], 0)
+            self.assertEqual(analysis["migration_candidate_count"], 0)
+            self.assertEqual(analysis["entries"], [])
 
     def test_write_outputs_records_report_and_manifest(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -157,12 +171,17 @@ class SeedMigrationInventoryTests(unittest.TestCase):
             analysis = smi.analyze_repo(root)
             written = smi.write_outputs(root, analysis)
 
-            self.assertEqual(written["report_path"], smi.REPORT_REL_PATH)
-            self.assertEqual(written["manifest_path"], smi.MANIFEST_REL_PATH)
+            self.assertEqual(written["written_outputs"]["report_path"], smi.REPORT_REL_PATH)
+            self.assertEqual(written["written_outputs"]["manifest_path"], smi.MANIFEST_REL_PATH)
             report_text = (root / smi.REPORT_REL_PATH).read_text(encoding="utf-8")
             self.assertIn("# Seed Migration Report", report_text)
             self.assertIn("Route state: surfaced", report_text)
             self.assertIn("SEED-005: Legacy", report_text)
+            self.assertIn(
+                "The specialist seed-migration packet now carries the durable inventory.",
+                report_text,
+            )
+            self.assertNotIn("when you want durable migration planning memory", report_text)
             self.assertTrue((root / smi.MANIFEST_REL_PATH).exists())
 
 

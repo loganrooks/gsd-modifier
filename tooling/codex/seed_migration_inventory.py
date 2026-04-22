@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import pathlib
 import re
@@ -22,23 +23,6 @@ except ModuleNotFoundError:
 REPORT_REL_PATH = ".planning/SEED-MIGRATION-REPORT.md"
 MANIFEST_REL_PATH = ".planning/SEED-MIGRATION-MANIFEST.json"
 SEED_MIGRATION_MANIFEST_SCHEMA_VERSION = 1
-REQUIRED_FRONTMATTER_KEYS = (
-    "id",
-    "seed_contract_version",
-    "status",
-    "planted",
-    "planted_during",
-    "trigger_when",
-    "scope",
-)
-REQUIRED_SECTION_HEADINGS = (
-    "Why This Matters",
-    "When to Surface",
-    "Scope Estimate",
-    "Strengthening Carry",
-    "Breadcrumbs",
-    "Notes",
-)
 
 
 def now_iso() -> str:
@@ -56,22 +40,6 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def parse_frontmatter_map(text: str | None) -> dict[str, str]:
-    if not text:
-        return {}
-    rows: dict[str, str] = {}
-    for line in text.splitlines():
-        match = re.match(r"^([A-Za-z0-9_-]+):\s*(.*)$", line.strip())
-        if not match:
-            continue
-        rows[match.group(1)] = match.group(2).strip().strip('"').strip("'")
-    return rows
-
-
-def extract_h2_headings(text: str) -> list[str]:
-    return [match.group(1).strip() for match in re.finditer(r"^##\s+(.+?)\s*$", text, re.M)]
-
-
 def extract_seed_title(text: str) -> str:
     match = re.search(r"^#\s*(?:SEED-[^:]+:\s*)?(.+)$", text, re.M)
     return match.group(1).strip() if match else ""
@@ -83,8 +51,8 @@ def summarize_gap_list(items: list[str]) -> str:
 
 def build_seed_entry(repo_root: pathlib.Path, path: pathlib.Path) -> dict:
     text = pu.read_text(path) or ""
-    frontmatter = parse_frontmatter_map(pu.frontmatter_text(text))
-    sections = extract_h2_headings(text)
+    frontmatter = pu.parse_frontmatter_map(pu.frontmatter_text(text))
+    sections = pu.extract_h2_headings(text)
     version = pu.parse_seed_contract_version(pu.frontmatter_text(text))
 
     if version is None:
@@ -94,18 +62,25 @@ def build_seed_entry(repo_root: pathlib.Path, path: pathlib.Path) -> dict:
     else:
         vintage = f"noncurrent:{version}"
 
-    missing_frontmatter = [key for key in REQUIRED_FRONTMATTER_KEYS if key not in frontmatter]
-    missing_sections = [heading for heading in REQUIRED_SECTION_HEADINGS if heading not in sections]
+    missing_frontmatter = [
+        key for key in pu.REQUIRED_SEED_FRONTMATTER_KEYS if key not in frontmatter
+    ]
+    missing_sections = [
+        heading for heading in pu.REQUIRED_SEED_SECTION_HEADINGS if heading not in sections
+    ]
     migration_moves: list[str] = []
+    migration_move_kinds: list[str] = []
 
     if version is None:
         migration_moves.append(
             f"stamp `seed_contract_version: {pu.CURRENT_SEED_CONTRACT_VERSION}`"
         )
+        migration_move_kinds.append("stamp_seed_contract_version")
     elif version != pu.CURRENT_SEED_CONTRACT_VERSION:
         migration_moves.append(
             f"move `seed_contract_version` from `{version}` to `{pu.CURRENT_SEED_CONTRACT_VERSION}`"
         )
+        migration_move_kinds.append("move_seed_contract_version")
 
     nonversion_frontmatter_gaps = [
         key for key in missing_frontmatter if key != "seed_contract_version"
@@ -114,10 +89,12 @@ def build_seed_entry(repo_root: pathlib.Path, path: pathlib.Path) -> dict:
         migration_moves.append(
             "add frontmatter keys: " + ", ".join(f"`{key}`" for key in nonversion_frontmatter_gaps)
         )
+        migration_move_kinds.append("add_frontmatter_keys")
     if missing_sections:
         migration_moves.append(
             "add sections: " + ", ".join(f"`{heading}`" for heading in missing_sections)
         )
+        migration_move_kinds.append("add_sections")
 
     return {
         "seed_id": frontmatter.get("id") or path.stem.split("-", 2)[0] + "-" + path.stem.split("-", 2)[1],
@@ -128,6 +105,7 @@ def build_seed_entry(repo_root: pathlib.Path, path: pathlib.Path) -> dict:
         "missing_frontmatter_keys": missing_frontmatter,
         "missing_section_headings": missing_sections,
         "migration_moves": migration_moves,
+        "migration_move_kinds": migration_move_kinds,
         "route_state": "migration_candidate" if migration_moves else "current_contract_visible",
     }
 
@@ -152,7 +130,12 @@ def analyze_repo(repo_root: pathlib.Path) -> dict:
         entry for entry in entries if entry["route_state"] == "migration_candidate"
     ]
     reasons = migration_reasons(seed_corpus_posture, entries)
-    route_state = "surfaced" if migration_candidates else "dormant"
+    if seed_corpus_posture["seed_file_count"] == 0:
+        route_state = "no_corpus"
+    elif migration_candidates:
+        route_state = "surfaced"
+    else:
+        route_state = "current_only"
 
     return {
         "schema_version": SEED_MIGRATION_MANIFEST_SCHEMA_VERSION,
@@ -164,7 +147,7 @@ def analyze_repo(repo_root: pathlib.Path) -> dict:
         "recommend_write": bool(migration_candidates),
         "recommendation": (
             "Write the seed-migration inventory when you want durable migration planning memory."
-            if migration_candidates
+            if route_state == "surfaced"
             else "Continue with current seed routing."
         ),
         "reasons": reasons,
@@ -230,21 +213,41 @@ def render_report(analysis: dict) -> str:
         if entry["migration_moves"]:
             lines.append("- Migration moves:")
             lines.extend(f"  - {move}" for move in entry["migration_moves"])
+        if entry["migration_move_kinds"]:
+            lines.append(
+                "- Migration move kinds: " + ", ".join(entry["migration_move_kinds"])
+            )
         lines.append("")
 
     return "\n".join(lines).rstrip() + "\n"
+
+
+def post_write_analysis(analysis: dict, written_outputs: dict) -> dict:
+    written_analysis = copy.deepcopy(analysis)
+    written_analysis["written_outputs"] = written_outputs
+    written_analysis["recommend_write"] = False
+    written_analysis["recommendation"] = (
+        "The specialist seed-migration packet now carries the durable inventory. "
+        "Rerun when seed posture moves."
+    )
+    return written_analysis
 
 
 def write_outputs(repo_root: pathlib.Path, analysis: dict) -> dict:
     report_path = repo_root / REPORT_REL_PATH
     manifest_path = repo_root / MANIFEST_REL_PATH
     report_path.parent.mkdir(parents=True, exist_ok=True)
-    report_path.write_text(render_report(analysis), encoding="utf-8")
-    manifest_path.write_text(json.dumps(analysis, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    return {
+    written_outputs = {
         "report_path": REPORT_REL_PATH,
         "manifest_path": MANIFEST_REL_PATH,
     }
+    written_analysis = post_write_analysis(analysis, written_outputs)
+    report_path.write_text(render_report(written_analysis), encoding="utf-8")
+    manifest_path.write_text(
+        json.dumps(written_analysis, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return written_analysis
 
 
 def main() -> int:
@@ -254,7 +257,7 @@ def main() -> int:
     repo_root = pathlib.Path(args.repo_root)
     analysis = analyze_repo(repo_root)
     if args.write:
-        analysis["written_outputs"] = write_outputs(repo_root, analysis)
+        analysis = write_outputs(repo_root, analysis)
     if args.json:
         json.dump(analysis, sys.stdout, indent=2, sort_keys=True)
         sys.stdout.write("\n")
