@@ -1,0 +1,130 @@
+<purpose>
+Review a concrete contract-changing slice against the upstream-pristine baseline, the repo-local delta layer, and the current propagation family so neighboring carriers either move in the same slice or stay explicitly held.
+</purpose>
+
+<required_reading>
+@__PROJECT_ROOT__/.codex/get-shit-done/references/mandatory-initial-read.md
+@__PROJECT_ROOT__/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/95-upstream-pristine-propagation-baseline-first-slice.md
+@__PROJECT_ROOT__/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/96-repo-local-propagation-delta-first-slice.md
+Read all files referenced by the invoking prompt's execution_context before starting.
+</required_reading>
+
+<supporting_reading>
+Use these as the normal widening packet:
+- `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/README.md`
+- `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/artifacts/03-propagation-registry-v2-declared-contracts.json`
+- `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/artifacts/04-propagation-registry-v2-semantic-map.json`
+- `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/artifacts/05-propagation-registry-v2-evidence-index.json`
+- `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/artifacts/06-propagation-registry-v2-coverage-and-refresh.json`
+- the changed surfaces named in the invoking prompt or args
+- the current local proposal, implementation, refresh, or disposition artifact for the active slice when one already exists
+</supporting_reading>
+
+<deeper_reading>
+Only widen into older propagation lanes, long-horizon docs, or broader governance docs when the current slice cannot be judged from the baseline/delta pair plus the typed propagation layers.
+</deeper_reading>
+
+<process>
+
+<step name="parse_args">
+Treat all freeform args as the contract-change trigger.
+
+Supported optional flags for the first slice:
+- `--write-note PATH` — write the bounded propagation review to a repo-local markdown path
+- `--strict-runtime` — require the runtime/install gate packet when the slice touches live materialization or registry carriers
+
+If the invoking text does not name the changed surfaces directly, infer them from the active slice and state that inference explicitly.
+</step>
+
+<step name="map_the_slice">
+State the trigger, then map the slice under these headings:
+
+- trigger surfaces
+- direct producers
+- direct consumers
+- narrative mirrors
+- runtime and registry carriers
+- durable outputs and state surfaces
+- intentionally held neighbors
+
+For each important carrier, say whether it belongs to:
+- upstream-pristine baseline
+- repo-local delta
+- mixed baseline-plus-delta widening
+
+Do not stop at the local file diff when the contract movement clearly crosses workflows, skills, wrappers, outputs, or governing docs.
+</step>
+
+<step name="choose_tools">
+Use repo-local tooling only as partial visibility:
+
+- `python3 tooling/codex/audit_refmap.py` when markdown-heavy topology changed
+- `python3 tooling/codex/project_uplift.py detect . --json` when uplift outputs or routed consumers may move
+- `python3 tooling/codex/runtime_visibility.py .` when live-vs-overlay or materialized runtime carriers may move
+- `python3 tooling/codex/manifest_install_coherence.py . --snapshot <snapshot.json> --strict` when the slice crosses several materialization/runtime families together
+- `python3 tooling/codex/harness_canary.py report . --strict` when current runtime/install invariants are part of the live question
+
+Do not let a clean tool result replace contextual reread. Tool output widens and sharpens the review; it does not finish it.
+</step>
+
+<step name="update_or_hold">
+If the propagation path is already clear, update adjacent live carriers in the same slice.
+
+If some neighbors stay held:
+- name them explicitly
+- state why they are held
+- name the later route, proposal, or audit family that still owns them
+
+Do not leave held boundaries ambient.
+</step>
+
+<step name="output_shape">
+Produce a compact markdown review with these sections:
+
+```markdown
+# Propagation Review
+
+## Trigger
+- ...
+
+## Baseline Versus Delta
+- ...
+
+## Producers
+- ...
+
+## Consumers
+- ...
+
+## Narrative Mirrors
+- ...
+
+## Runtime And Durable Carriers
+- ...
+
+## Updated In This Slice
+- ...
+
+## Held With Explicit Boundary
+- ...
+
+## Verification
+- ...
+
+## Next Route
+- ...
+```
+
+If `--write-note PATH` is present, write the review there. Otherwise return it in the current response.
+</step>
+
+<step name="verification">
+For overlay-backed workflow or skill changes in this repo:
+- rerun `./scripts/setup-portable-gsd.sh`
+- rerun the focused contract tests for the touched route
+- keep `audit_refmap.py verify` and `git diff --check` in the batch boundary
+
+If `--strict-runtime` is active or the slice touches live runtime/materialization carriers, include the runtime/install gate outputs in the verification section too.
+</step>
+
+</process>

@@ -125,3 +125,10 @@ python3 tooling/codex/run_claude_probe.py \
   - it does not hide real off-PATH cases or broader upstream install failures; it only recovers the bounded local executability case and then proves `gsd-sdk --version` under `/bin/sh`
 - `UPLIFT-HELD-LATER.md`
   - named reference for the uplift families the current detect-only slice keeps explicit rather than absorbing
+
+## Operator Routes
+
+- `$gsd-propagation-review`
+  - operator-facing route for concrete contract-changing slices that cross several producer/consumer families
+  - reads the upstream-pristine baseline plus the repo-local delta layer first, then widens into the typed propagation family only as needed
+  - uses the local tooling surfaces above as partial visibility, not as whole-network proof
