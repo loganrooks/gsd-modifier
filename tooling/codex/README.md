@@ -1,6 +1,6 @@
 # Codex Tooling Notes
 
-This directory holds small local utilities for debugging and operating Codex / Claude CLI behavior in this repo.
+This directory now holds host-boundary Codex utilities plus thin compatibility shims for generic helpers that were rehomed into [`harness_modifier/`](/home/rookslog/workspace/projects/prix-guesser/harness_modifier/README.md).
 
 ## Headless Claude Probe Rule
 
@@ -32,7 +32,7 @@ That turned out to be a bad test shape for file-mediated prompts, because the ru
 Inline prompt:
 
 ```bash
-python3 tooling/codex/run_claude_probe.py \
+python3 harness_modifier/capture/run_claude_probe.py \
   --label canary \
   --model sonnet \
   --effort high \
@@ -42,7 +42,7 @@ python3 tooling/codex/run_claude_probe.py \
 Repo-local wrapper/spec:
 
 ```bash
-python3 tooling/codex/run_claude_probe.py \
+python3 harness_modifier/capture/run_claude_probe.py \
   --label repo-spec \
   --model 'opus[1m]' \
   --effort xhigh \
@@ -59,20 +59,32 @@ python3 tooling/codex/run_claude_probe.py \
   - runs `audit_refmap.py verify` against touched audit roots by default
   - use `--staged` for staged-only checks and `--all` for a broader audit sweep
 - `run_claude_probe.py`
+  - authoritative home: `harness_modifier/capture/run_claude_probe.py`
+  - the local `tooling/codex/run_claude_probe.py` path is now a thin compatibility shim
   - runs a headless Claude probe and prints a compact summary: exit code, runtime, event counts, final text, stderr/debug tail
 - `extract_stream_text.py`
+  - authoritative home: `harness_modifier/capture/extract_stream_text.py`
+  - the local `tooling/codex/extract_stream_text.py` path is now a thin compatibility shim
   - extracts just text-bearing content from `stream-json` logs with `--head`, `--tail`, `--range`, and `--last-message`
 - `capture_launch_truth.py`
+  - authoritative home: `harness_modifier/capture/capture_launch_truth.py`
+  - the local `tooling/codex/capture_launch_truth.py` path is now a thin compatibility shim
   - captures requested-vs-effective Codex launch settings from `~/.codex/state_5.sqlite`
   - see also the propagation-family lane records under `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/` when launch-truth becomes part of a wider contract-carry question
 - `runtime_visibility.py`
+  - authoritative home: `harness_modifier/contract/runtime_visibility.py`
+  - the local `tooling/codex/runtime_visibility.py` path is now a thin compatibility shim
   - reports final repo-local GSD runtime truth for selected high-leverage families without rewriting updater/custom-file manifest semantics
   - use it when live-vs-overlay differences need classification (`intentional materialized carry`, `repo-local config carry`, `selective overlay boundary`, `obsolete live residue`, `unknown live drift`) rather than a blunt mismatch list
   - report output now records whether normalized overlay hashes are checkout-local, distinguishes live-only residue from live-only surfaces that are still explained by manifest, backup-meta, or install-mutation carry, and exposes stable per-entry `subclassification` / top-level `subclassification_summary` fields so selective boundaries do not collapse into one undifferentiated bucket
 - `capture_runtime_visibility_snapshot.py`
+  - authoritative home: `harness_modifier/capture/capture_runtime_visibility_snapshot.py`
+  - the local `tooling/codex/capture_runtime_visibility_snapshot.py` path is now a thin compatibility shim
   - captures a durable selected-lane snapshot around `runtime_visibility.py` with label, timestamp, branch, basis commit, dirty-worktree flag, and the full classified report payload
   - use it when an audit or intervention lane needs a frozen runtime-truth record instead of only ephemeral terminal output
 - `manifest_install_coherence.py`
+  - authoritative home: `harness_modifier/contract/manifest_install_coherence.py`
+  - the local `tooling/codex/manifest_install_coherence.py` path is now a thin compatibility shim
   - compares updater/custom-file boundary truth (`gsd-file-manifest.json`), tracked carried-subset truth (`backup-meta.json`), and a frozen selected-lane runtime snapshot
   - use it for manifest/install coherence passes when the question is whether any real contradiction remains after semantic separation, not whether one file can be forced to stand in for all three surfaces
   - `--strict` is the preferred mode for audit checkpoints because it fails on dirty current state, dirty snapshot boundaries, unknown live drift, or currently evidenced obsolete residue inside the selected runtime scope
@@ -106,6 +118,8 @@ python3 tooling/codex/run_claude_probe.py \
   - keeps seed-corpus posture, per-seed vintage, contract-shape gaps, and migration moves explicit as a separate planning packet instead of crowding those semantics into uplift memory alone
   - treat it as the specialist detect-only route once uplift or milestone-open surfaces point at older seed corpora
 - `harness_canary.py`
+  - authoritative home: `harness_modifier/contract/harness_canary.py`
+  - the local `tooling/codex/harness_canary.py` path is now a thin compatibility shim
   - emits a bounded machine-checkable report for current runtime/install invariants
   - the first slice checks:
     - canonical runtime version anchor presence
@@ -116,6 +130,8 @@ python3 tooling/codex/run_claude_probe.py \
     - uplift compatibility-anchor freshness when uplift memory exists
   - use `--strict` when the caller wants a real gate on those bounded invariants rather than a read-only report
 - `portable_gsd_contract.py`
+  - authoritative home: `harness_modifier/contract/portable_gsd_contract.py`
+  - the local `tooling/codex/portable_gsd_contract.py` path is now a thin compatibility shim
   - owns the tracked overlay install contract for repo-local GSD materialization
   - validates [OVERLAY-MANIFEST.json](/home/rookslog/workspace/projects/prix-guesser/tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json), captures fresh-install pristine overwrite copies when upstream no longer leaves them behind, applies overlay files, applies repo-local reasoning defaults, and verifies post-materialization coherence
   - `verify-materialized` now also reports typed runtime-specific `.claude` reference hits inside live `.codex/` materialization:
@@ -124,6 +140,8 @@ python3 tooling/codex/run_claude_probe.py \
     - leaves final judgment to contextual reread rather than pretending the helper can settle every warning by itself
   - use it when the question is whether overlay ownership, backup-carried overwrite truth, and additive repo-local owners are still aligned
 - `ensure_gsd_sdk_runtime.py`
+  - authoritative home: `harness_modifier/contract/ensure_gsd_sdk_runtime.py`
+  - the local `tooling/codex/ensure_gsd_sdk_runtime.py` path is now a thin compatibility shim
   - verifies the repo-local `gsd-sdk` runtime under `/bin/sh` after upstream local install and repairs the known executable-bit failure when the installed launcher target has a shebang but lost execute bits
   - use it as a narrow recovery surface after `get-shit-done-cc --codex --local` exits through the misleading `gsd-sdk` PATH banner
   - it does not hide real off-PATH cases or broader upstream install failures; it only recovers the bounded local executability case and then proves `gsd-sdk --version` under `/bin/sh`

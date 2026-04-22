@@ -28,32 +28,32 @@ if [[ "${INSTALL_EXIT}" -ne 0 && "${INSTALL_EXIT}" -ne 2 ]]; then
 fi
 
 echo "Verifying repo-local gsd-sdk runtime..."
-python3 "${REPO_ROOT}/tooling/codex/ensure_gsd_sdk_runtime.py" --pretty
+python3 "${REPO_ROOT}/harness_modifier/contract/ensure_gsd_sdk_runtime.py" --pretty
 
 if [[ "${INSTALL_EXIT}" -eq 2 ]]; then
   echo "Recovered from upstream gsd-sdk self-check failure via repo-local runtime verification."
 fi
 
 echo "Capturing fresh-install pristine copies for overwrite-mode carriers..."
-python3 "${REPO_ROOT}/tooling/codex/portable_gsd_contract.py" \
+python3 "${REPO_ROOT}/harness_modifier/contract/portable_gsd_contract.py" \
   capture-pristine-overwrites "${REPO_ROOT}" --strict
 
 echo "Validating tracked prix-guesser GSD overlay contract..."
-python3 "${REPO_ROOT}/tooling/codex/portable_gsd_contract.py" \
+python3 "${REPO_ROOT}/harness_modifier/contract/portable_gsd_contract.py" \
   validate-manifest "${REPO_ROOT}" --strict
 
 echo "Applying tracked prix-guesser GSD overlay..."
 echo "Using compact prompt: ${COMPACT_PROMPT_FILE}"
-python3 "${REPO_ROOT}/tooling/codex/portable_gsd_contract.py" \
+python3 "${REPO_ROOT}/harness_modifier/contract/portable_gsd_contract.py" \
   apply-overlay "${REPO_ROOT}" \
   --compact-prompt-file "${COMPACT_PROMPT_FILE}"
 
 echo "Applying repo-local GSD reasoning defaults..."
-python3 "${REPO_ROOT}/tooling/codex/portable_gsd_contract.py" \
+python3 "${REPO_ROOT}/harness_modifier/contract/portable_gsd_contract.py" \
   apply-reasoning-defaults "${REPO_ROOT}"
 
 echo "Verifying post-materialization overlay coherence..."
-python3 "${REPO_ROOT}/tooling/codex/portable_gsd_contract.py" \
+python3 "${REPO_ROOT}/harness_modifier/contract/portable_gsd_contract.py" \
   verify-materialized "${REPO_ROOT}" \
   --compact-prompt-file "${COMPACT_PROMPT_FILE}" \
   --strict

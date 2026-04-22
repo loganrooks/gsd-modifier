@@ -60,9 +60,9 @@ Use repo-local tooling only as partial visibility:
 
 - `python3 tooling/codex/audit_refmap.py` when markdown-heavy topology changed
 - `python3 tooling/codex/project_uplift.py detect . --json` when uplift outputs or routed consumers may move
-- `python3 tooling/codex/runtime_visibility.py .` when live-vs-overlay or materialized runtime carriers may move
-- `python3 tooling/codex/manifest_install_coherence.py . --snapshot <snapshot.json> --strict` when the slice crosses several materialization/runtime families together
-- `python3 tooling/codex/harness_canary.py report . --strict` when current runtime/install invariants are part of the live question
+- `python3 harness_modifier/contract/runtime_visibility.py .` when live-vs-overlay or materialized runtime carriers may move
+- `python3 harness_modifier/contract/manifest_install_coherence.py . --snapshot <snapshot.json> --strict` when the slice crosses several materialization/runtime families together
+- `python3 harness_modifier/contract/harness_canary.py report . --strict` when current runtime/install invariants are part of the live question
 
 Do not let a clean tool result replace contextual reread. Tool output widens and sharpens the review; it does not finish it.
 </step>

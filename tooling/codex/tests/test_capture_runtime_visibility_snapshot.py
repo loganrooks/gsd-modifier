@@ -5,7 +5,7 @@ import tempfile
 import unittest
 from unittest import mock
 
-from tooling.codex import capture_runtime_visibility_snapshot as crvs
+from harness_modifier.capture import capture_runtime_visibility_snapshot as crvs
 
 
 class CaptureRuntimeVisibilitySnapshotTests(unittest.TestCase):

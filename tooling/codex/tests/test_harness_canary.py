@@ -4,8 +4,8 @@ import tempfile
 import unittest
 from unittest import mock
 
-from tooling.codex import harness_canary as hc
-from tooling.codex import portable_gsd_contract as pgc
+from harness_modifier.contract import harness_canary as hc
+from harness_modifier.contract import portable_gsd_contract as pgc
 
 
 class HarnessCanaryTests(unittest.TestCase):

@@ -3,7 +3,7 @@ import pathlib
 import tempfile
 import unittest
 
-from tooling.codex import ensure_gsd_sdk_runtime as egsr
+from harness_modifier.contract import ensure_gsd_sdk_runtime as egsr
 
 
 class EnsureGsdSdkRuntimeTests(unittest.TestCase):

@@ -5,8 +5,8 @@ import sys
 import tempfile
 import unittest
 
-from tooling.codex import manifest_install_coherence as mic
-from tooling.codex import runtime_visibility as rv
+from harness_modifier.contract import manifest_install_coherence as mic
+from harness_modifier.contract import runtime_visibility as rv
 
 
 class ManifestInstallCoherenceTests(unittest.TestCase):

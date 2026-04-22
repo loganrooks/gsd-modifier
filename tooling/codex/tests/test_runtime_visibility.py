@@ -3,7 +3,7 @@ import pathlib
 import tempfile
 import unittest
 
-from tooling.codex import runtime_visibility as rv
+from harness_modifier.contract import runtime_visibility as rv
 
 
 class RuntimeVisibilityTests(unittest.TestCase):

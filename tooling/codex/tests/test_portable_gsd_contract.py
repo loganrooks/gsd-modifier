@@ -5,7 +5,7 @@ import sys
 import tempfile
 import unittest
 
-from tooling.codex import portable_gsd_contract as pgc
+from harness_modifier.contract import portable_gsd_contract as pgc
 
 
 class PortableGsdContractTests(unittest.TestCase):
