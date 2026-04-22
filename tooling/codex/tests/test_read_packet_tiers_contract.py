@@ -2,6 +2,8 @@ import json
 import unittest
 from pathlib import Path
 
+from tooling.codex.tests.overlay_paths import overlay_source_path
+
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -33,7 +35,7 @@ class ReadPacketTiersContractTests(unittest.TestCase):
         surfaces = [
             ROOT / "tooling/portable-gsd/overlay/get-shit-done/workflows/progress.md",
             ROOT / "tooling/portable-gsd/overlay/get-shit-done/workflows/resume-project.md",
-            ROOT / "tooling/portable-gsd/overlay/get-shit-done/workflows/uplift-project.md",
+            overlay_source_path("get-shit-done/workflows/uplift-project.md"),
         ]
         for path in surfaces:
             content = path.read_text()

@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "entries": {
     "agents/gsd-code-fixer.md": "overwrite",
     "agents/gsd-code-fixer.toml": "add",
@@ -46,17 +46,26 @@
     "get-shit-done/workflows/new-project.md": "overwrite",
     "get-shit-done/workflows/plan-phase.md": "overwrite",
     "get-shit-done/workflows/plant-seed.md": "overwrite",
-    "get-shit-done/workflows/propagation-review.md": "add",
+    "get-shit-done/workflows/propagation-review.md": {
+      "mode": "add",
+      "source": "harness_modifier/overlay/get-shit-done/workflows/propagation-review.md"
+    },
     "get-shit-done/workflows/progress.md": "overwrite",
     "get-shit-done/workflows/quick.md": "overwrite",
     "get-shit-done/workflows/research-phase.md": "overwrite",
     "get-shit-done/workflows/resume-project.md": "overwrite",
     "get-shit-done/workflows/review.md": "overwrite",
-    "get-shit-done/workflows/seed-migration-inventory.md": "add",
+    "get-shit-done/workflows/seed-migration-inventory.md": {
+      "mode": "add",
+      "source": "harness_modifier/overlay/get-shit-done/workflows/seed-migration-inventory.md"
+    },
     "get-shit-done/workflows/settings.md": "overwrite",
     "get-shit-done/workflows/spec-phase.md": "overwrite",
     "get-shit-done/workflows/transition.md": "overwrite",
-    "get-shit-done/workflows/uplift-project.md": "add",
+    "get-shit-done/workflows/uplift-project.md": {
+      "mode": "add",
+      "source": "harness_modifier/overlay/get-shit-done/workflows/uplift-project.md"
+    },
     "get-shit-done/workflows/update.md": "overwrite",
     "get-shit-done/workflows/verify-phase.md": "overwrite",
     "skills/gsd-discuss-phase/SKILL.md": "overwrite",
@@ -66,7 +75,10 @@
     "skills/gsd-health/SKILL.md": "overwrite",
     "skills/gsd-plan-phase/SKILL.md": "overwrite",
     "skills/gsd-plant-seed/SKILL.md": "overwrite",
-    "skills/gsd-propagation-review/SKILL.md": "add",
+    "skills/gsd-propagation-review/SKILL.md": {
+      "mode": "add",
+      "source": "harness_modifier/overlay/skills/gsd-propagation-review/SKILL.md"
+    },
     "skills/gsd-progress/SKILL.md": "add",
     "skills/gsd-resume-work/SKILL.md": "overwrite",
     "skills/gsd-review/SKILL.md": "overwrite",
@@ -74,9 +86,15 @@
     "skills/gsd-rigorous-research/references/method.md": "add",
     "skills/gsd-rigorous-research/references/output-template.md": "add",
     "skills/gsd-rigorous-research/references/repo-canon.md": "add",
-    "skills/gsd-seed-migration-inventory/SKILL.md": "add",
+    "skills/gsd-seed-migration-inventory/SKILL.md": {
+      "mode": "add",
+      "source": "harness_modifier/overlay/skills/gsd-seed-migration-inventory/SKILL.md"
+    },
     "skills/gsd-update/SKILL.md": "overwrite",
-    "skills/gsd-uplift-project/SKILL.md": "add",
+    "skills/gsd-uplift-project/SKILL.md": {
+      "mode": "add",
+      "source": "harness_modifier/overlay/skills/gsd-uplift-project/SKILL.md"
+    },
     "tooling/compact-prompts/project.md": "add",
     "tooling/compact-prompts/readiness.md": "add"
   }

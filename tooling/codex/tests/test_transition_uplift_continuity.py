@@ -174,7 +174,7 @@ class TransitionUpliftContinuityTests(unittest.TestCase):
             self._write(repo_root, ".codex/agents/gsd-planner.toml", 'description = "planner"\n')
             self._write(repo_root, ".codex/agents/gsd-plan-checker.toml", 'description = "checker"\n')
             self._write(repo_root, "tooling/codex/README.md", "# Codex Tooling Notes\n\n## Utilities\n- `project_uplift.py`\n")
-            self._write(repo_root, "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json", json.dumps({"schema_version": 1, "entries": {}}) + "\n")
+            self._write(repo_root, "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json", json.dumps({"schema_version": 2, "entries": {}}) + "\n")
             self._write(repo_root, "tooling/codex/UPLIFT-HELD-LATER.md", "- cross-runtime uplift composition — held\n")
             self._write(repo_root, ".codex/get-shit-done/workflows/discuss-phase.md", "### Strengthening Opportunities\n- keep\n")
             self._write(repo_root, ".codex/get-shit-done/templates/context.md", "### Strengthening Opportunities\n- keep\n")

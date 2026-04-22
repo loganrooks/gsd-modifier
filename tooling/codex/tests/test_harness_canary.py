@@ -22,7 +22,7 @@ class HarnessCanaryTests(unittest.TestCase):
             "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
             json.dumps(
                 {
-                    "schema_version": 1,
+                    "schema_version": 2,
                     "entries": {
                         "config.toml": "add",
                         "agents/gsd-executor.toml": "add",
@@ -66,7 +66,7 @@ class HarnessCanaryTests(unittest.TestCase):
                         "observed_runtime_manifest_source": ".codex/gsd-file-manifest.json",
                         "observed_runtime_version_aligned": True,
                         "declared_overlay_schema_version": declaration["overlay_schema_version"],
-                        "overlay_manifest_schema_version": 1,
+                        "overlay_manifest_schema_version": 2,
                         "overlay_manifest_schema_version_matches_declaration": True,
                         "upstream_compatibility_window": declaration["upstream_compatibility_window"],
                         "parity_scan_baseline": {

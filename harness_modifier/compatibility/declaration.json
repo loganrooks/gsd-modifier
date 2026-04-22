@@ -15,7 +15,7 @@
       "note": "second runtime is recorded as a held compatibility annotation while the observed basis remains anchored to .codex"
     }
   ],
-  "overlay_schema_version": 1,
+  "overlay_schema_version": 2,
   "uplift_manifest_schema_version": 6,
   "upstream_compatibility_window": {
     "mode": "observed_basis_only",

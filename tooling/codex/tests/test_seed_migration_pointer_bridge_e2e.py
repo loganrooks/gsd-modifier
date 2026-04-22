@@ -52,7 +52,7 @@ class SeedMigrationPointerBridgeE2ETests(unittest.TestCase):
         self._write(root, ".codex/get-shit-done/VERSION", "1.38.1\n")
         self._write(root, ".codex/agents/gsd-planner.toml", 'description = "planner"\n')
         self._write(root, ".codex/agents/gsd-plan-checker.toml", 'description = "checker"\n')
-        self._write(root, "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json", json.dumps({"schema_version": 1, "entries": {}}) + "\n")
+        self._write(root, "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json", json.dumps({"schema_version": 2, "entries": {}}) + "\n")
         self._write(
             root,
             "tooling/codex/README.md",
@@ -66,7 +66,7 @@ class SeedMigrationPointerBridgeE2ETests(unittest.TestCase):
             "- upstream-template drift machinery — held\n"
             "- aged-bespoke deep merge — held\n"
             "- audit-subtree aging carry — held\n"
-            "- legacy seed corpus migration — partially landed: tooling/portable-gsd/overlay/get-shit-done/workflows/seed-migration-inventory.md | intervention-proposals/90-seed-migration-operator-facing-pointer-bridge-implementation.md | propagation-audit/37-seed-migration-operator-facing-pointer-change-triggered-refresh.md\n"
+            "- legacy seed corpus migration — partially landed: harness_modifier/overlay/get-shit-done/workflows/seed-migration-inventory.md | intervention-proposals/90-seed-migration-operator-facing-pointer-bridge-implementation.md | propagation-audit/37-seed-migration-operator-facing-pointer-change-triggered-refresh.md\n"
             "- routed-entry hooks beyond `progress` — partially landed: propagation-audit/04-resume-project-second-consumer-implementation.md\n",
         )
         self._write(

@@ -16,6 +16,10 @@ Current first-slice split:
   - typed portable compatibility declaration
   - parity-baseline rules and held-annotation posture
   - first extraction artifact intended to travel unchanged into a later standalone project
+- `overlay/`
+  - authoritative first extraction tranche for specialist workflow and skill carriers
+  - package-owned helper shims for moved workflow shells
+  - current roster of generic, shared-boundary, and host-local overlay carriers
 
 During the in-repo rehome step, the old `tooling/codex/*.py` paths remain as thin compatibility shims.
 Active scripts, docs, and tests should prefer `harness_modifier/...` paths.

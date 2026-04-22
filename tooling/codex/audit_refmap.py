@@ -24,6 +24,7 @@ LOCAL_PATH_RE = re.compile(
     r"|(?:\.planning|tooling|scripts)/[^\s`\"'()<>]+"
     r")"
 )
+LINE_SUFFIX_RE = re.compile(r"^(.*?)(:\d+)?$")
 URL_SCHEME_RE = re.compile(r"^[a-zA-Z][a-zA-Z0-9+.-]*:")
 
 

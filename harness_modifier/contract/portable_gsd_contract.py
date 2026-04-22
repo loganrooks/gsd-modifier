@@ -158,13 +158,51 @@ def list_overlay_paths(overlay_root: pathlib.Path) -> set[str]:
     }
 
 
-def load_overlay_manifest(repo_root: pathlib.Path) -> dict[str, str]:
+def load_overlay_manifest(repo_root: pathlib.Path) -> dict[str, Any]:
     manifest_path = repo_root / OVERLAY_MANIFEST_REL_PATH
     payload = json.loads(read_text(manifest_path))
     entries = payload.get("entries", {})
     if not isinstance(entries, dict):
         raise ValueError("overlay manifest entries must be an object")
-    return {str(key): str(value) for key, value in entries.items()}
+    return entries
+
+
+def normalize_overlay_manifest_entry(
+    repo_root: pathlib.Path, rel_path: str, entry: Any
+) -> dict[str, str]:
+    if isinstance(entry, str):
+        source_rel_path = f"{OVERLAY_REL_PATH}/{rel_path}"
+        return {
+            "mode": entry,
+            "source_rel_path": source_rel_path,
+            "source_path": str((repo_root / source_rel_path).resolve()),
+        }
+    if isinstance(entry, dict):
+        mode = entry.get("mode")
+        source_rel_path = entry.get("source", f"{OVERLAY_REL_PATH}/{rel_path}")
+        if not isinstance(mode, str):
+            raise ValueError(f"overlay manifest entry {rel_path} is missing string mode")
+        if not isinstance(source_rel_path, str):
+            raise ValueError(f"overlay manifest entry {rel_path} has a non-string source")
+        return {
+            "mode": mode,
+            "source_rel_path": source_rel_path,
+            "source_path": str((repo_root / source_rel_path).resolve()),
+        }
+    raise ValueError(f"overlay manifest entry {rel_path} must be a string or object")
+
+
+def load_overlay_manifest_specs(repo_root: pathlib.Path) -> dict[str, dict[str, str]]:
+    entries = load_overlay_manifest(repo_root)
+    return {
+        str(rel_path): normalize_overlay_manifest_entry(repo_root, str(rel_path), entry)
+        for rel_path, entry in entries.items()
+    }
+
+
+def overlay_entry_source_path(repo_root: pathlib.Path, rel_path: str) -> pathlib.Path:
+    entry = load_overlay_manifest_specs(repo_root)[rel_path]
+    return pathlib.Path(entry["source_path"])
 
 
 def load_overlay_manifest_payload(repo_root: pathlib.Path) -> dict[str, Any]:
@@ -286,15 +324,30 @@ def build_manifest_validation_report(repo_root: pathlib.Path) -> dict[str, Any]:
         hard_failures.append(f"overlay manifest missing: {manifest_path}")
 
     overlay_paths = list_overlay_paths(overlay_root) if overlay_root.exists() else set()
-    entries = load_overlay_manifest(repo_root) if manifest_path.exists() else {}
+    entry_specs = load_overlay_manifest_specs(repo_root) if manifest_path.exists() else {}
     backup_paths = load_backup_meta_paths(codex_root) if codex_root.exists() else set()
 
-    manifest_paths = set(entries)
-    invalid_modes = sorted(path for path, mode in entries.items() if mode not in VALID_MODES)
-    missing_from_manifest = sorted(overlay_paths - manifest_paths)
-    missing_from_overlay = sorted(manifest_paths - overlay_paths)
-    overwrite_paths = {path for path, mode in entries.items() if mode == "overwrite"}
-    add_paths = {path for path, mode in entries.items() if mode == "add"}
+    manifest_paths = set(entry_specs)
+    default_overlay_paths = {
+        rel_path
+        for rel_path, spec in entry_specs.items()
+        if spec["source_rel_path"] == f"{OVERLAY_REL_PATH}/{rel_path}"
+    }
+    invalid_modes = sorted(path for path, spec in entry_specs.items() if spec["mode"] not in VALID_MODES)
+    missing_from_manifest = sorted(overlay_paths - default_overlay_paths)
+    missing_from_overlay = sorted(default_overlay_paths - overlay_paths)
+    missing_source_files = sorted(
+        rel_path for rel_path, spec in entry_specs.items() if not pathlib.Path(spec["source_path"]).exists()
+    )
+    overwrite_paths = {path for path, spec in entry_specs.items() if spec["mode"] == "overwrite"}
+    add_paths = {path for path, spec in entry_specs.items() if spec["mode"] == "add"}
+    external_source_entries = sorted(
+        {
+            rel_path: spec["source_rel_path"]
+            for rel_path, spec in entry_specs.items()
+            if spec["source_rel_path"] != f"{OVERLAY_REL_PATH}/{rel_path}"
+        }.items()
+    )
     overwrite_missing_in_backup = sorted(overwrite_paths - backup_paths)
     add_present_in_backup = sorted(add_paths & backup_paths)
     backup_overlay_not_overwrite = sorted((backup_paths & overlay_paths) - overwrite_paths)
@@ -305,6 +358,8 @@ def build_manifest_validation_report(repo_root: pathlib.Path) -> dict[str, Any]:
         hard_failures.append(f"{len(missing_from_manifest)} overlay files are missing manifest entries")
     if missing_from_overlay:
         hard_failures.append(f"{len(missing_from_overlay)} manifest entries do not exist in overlay")
+    if missing_source_files:
+        hard_failures.append(f"{len(missing_source_files)} manifest entries point at missing source files")
     if overwrite_missing_in_backup:
         hard_failures.append(
             f"{len(overwrite_missing_in_backup)} overwrite entries are not backed by backup-meta upstream carry"
@@ -329,6 +384,11 @@ def build_manifest_validation_report(repo_root: pathlib.Path) -> dict[str, Any]:
         "invalid_modes": invalid_modes,
         "missing_from_manifest": missing_from_manifest,
         "missing_from_overlay": missing_from_overlay,
+        "missing_source_files": missing_source_files,
+        "external_source_entries": [
+            {"path": rel_path, "source_rel_path": source_rel_path}
+            for rel_path, source_rel_path in external_source_entries
+        ],
         "overwrite_missing_in_backup": overwrite_missing_in_backup,
         "add_present_in_backup": add_present_in_backup,
         "backup_overlay_not_overwrite": backup_overlay_not_overwrite,
@@ -339,8 +399,8 @@ def build_manifest_validation_report(repo_root: pathlib.Path) -> dict[str, Any]:
 def capture_pristine_overwrites(repo_root: pathlib.Path) -> dict[str, Any]:
     codex_root = repo_root / ".codex"
     backup_root = codex_root / "gsd-local-patches"
-    entries = load_overlay_manifest(repo_root)
-    overwrite_paths = sorted(path for path, mode in entries.items() if mode == "overwrite")
+    entry_specs = load_overlay_manifest_specs(repo_root)
+    overwrite_paths = sorted(path for path, spec in entry_specs.items() if spec["mode"] == "overwrite")
     runtime_manifest_paths = load_runtime_manifest_paths(codex_root)
     copied: list[str] = []
     missing_live: list[str] = []
@@ -397,12 +457,11 @@ def capture_pristine_overwrites(repo_root: pathlib.Path) -> dict[str, Any]:
 
 
 def apply_overlay(repo_root: pathlib.Path, compact_prompt: str) -> list[str]:
-    overlay_root = repo_root / OVERLAY_REL_PATH
     codex_root = repo_root / ".codex"
-    entries = load_overlay_manifest(repo_root)
+    entry_specs = load_overlay_manifest_specs(repo_root)
     written: list[str] = []
-    for rel_path in sorted(entries):
-        source = overlay_root / rel_path
+    for rel_path in sorted(entry_specs):
+        source = pathlib.Path(entry_specs[rel_path]["source_path"])
         target = codex_root / rel_path
         target.parent.mkdir(parents=True, exist_ok=True)
         text = render_overlay_text(read_text(source), repo_root, compact_prompt)
@@ -438,12 +497,12 @@ def apply_reasoning_defaults(repo_root: pathlib.Path) -> None:
 def build_materialization_report(repo_root: pathlib.Path, compact_prompt: str) -> dict[str, Any]:
     validation = build_manifest_validation_report(repo_root)
     hard_failures = list(validation["hard_failures"])
-    overlay_root = repo_root / OVERLAY_REL_PATH
     codex_root = repo_root / ".codex"
     backup_paths = load_backup_meta_paths(codex_root)
-    entries = load_overlay_manifest(repo_root)
+    entry_specs = load_overlay_manifest_specs(repo_root)
     overlay_manifest_payload = load_overlay_manifest_payload(repo_root)
-    runtime_specific_reference_scan = build_runtime_specific_reference_report(codex_root, entries)
+    overlay_modes = {rel_path: spec["mode"] for rel_path, spec in entry_specs.items()}
+    runtime_specific_reference_scan = build_runtime_specific_reference_report(codex_root, overlay_modes)
     declared_overlay_schema_version = COMPATIBILITY_DECLARATION["overlay_schema_version"]
     observed_overlay_schema_version = overlay_manifest_payload.get("schema_version")
     overlay_schema_version_matches_declaration = observed_overlay_schema_version == declared_overlay_schema_version
@@ -457,12 +516,13 @@ def build_materialization_report(repo_root: pathlib.Path, compact_prompt: str) -
     backup_copy_missing: list[str] = []
     content_mismatch: list[str] = []
 
-    for rel_path, mode in sorted(entries.items()):
+    for rel_path, spec in sorted(entry_specs.items()):
+        mode = spec["mode"]
         live_path = codex_root / rel_path
         if not live_path.exists():
             missing_live_targets.append(rel_path)
             continue
-        overlay_text = render_overlay_text(read_text(overlay_root / rel_path), repo_root, compact_prompt)
+        overlay_text = render_overlay_text(read_text(pathlib.Path(spec["source_path"])), repo_root, compact_prompt)
         live_text = read_text(live_path)
         if normalize_reasoning_defaults(rel_path, overlay_text) != normalize_reasoning_defaults(rel_path, live_text):
             content_mismatch.append(rel_path)
@@ -499,7 +559,7 @@ def build_materialization_report(repo_root: pathlib.Path, compact_prompt: str) -
         },
         "summary": {
             **validation["summary"],
-            "live_target_count": len(entries),
+            "live_target_count": len(entry_specs),
             "missing_live_target_count": len(missing_live_targets),
             "backup_copy_missing_count": len(backup_copy_missing),
             "content_mismatch_count": len(content_mismatch),

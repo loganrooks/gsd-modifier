@@ -9,7 +9,7 @@ Read all files referenced by the invoking prompt's execution_context before star
 
 <supporting_reading>
 Keep the initial packet narrow:
-- `seed_migration_inventory.py` detect output
+- the package-owned seed migration shim detect output
 - the specific `.planning/seeds/SEED-*.md` files the detect run flagged as migration candidates, only when such candidates exist
 - `.planning/UPLIFT-REPORT.md` and `.planning/UPLIFT-MANIFEST.json` only when this route was activated from uplift posture
 </supporting_reading>
@@ -34,7 +34,7 @@ Keep rewrite automation, direct file edits, and larger seed-corpus normalization
 Run the repo-local helper:
 
 ```bash
-SEED_MIGRATION_JSON=$(python3 "__PROJECT_ROOT__/tooling/codex/seed_migration_inventory.py" detect "__PROJECT_ROOT__" $([ "$WRITE" = "true" ] && printf '%s' -- --write) --json)
+SEED_MIGRATION_JSON=$(python3 "__PROJECT_ROOT__/harness_modifier/overlay/helpers/seed_migration_inventory.py" detect "__PROJECT_ROOT__" $([ "$WRITE" = "true" ] && printf '%s' -- --write) --json)
 ```
 
 Parse the JSON for:

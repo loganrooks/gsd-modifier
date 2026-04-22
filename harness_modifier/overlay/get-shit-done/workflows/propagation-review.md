@@ -4,18 +4,18 @@ Review a concrete contract-changing slice against the upstream-pristine baseline
 
 <required_reading>
 @__PROJECT_ROOT__/.codex/get-shit-done/references/mandatory-initial-read.md
-@__PROJECT_ROOT__/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/95-upstream-pristine-propagation-baseline-first-slice.md
-@__PROJECT_ROOT__/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/96-repo-local-propagation-delta-first-slice.md
+Read the host repo's current propagation baseline pair when the invoking prompt or execution_context identifies it.
 Read all files referenced by the invoking prompt's execution_context before starting.
 </required_reading>
 
 <supporting_reading>
 Use these as the normal widening packet:
-- `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/README.md`
-- `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/artifacts/03-propagation-registry-v2-declared-contracts.json`
-- `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/artifacts/04-propagation-registry-v2-semantic-map.json`
-- `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/artifacts/05-propagation-registry-v2-evidence-index.json`
-- `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/artifacts/06-propagation-registry-v2-coverage-and-refresh.json`
+- the host repo's current propagation audit read surface
+- the host repo's current typed propagation registry packet:
+  - declared contracts
+  - semantic map
+  - evidence index
+  - coverage and refresh
 - the changed surfaces named in the invoking prompt or args
 - the current local proposal, implementation, refresh, or disposition artifact for the active slice when one already exists
 </supporting_reading>
@@ -58,8 +58,8 @@ Do not stop at the local file diff when the contract movement clearly crosses wo
 <step name="choose_tools">
 Use repo-local tooling only as partial visibility:
 
-- `python3 tooling/codex/audit_refmap.py` when markdown-heavy topology changed
-- `python3 tooling/codex/project_uplift.py detect . --json` when uplift outputs or routed consumers may move
+- `python3 harness_modifier/overlay/helpers/audit_refmap.py` when markdown-heavy topology changed
+- `python3 harness_modifier/overlay/helpers/project_uplift.py detect . --json` when uplift outputs or routed consumers may move
 - `python3 harness_modifier/contract/runtime_visibility.py .` when live-vs-overlay or materialized runtime carriers may move
 - `python3 harness_modifier/contract/manifest_install_coherence.py . --snapshot <snapshot.json> --strict` when the slice crosses several materialization/runtime families together
 - `python3 harness_modifier/contract/harness_canary.py report . --strict` when current runtime/install invariants are part of the live question

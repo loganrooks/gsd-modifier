@@ -24,7 +24,7 @@ class PortableGsdContractTests(unittest.TestCase):
                 "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
                 json.dumps(
                     {
-                        "schema_version": 1,
+                        "schema_version": 2,
                         "entries": {
                             "config.toml": "add",
                             "get-shit-done/workflows/plan-phase.md": "overwrite",
@@ -52,7 +52,7 @@ class PortableGsdContractTests(unittest.TestCase):
             self._write(
                 repo_root,
                 "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
-                json.dumps({"schema_version": 1, "entries": {"config.toml": "add"}}) + "\n",
+                json.dumps({"schema_version": 2, "entries": {"config.toml": "add"}}) + "\n",
             )
             self._write(repo_root, ".codex/gsd-local-patches/backup-meta.json", json.dumps({"files": ["config.toml"]}) + "\n")
 
@@ -80,7 +80,7 @@ class PortableGsdContractTests(unittest.TestCase):
                 "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
                 json.dumps(
                     {
-                        "schema_version": 1,
+                        "schema_version": 2,
                         "entries": {
                             "agents/gsd-planner.toml": "add",
                             "config.toml": "add",
@@ -119,7 +119,7 @@ class PortableGsdContractTests(unittest.TestCase):
                 "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
                 json.dumps(
                     {
-                        "schema_version": 1,
+                        "schema_version": 2,
                         "entries": {"get-shit-done/workflows/plan-phase.md": "overwrite"},
                     }
                 )
@@ -157,7 +157,7 @@ class PortableGsdContractTests(unittest.TestCase):
                 "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
                 json.dumps(
                     {
-                        "schema_version": 1,
+                        "schema_version": 2,
                         "entries": {"get-shit-done/workflows/plan-phase.md": "overwrite"},
                     }
                 )
@@ -202,7 +202,7 @@ class PortableGsdContractTests(unittest.TestCase):
                 "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
                 json.dumps(
                     {
-                        "schema_version": 1,
+                        "schema_version": 2,
                         "entries": {
                             "get-shit-done/workflows/update.md": "overwrite",
                         },
@@ -254,7 +254,7 @@ class PortableGsdContractTests(unittest.TestCase):
                 "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
                 json.dumps(
                     {
-                        "schema_version": 1,
+                        "schema_version": 2,
                         "entries": {
                             "get-shit-done/workflows/update.md": "overwrite",
                         },

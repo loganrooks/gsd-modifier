@@ -48,7 +48,7 @@ class ProjectUpliftTests(unittest.TestCase):
             "tooling/codex/UPLIFT-HELD-LATER.md",
             "- required-reading installation practice — held\n"
             "- cross-runtime uplift composition — held\n"
-            "- legacy seed corpus migration — partially landed: tooling/portable-gsd/overlay/get-shit-done/workflows/seed-migration-inventory.md | intervention-proposals/92-seed-migration-pointer-bridge-harden-follow-through-implementation.md | propagation-audit/38-seed-migration-pointer-bridge-harden-change-triggered-refresh.md\n"
+            "- legacy seed corpus migration — partially landed: harness_modifier/overlay/get-shit-done/workflows/seed-migration-inventory.md | intervention-proposals/92-seed-migration-pointer-bridge-harden-follow-through-implementation.md | propagation-audit/38-seed-migration-pointer-bridge-harden-change-triggered-refresh.md\n"
             "- routed-entry hooks beyond `progress` — partially landed: propagation-audit/04-resume-project-second-consumer-implementation.md\n",
         )
 
@@ -129,7 +129,7 @@ class ProjectUpliftTests(unittest.TestCase):
         self._write(root, "CLAUDE.md", "# Claude\n")
         self._write(root, ".planning/CLAUDE.md", "# Planning Claude\n")
         self._write(root, ".planning/CLAIM-TYPES.md", "# Claim Types\n")
-        self._write(root, "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json", json.dumps({"schema_version": 1, "entries": {}}) + "\n")
+        self._write(root, "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json", json.dumps({"schema_version": 2, "entries": {}}) + "\n")
         self._write(
             root,
             ".planning/LONG-ARC.md",
@@ -359,7 +359,7 @@ class ProjectUpliftTests(unittest.TestCase):
                     and item["status"] == "partially landed"
                     and item["pointer"]
                     == [
-                        "tooling/portable-gsd/overlay/get-shit-done/workflows/seed-migration-inventory.md",
+                        "harness_modifier/overlay/get-shit-done/workflows/seed-migration-inventory.md",
                         "intervention-proposals/92-seed-migration-pointer-bridge-harden-follow-through-implementation.md",
                         "propagation-audit/38-seed-migration-pointer-bridge-harden-change-triggered-refresh.md",
                     ]
@@ -406,8 +406,8 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertEqual(compatibility["observed_runtime_manifest_version"], "1.38.1")
             self.assertTrue(compatibility["observed_runtime_version_aligned"])
             self.assertEqual(compatibility["runtime_basis"]["runtime"], ".codex")
-            self.assertEqual(compatibility["declared_overlay_schema_version"], 1)
-            self.assertEqual(compatibility["overlay_manifest_schema_version"], 1)
+            self.assertEqual(compatibility["declared_overlay_schema_version"], 2)
+            self.assertEqual(compatibility["overlay_manifest_schema_version"], 2)
             self.assertTrue(compatibility["overlay_manifest_schema_version_matches_declaration"])
             self.assertEqual(compatibility["uplift_manifest_schema_version"], 6)
             self.assertEqual(compatibility["upstream_compatibility_window"]["state"], "unknown")

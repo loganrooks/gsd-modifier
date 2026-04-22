@@ -13,10 +13,16 @@ Context rule:
 - ordinary references to generic GSD planning canon such as `.planning/PROJECT.md`
   or `.planning/STATE.md` are not treated here as extraction defects by
   themselves
-- the live blockers for the first filesystem rehome are narrower:
-  - embedded host audit-workspace paths
-  - helper-home references that still point at `tooling/codex/*.py`
-  - compact-prompt bodies that intentionally preserve this host repo's doctrine
+- the first specialist filesystem-rehome slice is now landed:
+  - the specialist trio's authoritative source files now live under
+    `harness_modifier/overlay/`
+  - explicit manifest source indirection now ties those sources back to the
+    stable install targets under `tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json`
+- the remaining live blockers are now narrower:
+  - overwrite-family workflow/template/reference carriers that still preserve
+    host or upstream-boundary coupling
+  - host-local compact-prompt bodies that intentionally preserve this host
+    repo's doctrine
 
 ## Generic Carriers
 
@@ -25,9 +31,9 @@ splitting host doctrine out of their current text.
 
 | Path | Mode | Current extraction posture | Why it can travel |
 | --- | --- | --- | --- |
-| `skills/gsd-propagation-review/SKILL.md` | `add` | `first-filesystem-rehome` | Additive specialist skill adapter; wrapper text is generic and points to the workflow shell. |
-| `skills/gsd-uplift-project/SKILL.md` | `add` | `first-filesystem-rehome` | Additive specialist skill adapter; wrapper text is generic and points to the workflow shell. |
-| `skills/gsd-seed-migration-inventory/SKILL.md` | `add` | `first-filesystem-rehome` | Additive specialist skill adapter; wrapper text is generic and points to the workflow shell. |
+| `skills/gsd-propagation-review/SKILL.md` | `add` | `modifier-owned-source` | Additive specialist skill adapter; authoritative source now lives under `harness_modifier/overlay/skills/` while the stable install target remains declared in the overlay manifest. |
+| `skills/gsd-uplift-project/SKILL.md` | `add` | `modifier-owned-source` | Additive specialist skill adapter; authoritative source now lives under `harness_modifier/overlay/skills/` while the stable install target remains declared in the overlay manifest. |
+| `skills/gsd-seed-migration-inventory/SKILL.md` | `add` | `modifier-owned-source` | Additive specialist skill adapter; authoritative source now lives under `harness_modifier/overlay/skills/` while the stable install target remains declared in the overlay manifest. |
 | `skills/gsd-rigorous-research/SKILL.md` | `add` | `later-generic-slice` | Additive specialist research adapter with generic route semantics. |
 | `skills/gsd-rigorous-research/references/method.md` | `add` | `later-generic-slice` | Generic research method reference. |
 | `skills/gsd-rigorous-research/references/output-template.md` | `add` | `later-generic-slice` | Generic research output template. |
@@ -99,17 +105,17 @@ references, or later text-neutrality work.
 | `get-shit-done/workflows/plan-phase.md` | `overwrite` | `later` | Workflow carrier remains coupled to upstream baseline or host planning/runtime consumers. |
 | `get-shit-done/workflows/plant-seed.md` | `overwrite` | `later` | Workflow carrier remains coupled to upstream baseline or host planning/runtime consumers. |
 | `get-shit-done/workflows/progress.md` | `overwrite` | `later` | Workflow carrier remains coupled to upstream baseline or host planning/runtime consumers; it still references helper-home uplift routing. |
-| `get-shit-done/workflows/propagation-review.md` | `add` | `first-filesystem-rehome-after-text-split` | Generic mechanism shell still embeds host audit-workspace paths and helper-home refs. |
+| `get-shit-done/workflows/propagation-review.md` | `add` | `modifier-owned-source` | Generic mechanism shell now lives under `harness_modifier/overlay/`, with host audit-workspace embeds removed and package-owned helper shims carrying the source-home split. |
 | `get-shit-done/workflows/quick.md` | `overwrite` | `later` | Workflow carrier remains coupled to upstream baseline or host planning/runtime consumers. |
 | `get-shit-done/workflows/research-phase.md` | `overwrite` | `later` | Workflow carrier remains coupled to upstream baseline or host planning/runtime consumers. |
 | `get-shit-done/workflows/resume-project.md` | `overwrite` | `later` | Workflow carrier remains coupled to upstream baseline or host planning/runtime consumers; it still references helper-home uplift routing. |
 | `get-shit-done/workflows/review.md` | `overwrite` | `later` | Workflow carrier remains coupled to upstream baseline or host planning/runtime consumers. |
-| `get-shit-done/workflows/seed-migration-inventory.md` | `add` | `first-filesystem-rehome-after-text-split` | Generic mechanism shell still points at the helper-home detect script. |
+| `get-shit-done/workflows/seed-migration-inventory.md` | `add` | `modifier-owned-source` | Generic mechanism shell now lives under `harness_modifier/overlay/`, with detect routing resolved through a package-owned helper shim. |
 | `get-shit-done/workflows/settings.md` | `overwrite` | `later` | Workflow carrier remains coupled to upstream baseline or host planning/runtime consumers. |
 | `get-shit-done/workflows/spec-phase.md` | `overwrite` | `later` | Workflow carrier remains coupled to upstream baseline or host planning/runtime consumers. |
 | `get-shit-done/workflows/transition.md` | `overwrite` | `later` | Workflow carrier remains coupled to upstream baseline or host planning/runtime consumers; it still references helper-home uplift routing. |
 | `get-shit-done/workflows/update.md` | `overwrite` | `later` | Workflow carrier remains coupled to upstream baseline or host planning/runtime consumers. |
-| `get-shit-done/workflows/uplift-project.md` | `add` | `first-filesystem-rehome-after-text-split` | Generic mechanism shell still embeds host audit packet links and helper-home refs. |
+| `get-shit-done/workflows/uplift-project.md` | `add` | `modifier-owned-source` | Generic mechanism shell now lives under `harness_modifier/overlay/`, with host audit packet embeds abstracted behind named host references and package-owned helper shims. |
 | `get-shit-done/workflows/verify-phase.md` | `overwrite` | `later` | Workflow carrier remains coupled to upstream baseline or host planning/runtime consumers. |
 
 ### Skill Wrappers
@@ -139,9 +145,9 @@ surfaces.
 | `tooling/compact-prompts/project.md` | `add` | `hold-host-local` | Compact-prompt body preserves this host repo canon and should remain host-owned. |
 | `tooling/compact-prompts/readiness.md` | `add` | `hold-host-local` | Compact-prompt body preserves host readiness/rerun doctrine and should remain host-owned. |
 
-## First Filesystem-Rehome Eligible Set
+## Landed First Filesystem-Rehome Set
 
-The frozen first eligible set is:
+The first landed set is:
 - `skills/gsd-uplift-project/SKILL.md`
 - `skills/gsd-propagation-review/SKILL.md`
 - `skills/gsd-seed-migration-inventory/SKILL.md`
@@ -150,14 +156,22 @@ The frozen first eligible set is:
 - `get-shit-done/workflows/seed-migration-inventory.md`
 
 Current blocker state:
-- the three skill adapters are already generic enough to travel
-- the three workflow shells still need one text-abstraction pass first:
-  - replace hard host audit-workspace links with generic package-owned or
-    named-host-appendix references
-  - replace helper-home refs that still point at `tooling/codex/*.py`
-    with the post-rehome authoritative helper home or a stable shim contract
+- the first specialist source split is now done:
+  - the three skill adapters and three workflow shells now live under
+    `harness_modifier/overlay/`
+  - explicit source-path indirection in the overlay manifest keeps the stable
+    install targets unchanged
+  - package-owned helper shims now bridge the moved workflow shells to the
+    current helper authorities
+- the next remaining blockers are no longer the specialist trio:
+  - overwrite-family workflow/template/reference carriers that still couple to
+    host or upstream-boundary surfaces
+  - host-local compact-prompt bodies
+  - later runtime/agent/config carriers
 
 Later slices after that first rehome:
+- next bounded reread of the landed specialist source split before a second
+  overlay tranche moves
 - continuity references
 - `gsd-rigorous-research` generic tranche
 - overwrite workflow/template/reference families

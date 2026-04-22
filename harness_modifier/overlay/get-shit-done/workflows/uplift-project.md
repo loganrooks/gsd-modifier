@@ -9,7 +9,7 @@ Read all files referenced by the invoking prompt's execution_context before star
 
 <supporting_reading>
 Use the helper and the current uplift outputs as the first packet:
-- `project_uplift.py` detect output
+- the package-owned project uplift shim detect output
 - `.planning/UPLIFT-REPORT.md`, `.planning/UPLIFT-MANIFEST.json`, and `STATE.md` uplift section when they already exist or when `--write` is in play
 - `.planning/seeds/SEED-*.md` only when the helper surfaces legacy-unversioned or noncurrent seed posture
 - runtime/version surfaces only when compatibility movement is active
@@ -45,7 +45,7 @@ Do not reopen the full uplift audit family just to deliver an ordinary detect-on
 Run the repo-local helper:
 
 ```bash
-UPLIFT_JSON=$(python3 "__PROJECT_ROOT__/tooling/codex/project_uplift.py" detect "__PROJECT_ROOT__" $([ "$WRITE" = "true" ] && printf '%s' -- --write) --json)
+UPLIFT_JSON=$(python3 "__PROJECT_ROOT__/harness_modifier/overlay/helpers/project_uplift.py" detect "__PROJECT_ROOT__" $([ "$WRITE" = "true" ] && printf '%s' -- --write) --json)
 ```
 
 Parse the JSON for:
@@ -114,8 +114,8 @@ Route next action explicitly:
 - If doctrine-sensitive proposal routes remain:
   - keep them for explicit later review rather than folding them into detect-only, and only then widen into the supporting proposal/audit packet
   - when the operator wants one bounded assist-family packet before governance or durable uplift edits:
-    - use [103-uplift-agent-assist-patterns.md](/home/rookslog/workspace/projects/prix-guesser/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/103-uplift-agent-assist-patterns.md) as the family reference
-    - use [06-uplift-docs-governance-classification-packet-template.md](/home/rookslog/workspace/projects/prix-guesser/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/entry-uplift-audit/packets/06-uplift-docs-governance-classification-packet-template.md) or [08-uplift-carrier-gap-identification-packet-template.md](/home/rookslog/workspace/projects/prix-guesser/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/entry-uplift-audit/packets/08-uplift-carrier-gap-identification-packet-template.md) as the bounded packet entry
+    - use the host uplift assist-family reference as the family reference
+    - use the host docs-governance classification packet entry or the host carrier-gap identification packet entry as the bounded packet entry
     - record the packet result under `entry-uplift-audit/outputs/`
     - record the parent-thread judgment under `entry-uplift-audit/dispositions/`
     - keep the route operator-initiated: do not auto-spawn and do not widen the helper or CLI
