@@ -1344,8 +1344,11 @@ def update_state_section(repo_root: pathlib.Path, analysis: dict) -> None:
     if pattern.search(text):
         updated = pattern.sub("\n" + section.rstrip() + "\n", text)
     else:
+        deferred_marker = "\n## Deferred Items"
         session_marker = "\n## Session Continuity"
-        if session_marker in text:
+        if deferred_marker in text:
+            updated = text.replace(deferred_marker, "\n" + section.rstrip() + "\n" + deferred_marker, 1)
+        elif session_marker in text:
             updated = text.replace(session_marker, "\n" + section.rstrip() + "\n" + session_marker, 1)
         else:
             updated = text.rstrip() + "\n\n" + section

@@ -75,6 +75,14 @@ None yet.
 - Posture: [assumption that still governs next work]
 - Seeded: [strengthening route] -> [seed or later carrier]
 
+## Project Uplift
+
+Last uplift class: [unrecorded]
+Compatibility posture: [observed_basis_only]
+Observed runtime basis: [unrecorded]
+Held runtime annotation: [none]
+Current recommendation: [Run `$gsd-uplift-project --write` when durable uplift memory should be recorded.]
+
 ## Deferred Items
 
 Items acknowledged and carried forward from previous milestone close:
@@ -127,6 +135,7 @@ STATE.md is the project's short-term memory spanning all phases and sessions.
   - Clear resolved blockers
   - Refresh Project Reference date
   - Keep `Future Carry Forward` limited to still-live preserved seams, explicit non-decisions, posture assumptions, and seeded strengthening routes
+  - Preserve or refresh `Project Uplift` continuity without widening `STATE.md` into a structural compatibility carrier
 
 </lifecycle>
 
@@ -179,6 +188,18 @@ Updated after each plan completion.
 - `Posture:` for assumptions that still govern later work
 - `Seeded:` for strengthening routes that were deliberately moved to a later carrier
 - Keep this section small; anything broader should live in project docs, seeds, or milestone/audit artifacts
+
+### Project Uplift
+Compact continuity slot for repo-local uplift memory.
+- Keep it top-level and adjacent to `Accumulated Context`, not nested inside it
+- Treat the section as helper-filled, not as a second manifest
+- Keep only the scalar digest:
+  - last uplift class
+  - compatibility posture
+  - observed runtime basis
+  - held runtime annotation
+  - current recommendation
+- Transition preserves or refreshes this block; detailed structure remains in `.planning/UPLIFT-MANIFEST.json`
 
 ### Session Continuity
 Enables instant resumption:

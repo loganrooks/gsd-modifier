@@ -421,6 +421,53 @@ After (if database indexing was addressed in Phase 2):
 
 </step>
 
+<step name="review_project_uplift_continuity">
+
+If `STATE.md` carries a top-level `## Project Uplift` section, keep that continuity explicit through phase close.
+
+Read the current uplift note:
+
+```bash
+UPLIFT_NOTE=$(python3 "__PROJECT_ROOT__/tooling/codex/project_uplift.py" progress-note "__PROJECT_ROOT__" --json 2>/dev/null || true)
+```
+
+Treat this as its own bounded continuity step, not as part of `load_future_preservation_carry` and not as part of `review_accumulated_context`.
+
+**Preserve path:**
+
+- If the uplift note does not recommend `--write`, keep the existing `## Project Uplift` block in place.
+- Do not widen the block into a compatibility matrix or a structural row.
+
+**Refresh path:**
+
+- If the uplift note recommends `--write`, refresh the block before transition closes:
+
+```bash
+python3 "__PROJECT_ROOT__/tooling/codex/project_uplift.py" detect "__PROJECT_ROOT__" --write --json >/dev/null
+```
+
+- Use this refresh only when runtime or uplift-basis movement is actually detected.
+- Do not turn transition into a general compatibility dispatcher.
+
+**Carry discipline:**
+
+- Keep `## Project Uplift` as a top-level section adjacent to `Accumulated Context`, not nested inside it.
+- Keep the block summary-shaped:
+  - last uplift class
+  - compatibility posture
+  - observed runtime basis
+  - held runtime annotation
+  - current recommendation
+- Keep the typed structure in `.planning/UPLIFT-MANIFEST.json`, not in `STATE.md`.
+
+**Step complete when:**
+
+- [ ] The `Project Uplift` block was reviewed explicitly rather than left ambient
+- [ ] Preserve path or refresh path was chosen deliberately
+- [ ] The block remains summary-shaped and top-level in `STATE.md`
+
+</step>
+
 <step name="update_session_continuity_after_transition">
 
 Update Session Continuity section in STATE.md to reflect transition completion.
