@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "observed_runtime_directories": [
+    ".codex",
+    ".claude"
+  ],
+  "candidate_observed_runtime_directories": [
+    ".gemini",
+    ".config/opencode",
+    ".opencode",
+    ".config/kilo",
+    ".kilo"
+  ]
+}

@@ -3,7 +3,15 @@ import pathlib
 import tempfile
 import unittest
 
+from harness_modifier.compatibility import observation as compatibility_observation
+from harness_modifier.compatibility import seed_contract as compatibility_seed_contract
+from harness_modifier.uplift import output_policy as uplift_output_policy
 from tooling.codex import project_uplift as pu
+
+
+OBSERVATION_POLICY = compatibility_observation.load_observation()
+SEED_CONTRACT = compatibility_seed_contract.load_seed_contract()
+OUTPUT_POLICY = uplift_output_policy.load_output_policy()
 
 
 STATE_TEMPLATE = """---
@@ -141,6 +149,17 @@ class ProjectUpliftTests(unittest.TestCase):
     def _write_claude_runtime(self, root: pathlib.Path, version: str) -> None:
         self._write(root, ".claude/get-shit-done/VERSION", f"{version}\n")
 
+    def test_neutralization_carriers_load_expected_shapes(self) -> None:
+        self.assertEqual(OBSERVATION_POLICY["observed_runtime_directories"], [".codex", ".claude"])
+        self.assertIn(".gemini", OBSERVATION_POLICY["candidate_observed_runtime_directories"])
+        self.assertEqual(SEED_CONTRACT["seed_dir_rel_path"], ".planning/seeds")
+        self.assertEqual(SEED_CONTRACT["current_seed_contract_version"], "2")
+        self.assertIn("seed_contract_version", SEED_CONTRACT["required_seed_frontmatter_keys"])
+        self.assertIn("Strengthening Carry", SEED_CONTRACT["required_seed_section_headings"])
+        self.assertEqual(OUTPUT_POLICY["report_rel_path"], ".planning/UPLIFT-REPORT.md")
+        self.assertEqual(OUTPUT_POLICY["manifest_rel_path"], ".planning/UPLIFT-MANIFEST.json")
+        self.assertEqual(OUTPUT_POLICY["state_heading"], "## Project Uplift")
+
     def test_detect_classifies_vanilla_project(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             repo_root = pathlib.Path(tmpdir)
@@ -173,13 +192,36 @@ class ProjectUpliftTests(unittest.TestCase):
                 all(proposal["proposal_state"] != "absent" for proposal in analysis["pending_doctrine_sensitive_proposals"])
             )
 
+    def test_runtime_dirs_present_matches_observation_policy_union(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="completed")
+            self._write_doctrine_stack(repo_root)
+            for rel_path in [".claude", ".gemini", ".config/opencode", ".opencode", ".config/kilo", ".kilo"]:
+                (repo_root / rel_path).mkdir(parents=True, exist_ok=True)
+
+            runtime_dirs = pu.runtime_dirs_present(repo_root)
+
+            self.assertEqual(
+                runtime_dirs,
+                [
+                    ".codex",
+                    ".claude",
+                    ".gemini",
+                    ".config/opencode",
+                    ".opencode",
+                    ".config/kilo",
+                    ".kilo",
+                ],
+            )
+
     def test_detect_surfaces_legacy_seed_corpus_posture(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             repo_root = pathlib.Path(tmpdir)
             self._minimal_project(repo_root, status="completed")
             self._write_doctrine_stack(repo_root)
             self._write_seed(repo_root, "001", "legacy-route", None)
-            self._write_seed(repo_root, "002", "current-route", pu.CURRENT_SEED_CONTRACT_VERSION)
+            self._write_seed(repo_root, "002", "current-route", SEED_CONTRACT["current_seed_contract_version"])
 
             analysis = pu.analyze_repo(repo_root)
 
@@ -203,7 +245,7 @@ class ProjectUpliftTests(unittest.TestCase):
                 repo_root,
                 "005",
                 "current-gap",
-                pu.CURRENT_SEED_CONTRACT_VERSION,
+                SEED_CONTRACT["current_seed_contract_version"],
                 include_current_shape=False,
             )
 
@@ -296,7 +338,7 @@ class ProjectUpliftTests(unittest.TestCase):
             repo_root = pathlib.Path(tmpdir)
             self._minimal_project(repo_root, status="completed")
             self._write_doctrine_stack(repo_root)
-            self._write_seed(repo_root, "003", "current-route", pu.CURRENT_SEED_CONTRACT_VERSION)
+            self._write_seed(repo_root, "003", "current-route", SEED_CONTRACT["current_seed_contract_version"])
 
             note = pu.build_progress_note(repo_root)
 
@@ -534,7 +576,7 @@ class ProjectUpliftTests(unittest.TestCase):
                 repo_root,
                 "005",
                 "shape-gap",
-                pu.CURRENT_SEED_CONTRACT_VERSION,
+                SEED_CONTRACT["current_seed_contract_version"],
                 include_current_shape=False,
             )
 

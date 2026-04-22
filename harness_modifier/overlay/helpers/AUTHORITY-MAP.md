@@ -23,14 +23,15 @@ Status: active helper authority map
 - [d:r:i] Do not reopen `audit_refmap.py` as a modifier-facing payload candidate unless its repo-local path grammar is first neutralized deliberately in a separate family.
 - [d:r:i] Do not open `seed_migration_inventory.py` relocation ahead of `project_uplift.py`; its payload authority remains downstream.
 
-## Project Uplift Neutralization Preconditions
+## Project Uplift Neutralization Result
 
-- [d:r:i] move runtime-dir policy out of hard-coded module constants and into typed data
-- [d:r:i] move uplift planning-output policy out of embedded path constants and into typed data
-- [d:r:i] keep compatibility-anchor routing declaration-driven rather than helper-constant-driven
-- [d:r:i] preserve `.codex` observed basis plus `.claude` held annotation while doing the neutralization
+- [d:r:i] The bounded neutralization slice is now landed through [../../../.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/154-harness-modifier-project-uplift-neutralization-implementation.md](/home/rookslog/workspace/projects/prix-guesser/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/154-harness-modifier-project-uplift-neutralization-implementation.md).
+- [d:r:i] runtime-dir policy now routes through typed observation data
+- [d:r:i] uplift planning-output policy now routes through typed output-policy data
+- [d:r:i] seed contract shape now routes through typed seed-contract data
+- [d:r:i] compatibility-anchor routing stays declaration-driven, with `.codex` observed basis and `.claude` held annotation preserved
 
 ## Exact Next Move
 
-- [d:r:i] Open a bounded `project_uplift.py` neutralization proposal.
-- [d:r:i] Do not relocate any helper payload in the same slice as this authority map.
+- [d:r:i] Judge `project_uplift.py` again after neutralization rather than assuming the earlier payload-candidate posture still answers the later movement question by itself.
+- [d:r:i] Do not relocate any helper payload in the same slice as that post-neutralization judgment.

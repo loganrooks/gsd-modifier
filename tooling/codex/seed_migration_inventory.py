@@ -11,6 +11,8 @@ import re
 import sys
 from datetime import datetime, timezone
 
+from harness_modifier.compatibility import seed_contract as compatibility_seed_contract
+
 try:
     from tooling.codex import project_uplift as pu
 except ModuleNotFoundError:
@@ -23,6 +25,11 @@ except ModuleNotFoundError:
 REPORT_REL_PATH = ".planning/SEED-MIGRATION-REPORT.md"
 MANIFEST_REL_PATH = ".planning/SEED-MIGRATION-MANIFEST.json"
 SEED_MIGRATION_MANIFEST_SCHEMA_VERSION = 1
+SEED_CONTRACT = compatibility_seed_contract.load_seed_contract()
+CURRENT_SEED_CONTRACT_VERSION = str(SEED_CONTRACT["current_seed_contract_version"])
+REQUIRED_SEED_FRONTMATTER_KEYS = tuple(SEED_CONTRACT["required_seed_frontmatter_keys"])
+REQUIRED_SEED_SECTION_HEADINGS = tuple(SEED_CONTRACT["required_seed_section_headings"])
+SEED_DIR_REL_PATH = str(SEED_CONTRACT["seed_dir_rel_path"])
 
 
 def now_iso() -> str:
@@ -57,28 +64,28 @@ def build_seed_entry(repo_root: pathlib.Path, path: pathlib.Path) -> dict:
 
     if version is None:
         vintage = "legacy_unversioned"
-    elif version == pu.CURRENT_SEED_CONTRACT_VERSION:
+    elif version == CURRENT_SEED_CONTRACT_VERSION:
         vintage = "current_contract"
     else:
         vintage = f"noncurrent:{version}"
 
     missing_frontmatter = [
-        key for key in pu.REQUIRED_SEED_FRONTMATTER_KEYS if key not in frontmatter
+        key for key in REQUIRED_SEED_FRONTMATTER_KEYS if key not in frontmatter
     ]
     missing_sections = [
-        heading for heading in pu.REQUIRED_SEED_SECTION_HEADINGS if heading not in sections
+        heading for heading in REQUIRED_SEED_SECTION_HEADINGS if heading not in sections
     ]
     migration_moves: list[str] = []
     migration_move_kinds: list[str] = []
 
     if version is None:
         migration_moves.append(
-            f"stamp `seed_contract_version: {pu.CURRENT_SEED_CONTRACT_VERSION}`"
+            f"stamp `seed_contract_version: {CURRENT_SEED_CONTRACT_VERSION}`"
         )
         migration_move_kinds.append("stamp_seed_contract_version")
-    elif version != pu.CURRENT_SEED_CONTRACT_VERSION:
+    elif version != CURRENT_SEED_CONTRACT_VERSION:
         migration_moves.append(
-            f"move `seed_contract_version` from `{version}` to `{pu.CURRENT_SEED_CONTRACT_VERSION}`"
+            f"move `seed_contract_version` from `{version}` to `{CURRENT_SEED_CONTRACT_VERSION}`"
         )
         migration_move_kinds.append("move_seed_contract_version")
 
@@ -101,7 +108,7 @@ def build_seed_entry(repo_root: pathlib.Path, path: pathlib.Path) -> dict:
         "title": extract_seed_title(text) or path.stem,
         "rel_path": pu.rel_path(repo_root, path),
         "contract_vintage": vintage,
-        "current_contract_version": pu.CURRENT_SEED_CONTRACT_VERSION,
+        "current_contract_version": CURRENT_SEED_CONTRACT_VERSION,
         "missing_frontmatter_keys": missing_frontmatter,
         "missing_section_headings": missing_sections,
         "migration_moves": migration_moves,
@@ -122,7 +129,7 @@ def migration_reasons(seed_corpus_posture: dict, entries: list[dict]) -> list[st
 
 def analyze_repo(repo_root: pathlib.Path) -> dict:
     repo_root = repo_root.resolve()
-    seed_root = repo_root / pu.SEED_DIR_REL_PATH
+    seed_root = repo_root / SEED_DIR_REL_PATH
     seed_paths = sorted(seed_root.glob("SEED-*.md")) if seed_root.exists() else []
     entries = [build_seed_entry(repo_root, path) for path in seed_paths]
     seed_corpus_posture = pu.build_seed_corpus_posture(repo_root)

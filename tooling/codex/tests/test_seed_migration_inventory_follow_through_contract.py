@@ -3,11 +3,13 @@ import re
 import unittest
 from pathlib import Path
 
+from harness_modifier.compatibility import seed_contract as compatibility_seed_contract
 from tooling.codex import project_uplift as pu
 from tooling.codex.tests.overlay_paths import overlay_entry_mode, overlay_source_path
 
 
 ROOT = Path(__file__).resolve().parents[3]
+SEED_CONTRACT = compatibility_seed_contract.load_seed_contract()
 
 
 class SeedMigrationInventoryFollowThroughContractTests(unittest.TestCase):
@@ -60,8 +62,8 @@ class SeedMigrationInventoryFollowThroughContractTests(unittest.TestCase):
             heading for heading in re.findall(r"^##\s+(.+?)\s*$", template, re.M)
         }
 
-        self.assertEqual(frontmatter_keys, set(pu.REQUIRED_SEED_FRONTMATTER_KEYS))
-        self.assertEqual(section_headings, set(pu.REQUIRED_SEED_SECTION_HEADINGS))
+        self.assertEqual(frontmatter_keys, set(SEED_CONTRACT["required_seed_frontmatter_keys"]))
+        self.assertEqual(section_headings, set(SEED_CONTRACT["required_seed_section_headings"]))
 
 
 if __name__ == "__main__":

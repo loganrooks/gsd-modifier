@@ -18,45 +18,12 @@ if str(REPO_ROOT_FOR_IMPORTS) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT_FOR_IMPORTS))
 
 from harness_modifier.compatibility import declaration as compatibility_declaration
+from harness_modifier.compatibility import observation as compatibility_observation
+from harness_modifier.compatibility import seed_contract as compatibility_seed_contract
+from harness_modifier.uplift import output_policy as uplift_output_policy
 
 
-STATE_HEADING = "## Project Uplift"
-REPORT_REL_PATH = ".planning/UPLIFT-REPORT.md"
-MANIFEST_REL_PATH = ".planning/UPLIFT-MANIFEST.json"
-HELD_LATER_REL_PATH = "tooling/codex/UPLIFT-HELD-LATER.md"
-RUNTIME_MANIFEST_REL_PATH = ".codex/gsd-file-manifest.json"
-RUNTIME_VERSION_REL_PATH = ".codex/get-shit-done/VERSION"
 OVERLAY_MANIFEST_REL_PATH = "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json"
-SEED_DIR_REL_PATH = ".planning/seeds"
-CURRENT_SEED_CONTRACT_VERSION = "2"
-REQUIRED_SEED_FRONTMATTER_KEYS = (
-    "id",
-    "seed_contract_version",
-    "status",
-    "planted",
-    "planted_during",
-    "trigger_when",
-    "scope",
-)
-REQUIRED_SEED_SECTION_HEADINGS = (
-    "Why This Matters",
-    "When to Surface",
-    "Scope Estimate",
-    "Strengthening Carry",
-    "Breadcrumbs",
-    "Notes",
-)
-COMPATIBILITY_DECLARATION = compatibility_declaration.load_declaration()
-COMPATIBILITY_DECLARATION_REL_PATH = compatibility_declaration.DECLARATION_REL_PATH
-UPLIFT_MANIFEST_SCHEMA_VERSION = int(COMPATIBILITY_DECLARATION["uplift_manifest_schema_version"])
-COMPATIBILITY_POSTURE = str(COMPATIBILITY_DECLARATION["compatibility_posture"])
-RUNTIME_BASIS_DECLARATION = COMPATIBILITY_DECLARATION["runtime_basis"]
-RUNTIME_HELD_ANNOTATIONS_DECLARATION = COMPATIBILITY_DECLARATION["runtime_held_annotations"]
-DECLARED_OVERLAY_SCHEMA_VERSION = COMPATIBILITY_DECLARATION["overlay_schema_version"]
-UPSTREAM_COMPATIBILITY_WINDOW = COMPATIBILITY_DECLARATION["upstream_compatibility_window"]
-PARITY_SCAN_BASELINE_DECLARATION = COMPATIBILITY_DECLARATION["parity_scan_baseline"]
-COMPATIBILITY_CHECK_PROTOCOL = tuple(COMPATIBILITY_DECLARATION["check_protocol"])
-COMPATIBILITY_HELD_LATER = tuple(COMPATIBILITY_DECLARATION["held_later"])
 PROGRESS_NOTE_RENDER_FIELDS = (
     ("last_uplift_class", "Last uplift class"),
     ("last_uplift_secondary_signals", "Secondary signals"),
@@ -75,22 +42,52 @@ SEED_MIGRATION_WRITE_POINTER_LABEL = "Seed migration write packet"
 SEED_MIGRATION_SKILL_COMMAND = "$gsd-seed-migration-inventory"
 SEED_MIGRATION_WRITE_COMMAND = f"{SEED_MIGRATION_SKILL_COMMAND} --write"
 
-RUNTIME_DIRS = [
-    ".codex",
-    ".claude",
-    ".gemini",
-    ".config/opencode",
-    ".opencode",
-    ".config/kilo",
-    ".kilo",
-]
-
 RERUN_BOUNDARY_PATTERNS = [
     re.compile(r"pre-rerun", re.I),
     re.compile(r"fresh discuss \+ plan required", re.I),
     re.compile(r"rerun-boundary", re.I),
     re.compile(r"input to the next discuss pass", re.I),
 ]
+
+
+def compatibility_policy() -> dict:
+    return compatibility_declaration.load_declaration()
+
+
+def compatibility_declaration_rel_path() -> str:
+    return compatibility_declaration.DECLARATION_REL_PATH
+
+
+def observation_policy() -> dict:
+    return compatibility_observation.load_observation()
+
+
+def seed_contract_policy() -> dict:
+    return compatibility_seed_contract.load_seed_contract()
+
+
+def uplift_output_policy_data() -> dict:
+    return uplift_output_policy.load_output_policy()
+
+
+def state_heading() -> str:
+    return str(uplift_output_policy_data()["state_heading"])
+
+
+def report_rel_path() -> str:
+    return str(uplift_output_policy_data()["report_rel_path"])
+
+
+def manifest_rel_path() -> str:
+    return str(uplift_output_policy_data()["manifest_rel_path"])
+
+
+def held_later_rel_path() -> str:
+    return str(uplift_output_policy_data()["held_later_rel_path"])
+
+
+def overlay_manifest_rel_path() -> str:
+    return OVERLAY_MANIFEST_REL_PATH
 
 
 @dataclasses.dataclass(frozen=True)
@@ -259,31 +256,39 @@ def count_phase_files(repo_root: pathlib.Path, pattern: str) -> int:
 
 
 def runtime_dirs_present(repo_root: pathlib.Path) -> list[str]:
+    policy = observation_policy()
+    rel_paths = list(policy["observed_runtime_directories"]) + list(
+        policy["candidate_observed_runtime_directories"]
+    )
     present: list[str] = []
-    for rel_path_str in RUNTIME_DIRS:
+    seen: set[str] = set()
+    for rel_path_str in rel_paths:
+        if rel_path_str in seen:
+            continue
+        seen.add(rel_path_str)
         if (repo_root / rel_path_str).exists():
             present.append(rel_path_str)
     return present
 
 
 def load_manifest(repo_root: pathlib.Path) -> dict | None:
-    return read_json(repo_root / MANIFEST_REL_PATH)
+    return read_json(repo_root / manifest_rel_path())
 
 
-def load_runtime_manifest(repo_root: pathlib.Path) -> dict | None:
-    return read_json(repo_root / RUNTIME_MANIFEST_REL_PATH)
+def load_runtime_manifest(repo_root: pathlib.Path, declaration: dict) -> dict | None:
+    return read_json(repo_root / declaration["runtime_basis"]["manifest_version_source"])
 
 
 def load_overlay_manifest(repo_root: pathlib.Path) -> dict | None:
-    return read_json(repo_root / OVERLAY_MANIFEST_REL_PATH)
+    return read_json(repo_root / overlay_manifest_rel_path())
 
 
-def runtime_version_source(repo_root: pathlib.Path) -> tuple[str | None, str | None]:
-    return read_runtime_version_at(repo_root, RUNTIME_VERSION_REL_PATH)
+def runtime_version_source(repo_root: pathlib.Path, declaration: dict) -> tuple[str | None, str | None]:
+    return read_runtime_version_at(repo_root, declaration["runtime_basis"]["version_source"])
 
 
-def held_runtime_annotation(repo_root: pathlib.Path) -> dict | None:
-    for declared_annotation in RUNTIME_HELD_ANNOTATIONS_DECLARATION:
+def held_runtime_annotation(repo_root: pathlib.Path, declaration: dict) -> dict | None:
+    for declared_annotation in declaration["runtime_held_annotations"]:
         version_source = declared_annotation["version_source"]
         version, version_source_path = read_runtime_version_at(repo_root, version_source)
         if version is None:
@@ -307,11 +312,11 @@ def held_runtime_annotation_summary(annotation: dict | None) -> str | None:
     return f"{runtime} {version} ({posture})"
 
 
-def build_compatibility_basis(repo_root: pathlib.Path) -> dict:
-    runtime_manifest = load_runtime_manifest(repo_root) or {}
+def build_compatibility_basis(repo_root: pathlib.Path, declaration: dict) -> dict:
+    runtime_manifest = load_runtime_manifest(repo_root, declaration) or {}
     overlay_manifest = load_overlay_manifest(repo_root) or {}
-    runtime_version, runtime_version_source_path = runtime_version_source(repo_root)
-    annotation = held_runtime_annotation(repo_root)
+    runtime_version, runtime_version_source_path = runtime_version_source(repo_root, declaration)
+    annotation = held_runtime_annotation(repo_root, declaration)
     runtime_manifest_version = runtime_manifest.get("version")
     aligned = (
         runtime_version is not None
@@ -324,32 +329,34 @@ def build_compatibility_basis(repo_root: pathlib.Path) -> dict:
         if isinstance(version, str) and version
     ]
     return {
-        "compatibility_posture": COMPATIBILITY_POSTURE,
-        "compatibility_declaration_path": COMPATIBILITY_DECLARATION_REL_PATH,
-        "compatibility_declaration_schema_version": COMPATIBILITY_DECLARATION["schema_version"],
-        "runtime_basis": json.loads(json.dumps(RUNTIME_BASIS_DECLARATION)),
-        "runtime_held_annotations": json.loads(json.dumps(RUNTIME_HELD_ANNOTATIONS_DECLARATION)),
+        "compatibility_posture": str(declaration["compatibility_posture"]),
+        "compatibility_declaration_path": compatibility_declaration_rel_path(),
+        "compatibility_declaration_schema_version": declaration["schema_version"],
+        "runtime_basis": json.loads(json.dumps(declaration["runtime_basis"])),
+        "runtime_held_annotations": json.loads(json.dumps(declaration["runtime_held_annotations"])),
         "observed_runtime_version": runtime_version,
         "observed_runtime_version_source": runtime_version_source_path,
         "observed_runtime_manifest_version": runtime_manifest_version,
-        "observed_runtime_manifest_source": RUNTIME_MANIFEST_REL_PATH if runtime_manifest_version else None,
+        "observed_runtime_manifest_source": (
+            declaration["runtime_basis"]["manifest_version_source"] if runtime_manifest_version else None
+        ),
         "observed_runtime_version_aligned": aligned,
         "observed_runtime_version_set": sorted(set(observed_versions)),
         "held_runtime_annotation": annotation,
         "held_runtime_annotation_summary": held_runtime_annotation_summary(annotation),
-        "declared_overlay_schema_version": DECLARED_OVERLAY_SCHEMA_VERSION,
+        "declared_overlay_schema_version": declaration["overlay_schema_version"],
         "overlay_manifest_schema_version": overlay_manifest.get("schema_version"),
         "overlay_manifest_schema_version_matches_declaration": (
-            overlay_manifest.get("schema_version") == DECLARED_OVERLAY_SCHEMA_VERSION
+            overlay_manifest.get("schema_version") == declaration["overlay_schema_version"]
         ),
-        "uplift_manifest_schema_version": UPLIFT_MANIFEST_SCHEMA_VERSION,
-        "upstream_compatibility_window": json.loads(json.dumps(UPSTREAM_COMPATIBILITY_WINDOW)),
+        "uplift_manifest_schema_version": int(declaration["uplift_manifest_schema_version"]),
+        "upstream_compatibility_window": json.loads(json.dumps(declaration["upstream_compatibility_window"])),
         "parity_scan_baseline": {
-            "target_runtime": PARITY_SCAN_BASELINE_DECLARATION["target_runtime"],
-            "rule_count": len(PARITY_SCAN_BASELINE_DECLARATION["rules"]),
+            "target_runtime": declaration["parity_scan_baseline"]["target_runtime"],
+            "rule_count": len(declaration["parity_scan_baseline"]["rules"]),
         },
-        "check_protocol": list(COMPATIBILITY_CHECK_PROTOCOL),
-        "held_later": list(COMPATIBILITY_HELD_LATER),
+        "check_protocol": list(declaration["check_protocol"]),
+        "held_later": list(declaration["held_later"]),
     }
 
 
@@ -428,11 +435,12 @@ def format_held_later_family(entry: dict) -> str:
 
 
 def load_held_later_families(repo_root: pathlib.Path) -> list[dict]:
-    text = read_text(repo_root / HELD_LATER_REL_PATH)
+    held_later_path = held_later_rel_path()
+    text = read_text(repo_root / held_later_path)
     if text is None:
         return [
             {
-                "family": f"held-later reference missing: {HELD_LATER_REL_PATH}",
+                "family": f"held-later reference missing: {held_later_path}",
                 "status": "missing",
                 "pointer": None,
             }
@@ -680,7 +688,12 @@ def doctrine_reference_hash(carriers: list[dict]) -> str:
 
 
 def build_seed_corpus_posture(repo_root: pathlib.Path) -> dict:
-    seed_root = repo_root / SEED_DIR_REL_PATH
+    contract = seed_contract_policy()
+    seed_dir_rel_path = str(contract["seed_dir_rel_path"])
+    current_contract_version = str(contract["current_seed_contract_version"])
+    required_frontmatter_keys = tuple(contract["required_seed_frontmatter_keys"])
+    required_section_headings = tuple(contract["required_seed_section_headings"])
+    seed_root = repo_root / seed_dir_rel_path
     seed_paths = sorted(seed_root.glob("SEED-*.md")) if seed_root.exists() else []
     current_contract_count = 0
     legacy_unversioned_count = 0
@@ -702,15 +715,15 @@ def build_seed_corpus_posture(repo_root: pathlib.Path) -> dict:
                 legacy_unversioned_examples.append(rel)
             fingerprint_rows.append(f"{rel}:legacy_unversioned")
             continue
-        if version == CURRENT_SEED_CONTRACT_VERSION:
+        if version == current_contract_version:
             current_contract_count += 1
             frontmatter_map = parse_frontmatter_map(frontmatter)
             headings = extract_h2_headings(text)
             missing_frontmatter_keys = [
-                key for key in REQUIRED_SEED_FRONTMATTER_KEYS if key not in frontmatter_map
+                key for key in required_frontmatter_keys if key not in frontmatter_map
             ]
             missing_section_headings = [
-                heading for heading in REQUIRED_SEED_SECTION_HEADINGS if heading not in headings
+                heading for heading in required_section_headings if heading not in headings
             ]
             if missing_frontmatter_keys or missing_section_headings:
                 current_contract_shape_gap_count += 1
@@ -756,7 +769,8 @@ def build_seed_corpus_posture(repo_root: pathlib.Path) -> dict:
     return {
         "seed_dir_present": seed_root.exists(),
         "seed_file_count": seed_file_count,
-        "current_contract_version": CURRENT_SEED_CONTRACT_VERSION,
+        "seed_dir_rel_path": seed_dir_rel_path,
+        "current_contract_version": current_contract_version,
         "posture": posture,
         "current_contract_count": current_contract_count,
         "legacy_unversioned_count": legacy_unversioned_count,
@@ -1053,6 +1067,7 @@ def recommendation_reasons(
 
 def analyze_repo(repo_root: pathlib.Path) -> dict:
     repo_root = repo_root.resolve()
+    declaration = compatibility_policy()
     planning_root = repo_root / ".planning"
     manifest = load_manifest(repo_root)
     planning_exists = planning_root.exists()
@@ -1119,7 +1134,7 @@ def analyze_repo(repo_root: pathlib.Path) -> dict:
     )
     recommend_detect_only = bool(reasons) and primary_class != "current-aligned posture"
     held_later = load_held_later_families(repo_root)
-    compatibility_basis = build_compatibility_basis(repo_root)
+    compatibility_basis = build_compatibility_basis(repo_root, declaration)
     return {
         "repo_root": str(repo_root),
         "generated_at": now_iso(),
@@ -1338,6 +1353,7 @@ def post_write_analysis(analysis: dict) -> dict:
 
 
 def state_section_text(analysis: dict) -> str:
+    output_policy = uplift_output_policy_data()
     recommendation = (
         "Run `$gsd-uplift-project --detect-only` before treating ordinary routing as settled."
         if analysis["recommend_detect_only"]
@@ -1348,7 +1364,7 @@ def state_section_text(analysis: dict) -> str:
     compatibility = analysis["compatibility_basis"]
     return "\n".join(
         [
-            STATE_HEADING,
+            output_policy["state_heading"],
             "",
             f"Last uplift pass: {analysis['generated_at']}",
             f"Last uplift class: {analysis['project_class']}",
@@ -1366,20 +1382,21 @@ def state_section_text(analysis: dict) -> str:
             f"Seed corpus posture: {seed_corpus_summary(analysis['seed_corpus_posture'])}",
             f"Pending doctrine-sensitive proposals: {pending_count}",
             f"Current recommendation: {recommendation}",
-            f"Current uplift report: {REPORT_REL_PATH}",
-            f"Current uplift manifest: {MANIFEST_REL_PATH}",
+            f"Current uplift report: {output_policy['report_rel_path']}",
+            f"Current uplift manifest: {output_policy['manifest_rel_path']}",
             "",
         ]
     )
 
 
 def update_state_section(repo_root: pathlib.Path, analysis: dict) -> None:
+    heading = state_heading()
     state_path = repo_root / ".planning" / "STATE.md"
     text = read_text(state_path)
     if text is None:
         return
     section = state_section_text(analysis)
-    pattern = re.compile(rf"\n{re.escape(STATE_HEADING)}\n[\s\S]*?(?=\n## |\Z)")
+    pattern = re.compile(rf"\n{re.escape(heading)}\n[\s\S]*?(?=\n## |\Z)")
     if pattern.search(text):
         updated = pattern.sub("\n" + section.rstrip() + "\n", text)
     else:
@@ -1395,14 +1412,15 @@ def update_state_section(repo_root: pathlib.Path, analysis: dict) -> None:
 
 
 def write_outputs(repo_root: pathlib.Path, analysis: dict) -> dict:
+    output_policy = uplift_output_policy_data()
     planning_root = repo_root / ".planning"
     planning_root.mkdir(parents=True, exist_ok=True)
     written_analysis = post_write_analysis(analysis)
-    report_path = repo_root / REPORT_REL_PATH
-    manifest_path = repo_root / MANIFEST_REL_PATH
+    report_path = repo_root / output_policy["report_rel_path"]
+    manifest_path = repo_root / output_policy["manifest_rel_path"]
     report_path.write_text(render_report(written_analysis), encoding="utf-8")
     manifest_payload = {
-        "schema_version": UPLIFT_MANIFEST_SCHEMA_VERSION,
+        "schema_version": written_analysis["compatibility_basis"]["uplift_manifest_schema_version"],
         "generated_at": written_analysis["generated_at"],
         "mode": "detect-only",
         "last_uplift_class": written_analysis["project_class"],
@@ -1431,6 +1449,7 @@ def write_outputs(repo_root: pathlib.Path, analysis: dict) -> dict:
 
 def build_progress_note(repo_root: pathlib.Path) -> dict:
     repo_root = repo_root.resolve()
+    output_policy = uplift_output_policy_data()
     manifest = load_manifest(repo_root)
     if manifest is None:
         planning_root = repo_root / ".planning"
@@ -1453,8 +1472,8 @@ def build_progress_note(repo_root: pathlib.Path) -> dict:
             "pending_doctrine_sensitive_proposals": [],
             "recommendation": "Run `$gsd-uplift-project --detect-only` to record uplift memory." if show else "No uplift memory available.",
             "reasons": ["no uplift manifest recorded yet"] if show else [],
-            "report_path": REPORT_REL_PATH,
-            "manifest_path": MANIFEST_REL_PATH,
+            "report_path": output_policy["report_rel_path"],
+            "manifest_path": output_policy["manifest_rel_path"],
             **seed_fields,
         }
 
@@ -1509,8 +1528,8 @@ def build_progress_note(repo_root: pathlib.Path) -> dict:
         "pending_doctrine_sensitive_proposals": pending,
         "recommendation": recommendation,
         "reasons": reasons,
-        "report_path": REPORT_REL_PATH,
-        "manifest_path": MANIFEST_REL_PATH,
+        "report_path": output_policy["report_rel_path"],
+        "manifest_path": output_policy["manifest_rel_path"],
         **seed_fields,
     }
 

@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "state_heading": "## Project Uplift",
+  "report_rel_path": ".planning/UPLIFT-REPORT.md",
+  "manifest_rel_path": ".planning/UPLIFT-MANIFEST.json",
+  "held_later_rel_path": "tooling/codex/UPLIFT-HELD-LATER.md"
+}

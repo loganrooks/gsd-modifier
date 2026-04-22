@@ -11,12 +11,14 @@ import tomllib
 from typing import Any
 
 try:
+    from harness_modifier.uplift import output_policy as uplift_output_policy
     from harness_modifier.contract import portable_gsd_contract as pgc
     from tooling.codex import project_uplift as pu
 except ModuleNotFoundError:  # direct script invocation by path
     repo_root = pathlib.Path(__file__).resolve().parents[2]
     if str(repo_root) not in sys.path:
         sys.path.insert(0, str(repo_root))
+    from harness_modifier.uplift import output_policy as uplift_output_policy
     from harness_modifier.contract import portable_gsd_contract as pgc
     from tooling.codex import project_uplift as pu
 
@@ -176,17 +178,18 @@ def check_agent_reasoning(repo_root: pathlib.Path, agent_name: str, expected: st
 
 
 def check_uplift_compatibility(repo_root: pathlib.Path) -> dict[str, Any]:
-    manifest_path = repo_root / pu.MANIFEST_REL_PATH
+    manifest_rel_path = uplift_output_policy.load_output_policy()["manifest_rel_path"]
+    manifest_path = repo_root / manifest_rel_path
     if not manifest_path.exists():
         return make_check(
             "uplift_compatibility_anchor",
             "not_applicable",
             "no uplift manifest recorded yet",
-            {"manifest_path": pu.MANIFEST_REL_PATH},
+            {"manifest_path": manifest_rel_path},
         )
     note = pu.build_progress_note(repo_root)
     details = {
-        "manifest_path": pu.MANIFEST_REL_PATH,
+        "manifest_path": manifest_rel_path,
         "compatibility_basis_changed": note.get("compatibility_basis_changed", False),
         "recommend_write": note.get("recommend_write", False),
         "recommendation": note.get("recommendation"),

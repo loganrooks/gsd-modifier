@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "seed_dir_rel_path": ".planning/seeds",
+  "current_seed_contract_version": "2",
+  "required_seed_frontmatter_keys": [
+    "id",
+    "seed_contract_version",
+    "status",
+    "planted",
+    "planted_during",
+    "trigger_when",
+    "scope"
+  ],
+  "required_seed_section_headings": [
+    "Why This Matters",
+    "When to Surface",
+    "Scope Estimate",
+    "Strengthening Carry",
+    "Breadcrumbs",
+    "Notes"
+  ]
+}

@@ -93,7 +93,7 @@ class SeedMigrationInventoryTests(unittest.TestCase):
                 ".planning/seeds/SEED-002-current-gap.md",
                 seed_id="SEED-002",
                 title="Current Gap",
-                version=smi.pu.CURRENT_SEED_CONTRACT_VERSION,
+                version=smi.CURRENT_SEED_CONTRACT_VERSION,
                 include_current_shape=False,
             )
             self._write_seed(
@@ -134,7 +134,7 @@ class SeedMigrationInventoryTests(unittest.TestCase):
                 ".planning/seeds/SEED-004-current.md",
                 seed_id="SEED-004",
                 title="Current",
-                version=smi.pu.CURRENT_SEED_CONTRACT_VERSION,
+                version=smi.CURRENT_SEED_CONTRACT_VERSION,
                 include_current_shape=True,
             )
 
