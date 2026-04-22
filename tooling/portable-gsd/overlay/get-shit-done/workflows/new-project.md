@@ -13,6 +13,7 @@ Start from the narrow initialization packet this workflow actually needs:
 - the provided idea document or prompt text in auto mode
 - existing codebase map only when brownfield mapping is already available or the route points there
 - prior spike/sketch findings only when they exist and materially shape initialization choices
+- `@__PROJECT_ROOT__/.codex/get-shit-done/references/entry-runtime-uplift-continuity.md` only when the greenfield/brownfield route states below say repo-local entry continuity should surface
 </supporting_reading>
 
 <deeper_reading>
@@ -105,7 +106,17 @@ All subsequent references to the project instruction file use `$INSTRUCTION_FILE
 Keep the entry packet layered:
 - Primary packet: `init.new-project`, execution-context files, and any provided idea document
 - Supporting packet: existing codebase map, prior spike/sketch findings, and config surfaces only when the active route points there
+- Supporting packet: `.codex/get-shit-done/references/entry-runtime-uplift-continuity.md` only when the greenfield/brownfield route states below say repo-local continuity should surface
 - Deeper packet: broader research/governance rereads only after the initialization route or conflict actually depends on them
+
+## 1.5. Review Entry Runtime Continuity
+
+Use `.codex/get-shit-done/references/entry-runtime-uplift-continuity.md` only when the active route state says repo-local continuity should surface.
+
+- Greenfield initialization: surface only when repo-local runtime or governing doctrine is already present or the initialization route explicitly depends on that continuity staying visible in the first canon
+- Brownfield initialization: surface when existing code, docs, or repo-local doctrine make later uplift or migration pressure likely even though `.planning/` is not yet present
+- If surfaced, start from the reference's `Primary Compact Read`, widen only as it directs, and keep observed `.codex` basis plus held `.claude` annotation explicit
+- Do not run `$gsd-uplift-project --write` from `new-project.md`; if later repo-local uplift refresh is still needed after initialization, route from `$gsd-progress`
 
 **If `project_exists` is true:** Error — project already initialized. Use `$gsd-progress`. If repo-local harness doctrine or governing docs need refresh after older or vanilla setup, route from there to `$gsd-uplift-project --write` rather than reopening initialization.
 

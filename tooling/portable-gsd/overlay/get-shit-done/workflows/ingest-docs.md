@@ -20,6 +20,7 @@ Start from the narrow ingest packet this workflow already owns:
 - manifest file when provided
 - discovered doc list, classifications, and conflict report as the workflow advances
 - existing `.planning/` canon only when merge mode or conflict review actually requires it
+- `@__PROJECT_ROOT__/.codex/get-shit-done/references/entry-runtime-uplift-continuity.md` only when the new/merge route states below say repo-local continuity should surface
 </supporting_reading>
 
 <deeper_reading>
@@ -68,6 +69,7 @@ Keep the ingest packet layered:
 
 - Primary packet: parsed arguments, `init.ingest-docs`, and the manifest when one is provided
 - Supporting packet: discovered docs, classifications, syntheses, conflict report, and existing planning files only when the route reaches them
+- Supporting packet: `.codex/get-shit-done/references/entry-runtime-uplift-continuity.md` only when the new/merge route states below say repo-local continuity should surface
 - Deeper packet: broader governance/runtime rereads only when merge review or later follow-through depends on them
 
 Run the init query:
@@ -96,6 +98,17 @@ git init
 - else → `RUNTIME=claude`
 
 Fall back to env vars (`CODEX_HOME`, `GEMINI_CONFIG_DIR`, `OPENCODE_CONFIG_DIR`) if execution_context is unavailable.
+
+</step>
+
+<step name="review_entry_runtime_continuity">
+
+Use `.codex/get-shit-done/references/entry-runtime-uplift-continuity.md` only when the active ingest route says repo-local continuity should surface.
+
+- `MODE=new`: surface when imported docs are older or vanilla GSD docs or when new-mode ingest is creating `.planning/` inside a repo where runtime or governing continuity should stay explicit from the start
+- `MODE=merge`: surface when existing `.planning/STATE.md` already carries `## Project Uplift` or when merge review touches runtime, governance, or uplift-adjacent carriers
+- If surfaced, start from the reference's `Primary Compact Read`, widen only as it directs, and keep observed `.codex` basis plus held `.claude` annotation explicit
+- Do not run `$gsd-uplift-project --write` inside ingest; keep later repo-local uplift refresh as a separate route after import
 
 </step>
 
