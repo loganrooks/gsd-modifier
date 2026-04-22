@@ -167,6 +167,7 @@ When `UPLIFT_NOTE.show` is `true`, add:
 ## Uplift Posture
 - Last uplift class: {last_uplift_class or "none recorded yet"}
 - Secondary signals: {last_uplift_secondary_signals or "none"}
+- Held runtime annotation: {held_runtime_annotation}
 - Seed corpus posture: {seed_corpus_posture}
 - Seed posture reason: {seed_corpus_reason 1}
 - Seed posture reason: {seed_corpus_reason 2}
@@ -178,6 +179,8 @@ When `UPLIFT_NOTE.show` is `true`, add:
 ```
 
 Only show the `Seed corpus posture` and `Seed posture reason` lines when `UPLIFT_NOTE.show_seed_corpus_posture` is `true`.
+
+Only show the `Held runtime annotation` line when `UPLIFT_NOTE.held_runtime_annotation` is non-empty.
 
 Only show these lines when `UPLIFT_NOTE.show_seed_migration_pointer` is `true`:
 

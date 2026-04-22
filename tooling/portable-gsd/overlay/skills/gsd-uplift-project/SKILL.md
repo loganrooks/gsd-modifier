@@ -58,7 +58,7 @@ Execute the uplift-project workflow from @/home/rookslog/workspace/projects/prix
 
 Default posture is detect-only.
 Pass `--write` only when the caller explicitly wants durable uplift memory written.
-If the workflow reports runtime-basis movement, prefer rerunning with `--write` so the durable uplift memory and live routed note stay in tune.
+If the workflow reports compatibility-basis movement, including held-runtime annotation movement, prefer rerunning with `--write` so the durable uplift memory and live routed note stay in tune.
 If doctrine-sensitive proposals remain and the operator wants one bounded assist-family packet before governance or durable uplift edits, keep that route operator-initiated and follow the workflow's route block rather than inventing a helper or spawn path here.
 If the workflow surfaces legacy, noncurrent, or current-version shape-gap seed posture, keep migration separate but prefer `--write` once the operator wants that posture preserved in durable uplift memory too.
 If the operator wants the deeper detect-only migration packet rather than only uplift-side posture, point them at `$gsd-seed-migration-inventory`.

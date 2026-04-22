@@ -138,6 +138,9 @@ class ProjectUpliftTests(unittest.TestCase):
         self._write(root, "tooling/codex/README.md", "# Codex Tooling Notes\n\n## Utilities\n- `audit_refmap.py`\n- `project_uplift.py`\n")
         self._write_strengthening_carriers(root)
 
+    def _write_claude_runtime(self, root: pathlib.Path, version: str) -> None:
+        self._write(root, ".claude/get-shit-done/VERSION", f"{version}\n")
+
     def test_detect_classifies_vanilla_project(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             repo_root = pathlib.Path(tmpdir)
@@ -348,7 +351,7 @@ class ProjectUpliftTests(unittest.TestCase):
 
             manifest = json.loads((repo_root / ".planning/UPLIFT-MANIFEST.json").read_text(encoding="utf-8"))
             held_later = manifest["held_later_families"]
-            self.assertEqual(manifest["schema_version"], 5)
+            self.assertEqual(manifest["schema_version"], 6)
             self.assertTrue(any(item["status"] == "held" for item in held_later))
             self.assertTrue(
                 any(
@@ -399,8 +402,25 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertEqual(compatibility["observed_runtime_manifest_version"], "1.38.1")
             self.assertTrue(compatibility["observed_runtime_version_aligned"])
             self.assertEqual(compatibility["overlay_manifest_schema_version"], 1)
-            self.assertEqual(compatibility["uplift_manifest_schema_version"], 5)
+            self.assertEqual(compatibility["uplift_manifest_schema_version"], 6)
             self.assertIn("version-window claims beyond the observed runtime basis", compatibility["held_later"])
+
+    def test_compatibility_basis_carries_held_claude_annotation_without_relabeling_posture(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="completed")
+            self._write_doctrine_stack(repo_root)
+            self._write_claude_runtime(repo_root, "1.34.2")
+
+            compatibility = pu.analyze_repo(repo_root)["compatibility_basis"]
+
+            self.assertEqual(compatibility["compatibility_posture"], "observed_basis_only")
+            self.assertEqual(compatibility["observed_runtime_version"], "1.38.1")
+            self.assertEqual(compatibility["held_runtime_annotation"]["runtime"], ".claude")
+            self.assertEqual(compatibility["held_runtime_annotation"]["version"], "1.34.2")
+            self.assertEqual(compatibility["held_runtime_annotation"]["version_source"], ".claude/get-shit-done/VERSION")
+            self.assertEqual(compatibility["held_runtime_annotation"]["annotation_posture"], "held_annotation")
+            self.assertEqual(compatibility["held_runtime_annotation_summary"], ".claude 1.34.2 (held_annotation)")
 
     def test_progress_note_recommends_write_after_runtime_basis_movement(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -420,6 +440,30 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertIn("--write", note["recommendation"])
             self.assertTrue(
                 any("observed runtime version moved from 1.38.1 to 1.38.3" in reason for reason in note["reasons"])
+            )
+
+    def test_progress_note_recommends_write_after_held_runtime_annotation_movement(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="completed")
+            self._write_doctrine_stack(repo_root)
+            self._write_claude_runtime(repo_root, "1.34.2")
+            pu.write_outputs(repo_root, pu.analyze_repo(repo_root))
+
+            self._write_claude_runtime(repo_root, "1.34.3")
+
+            note = pu.build_progress_note(repo_root)
+
+            self.assertTrue(note["recommend_write"])
+            self.assertFalse(note["recommend_detect_only"])
+            self.assertTrue(note["compatibility_basis_changed"])
+            self.assertEqual(note["held_runtime_annotation"], ".claude 1.34.2 (held_annotation)")
+            self.assertTrue(
+                any(
+                    "held runtime annotation moved from .claude 1.34.2 (held_annotation) to .claude 1.34.3 (held_annotation)"
+                    in reason
+                    for reason in note["reasons"]
+                )
             )
 
     def test_compatibility_basis_ignores_noncanonical_runtime_version_file(self) -> None:
@@ -505,6 +549,27 @@ class ProjectUpliftTests(unittest.TestCase):
                     for reason in note["seed_corpus_reasons"]
                 )
             )
+
+    def test_write_outputs_and_progress_note_surface_held_runtime_annotation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="completed")
+            self._write_doctrine_stack(repo_root)
+            self._write_claude_runtime(repo_root, "1.34.2")
+
+            pu.write_outputs(repo_root, pu.analyze_repo(repo_root))
+
+            manifest = json.loads((repo_root / ".planning/UPLIFT-MANIFEST.json").read_text(encoding="utf-8"))
+            report_text = (repo_root / ".planning/UPLIFT-REPORT.md").read_text(encoding="utf-8")
+            state_text = (repo_root / ".planning/STATE.md").read_text(encoding="utf-8")
+            note = pu.build_progress_note(repo_root)
+
+            self.assertEqual(manifest["schema_version"], 6)
+            self.assertEqual(manifest["compatibility_basis"]["held_runtime_annotation_summary"], ".claude 1.34.2 (held_annotation)")
+            self.assertIn("### Held Runtime Annotation", report_text)
+            self.assertLess(report_text.index("### Compatibility Check Protocol"), report_text.index("### Held Runtime Annotation"))
+            self.assertIn("Held runtime annotation: .claude 1.34.2 (held_annotation)", state_text)
+            self.assertEqual(note["held_runtime_annotation"], ".claude 1.34.2 (held_annotation)")
 
     def test_cross_runtime_primary_class_preserves_mid_phase_secondary_signal(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:

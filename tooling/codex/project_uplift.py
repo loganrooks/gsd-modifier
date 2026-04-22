@@ -20,6 +20,7 @@ MANIFEST_REL_PATH = ".planning/UPLIFT-MANIFEST.json"
 HELD_LATER_REL_PATH = "tooling/codex/UPLIFT-HELD-LATER.md"
 RUNTIME_MANIFEST_REL_PATH = ".codex/gsd-file-manifest.json"
 RUNTIME_VERSION_REL_PATH = ".codex/get-shit-done/VERSION"
+HELD_CLAUDE_RUNTIME_VERSION_REL_PATH = ".claude/get-shit-done/VERSION"
 OVERLAY_MANIFEST_REL_PATH = "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json"
 SEED_DIR_REL_PATH = ".planning/seeds"
 CURRENT_SEED_CONTRACT_VERSION = "2"
@@ -40,8 +41,12 @@ REQUIRED_SEED_SECTION_HEADINGS = (
     "Breadcrumbs",
     "Notes",
 )
-UPLIFT_MANIFEST_SCHEMA_VERSION = 5
+UPLIFT_MANIFEST_SCHEMA_VERSION = 6
 COMPATIBILITY_POSTURE = "observed_basis_only"
+HELD_RUNTIME_ANNOTATION_POSTURE = "held_annotation"
+HELD_RUNTIME_ANNOTATION_NOTE = (
+    "second runtime is recorded as a held compatibility annotation while the observed basis remains anchored to .codex"
+)
 COMPATIBILITY_HELD_LATER = [
     "version-window claims beyond the observed runtime basis",
     "cross-runtime compatibility matrix",
@@ -50,6 +55,7 @@ COMPATIBILITY_HELD_LATER = [
 PROGRESS_NOTE_RENDER_FIELDS = (
     ("last_uplift_class", "Last uplift class"),
     ("last_uplift_secondary_signals", "Secondary signals"),
+    ("held_runtime_annotation", "Held runtime annotation"),
     ("seed_corpus_posture", "Seed corpus posture"),
     ("recommendation", "Recommendation"),
     ("report_path", "Report"),
@@ -215,6 +221,13 @@ def rel_path(repo_root: pathlib.Path, path: pathlib.Path) -> str:
     return str(path.relative_to(repo_root))
 
 
+def read_runtime_version_at(repo_root: pathlib.Path, rel_path_str: str) -> tuple[str | None, str | None]:
+    text = read_text(repo_root / rel_path_str)
+    if text is None:
+        return None, None
+    return text.strip(), rel_path_str
+
+
 def state_status(repo_root: pathlib.Path) -> str:
     state_path = repo_root / ".planning" / "STATE.md"
     text = read_text(state_path)
@@ -261,16 +274,36 @@ def load_overlay_manifest(repo_root: pathlib.Path) -> dict | None:
 
 
 def runtime_version_source(repo_root: pathlib.Path) -> tuple[str | None, str | None]:
-    text = read_text(repo_root / RUNTIME_VERSION_REL_PATH)
-    if text is None:
-        return None, None
-    return text.strip(), RUNTIME_VERSION_REL_PATH
+    return read_runtime_version_at(repo_root, RUNTIME_VERSION_REL_PATH)
+
+
+def held_runtime_annotation(repo_root: pathlib.Path) -> dict | None:
+    version, version_source_path = read_runtime_version_at(repo_root, HELD_CLAUDE_RUNTIME_VERSION_REL_PATH)
+    if version is None:
+        return None
+    return {
+        "runtime": ".claude",
+        "version": version,
+        "version_source": version_source_path,
+        "annotation_posture": HELD_RUNTIME_ANNOTATION_POSTURE,
+        "note": HELD_RUNTIME_ANNOTATION_NOTE,
+    }
+
+
+def held_runtime_annotation_summary(annotation: dict | None) -> str | None:
+    if not isinstance(annotation, dict):
+        return None
+    runtime = annotation.get("runtime") or "unnamed"
+    version = annotation.get("version") or "unrecorded"
+    posture = annotation.get("annotation_posture") or "held"
+    return f"{runtime} {version} ({posture})"
 
 
 def build_compatibility_basis(repo_root: pathlib.Path) -> dict:
     runtime_manifest = load_runtime_manifest(repo_root) or {}
     overlay_manifest = load_overlay_manifest(repo_root) or {}
     runtime_version, runtime_version_source_path = runtime_version_source(repo_root)
+    annotation = held_runtime_annotation(repo_root)
     runtime_manifest_version = runtime_manifest.get("version")
     aligned = (
         runtime_version is not None
@@ -290,11 +323,14 @@ def build_compatibility_basis(repo_root: pathlib.Path) -> dict:
         "observed_runtime_manifest_source": RUNTIME_MANIFEST_REL_PATH if runtime_manifest_version else None,
         "observed_runtime_version_aligned": aligned,
         "observed_runtime_version_set": sorted(set(observed_versions)),
+        "held_runtime_annotation": annotation,
+        "held_runtime_annotation_summary": held_runtime_annotation_summary(annotation),
         "overlay_manifest_schema_version": overlay_manifest.get("schema_version"),
         "uplift_manifest_schema_version": UPLIFT_MANIFEST_SCHEMA_VERSION,
         "check_protocol": [
             "compare candidate runtime version to observed_runtime_version",
             "compare candidate runtime manifest version to observed_runtime_manifest_version when present",
+            "compare held runtime annotation values when a second runtime is intentionally carried inside the compatibility anchor",
             "rerun ./scripts/setup-portable-gsd.sh before refreshing durable uplift memory after runtime movement",
             "rerun $gsd-uplift-project --write after runtime movement so compatibility anchors and uplift posture stay in tune",
         ],
@@ -319,6 +355,12 @@ def compatibility_drift_reasons(previous: dict, current: dict) -> list[str]:
         before_text = "unrecorded" if before in (None, "") else str(before)
         after_text = "unrecorded" if after in (None, "") else str(after)
         reasons.append(f"{label} moved from {before_text} to {after_text}")
+    before_annotation = previous.get("held_runtime_annotation")
+    after_annotation = current.get("held_runtime_annotation")
+    if before_annotation != after_annotation:
+        before_text = held_runtime_annotation_summary(before_annotation) or "unrecorded"
+        after_text = held_runtime_annotation_summary(after_annotation) or "unrecorded"
+        reasons.append(f"held runtime annotation moved from {before_text} to {after_text}")
     return reasons
 
 
@@ -1133,6 +1175,21 @@ def render_report(analysis: dict) -> str:
         ]
     )
     lines.extend(f"- {step}" for step in compatibility["check_protocol"])
+    if compatibility["held_runtime_annotation"]:
+        annotation = compatibility["held_runtime_annotation"]
+        lines.extend(
+            [
+                "",
+                "### Held Runtime Annotation",
+                "",
+                f"- Runtime: {annotation['runtime']}",
+                f"- Held runtime version: {annotation['version']}",
+                f"- Held runtime version source: {annotation['version_source']}",
+                f"- Annotation posture: {annotation['annotation_posture']}",
+                f"- Note: {annotation['note']}",
+                "",
+            ]
+        )
     lines.extend(
         [
             "",
@@ -1262,6 +1319,11 @@ def state_section_text(analysis: dict) -> str:
             f"Doctrine reference changed since prior uplift: {'yes' if analysis['doctrine_reference_changed'] else 'no'}",
             f"Compatibility posture: {compatibility['compatibility_posture']}",
             f"Observed runtime basis: {', '.join(compatibility['observed_runtime_version_set']) if compatibility['observed_runtime_version_set'] else 'unrecorded'}",
+            (
+                f"Held runtime annotation: {compatibility['held_runtime_annotation_summary']}"
+                if compatibility["held_runtime_annotation_summary"]
+                else "Held runtime annotation: none"
+            ),
             f"Seed corpus posture: {seed_corpus_summary(analysis['seed_corpus_posture'])}",
             f"Pending doctrine-sensitive proposals: {pending_count}",
             f"Current recommendation: {recommendation}",
@@ -1341,6 +1403,9 @@ def build_progress_note(repo_root: pathlib.Path) -> dict:
             "recommend_detect_only": show,
             "last_uplift_class": None,
             "last_uplift_secondary_signals": [],
+            "held_runtime_annotation": (
+                analysis["compatibility_basis"]["held_runtime_annotation_summary"] if analysis is not None else None
+            ),
             "doctrine_reference_changed": False,
             "seed_corpus_basis_changed": False,
             "pending_doctrine_sensitive_proposals": [],
@@ -1392,6 +1457,10 @@ def build_progress_note(repo_root: pathlib.Path) -> dict:
         "last_uplift_class": manifest.get("last_uplift_class"),
         "last_uplift_secondary_signals": manifest.get("last_uplift_secondary_signals", []),
         "last_uplift_at": manifest.get("generated_at"),
+        "held_runtime_annotation": (
+            manifest_compatibility.get("held_runtime_annotation_summary")
+            or held_runtime_annotation_summary(manifest_compatibility.get("held_runtime_annotation"))
+        ),
         "doctrine_reference_changed": doctrine_changed,
         "compatibility_basis_changed": compatibility_basis_changed,
         "seed_corpus_basis_changed": seed_corpus_basis_changed,

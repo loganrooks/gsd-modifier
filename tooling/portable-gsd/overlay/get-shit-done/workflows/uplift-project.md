@@ -75,6 +75,7 @@ Present a compact result:
 - Runtime directories: {runtime_dirs}
 - Compatibility posture: {compatibility_basis.compatibility_posture}
 - Observed runtime basis: {compatibility_basis.observed_runtime_version_set or "unrecorded"}
+- Held runtime annotation: {compatibility_basis.held_runtime_annotation_summary or "none"}
 - Seed corpus posture: {seed_corpus_posture.posture} | current {seed_corpus_posture.current_contract_count} | legacy {seed_corpus_posture.legacy_unversioned_count} | noncurrent {seed_corpus_posture.noncurrent_version_counts or "none"}
 - Recommendation: {recommendation}
 
