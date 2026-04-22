@@ -21,7 +21,10 @@ Context rule:
   - the moved skill adapters now use `__PROJECT_ROOT__` source-side execution
     context tokens instead of host-absolute embedded paths
 - the remaining live blockers are now narrower:
-  - helper-shim versus helper-payload authority
+  - helper-payload authority now splits more sharply:
+    - `project_uplift.py` is the later modifier-facing payload candidate, but only after a neutralization slice
+    - `seed_migration_inventory.py` is downstream of `project_uplift.py`
+    - `audit_refmap.py` is now out of the later payload-movement candidate set and remains repo-local audit tooling
   - overwrite-family workflow/template/reference carriers that still preserve
     host or upstream-boundary coupling
   - host-local compact-prompt bodies that intentionally preserve this host
@@ -169,7 +172,13 @@ Current blocker state:
   - package-owned helper shims now bridge the moved workflow shells to the
     current helper authorities
 - the next remaining blockers are no longer the specialist trio:
-  - helper-shim versus helper-payload authority
+  - helper-payload authority split now lives explicitly in
+    `harness_modifier/overlay/helpers/AUTHORITY-MAP.md`
+  - `project_uplift.py` neutralization before any later payload movement
+  - `seed_migration_inventory.py` as a downstream helper that cannot lead
+    movement
+  - `audit_refmap.py` as a sharper repo-local audit-tooling family rather than
+    a later payload-movement candidate
   - default-source-root migration pressure
   - overwrite-family source-indirection readiness before any overwrite carrier
     split
@@ -179,8 +188,10 @@ Current blocker state:
   - later runtime/agent/config carriers
 
 Later slices after that first rehome:
-- next bounded reread of the landed specialist source split before a second
-  overlay tranche moves
+- helper authority map now landed under
+  `harness_modifier/overlay/helpers/AUTHORITY-MAP.md`
+- next bounded move: `project_uplift.py` neutralization before any later helper
+  payload movement
 - continuity references
 - `gsd-rigorous-research` generic tranche
 - overwrite workflow/template/reference families
