@@ -7,6 +7,9 @@ Use this reference at entry routes when initialization or doc ingest needs bound
 - Start from the active route-state signal:
   - `new-project.md`: `init.new-project`, current execution-context runtime, and whether the route is greenfield or brownfield
   - `ingest-docs.md`: `MODE`, current execution-context runtime, and whether `.planning/STATE.md` already carries `## Project Uplift`
+- For this continuity surface, treat the runtime signal as:
+  - observed `.codex` basis when present in the repo-local continuity carriers
+  - held `.claude` annotation when present in the repo-local continuity carriers
 - If `.planning/STATE.md` already exists and carries `## Project Uplift`, read that compact block first
 - When `.planning/` does not exist yet, keep the compact read at route-state plus current execution context rather than pretending durable uplift memory already exists
 
@@ -26,6 +29,7 @@ Use this reference at entry routes when initialization or doc ingest needs bound
 - Held runtime annotation stays annotation, not dual-basis relabeling
 - Repo-local entry continuity here is about observed `.codex` basis plus held `.claude` annotation
 - Broader installer/runtime detection across additional providers remains a separate workflow concern in this slice
+- Unlike the milestone-boundary sibling, the entry-side compact state read is conditional: use the `Project Uplift` digest when it already exists, and keep the route-state plus execution-context read primary when `.planning/` is still absent
 - Entry routes may surface this continuity; they do not widen it into parity, translation, matrix, or version-window claims
 - Do not run `$gsd-uplift-project --write` from `new-project.md` or `ingest-docs.md`
 - When `.planning/` does not exist yet, use this reference to keep generated canon and operator reasoning aligned, not to claim that durable uplift memory already exists
@@ -36,6 +40,7 @@ Use this reference at entry routes when initialization or doc ingest needs bound
 
 Surface the continuity route only when one or more of these are true:
 
+- `.codex/` or `.claude/` repo-local runtime files are already present while `.planning/` is still absent
 - repo-local runtime or governing doctrine is already present in the repo and should remain explicit in the first canon
 - the initialization route explicitly raises runtime or governing continuity pressure that later uplift work would otherwise have to rediscover
 - the operator needs to keep observed `.codex` basis plus held `.claude` annotation explicit while still leaving write-side uplift for later

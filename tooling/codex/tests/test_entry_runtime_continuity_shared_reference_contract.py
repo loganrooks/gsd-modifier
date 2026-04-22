@@ -6,6 +6,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 
 
+def _heading_section(text: str, heading: str) -> str:
+    start = text.index(heading)
+    next_heading = text.find("\n### `", start + len(heading))
+    if next_heading == -1:
+        return text[start:]
+    return text[start:next_heading]
+
+
 class EntryRuntimeContinuitySharedReferenceContractTests(unittest.TestCase):
     def test_overlay_manifest_owns_shared_reference_as_add(self) -> None:
         manifest = json.loads(
@@ -29,11 +37,28 @@ class EntryRuntimeContinuitySharedReferenceContractTests(unittest.TestCase):
         self.assertIn("## Interpretation Frame", reference)
         self.assertIn("## When To Surface", reference)
         self.assertIn("Compatibility posture: observed_basis_only", reference)
+        self.assertIn("observed `.codex` basis", reference)
+        self.assertIn("held `.claude` annotation", reference)
         self.assertIn("Do not run `$gsd-uplift-project --write`", reference)
         self.assertIn("### `new-project.md` Greenfield", reference)
         self.assertIn("### `new-project.md` Brownfield", reference)
         self.assertIn("### `ingest-docs.md` New Mode", reference)
         self.assertIn("### `ingest-docs.md` Merge Mode", reference)
+
+    def test_each_route_state_keeps_at_least_one_trigger_bullet(self) -> None:
+        reference = (
+            ROOT
+            / "tooling/portable-gsd/overlay/get-shit-done/references/entry-runtime-uplift-continuity.md"
+        ).read_text()
+
+        for heading in (
+            "### `new-project.md` Greenfield",
+            "### `new-project.md` Brownfield",
+            "### `ingest-docs.md` New Mode",
+            "### `ingest-docs.md` Merge Mode",
+        ):
+            section = _heading_section(reference, heading)
+            self.assertIn("\n- ", section, msg=f"{heading} lost its trigger bullets")
 
     def test_mandatory_initial_read_stays_grammar_only(self) -> None:
         text = (
