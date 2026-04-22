@@ -13,6 +13,7 @@ Mark a shipped version (v1.0, v1.1, v2.0) as complete. Creates historical record
 5. `.planning/PROJECT.md`
 6. `.planning/STATE.md`
 7. `.planning/LONG-ARC.md` when it exists
+8. `@__PROJECT_ROOT__/.codex/get-shit-done/references/milestone-boundary-uplift-continuity.md`
 
 </required_reading>
 
@@ -184,6 +185,20 @@ Use this review to decide what should stay explicit after milestone close:
 - `Seeded:` strengthening routes that should remain in explicit seed carry instead of dissolving into retrospective prose
 
 Do not clear future-carry lines simply because a milestone boundary was crossed. If a carried item closes here, make that closure explicit in the milestone/project record rather than letting it disappear ambiently.
+
+</step>
+
+<step name="review_project_uplift_milestone_close_continuity">
+
+Before archival and final state cleanup, use the shared milestone-boundary uplift reference to decide whether uplift continuity belongs in milestone-close judgment.
+
+- Start from `.planning/STATE.md` `## Project Uplift`
+- Widen into `.planning/UPLIFT-REPORT.md` only when the compact digest does not carry enough milestone-close context
+- Widen into `.planning/UPLIFT-MANIFEST.json` only when basis or annotation ambiguity remains after the first two reads
+- Keep `Compatibility posture: observed_basis_only` explicit when surfaced
+- Keep held runtime annotation as annotation rather than relabeling top-level posture
+- Keep this step beside `review_long_horizon_carry`; it does not absorb long-arc or future-carry review
+- Do not run `$gsd-uplift-project --write` from milestone close
 
 </step>
 

@@ -6,6 +6,7 @@ Start a new milestone cycle for an existing project. Loads project context, gath
 
 <required_reading>
 @__PROJECT_ROOT__/.codex/get-shit-done/references/mandatory-initial-read.md
+@__PROJECT_ROOT__/.codex/get-shit-done/references/milestone-boundary-uplift-continuity.md
 
 Read all files referenced by the invoking prompt's execution_context before starting.
 
@@ -52,7 +53,20 @@ If the flag is absent, keep the current behavior of continuing phase numbering f
 - Read MILESTONES.md (what shipped previously)
 - Read STATE.md (pending todos, blockers, and `Future Carry Forward` when present)
 - Read `.planning/LONG-ARC.md` when it exists (long-run doctrine and future-shape pressure)
+- Read `.codex/get-shit-done/references/milestone-boundary-uplift-continuity.md` for milestone-boundary uplift triggers and widening rules
 - Check for MILESTONE-CONTEXT.md (from $gsd-discuss-milestone)
+
+## 1.5. Review Project Uplift Milestone-Open Continuity
+
+Use the shared milestone-boundary uplift reference to decide whether uplift continuity belongs in the milestone-opening packet.
+
+- Start from `STATE.md` `## Project Uplift`
+- Widen into `.planning/UPLIFT-REPORT.md` only when the compact digest does not carry enough milestone-opening context
+- Widen into `.planning/UPLIFT-MANIFEST.json` only when basis or annotation ambiguity remains after the first two reads
+- Keep `Compatibility posture: observed_basis_only` explicit when surfaced
+- Keep held runtime annotation as annotation rather than relabeling top-level posture
+- Do not run `$gsd-uplift-project --write` from milestone open
+- Keep this review beside `LONG-ARC.md` and `Future Carry Forward`, not as a replacement for them
 
 ## 2. Gather Milestone Goals
 

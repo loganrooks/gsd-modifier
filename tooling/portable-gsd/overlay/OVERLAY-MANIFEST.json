@@ -21,6 +21,7 @@
     "get-shit-done/bin/lib/roadmap.cjs": "overwrite",
     "get-shit-done/bin/lib/state.cjs": "overwrite",
     "get-shit-done/references/agent-contracts.md": "overwrite",
+    "get-shit-done/references/milestone-boundary-uplift-continuity.md": "add",
     "get-shit-done/references/mandatory-initial-read.md": "overwrite",
     "get-shit-done/references/planner-reviews.md": "overwrite",
     "get-shit-done/references/planning-config.md": "overwrite",
