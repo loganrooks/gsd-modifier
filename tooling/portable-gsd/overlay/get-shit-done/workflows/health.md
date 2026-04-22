@@ -12,7 +12,6 @@ Read all files referenced by the invoking prompt's execution_context before star
 Start from the narrow structural-health packet:
 - `.planning/PROJECT.md`, `.planning/ROADMAP.md`, `.planning/STATE.md`, and `.planning/config.json` when present
 - command arguments and any immediately previous health output when this is a rerun
-- `.planning/UPLIFT-REPORT.md` or `.planning/UPLIFT-MANIFEST.json` only inside the dedicated uplift follow-through step, and only after the compact `STATE.md` `## Project Uplift` reread has shown that route-local posture pressure is still live
 </supporting_reading>
 
 <deeper_reading>
@@ -53,6 +52,7 @@ Parse JSON output:
 <step name="keep_route_boundaries_explicit">
 **Keep structural repair distinct from broader repo-local posture refresh:**
 
+- The authoritative three-way split is stated in `review_project_uplift_health_follow_through` -> `Interpretation Frame`.
 - `health` owns structural planning integrity and limited low-risk repair.
 - If core planning state is missing entirely, route to `$gsd-new-project` or `$gsd-ingest-docs` as appropriate rather than treating the problem as project uplift.
 - If planning structure is present but the project still carries older or thinner repo-local runtime, governing-doc, or doctrine posture, route separately to `$gsd-uplift-project --write` after health instead of mutating that posture inside repair.
@@ -89,16 +89,18 @@ Only surface this step after all structural health validation is complete, inclu
 
 This step is read-only and route-local. Do not run `$gsd-uplift-project --write` from inside it.
 
+Only widen into `.planning/UPLIFT-REPORT.md` or `.planning/UPLIFT-MANIFEST.json` from inside this dedicated step, and only after the compact `STATE.md` `## Project Uplift` reread has shown that route-local posture pressure is still live.
+
 Only surface the step when:
 - structural planning state is present
 - the route is no longer broken or missing-planning
 - the compact `STATE.md` `## Project Uplift` block still shows live posture pressure rather than ordinary steady-state continuation
 
 Treat the following as live posture pressure signals:
-- `Compatibility posture` needs active interpretation instead of simple observed-basis continuation
-- `Observed runtime basis` carries route-local relevance after structural validation
-- `Held runtime annotation` is present and materially affects route-local interpretation
-- `Current recommendation` names later repo-local refresh rather than ordinary routing
+- `Compatibility posture` is not exactly `observed_basis_only`
+- `Held runtime annotation` is present and not `none`
+- `Current recommendation` is not exactly `Continue with ordinary routing.`
+- `Observed runtime basis` becomes route-local only when the current health pass follows runtime movement, migration, or another state change that makes the compact basis line newly consequential after validation
 
 ## Primary Compact Read
 
@@ -144,6 +146,9 @@ Keep the ownership split explicit:
 - `gsd-sdk query validate.health` remains the structural-health authority
 - this step owns only read-only uplift-continuity surfacing after validation
 - `$gsd-uplift-project --write` remains the later write-side posture-refresh authority
+- The footer remains the write-side route pointer when later posture refresh is still live.
+- This step remains the read-only continuity reread.
+- Both may surface in one pass without duplicating ownership or turning health into a second uplift workflow.
 
 Do not compute compatibility drift here.
 Do not widen the health footer into a second uplift workflow.
@@ -158,7 +163,10 @@ Place this step:
 Keep it silent when:
 - planning structure is missing and the correct route is `$gsd-new-project` or `$gsd-ingest-docs`
 - structural health itself is still the unresolved question
-- the compact `Project Uplift` block resolves to ordinary routing without later posture pressure
+- the compact `Project Uplift` block resolves to ordinary routing without later posture pressure, including:
+  - `Compatibility posture: observed_basis_only`
+  - `Held runtime annotation: none`
+  - `Current recommendation: Continue with ordinary routing.`
 </step>
 
 <step name="format_output">
