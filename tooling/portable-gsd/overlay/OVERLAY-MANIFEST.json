@@ -15,6 +15,7 @@
     "agents/gsd-planner.toml": "add",
     "agents/gsd-verifier.toml": "add",
     "config.toml": "add",
+    "get-shit-done/bin/lib/audit.cjs": "overwrite",
     "get-shit-done/bin/lib/config.cjs": "overwrite",
     "get-shit-done/bin/lib/phase.cjs": "overwrite",
     "get-shit-done/bin/lib/roadmap.cjs": "overwrite",

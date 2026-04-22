@@ -51,6 +51,7 @@ node "/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/bin/gs
 If the output contains open items (any section with count > 0):
 
 Display the full audit report to the user.
+If seed rows surface contract vintage or strengthening carry, keep those details visible while discussing acknowledgment or deferment instead of flattening them back to bare seed IDs.
 
 Then ask:
 ```
