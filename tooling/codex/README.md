@@ -132,3 +132,5 @@ python3 tooling/codex/run_claude_probe.py \
   - operator-facing route for concrete contract-changing slices that cross several producer/consumer families
   - reads the upstream-pristine baseline plus the repo-local delta layer first, then widens into the typed propagation family only as needed
   - uses the local tooling surfaces above as partial visibility, not as whole-network proof
+  - keeps tool results subordinate to explicit `Updated In This Slice` versus `Held With Explicit Boundary` disposition instead of letting clean helper output silently close the route
+  - when a durable note is requested, prefers existing lane homes (`outputs/`, `dispositions/`, or `*-change-triggered-refresh.md`) over scattered ad hoc note paths

@@ -75,6 +75,11 @@ If some neighbors stay held:
 - state why they are held
 - name the later route, proposal, or audit family that still owns them
 
+Disposition bridge:
+- when a partial tool flags a carrier and the route can move it now, say that explicitly under `Updated In This Slice`
+- when a partial tool flags a carrier but the route is holding it, carry that under `Held With Explicit Boundary` with the specific reason
+- when tools stay clean but contextual reread still sees a neighboring carrier that matters, keep that carrier explicit under `Held With Explicit Boundary` rather than letting the clean tool output silently erase it
+
 Do not leave held boundaries ambient.
 </step>
 
@@ -116,6 +121,13 @@ Produce a compact markdown review with these sections:
 ```
 
 If `--write-note PATH` is present, write the review there. Otherwise return it in the current response.
+
+When a durable note is being written, prefer an existing lane home over an ad hoc new note path:
+- `outputs/` when you are preserving an external/model return or a transparent composite of one
+- `dispositions/` when you are recording local inheritance or judgment
+- `*-change-triggered-refresh.md` when the note itself becomes a new propagation-baseline carrier
+
+When the target path sits inside this audit workspace, preserve the local claim-type grammar instead of downgrading into untyped prose.
 </step>
 
 <step name="verification">

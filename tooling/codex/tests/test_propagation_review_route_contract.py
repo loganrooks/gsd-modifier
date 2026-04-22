@@ -33,6 +33,10 @@ class PropagationReviewRouteContractTests(unittest.TestCase):
         self.assertIn("manifest_install_coherence.py", text)
         self.assertIn("harness_canary.py report . --strict", text)
         self.assertIn("Do not let a clean tool result replace contextual reread.", text)
+        self.assertIn("Updated In This Slice", text)
+        self.assertIn("Held With Explicit Boundary", text)
+        self.assertIn("outputs/` when you are preserving", text)
+        self.assertIn("local claim-type grammar", text)
 
     def test_skill_keeps_route_read_only_and_specialist_handoffs_explicit(self) -> None:
         text = (
@@ -41,6 +45,7 @@ class PropagationReviewRouteContractTests(unittest.TestCase):
         self.assertIn("$gsd-propagation-review", text)
         self.assertIn("Default posture is read-only.", text)
         self.assertIn("--write-note PATH", text)
+        self.assertIn("existing lane home", text)
         self.assertIn("$gsd-uplift-project --write", text)
         self.assertIn("$gsd-seed-migration-inventory", text)
 

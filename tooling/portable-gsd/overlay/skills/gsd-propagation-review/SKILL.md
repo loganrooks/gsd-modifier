@@ -60,6 +60,13 @@ Default posture is read-only.
 Use `--write-note PATH` only when the caller explicitly wants a durable propagation review note.
 Use `--strict-runtime` when the changed slice touches live runtime, overlay/materialization, or registry carriers and the review should include the bounded runtime/install gate packet.
 
+When a durable note is requested, prefer an existing lane home over a new ad hoc path:
+- `outputs/` for preserved external/model returns or transparent composites of one
+- `dispositions/` for local inheritance or judgment
+- `*-change-triggered-refresh.md` when the note itself becomes a new propagation-baseline carrier
+
+If the note lands inside this audit workspace, preserve the local claim-type grammar rather than dropping into untyped prose.
+
 Keep the route hybrid:
 - baseline/delta docs and the typed registry guide the review
 - tooling sharpens visibility where it fits
