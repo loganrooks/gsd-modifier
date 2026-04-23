@@ -217,13 +217,16 @@ def collect_rel_paths(root: pathlib.Path, rel_glob: str) -> set[str]:
     return {path.relative_to(root).as_posix() for path in root.glob(rel_glob) if path.is_file()}
 
 
-def build_report(repo_root: pathlib.Path) -> dict:
-    overlay_root = repo_root / "tooling" / "portable-gsd" / "overlay"
-    live_root = repo_root / ".codex"
-    compact_prompt = compact_prompt_file(repo_root)
+def build_report_for_runtime_roots(
+    modifier_repo_root: pathlib.Path,
+    live_repo_root: pathlib.Path,
+) -> dict:
+    overlay_root = modifier_repo_root / "tooling" / "portable-gsd" / "overlay"
+    live_root = live_repo_root / ".codex"
+    compact_prompt = compact_prompt_file(modifier_repo_root)
     manifest_paths = load_manifest_paths(live_root)
     backup_paths = load_backup_paths(live_root)
-    install_mutation_targets = load_install_mutation_targets(repo_root)
+    install_mutation_targets = load_install_mutation_targets(modifier_repo_root)
     entries = []
 
     if not overlay_root.exists():
@@ -250,7 +253,11 @@ def build_report(repo_root: pathlib.Path) -> dict:
 
             if overlay_exists:
                 overlay_text = read_text(overlay_path)
-                normalized_overlay = normalize_overlay_text(overlay_text, repo_root, compact_prompt)
+                normalized_overlay = normalize_overlay_text(
+                    overlay_text,
+                    modifier_repo_root,
+                    compact_prompt,
+                )
             if live_exists:
                 live_text = read_text(live_path)
 
@@ -316,7 +323,8 @@ def build_report(repo_root: pathlib.Path) -> dict:
     }
 
     return {
-        "repo_root": str(repo_root),
+        "modifier_repo_root": str(modifier_repo_root),
+        "live_repo_root": str(live_repo_root),
         "overlay_root": str(overlay_root),
         "live_root": str(live_root),
         "compact_prompt_file": compact_prompt,
@@ -325,6 +333,10 @@ def build_report(repo_root: pathlib.Path) -> dict:
         "subclassification_summary": subclassification_summary,
         "entries": entries,
     }
+
+
+def build_report(repo_root: pathlib.Path) -> dict:
+    return build_report_for_runtime_roots(repo_root, repo_root)
 
 
 def main() -> int:

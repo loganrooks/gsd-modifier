@@ -99,6 +99,40 @@ class RuntimeVisibilityTests(unittest.TestCase):
             self.assertEqual(report["subclassification_summary"][rv.SUB_TEMPLATE_MATERIALIZATION], 1)
             self.assertEqual(report["subclassification_summary"][rv.SUB_OBSOLETE_UNTRACKED], 1)
 
+    def test_build_report_for_runtime_roots_reads_modifier_and_host_separately(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = pathlib.Path(tmpdir)
+            modifier_root = root / "modifier"
+            host_root = root / "host"
+            overlay_workflows = modifier_root / "tooling" / "portable-gsd" / "overlay" / "get-shit-done" / "workflows"
+            live_workflows = host_root / ".codex" / "get-shit-done" / "workflows"
+            (modifier_root / "scripts").mkdir(parents=True)
+            (host_root / ".codex" / "gsd-local-patches").mkdir(parents=True)
+            overlay_workflows.mkdir(parents=True)
+            live_workflows.mkdir(parents=True)
+
+            (modifier_root / "scripts" / "setup-portable-gsd.sh").write_text(
+                'quality_reasoning = {"gsd-planner": "xhigh"}\n',
+                encoding="utf-8",
+            )
+            (host_root / ".codex" / "gsd-file-manifest.json").write_text(
+                json.dumps({"version": "1", "timestamp": "now", "files": {}}),
+                encoding="utf-8",
+            )
+            (host_root / ".codex" / "gsd-local-patches" / "backup-meta.json").write_text(
+                json.dumps({"files": []}),
+                encoding="utf-8",
+            )
+
+            (overlay_workflows / "plan-phase.md").write_text("__PROJECT_ROOT__\n", encoding="utf-8")
+            (live_workflows / "plan-phase.md").write_text(f"{modifier_root.resolve()}\n", encoding="utf-8")
+
+            report = rv.build_report_for_runtime_roots(modifier_root, host_root)
+
+            self.assertEqual(report["modifier_repo_root"], str(modifier_root))
+            self.assertEqual(report["live_repo_root"], str(host_root))
+            self.assertEqual(report["summary"]["intentional_materialized_carry"], 1)
+
 
 if __name__ == "__main__":
     unittest.main()

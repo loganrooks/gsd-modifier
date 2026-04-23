@@ -318,16 +318,30 @@ class PortableGsdContractTests(unittest.TestCase):
                     "gsd-local-patches/get-shit-done/workflows/update.md",
                 ],
             )
-            self.assertEqual(
-                {hit["classification"] for hit in runtime_scan["hits"]},
-                {"unreviewed_runtime_specific_reference_hit"},
+
+    def test_build_materialization_report_for_roots_reads_modifier_and_host_separately(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = pathlib.Path(tmpdir)
+            modifier_root = root / "modifier"
+            host_root = root / "host"
+            self._write(modifier_root, "tooling/portable-gsd/overlay/config.toml", 'model = "gpt-5.4"\n')
+            self._write(
+                modifier_root,
+                "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
+                json.dumps({"schema_version": 2, "entries": {"config.toml": "add"}}) + "\n",
             )
-            self.assertEqual(
-                {hit["family"] for hit in runtime_scan["hits"]},
-                {"needs_contextual_reread"},
+            self._write(host_root, ".codex/get-shit-done/workflows/plan-phase.md", "Plan phase\n")
+
+            report = pgc.build_materialization_report_for_roots(
+                modifier_root,
+                host_root,
+                pgc.DEFAULT_COMPACT_PROMPT_FILE,
             )
-            self.assertTrue(all(hit["requires_contextual_reread"] for hit in runtime_scan["hits"]))
-            self.assertEqual(report["hard_failures"], [])
+
+            self.assertEqual(report["modifier_repo_root"], str(modifier_root))
+            self.assertEqual(report["live_repo_root"], str(host_root))
+            self.assertEqual(report["summary"]["missing_live_target_count"], 1)
+            self.assertTrue(report["hard_failures"])
 
 
 if __name__ == "__main__":

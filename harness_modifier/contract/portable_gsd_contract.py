@@ -312,10 +312,13 @@ def build_runtime_specific_reference_report(
     }
 
 
-def build_manifest_validation_report(repo_root: pathlib.Path) -> dict[str, Any]:
-    overlay_root = repo_root / OVERLAY_REL_PATH
-    manifest_path = repo_root / OVERLAY_MANIFEST_REL_PATH
-    codex_root = repo_root / ".codex"
+def build_manifest_validation_report_for_roots(
+    modifier_repo_root: pathlib.Path,
+    live_repo_root: pathlib.Path,
+) -> dict[str, Any]:
+    overlay_root = modifier_repo_root / OVERLAY_REL_PATH
+    manifest_path = modifier_repo_root / OVERLAY_MANIFEST_REL_PATH
+    codex_root = live_repo_root / ".codex"
 
     hard_failures: list[str] = []
     if not overlay_root.exists():
@@ -324,7 +327,7 @@ def build_manifest_validation_report(repo_root: pathlib.Path) -> dict[str, Any]:
         hard_failures.append(f"overlay manifest missing: {manifest_path}")
 
     overlay_paths = list_overlay_paths(overlay_root) if overlay_root.exists() else set()
-    entry_specs = load_overlay_manifest_specs(repo_root) if manifest_path.exists() else {}
+    entry_specs = load_overlay_manifest_specs(modifier_repo_root) if manifest_path.exists() else {}
     backup_paths = load_backup_meta_paths(codex_root) if codex_root.exists() else set()
 
     manifest_paths = set(entry_specs)
@@ -372,6 +375,8 @@ def build_manifest_validation_report(repo_root: pathlib.Path) -> dict[str, Any]:
         )
 
     return {
+        "modifier_repo_root": str(modifier_repo_root),
+        "live_repo_root": str(live_repo_root),
         "overlay_root": str(overlay_root),
         "manifest_path": str(manifest_path),
         "summary": {
@@ -394,6 +399,10 @@ def build_manifest_validation_report(repo_root: pathlib.Path) -> dict[str, Any]:
         "backup_overlay_not_overwrite": backup_overlay_not_overwrite,
         "hard_failures": hard_failures,
     }
+
+
+def build_manifest_validation_report(repo_root: pathlib.Path) -> dict[str, Any]:
+    return build_manifest_validation_report_for_roots(repo_root, repo_root)
 
 
 def capture_pristine_overwrites(repo_root: pathlib.Path) -> dict[str, Any]:
@@ -494,13 +503,17 @@ def apply_reasoning_defaults(repo_root: pathlib.Path) -> None:
         agent_path.write_text(text, encoding="utf-8")
 
 
-def build_materialization_report(repo_root: pathlib.Path, compact_prompt: str) -> dict[str, Any]:
-    validation = build_manifest_validation_report(repo_root)
+def build_materialization_report_for_roots(
+    modifier_repo_root: pathlib.Path,
+    live_repo_root: pathlib.Path,
+    compact_prompt: str,
+) -> dict[str, Any]:
+    validation = build_manifest_validation_report_for_roots(modifier_repo_root, live_repo_root)
     hard_failures = list(validation["hard_failures"])
-    codex_root = repo_root / ".codex"
+    codex_root = live_repo_root / ".codex"
     backup_paths = load_backup_meta_paths(codex_root)
-    entry_specs = load_overlay_manifest_specs(repo_root)
-    overlay_manifest_payload = load_overlay_manifest_payload(repo_root)
+    entry_specs = load_overlay_manifest_specs(modifier_repo_root)
+    overlay_manifest_payload = load_overlay_manifest_payload(modifier_repo_root)
     overlay_modes = {rel_path: spec["mode"] for rel_path, spec in entry_specs.items()}
     runtime_specific_reference_scan = build_runtime_specific_reference_report(codex_root, overlay_modes)
     declared_overlay_schema_version = COMPATIBILITY_DECLARATION["overlay_schema_version"]
@@ -522,7 +535,11 @@ def build_materialization_report(repo_root: pathlib.Path, compact_prompt: str) -
         if not live_path.exists():
             missing_live_targets.append(rel_path)
             continue
-        overlay_text = render_overlay_text(read_text(pathlib.Path(spec["source_path"])), repo_root, compact_prompt)
+        overlay_text = render_overlay_text(
+            read_text(pathlib.Path(spec["source_path"])),
+            modifier_repo_root,
+            compact_prompt,
+        )
         live_text = read_text(live_path)
         if normalize_reasoning_defaults(rel_path, overlay_text) != normalize_reasoning_defaults(rel_path, live_text):
             content_mismatch.append(rel_path)
@@ -539,7 +556,8 @@ def build_materialization_report(repo_root: pathlib.Path, compact_prompt: str) -
         hard_failures.append(f"{len(content_mismatch)} live targets do not match the materialized overlay contract")
 
     return {
-        "repo_root": str(repo_root),
+        "modifier_repo_root": str(modifier_repo_root),
+        "live_repo_root": str(live_repo_root),
         "compact_prompt_file": compact_prompt,
         "install_mutation_targets": sorted(install_mutation_targets()),
         "compatibility_declaration": {
@@ -576,6 +594,10 @@ def build_materialization_report(repo_root: pathlib.Path, compact_prompt: str) -
         "runtime_specific_reference_scan": runtime_specific_reference_scan,
         "hard_failures": hard_failures,
     }
+
+
+def build_materialization_report(repo_root: pathlib.Path, compact_prompt: str) -> dict[str, Any]:
+    return build_materialization_report_for_roots(repo_root, repo_root, compact_prompt)
 
 
 def main() -> int:

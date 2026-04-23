@@ -10,7 +10,9 @@ Current first-slice split:
 - `closure/`
   - responsible-closure observation-record carrier and writer
   - responsible-closure host-exercise packet contract and writer
+  - first observe-only host-exercise runner plus frozen host-evidence bundle support
   - shared exercise vocabulary owned at the packet layer and consumed by the observation writer
+  - current posture: pre-run experimental / observe-only support, not a default materialized overlay family
 - `capture/`
   - launch-truth capture
   - runtime snapshot capture
