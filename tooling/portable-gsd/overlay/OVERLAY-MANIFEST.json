@@ -1,101 +1,1118 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "entries": {
-    "agents/gsd-code-fixer.md": "overwrite",
-    "agents/gsd-code-fixer.toml": "add",
-    "agents/gsd-code-reviewer.md": "overwrite",
-    "agents/gsd-code-reviewer.toml": "add",
-    "agents/gsd-executor.toml": "add",
-    "agents/gsd-intel-updater.md": "overwrite",
-    "agents/gsd-intel-updater.toml": "add",
-    "agents/gsd-pattern-mapper.md": "overwrite",
-    "agents/gsd-pattern-mapper.toml": "add",
-    "agents/gsd-phase-researcher.toml": "add",
-    "agents/gsd-plan-checker.toml": "add",
-    "agents/gsd-planner.toml": "add",
-    "agents/gsd-verifier.toml": "add",
-    "config.toml": "add",
-    "get-shit-done/bin/lib/audit.cjs": "overwrite",
-    "get-shit-done/bin/lib/config.cjs": "overwrite",
-    "get-shit-done/bin/lib/phase.cjs": "overwrite",
-    "get-shit-done/bin/lib/roadmap.cjs": "overwrite",
-    "get-shit-done/bin/lib/state.cjs": "overwrite",
-    "get-shit-done/references/agent-contracts.md": "overwrite",
-    "get-shit-done/references/entry-runtime-uplift-continuity.md": "add",
-    "get-shit-done/references/milestone-boundary-uplift-continuity.md": "add",
-    "get-shit-done/references/mandatory-initial-read.md": "overwrite",
-    "get-shit-done/references/planner-reviews.md": "overwrite",
-    "get-shit-done/references/planning-config.md": "overwrite",
-    "get-shit-done/references/verification-overrides.md": "overwrite",
-    "get-shit-done/templates/config.json": "overwrite",
-    "get-shit-done/templates/context.md": "overwrite",
-    "get-shit-done/templates/phase-prompt.md": "overwrite",
-    "get-shit-done/templates/research.md": "overwrite",
-    "get-shit-done/templates/spec.md": "overwrite",
-    "get-shit-done/templates/state.md": "overwrite",
-    "get-shit-done/templates/verification-report.md": "overwrite",
-    "get-shit-done/workflows/complete-milestone.md": "overwrite",
-    "get-shit-done/workflows/discuss-phase-assumptions.md": "overwrite",
-    "get-shit-done/workflows/discuss-phase-power.md": "overwrite",
-    "get-shit-done/workflows/discuss-phase.md": "overwrite",
-    "get-shit-done/workflows/do.md": "overwrite",
-    "get-shit-done/workflows/explore.md": "overwrite",
-    "get-shit-done/workflows/health.md": "overwrite",
-    "get-shit-done/workflows/ingest-docs.md": "overwrite",
-    "get-shit-done/workflows/new-milestone.md": "overwrite",
-    "get-shit-done/workflows/new-project.md": "overwrite",
-    "get-shit-done/workflows/plan-phase.md": "overwrite",
-    "get-shit-done/workflows/plant-seed.md": "overwrite",
+    "agents/gsd-code-fixer.md": {
+      "capability_id": "agents/gsd-code-fixer.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "agents/gsd-code-fixer.md",
+          "source": "tooling/portable-gsd/overlay/agents/gsd-code-fixer.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "agents/gsd-code-fixer.md",
+          "source": "tooling/portable-gsd/overlay/agents/gsd-code-fixer.md"
+        }
+      }
+    },
+    "agents/gsd-code-fixer.toml": {
+      "capability_id": "agents/gsd-code-fixer.toml",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "agents/gsd-code-fixer.toml",
+          "source": "tooling/portable-gsd/overlay/agents/gsd-code-fixer.toml"
+        }
+      }
+    },
+    "agents/gsd-code-reviewer.md": {
+      "capability_id": "agents/gsd-code-reviewer.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "agents/gsd-code-reviewer.md",
+          "source": "tooling/portable-gsd/overlay/agents/gsd-code-reviewer.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "agents/gsd-code-reviewer.md",
+          "source": "tooling/portable-gsd/overlay/agents/gsd-code-reviewer.md"
+        }
+      }
+    },
+    "agents/gsd-code-reviewer.toml": {
+      "capability_id": "agents/gsd-code-reviewer.toml",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "agents/gsd-code-reviewer.toml",
+          "source": "tooling/portable-gsd/overlay/agents/gsd-code-reviewer.toml"
+        }
+      }
+    },
+    "agents/gsd-executor.toml": {
+      "capability_id": "agents/gsd-executor.toml",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "agents/gsd-executor.toml",
+          "source": "tooling/portable-gsd/overlay/agents/gsd-executor.toml"
+        }
+      }
+    },
+    "agents/gsd-intel-updater.md": {
+      "capability_id": "agents/gsd-intel-updater.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "agents/gsd-intel-updater.md",
+          "source": "tooling/portable-gsd/overlay/agents/gsd-intel-updater.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "agents/gsd-intel-updater.md",
+          "source": "tooling/portable-gsd/overlay/agents/gsd-intel-updater.md"
+        }
+      }
+    },
+    "agents/gsd-intel-updater.toml": {
+      "capability_id": "agents/gsd-intel-updater.toml",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "agents/gsd-intel-updater.toml",
+          "source": "tooling/portable-gsd/overlay/agents/gsd-intel-updater.toml"
+        }
+      }
+    },
+    "agents/gsd-pattern-mapper.md": {
+      "capability_id": "agents/gsd-pattern-mapper.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "agents/gsd-pattern-mapper.md",
+          "source": "tooling/portable-gsd/overlay/agents/gsd-pattern-mapper.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "agents/gsd-pattern-mapper.md",
+          "source": "tooling/portable-gsd/overlay/agents/gsd-pattern-mapper.md"
+        }
+      }
+    },
+    "agents/gsd-pattern-mapper.toml": {
+      "capability_id": "agents/gsd-pattern-mapper.toml",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "agents/gsd-pattern-mapper.toml",
+          "source": "tooling/portable-gsd/overlay/agents/gsd-pattern-mapper.toml"
+        }
+      }
+    },
+    "agents/gsd-phase-researcher.toml": {
+      "capability_id": "agents/gsd-phase-researcher.toml",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "agents/gsd-phase-researcher.toml",
+          "source": "tooling/portable-gsd/overlay/agents/gsd-phase-researcher.toml"
+        }
+      }
+    },
+    "agents/gsd-plan-checker.toml": {
+      "capability_id": "agents/gsd-plan-checker.toml",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "agents/gsd-plan-checker.toml",
+          "source": "tooling/portable-gsd/overlay/agents/gsd-plan-checker.toml"
+        }
+      }
+    },
+    "agents/gsd-planner.toml": {
+      "capability_id": "agents/gsd-planner.toml",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "agents/gsd-planner.toml",
+          "source": "tooling/portable-gsd/overlay/agents/gsd-planner.toml"
+        }
+      }
+    },
+    "agents/gsd-verifier.toml": {
+      "capability_id": "agents/gsd-verifier.toml",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "agents/gsd-verifier.toml",
+          "source": "tooling/portable-gsd/overlay/agents/gsd-verifier.toml"
+        }
+      }
+    },
+    "config.toml": {
+      "capability_id": "config.toml",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "config.toml",
+          "source": "tooling/portable-gsd/overlay/config.toml"
+        }
+      }
+    },
+    "get-shit-done/bin/lib/audit.cjs": {
+      "capability_id": "get-shit-done/bin/lib/audit.cjs",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/bin/lib/audit.cjs",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/bin/lib/audit.cjs"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/bin/lib/audit.cjs",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/bin/lib/audit.cjs"
+        }
+      }
+    },
+    "get-shit-done/bin/lib/config.cjs": {
+      "capability_id": "get-shit-done/bin/lib/config.cjs",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/bin/lib/config.cjs",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/bin/lib/config.cjs"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/bin/lib/config.cjs",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/bin/lib/config.cjs"
+        }
+      }
+    },
+    "get-shit-done/bin/lib/phase.cjs": {
+      "capability_id": "get-shit-done/bin/lib/phase.cjs",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/bin/lib/phase.cjs",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/bin/lib/phase.cjs"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/bin/lib/phase.cjs",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/bin/lib/phase.cjs"
+        }
+      }
+    },
+    "get-shit-done/bin/lib/roadmap.cjs": {
+      "capability_id": "get-shit-done/bin/lib/roadmap.cjs",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/bin/lib/roadmap.cjs",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/bin/lib/roadmap.cjs"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/bin/lib/roadmap.cjs",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/bin/lib/roadmap.cjs"
+        }
+      }
+    },
+    "get-shit-done/bin/lib/state.cjs": {
+      "capability_id": "get-shit-done/bin/lib/state.cjs",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/bin/lib/state.cjs",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/bin/lib/state.cjs"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/bin/lib/state.cjs",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/bin/lib/state.cjs"
+        }
+      }
+    },
+    "get-shit-done/references/agent-contracts.md": {
+      "capability_id": "get-shit-done/references/agent-contracts.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/references/agent-contracts.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/references/agent-contracts.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/references/agent-contracts.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/references/agent-contracts.md"
+        }
+      }
+    },
+    "get-shit-done/references/entry-runtime-uplift-continuity.md": {
+      "capability_id": "get-shit-done/references/entry-runtime-uplift-continuity.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "get-shit-done/references/entry-runtime-uplift-continuity.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/references/entry-runtime-uplift-continuity.md"
+        },
+        "claude": {
+          "mode": "add",
+          "target": "get-shit-done/references/entry-runtime-uplift-continuity.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/references/entry-runtime-uplift-continuity.md"
+        }
+      }
+    },
+    "get-shit-done/references/milestone-boundary-uplift-continuity.md": {
+      "capability_id": "get-shit-done/references/milestone-boundary-uplift-continuity.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "get-shit-done/references/milestone-boundary-uplift-continuity.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/references/milestone-boundary-uplift-continuity.md"
+        },
+        "claude": {
+          "mode": "add",
+          "target": "get-shit-done/references/milestone-boundary-uplift-continuity.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/references/milestone-boundary-uplift-continuity.md"
+        }
+      }
+    },
+    "get-shit-done/references/mandatory-initial-read.md": {
+      "capability_id": "get-shit-done/references/mandatory-initial-read.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/references/mandatory-initial-read.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/references/mandatory-initial-read.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/references/mandatory-initial-read.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/references/mandatory-initial-read.md"
+        }
+      }
+    },
+    "get-shit-done/references/planner-reviews.md": {
+      "capability_id": "get-shit-done/references/planner-reviews.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/references/planner-reviews.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/references/planner-reviews.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/references/planner-reviews.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/references/planner-reviews.md"
+        }
+      }
+    },
+    "get-shit-done/references/planning-config.md": {
+      "capability_id": "get-shit-done/references/planning-config.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/references/planning-config.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/references/planning-config.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/references/planning-config.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/references/planning-config.md"
+        }
+      }
+    },
+    "get-shit-done/references/verification-overrides.md": {
+      "capability_id": "get-shit-done/references/verification-overrides.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/references/verification-overrides.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/references/verification-overrides.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/references/verification-overrides.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/references/verification-overrides.md"
+        }
+      }
+    },
+    "get-shit-done/templates/config.json": {
+      "capability_id": "get-shit-done/templates/config.json",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/templates/config.json",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/templates/config.json"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/templates/config.json",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/templates/config.json"
+        }
+      }
+    },
+    "get-shit-done/templates/context.md": {
+      "capability_id": "get-shit-done/templates/context.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/templates/context.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/templates/context.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/templates/context.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/templates/context.md"
+        }
+      }
+    },
+    "get-shit-done/templates/phase-prompt.md": {
+      "capability_id": "get-shit-done/templates/phase-prompt.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/templates/phase-prompt.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/templates/phase-prompt.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/templates/phase-prompt.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/templates/phase-prompt.md"
+        }
+      }
+    },
+    "get-shit-done/templates/research.md": {
+      "capability_id": "get-shit-done/templates/research.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/templates/research.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/templates/research.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/templates/research.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/templates/research.md"
+        }
+      }
+    },
+    "get-shit-done/templates/spec.md": {
+      "capability_id": "get-shit-done/templates/spec.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/templates/spec.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/templates/spec.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/templates/spec.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/templates/spec.md"
+        }
+      }
+    },
+    "get-shit-done/templates/state.md": {
+      "capability_id": "get-shit-done/templates/state.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/templates/state.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/templates/state.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/templates/state.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/templates/state.md"
+        }
+      }
+    },
+    "get-shit-done/templates/verification-report.md": {
+      "capability_id": "get-shit-done/templates/verification-report.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/templates/verification-report.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/templates/verification-report.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/templates/verification-report.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/templates/verification-report.md"
+        }
+      }
+    },
+    "get-shit-done/workflows/complete-milestone.md": {
+      "capability_id": "get-shit-done/workflows/complete-milestone.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/complete-milestone.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/complete-milestone.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/complete-milestone.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/complete-milestone.md"
+        }
+      }
+    },
+    "get-shit-done/workflows/discuss-phase-assumptions.md": {
+      "capability_id": "get-shit-done/workflows/discuss-phase-assumptions.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/discuss-phase-assumptions.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/discuss-phase-assumptions.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/discuss-phase-assumptions.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/discuss-phase-assumptions.md"
+        }
+      }
+    },
+    "get-shit-done/workflows/discuss-phase-power.md": {
+      "capability_id": "get-shit-done/workflows/discuss-phase-power.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/discuss-phase-power.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/discuss-phase-power.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/discuss-phase-power.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/discuss-phase-power.md"
+        }
+      }
+    },
+    "get-shit-done/workflows/discuss-phase.md": {
+      "capability_id": "get-shit-done/workflows/discuss-phase.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/discuss-phase.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/discuss-phase.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/discuss-phase.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/discuss-phase.md"
+        }
+      }
+    },
+    "get-shit-done/workflows/do.md": {
+      "capability_id": "get-shit-done/workflows/do.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/do.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/do.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/do.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/do.md"
+        }
+      }
+    },
+    "get-shit-done/workflows/explore.md": {
+      "capability_id": "get-shit-done/workflows/explore.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/explore.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/explore.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/explore.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/explore.md"
+        }
+      }
+    },
+    "get-shit-done/workflows/health.md": {
+      "capability_id": "get-shit-done/workflows/health.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/health.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/health.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/health.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/health.md"
+        }
+      }
+    },
+    "get-shit-done/workflows/ingest-docs.md": {
+      "capability_id": "get-shit-done/workflows/ingest-docs.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/ingest-docs.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/ingest-docs.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/ingest-docs.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/ingest-docs.md"
+        }
+      }
+    },
+    "get-shit-done/workflows/new-milestone.md": {
+      "capability_id": "get-shit-done/workflows/new-milestone.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/new-milestone.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/new-milestone.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/new-milestone.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/new-milestone.md"
+        }
+      }
+    },
+    "get-shit-done/workflows/new-project.md": {
+      "capability_id": "get-shit-done/workflows/new-project.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/new-project.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/new-project.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/new-project.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/new-project.md"
+        }
+      }
+    },
+    "get-shit-done/workflows/plan-phase.md": {
+      "capability_id": "get-shit-done/workflows/plan-phase.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/plan-phase.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/plan-phase.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/plan-phase.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/plan-phase.md"
+        }
+      }
+    },
+    "get-shit-done/workflows/plant-seed.md": {
+      "capability_id": "get-shit-done/workflows/plant-seed.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/plant-seed.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/plant-seed.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/plant-seed.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/plant-seed.md"
+        }
+      }
+    },
     "get-shit-done/workflows/propagation-review.md": {
-      "mode": "add",
-      "source": "harness_modifier/overlay/get-shit-done/workflows/propagation-review.md"
+      "capability_id": "get-shit-done/workflows/propagation-review.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "get-shit-done/workflows/propagation-review.md",
+          "source": "harness_modifier/overlay/get-shit-done/workflows/propagation-review.md"
+        },
+        "claude": {
+          "mode": "add",
+          "target": "get-shit-done/workflows/propagation-review.md",
+          "source": "harness_modifier/overlay/get-shit-done/workflows/propagation-review.md"
+        }
+      }
     },
-    "get-shit-done/workflows/progress.md": "overwrite",
-    "get-shit-done/workflows/quick.md": "overwrite",
-    "get-shit-done/workflows/research-phase.md": "overwrite",
-    "get-shit-done/workflows/resume-project.md": "overwrite",
-    "get-shit-done/workflows/review.md": "overwrite",
+    "get-shit-done/workflows/progress.md": {
+      "capability_id": "get-shit-done/workflows/progress.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/progress.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/progress.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/progress.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/progress.md"
+        }
+      }
+    },
+    "get-shit-done/workflows/quick.md": {
+      "capability_id": "get-shit-done/workflows/quick.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/quick.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/quick.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/quick.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/quick.md"
+        }
+      }
+    },
+    "get-shit-done/workflows/research-phase.md": {
+      "capability_id": "get-shit-done/workflows/research-phase.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/research-phase.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/research-phase.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/research-phase.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/research-phase.md"
+        }
+      }
+    },
+    "get-shit-done/workflows/resume-project.md": {
+      "capability_id": "get-shit-done/workflows/resume-project.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/resume-project.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/resume-project.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/resume-project.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/resume-project.md"
+        }
+      }
+    },
+    "get-shit-done/workflows/review.md": {
+      "capability_id": "get-shit-done/workflows/review.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/review.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/review.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/review.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/review.md"
+        }
+      }
+    },
     "get-shit-done/workflows/seed-migration-inventory.md": {
-      "mode": "add",
-      "source": "harness_modifier/overlay/get-shit-done/workflows/seed-migration-inventory.md"
+      "capability_id": "get-shit-done/workflows/seed-migration-inventory.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "get-shit-done/workflows/seed-migration-inventory.md",
+          "source": "harness_modifier/overlay/get-shit-done/workflows/seed-migration-inventory.md"
+        },
+        "claude": {
+          "mode": "add",
+          "target": "get-shit-done/workflows/seed-migration-inventory.md",
+          "source": "harness_modifier/overlay/get-shit-done/workflows/seed-migration-inventory.md"
+        }
+      }
     },
-    "get-shit-done/workflows/settings.md": "overwrite",
-    "get-shit-done/workflows/spec-phase.md": "overwrite",
-    "get-shit-done/workflows/transition.md": "overwrite",
+    "get-shit-done/workflows/settings.md": {
+      "capability_id": "get-shit-done/workflows/settings.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/settings.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/settings.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/settings.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/settings.md"
+        }
+      }
+    },
+    "get-shit-done/workflows/spec-phase.md": {
+      "capability_id": "get-shit-done/workflows/spec-phase.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/spec-phase.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/spec-phase.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/spec-phase.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/spec-phase.md"
+        }
+      }
+    },
+    "get-shit-done/workflows/transition.md": {
+      "capability_id": "get-shit-done/workflows/transition.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/transition.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/transition.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/transition.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/transition.md"
+        }
+      }
+    },
     "get-shit-done/workflows/uplift-project.md": {
-      "mode": "add",
-      "source": "harness_modifier/overlay/get-shit-done/workflows/uplift-project.md"
+      "capability_id": "get-shit-done/workflows/uplift-project.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "get-shit-done/workflows/uplift-project.md",
+          "source": "harness_modifier/overlay/get-shit-done/workflows/uplift-project.md"
+        },
+        "claude": {
+          "mode": "add",
+          "target": "get-shit-done/workflows/uplift-project.md",
+          "source": "harness_modifier/overlay/get-shit-done/workflows/uplift-project.md"
+        }
+      }
     },
-    "get-shit-done/workflows/update.md": "overwrite",
-    "get-shit-done/workflows/verify-phase.md": "overwrite",
-    "skills/gsd-discuss-phase/SKILL.md": "overwrite",
-    "skills/gsd-do/SKILL.md": "overwrite",
-    "skills/gsd-explore/SKILL.md": "overwrite",
-    "skills/gsd-from-gsd2/SKILL.md": "overwrite",
-    "skills/gsd-health/SKILL.md": "overwrite",
-    "skills/gsd-plan-phase/SKILL.md": "overwrite",
-    "skills/gsd-plant-seed/SKILL.md": "overwrite",
-    "skills/gsd-propagation-review/SKILL.md": {
-      "mode": "add",
-      "source": "harness_modifier/overlay/skills/gsd-propagation-review/SKILL.md"
+    "get-shit-done/workflows/update.md": {
+      "capability_id": "get-shit-done/workflows/update.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/update.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/update.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/update.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/update.md"
+        }
+      }
     },
-    "skills/gsd-progress/SKILL.md": "add",
-    "skills/gsd-resume-work/SKILL.md": "overwrite",
-    "skills/gsd-review/SKILL.md": "overwrite",
-    "skills/gsd-rigorous-research/SKILL.md": "add",
-    "skills/gsd-rigorous-research/references/method.md": "add",
-    "skills/gsd-rigorous-research/references/output-template.md": "add",
-    "skills/gsd-rigorous-research/references/repo-canon.md": "add",
-    "skills/gsd-seed-migration-inventory/SKILL.md": {
-      "mode": "add",
-      "source": "harness_modifier/overlay/skills/gsd-seed-migration-inventory/SKILL.md"
+    "get-shit-done/workflows/verify-phase.md": {
+      "capability_id": "get-shit-done/workflows/verify-phase.md",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/verify-phase.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/verify-phase.md"
+        },
+        "claude": {
+          "mode": "overwrite",
+          "target": "get-shit-done/workflows/verify-phase.md",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/verify-phase.md"
+        }
+      }
     },
-    "skills/gsd-update/SKILL.md": "overwrite",
-    "skills/gsd-uplift-project/SKILL.md": {
-      "mode": "add",
-      "source": "harness_modifier/overlay/skills/gsd-uplift-project/SKILL.md"
+    "skills/gsd-discuss-phase/SKILL.md": {
+      "capability_id": "skills/gsd-discuss-phase/SKILL.md",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "skills/gsd-discuss-phase/SKILL.md",
+          "source": "tooling/portable-gsd/overlay/skills/gsd-discuss-phase/SKILL.md"
+        }
+      }
     },
-    "tooling/compact-prompts/project.md": "add",
-    "tooling/compact-prompts/readiness.md": "add"
+    "skills/gsd-do/SKILL.md": {
+      "capability_id": "skills/gsd-do/SKILL.md",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "skills/gsd-do/SKILL.md",
+          "source": "tooling/portable-gsd/overlay/skills/gsd-do/SKILL.md"
+        }
+      }
+    },
+    "skills/gsd-explore/SKILL.md": {
+      "capability_id": "skills/gsd-explore/SKILL.md",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "skills/gsd-explore/SKILL.md",
+          "source": "tooling/portable-gsd/overlay/skills/gsd-explore/SKILL.md"
+        }
+      }
+    },
+    "skills/gsd-from-gsd2/SKILL.md": {
+      "capability_id": "skills/gsd-from-gsd2/SKILL.md",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "skills/gsd-from-gsd2/SKILL.md",
+          "source": "tooling/portable-gsd/overlay/skills/gsd-from-gsd2/SKILL.md"
+        }
+      }
+    },
+    "skills/gsd-health/SKILL.md": {
+      "capability_id": "skills/gsd-health/SKILL.md",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "skills/gsd-health/SKILL.md",
+          "source": "tooling/portable-gsd/overlay/skills/gsd-health/SKILL.md"
+        }
+      }
+    },
+    "skills/gsd-plan-phase/SKILL.md": {
+      "capability_id": "skills/gsd-plan-phase/SKILL.md",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "skills/gsd-plan-phase/SKILL.md",
+          "source": "tooling/portable-gsd/overlay/skills/gsd-plan-phase/SKILL.md"
+        }
+      }
+    },
+    "skills/gsd-plant-seed/SKILL.md": {
+      "capability_id": "skills/gsd-plant-seed/SKILL.md",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "skills/gsd-plant-seed/SKILL.md",
+          "source": "tooling/portable-gsd/overlay/skills/gsd-plant-seed/SKILL.md"
+        }
+      }
+    },
+    "entrypoints/gsd-propagation-review": {
+      "capability_id": "entrypoint.gsd-propagation-review",
+      "parity_tier": "core_adapted",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "skills/gsd-propagation-review/SKILL.md",
+          "source": "harness_modifier/overlay/skills/gsd-propagation-review/SKILL.md"
+        },
+        "claude": {
+          "mode": "add",
+          "target": "commands/gsd/propagation-review.md",
+          "source": "harness_modifier/overlay/commands/gsd/propagation-review.md"
+        }
+      }
+    },
+    "skills/gsd-progress/SKILL.md": {
+      "capability_id": "skills/gsd-progress/SKILL.md",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "skills/gsd-progress/SKILL.md",
+          "source": "tooling/portable-gsd/overlay/skills/gsd-progress/SKILL.md"
+        }
+      }
+    },
+    "skills/gsd-resume-work/SKILL.md": {
+      "capability_id": "skills/gsd-resume-work/SKILL.md",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "skills/gsd-resume-work/SKILL.md",
+          "source": "tooling/portable-gsd/overlay/skills/gsd-resume-work/SKILL.md"
+        }
+      }
+    },
+    "skills/gsd-review/SKILL.md": {
+      "capability_id": "skills/gsd-review/SKILL.md",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "skills/gsd-review/SKILL.md",
+          "source": "tooling/portable-gsd/overlay/skills/gsd-review/SKILL.md"
+        }
+      }
+    },
+    "skills/gsd-rigorous-research/SKILL.md": {
+      "capability_id": "skills/gsd-rigorous-research/SKILL.md",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "skills/gsd-rigorous-research/SKILL.md",
+          "source": "tooling/portable-gsd/overlay/skills/gsd-rigorous-research/SKILL.md"
+        }
+      }
+    },
+    "skills/gsd-rigorous-research/references/method.md": {
+      "capability_id": "skills/gsd-rigorous-research/references/method.md",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "skills/gsd-rigorous-research/references/method.md",
+          "source": "tooling/portable-gsd/overlay/skills/gsd-rigorous-research/references/method.md"
+        }
+      }
+    },
+    "skills/gsd-rigorous-research/references/output-template.md": {
+      "capability_id": "skills/gsd-rigorous-research/references/output-template.md",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "skills/gsd-rigorous-research/references/output-template.md",
+          "source": "tooling/portable-gsd/overlay/skills/gsd-rigorous-research/references/output-template.md"
+        }
+      }
+    },
+    "skills/gsd-rigorous-research/references/repo-canon.md": {
+      "capability_id": "skills/gsd-rigorous-research/references/repo-canon.md",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "skills/gsd-rigorous-research/references/repo-canon.md",
+          "source": "tooling/portable-gsd/overlay/skills/gsd-rigorous-research/references/repo-canon.md"
+        }
+      }
+    },
+    "entrypoints/gsd-seed-migration-inventory": {
+      "capability_id": "entrypoint.gsd-seed-migration-inventory",
+      "parity_tier": "core_adapted",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "skills/gsd-seed-migration-inventory/SKILL.md",
+          "source": "harness_modifier/overlay/skills/gsd-seed-migration-inventory/SKILL.md"
+        },
+        "claude": {
+          "mode": "add",
+          "target": "commands/gsd/seed-migration-inventory.md",
+          "source": "harness_modifier/overlay/commands/gsd/seed-migration-inventory.md"
+        }
+      }
+    },
+    "skills/gsd-update/SKILL.md": {
+      "capability_id": "skills/gsd-update/SKILL.md",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "overwrite",
+          "target": "skills/gsd-update/SKILL.md",
+          "source": "tooling/portable-gsd/overlay/skills/gsd-update/SKILL.md"
+        }
+      }
+    },
+    "entrypoints/gsd-uplift-project": {
+      "capability_id": "entrypoint.gsd-uplift-project",
+      "parity_tier": "core_adapted",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "skills/gsd-uplift-project/SKILL.md",
+          "source": "harness_modifier/overlay/skills/gsd-uplift-project/SKILL.md"
+        },
+        "claude": {
+          "mode": "add",
+          "target": "commands/gsd/uplift-project.md",
+          "source": "harness_modifier/overlay/commands/gsd/uplift-project.md"
+        }
+      }
+    },
+    "tooling/compact-prompts/project.md": {
+      "capability_id": "tooling/compact-prompts/project.md",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "tooling/compact-prompts/project.md",
+          "source": "tooling/portable-gsd/overlay/tooling/compact-prompts/project.md"
+        }
+      }
+    },
+    "tooling/compact-prompts/readiness.md": {
+      "capability_id": "tooling/compact-prompts/readiness.md",
+      "parity_tier": "runtime_specific",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "tooling/compact-prompts/readiness.md",
+          "source": "tooling/portable-gsd/overlay/tooling/compact-prompts/readiness.md"
+        }
+      }
+    }
   }
 }

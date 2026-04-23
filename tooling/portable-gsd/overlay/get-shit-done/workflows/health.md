@@ -97,10 +97,11 @@ Only surface the step when:
 - the compact `STATE.md` `## Project Uplift` block still shows live posture pressure rather than ordinary steady-state continuation
 
 Treat the following as live posture pressure signals:
-- `Compatibility posture` is not exactly `observed_basis_only`
-- `Held runtime annotation` is present and not `none`
+- `Compatibility posture` is not exactly `core_runtime_parity`
+- `Mixed-runtime policy` is not exactly `dual-runtime-core (active)`
+- `Secondary runtime observation` is present and not `none`
 - `Current recommendation` is not exactly `Continue with ordinary routing.`
-- `Observed runtime basis` becomes route-local only when the current health pass follows runtime movement, migration, or another state change that makes the compact basis line newly consequential after validation
+- `Observed runtime profiles` become route-local only when the current health pass follows runtime movement, migration, or another state change that makes the compact profile line newly consequential after validation
 
 ## Primary Compact Read
 
@@ -109,9 +110,10 @@ Start with `.planning/STATE.md` and reread `## Project Uplift` first.
 Keep this compact digest primary over deeper widening. Use it to read:
 - `Last uplift pass`
 - `Last uplift class`
-- `Compatibility posture: observed_basis_only`
-- `Observed runtime basis`
-- `Held runtime annotation`
+- `Compatibility posture: core_runtime_parity`
+- `Observed runtime profiles`
+- `Mixed-runtime policy`
+- `Secondary runtime observation`
 - `Current recommendation`
 
 If the compact digest already resolves the route-local posture question, stop here.
@@ -130,10 +132,11 @@ Use the report to understand:
 
 ## Deeper Typed Read
 
-Only widen into `.planning/UPLIFT-MANIFEST.json` when basis or annotation ambiguity remains after the compact and narrative reads.
+Only widen into `.planning/UPLIFT-MANIFEST.json` when runtime-profile or policy ambiguity remains after the compact and narrative reads.
 
 Use the typed manifest to resolve:
 - `compatibility_basis`
+- `mixed_runtime_policy`
 - `held_runtime_annotation`
 - `held_later_families`
 - per-carrier fingerprints and typed posture fields
@@ -164,8 +167,9 @@ Keep it silent when:
 - planning structure is missing and the correct route is `$gsd-new-project` or `$gsd-ingest-docs`
 - structural health itself is still the unresolved question
 - the compact `Project Uplift` block resolves to ordinary routing without later posture pressure, including:
-  - `Compatibility posture: observed_basis_only`
-  - `Held runtime annotation: none`
+  - `Compatibility posture: core_runtime_parity`
+  - `Mixed-runtime policy: dual-runtime-core (active)`
+  - `Secondary runtime observation: none`
   - `Current recommendation: Continue with ordinary routing.`
 </step>
 

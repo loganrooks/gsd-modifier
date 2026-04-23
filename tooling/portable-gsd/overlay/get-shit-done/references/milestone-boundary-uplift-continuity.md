@@ -15,13 +15,15 @@ Use this reference at milestone open and milestone close when the route needs bo
 
 ## Deeper Typed Read
 
-- Widen into `.planning/UPLIFT-MANIFEST.json` only when basis or annotation ambiguity remains after the compact digest and narrative report
-- Use the typed surface to clarify current observed basis, held runtime annotation, pending doctrine-sensitive proposals, or held-later family state when the milestone-boundary route depends on them
+- Widen into `.planning/UPLIFT-MANIFEST.json` only when runtime profile or policy ambiguity remains after the compact digest and narrative report
+- Use the typed surface to clarify observed runtime profiles, mixed-runtime policy, secondary runtime observation, pending doctrine-sensitive proposals, or held-later family state when the milestone-boundary route depends on them
 
 ## Interpretation Frame
 
-- `Compatibility posture: observed_basis_only` remains the top-level posture
-- Held runtime annotation stays annotation, not dual-basis relabeling
+- `Compatibility posture: core_runtime_parity` remains the top-level posture
+- `Observed runtime profiles` stay the compact runtime evidence line
+- `Mixed-runtime policy` stays policy, not a claim that dual-runtime support is already green
+- `Secondary runtime observation` remains a helper line, not the parity claim itself
 - Milestone boundaries may surface uplift posture
 - Milestone boundaries do not widen that posture into parity, translation, matrix, or version-window claims
 - Do not run `$gsd-uplift-project --write` from milestone boundaries; they read uplift continuity here and do not become write-side compatibility dispatch
@@ -34,7 +36,8 @@ Use this reference at milestone open and milestone close when the route needs bo
 
 Surface the uplift route when one or more of these are true:
 
-- observed runtime basis moved since the previous milestone
+- observed runtime profiles moved since the previous milestone
+- mixed-runtime policy changed since the previous milestone
 - `pending_doctrine_sensitive_proposals` is greater than zero
 - a `held_later_families` partial landing is relevant to the next milestone's target scope
 - the current `phase_boundary_signal.mid_phase_signal` changes what belongs in the milestone-opening packet
@@ -43,7 +46,8 @@ Surface the uplift route when one or more of these are true:
 
 Surface the uplift route when one or more of these are true:
 
-- the milestone changed observed runtime basis
+- the milestone changed observed runtime profiles
+- mixed-runtime policy changed during the milestone
 - seed corpus posture changed during the milestone
 - `held_later_families` gained or closed partial-landing entries during the milestone
 - doctrine-sensitive carrier posture changed during the milestone's phases

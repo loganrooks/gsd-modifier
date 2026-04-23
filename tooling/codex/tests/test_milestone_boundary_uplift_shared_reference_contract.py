@@ -1,6 +1,7 @@
-import json
 import unittest
 from pathlib import Path
+
+from tooling.codex.tests.overlay_paths import overlay_entry_mode
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -8,12 +9,8 @@ ROOT = Path(__file__).resolve().parents[3]
 
 class MilestoneBoundaryUpliftSharedReferenceContractTests(unittest.TestCase):
     def test_overlay_manifest_owns_shared_reference_as_add(self) -> None:
-        manifest = json.loads(
-            (ROOT / "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json").read_text()
-        )
-        entries = manifest["entries"]
         self.assertEqual(
-            entries.get("get-shit-done/references/milestone-boundary-uplift-continuity.md"),
+            overlay_entry_mode("get-shit-done/references/milestone-boundary-uplift-continuity.md"),
             "add",
         )
 
@@ -28,7 +25,8 @@ class MilestoneBoundaryUpliftSharedReferenceContractTests(unittest.TestCase):
         self.assertIn("## Deeper Typed Read", reference)
         self.assertIn("## Interpretation Frame", reference)
         self.assertIn("## When To Surface", reference)
-        self.assertIn("Compatibility posture: observed_basis_only", reference)
+        self.assertIn("Compatibility posture: core_runtime_parity", reference)
+        self.assertIn("Mixed-runtime policy", reference)
         self.assertIn("Do not run `$gsd-uplift-project --write`", reference)
 
     def test_new_milestone_reads_shared_reference_and_keeps_open_route_read_only(self) -> None:

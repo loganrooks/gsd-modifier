@@ -32,7 +32,9 @@ OVERLAY_MANIFEST_REL_PATH = "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json"
 PROGRESS_NOTE_RENDER_FIELDS = (
     ("last_uplift_class", "Last uplift class"),
     ("last_uplift_secondary_signals", "Secondary signals"),
-    ("held_runtime_annotation", "Held runtime annotation"),
+    ("observed_runtime_profiles", "Observed runtime profiles"),
+    ("mixed_runtime_policy", "Mixed-runtime policy"),
+    ("held_runtime_annotation", "Secondary runtime observation"),
     ("seed_corpus_posture", "Seed corpus posture"),
     ("recommendation", "Recommendation"),
     ("report_path", "Report"),
@@ -315,7 +317,22 @@ def runtime_version_source(repo_root: pathlib.Path, declaration: dict) -> tuple[
 
 
 def held_runtime_annotation(repo_root: pathlib.Path, declaration: dict) -> dict | None:
-    for declared_annotation in declaration["runtime_held_annotations"]:
+    profiles = declaration.get("runtime_profiles", {})
+    for runtime_name, profile in profiles.items():
+        if runtime_name == compatibility_declaration.DEFAULT_RUNTIME:
+            continue
+        version_source = profile["version_source"]
+        version, version_source_path = read_runtime_version_at(repo_root, version_source)
+        if version is None:
+            continue
+        return {
+            "runtime": profile["runtime_root"],
+            "version": version,
+            "version_source": version_source_path,
+            "annotation_posture": "active_core_profile",
+            "note": "secondary active core runtime observed alongside the default runtime basis",
+        }
+    for declared_annotation in declaration.get("runtime_held_annotations", []):
         version_source = declared_annotation["version_source"]
         version, version_source_path = read_runtime_version_at(repo_root, version_source)
         if version is None:
@@ -355,12 +372,43 @@ def build_compatibility_basis(repo_root: pathlib.Path, declaration: dict) -> dic
         for version in [runtime_version, runtime_manifest_version]
         if isinstance(version, str) and version
     ]
+    observed_runtime_profiles = {}
+    for runtime_name, profile in declaration.get("runtime_profiles", {}).items():
+        version, version_source_path = read_runtime_version_at(repo_root, profile["version_source"])
+        runtime_manifest_payload = read_json(repo_root / profile["manifest_version_source"]) or {}
+        manifest_version = runtime_manifest_payload.get("version")
+        observed_runtime_profiles[runtime_name] = {
+            "runtime_root": profile["runtime_root"],
+            "profile_name": profile["profile_name"],
+            "version": version,
+            "version_source": version_source_path,
+            "manifest_version": manifest_version,
+            "manifest_version_source": (
+                profile["manifest_version_source"] if manifest_version else None
+            ),
+            "aligned": (
+                version is not None
+                and manifest_version is not None
+                and version == manifest_version
+            ),
+        }
+    declared_overlay_schema_version = declaration["overlay_schema_version"]
+    observed_overlay_schema_version = overlay_manifest.get("schema_version")
+    overlay_manifest_schema_version_matches_declaration = (
+        observed_overlay_schema_version == declared_overlay_schema_version
+        or {observed_overlay_schema_version, declared_overlay_schema_version} == {2, 3}
+    )
     return {
         "compatibility_posture": str(declaration["compatibility_posture"]),
         "compatibility_declaration_path": compatibility_declaration_rel_path(),
         "compatibility_declaration_schema_version": declaration["schema_version"],
         "runtime_basis": json.loads(json.dumps(declaration["runtime_basis"])),
         "runtime_held_annotations": json.loads(json.dumps(declaration["runtime_held_annotations"])),
+        "runtime_profiles": json.loads(json.dumps(declaration.get("runtime_profiles", {}))),
+        "support_claims": json.loads(json.dumps(declaration.get("support_claims", {}))),
+        "mixed_runtime_policy": json.loads(json.dumps(declaration.get("mixed_runtime_policy", {}))),
+        "capability_contract": json.loads(json.dumps(declaration.get("capability_contract", {}))),
+        "observed_runtime_profiles": observed_runtime_profiles,
         "observed_runtime_version": runtime_version,
         "observed_runtime_version_source": runtime_version_source_path,
         "observed_runtime_manifest_version": runtime_manifest_version,
@@ -371,11 +419,9 @@ def build_compatibility_basis(repo_root: pathlib.Path, declaration: dict) -> dic
         "observed_runtime_version_set": sorted(set(observed_versions)),
         "held_runtime_annotation": annotation,
         "held_runtime_annotation_summary": held_runtime_annotation_summary(annotation),
-        "declared_overlay_schema_version": declaration["overlay_schema_version"],
-        "overlay_manifest_schema_version": overlay_manifest.get("schema_version"),
-        "overlay_manifest_schema_version_matches_declaration": (
-            overlay_manifest.get("schema_version") == declaration["overlay_schema_version"]
-        ),
+        "declared_overlay_schema_version": declared_overlay_schema_version,
+        "overlay_manifest_schema_version": observed_overlay_schema_version,
+        "overlay_manifest_schema_version_matches_declaration": overlay_manifest_schema_version_matches_declaration,
         "uplift_manifest_schema_version": int(declaration["uplift_manifest_schema_version"]),
         "upstream_compatibility_window": json.loads(json.dumps(declaration["upstream_compatibility_window"])),
         "parity_scan_baseline": {
@@ -416,6 +462,9 @@ def compatibility_drift_reasons(previous: dict, current: dict) -> list[str]:
     object_fields = (
         ("runtime_basis", "declared runtime basis"),
         ("runtime_held_annotations", "declared runtime held annotations"),
+        ("runtime_profiles", "declared runtime profiles"),
+        ("support_claims", "support claims"),
+        ("mixed_runtime_policy", "mixed runtime policy"),
         ("upstream_compatibility_window", "upstream compatibility window"),
         ("parity_scan_baseline", "parity scan baseline"),
     )
@@ -1241,6 +1290,7 @@ def render_report(analysis: dict) -> str:
             f"- Compatibility declaration: {compatibility['compatibility_declaration_path']}",
             f"- Compatibility declaration schema version: {compatibility['compatibility_declaration_schema_version']}",
             f"- Declared runtime basis: {compatibility['runtime_basis']['runtime']} ({compatibility['runtime_basis']['basis_mode']})",
+            f"- Active core profiles: {', '.join(compatibility.get('support_claims', {}).get('active_core_profiles', [])) or 'unrecorded'}",
             f"- Observed runtime version: {compatibility['observed_runtime_version'] or 'unrecorded'}",
             f"- Observed runtime manifest version: {compatibility['observed_runtime_manifest_version'] or 'unrecorded'}",
             f"- Runtime version alignment: {version_alignment}",
@@ -1254,23 +1304,36 @@ def render_report(analysis: dict) -> str:
             f"- Uplift manifest schema version: {compatibility['uplift_manifest_schema_version']}",
             f"- Upstream compatibility window: {compatibility['upstream_compatibility_window']['state']} ({compatibility['upstream_compatibility_window']['mode']})",
             f"- Parity scan baseline: {compatibility['parity_scan_baseline']['target_runtime']} ({compatibility['parity_scan_baseline']['rule_count']} rules)",
+            f"- Mixed-runtime policy: {compatibility.get('mixed_runtime_policy', {}).get('profile_name', 'unrecorded')} ({compatibility.get('mixed_runtime_policy', {}).get('state', 'unrecorded')})",
             "",
             "### Compatibility Check Protocol",
             "",
         ]
     )
     lines.extend(f"- {step}" for step in compatibility["check_protocol"])
+    if compatibility.get("observed_runtime_profiles"):
+        lines.extend(
+            [
+                "",
+                "### Runtime Profiles",
+                "",
+            ]
+        )
+        for runtime_name, profile in compatibility["observed_runtime_profiles"].items():
+            lines.append(
+                f"- {runtime_name}: {profile['version'] or 'unrecorded'} / {profile['manifest_version'] or 'unrecorded'}"
+            )
     if compatibility["held_runtime_annotation"]:
         annotation = compatibility["held_runtime_annotation"]
         lines.extend(
             [
                 "",
-                "### Held Runtime Annotation",
+                "### Secondary Core Runtime Observation",
                 "",
                 f"- Runtime: {annotation['runtime']}",
-                f"- Held runtime version: {annotation['version']}",
+                f"- Runtime version: {annotation['version']}",
                 f"- Held runtime version source: {annotation['version_source']}",
-                f"- Annotation posture: {annotation['annotation_posture']}",
+                f"- Runtime posture: {annotation['annotation_posture']}",
                 f"- Note: {annotation['note']}",
                 "",
             ]
@@ -1394,6 +1457,23 @@ def build_state_section_values(analysis: dict) -> dict[str, str]:
     pending_count = len(analysis["pending_doctrine_sensitive_proposals"])
     secondary = ", ".join(analysis["secondary_signals"]) if analysis["secondary_signals"] else "none"
     compatibility = analysis["compatibility_basis"]
+    observed_runtime_basis = (
+        ", ".join(
+            f"{runtime_name}:{profile['version'] or 'unrecorded'}"
+            for runtime_name, profile in compatibility.get("observed_runtime_profiles", {}).items()
+        )
+        if compatibility.get("observed_runtime_profiles")
+        else (
+            ", ".join(compatibility["observed_runtime_version_set"])
+            if compatibility["observed_runtime_version_set"]
+            else "unrecorded"
+        )
+    )
+    mixed_runtime_policy = compatibility.get("mixed_runtime_policy", {})
+    mixed_runtime_policy_summary = (
+        f"{mixed_runtime_policy.get('profile_name', 'unrecorded')} "
+        f"({mixed_runtime_policy.get('state', 'unrecorded')})"
+    )
     return {
         "last_uplift_pass": str(analysis["generated_at"]),
         "last_uplift_class": str(analysis["project_class"]),
@@ -1402,11 +1482,8 @@ def build_state_section_values(analysis: dict) -> dict[str, str]:
         "doctrine_reference_changed": "yes" if analysis["doctrine_reference_changed"] else "no",
         "compatibility_posture": str(compatibility["compatibility_posture"]),
         "compatibility_declaration": str(compatibility["compatibility_declaration_path"]),
-        "observed_runtime_basis": (
-            ", ".join(compatibility["observed_runtime_version_set"])
-            if compatibility["observed_runtime_version_set"]
-            else "unrecorded"
-        ),
+        "observed_runtime_basis": observed_runtime_basis,
+        "mixed_runtime_policy": mixed_runtime_policy_summary,
         "held_runtime_annotation": compatibility["held_runtime_annotation_summary"] or "none",
         "seed_corpus_posture": seed_corpus_summary(analysis["seed_corpus_posture"]),
         "pending_doctrine_sensitive_proposals": str(pending_count),
@@ -1477,6 +1554,20 @@ def build_progress_note(repo_root: pathlib.Path) -> dict:
             "recommend_detect_only": show,
             "last_uplift_class": None,
             "last_uplift_secondary_signals": [],
+            "observed_runtime_profiles": (
+                ", ".join(
+                    f"{runtime_name}:{profile['version'] or 'unrecorded'}"
+                    for runtime_name, profile in analysis["compatibility_basis"].get("observed_runtime_profiles", {}).items()
+                )
+                if analysis is not None
+                else None
+            ),
+            "mixed_runtime_policy": (
+                f"{analysis['compatibility_basis'].get('mixed_runtime_policy', {}).get('profile_name', 'unrecorded')} "
+                f"({analysis['compatibility_basis'].get('mixed_runtime_policy', {}).get('state', 'unrecorded')})"
+                if analysis is not None
+                else None
+            ),
             "held_runtime_annotation": (
                 analysis["compatibility_basis"]["held_runtime_annotation_summary"] if analysis is not None else None
             ),
@@ -1531,6 +1622,14 @@ def build_progress_note(repo_root: pathlib.Path) -> dict:
         "last_uplift_class": manifest.get("last_uplift_class"),
         "last_uplift_secondary_signals": manifest.get("last_uplift_secondary_signals", []),
         "last_uplift_at": manifest.get("generated_at"),
+        "observed_runtime_profiles": ", ".join(
+            f"{runtime_name}:{profile.get('version') or 'unrecorded'}"
+            for runtime_name, profile in current_compatibility.get("observed_runtime_profiles", {}).items()
+        ),
+        "mixed_runtime_policy": (
+            f"{current_compatibility.get('mixed_runtime_policy', {}).get('profile_name', 'unrecorded')} "
+            f"({current_compatibility.get('mixed_runtime_policy', {}).get('state', 'unrecorded')})"
+        ),
         "held_runtime_annotation": (
             manifest_compatibility.get("held_runtime_annotation_summary")
             or held_runtime_annotation_summary(manifest_compatibility.get("held_runtime_annotation"))

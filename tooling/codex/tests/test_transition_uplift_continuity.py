@@ -37,9 +37,10 @@ Progress: [█████░░░░░] 50%
 
 Last uplift pass: 2026-04-22T12:00:00+00:00
 Last uplift class: cross-runtime uplift
-Compatibility posture: observed_basis_only
-Observed runtime basis: 1.38.3
-Held runtime annotation: .claude 1.34.2 (held_annotation)
+Compatibility posture: core_runtime_parity
+Observed runtime profiles: codex:1.38.3, claude:1.34.2
+Mixed-runtime policy: dual-runtime-core (active)
+Secondary runtime observation: .claude 1.34.2 (active_core_profile)
 Current recommendation: Continue with ordinary routing; uplift memory keeps this posture explicit.
 
 ## Session Continuity
@@ -104,8 +105,9 @@ class TransitionUpliftContinuityTests(unittest.TestCase):
             state_text = (repo_root / ".planning/STATE.md").read_text(encoding="utf-8")
             self.assertEqual(payload["next_phase"], "2")
             self.assertIn("## Project Uplift", state_text)
-            self.assertIn("Compatibility posture: observed_basis_only", state_text)
-            self.assertIn("Held runtime annotation: .claude 1.34.2 (held_annotation)", state_text)
+            self.assertIn("Compatibility posture: core_runtime_parity", state_text)
+            self.assertIn("Mixed-runtime policy: dual-runtime-core (active)", state_text)
+            self.assertIn("Secondary runtime observation: .claude 1.34.2 (active_core_profile)", state_text)
             self.assertIn("Phase: 2 of 2 (next phase)", state_text)
 
     def test_transition_workflow_names_uplift_continuity_step(self) -> None:

@@ -1,18 +1,16 @@
 import pathlib
 import unittest
 
+from tooling.codex.tests.overlay_paths import overlay_entry_mode
+
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[3]
 
 
 class SpecFutureCarryContractTests(unittest.TestCase):
     def test_overlay_manifest_owns_spec_surfaces(self) -> None:
-        manifest = (
-            REPO_ROOT / "tooling" / "portable-gsd" / "overlay" / "OVERLAY-MANIFEST.json"
-        ).read_text(encoding="utf-8")
-
-        self.assertIn('"get-shit-done/workflows/spec-phase.md": "overwrite"', manifest)
-        self.assertIn('"get-shit-done/templates/spec.md": "overwrite"', manifest)
+        self.assertEqual(overlay_entry_mode("get-shit-done/workflows/spec-phase.md"), "overwrite")
+        self.assertEqual(overlay_entry_mode("get-shit-done/templates/spec.md"), "overwrite")
 
     def test_spec_template_exposes_future_aware_notes(self) -> None:
         template = (

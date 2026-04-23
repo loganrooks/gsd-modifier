@@ -78,9 +78,10 @@ None yet.
 ## Project Uplift
 
 Last uplift class: [unrecorded]
-Compatibility posture: [observed_basis_only]
-Observed runtime basis: [unrecorded]
-Held runtime annotation: [none]
+Compatibility posture: [core_runtime_parity]
+Observed runtime profiles: [codex:unrecorded, claude:unrecorded]
+Mixed-runtime policy: [dual-runtime-core (active)]
+Secondary runtime observation: [none]
 Current recommendation: [Run `$gsd-uplift-project --write` when durable uplift memory should be recorded.]
 
 ## Deferred Items
@@ -196,8 +197,9 @@ Compact continuity slot for repo-local uplift memory.
 - Keep only the scalar digest:
   - last uplift class
   - compatibility posture
-  - observed runtime basis
-  - held runtime annotation
+  - observed runtime profiles
+  - mixed-runtime policy
+  - secondary runtime observation
   - current recommendation
 - Transition preserves or refreshes this block; detailed structure remains in `.planning/UPLIFT-MANIFEST.json`
 

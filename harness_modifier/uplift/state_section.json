@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "state_rel_path": ".planning/STATE.md",
   "sibling_markers": [
     "## Deferred Items",
@@ -14,6 +14,7 @@
     "compatibility_posture",
     "compatibility_declaration",
     "observed_runtime_basis",
+    "mixed_runtime_policy",
     "held_runtime_annotation",
     "seed_corpus_posture",
     "pending_doctrine_sensitive_proposals",
@@ -29,8 +30,9 @@
     "doctrine_reference_changed": "Doctrine reference changed since prior uplift",
     "compatibility_posture": "Compatibility posture",
     "compatibility_declaration": "Compatibility declaration",
-    "observed_runtime_basis": "Observed runtime basis",
-    "held_runtime_annotation": "Held runtime annotation",
+    "observed_runtime_basis": "Observed runtime profiles",
+    "mixed_runtime_policy": "Mixed-runtime policy",
+    "held_runtime_annotation": "Secondary runtime observation",
     "seed_corpus_posture": "Seed corpus posture",
     "pending_doctrine_sensitive_proposals": "Pending doctrine-sensitive proposals",
     "current_recommendation": "Current recommendation",

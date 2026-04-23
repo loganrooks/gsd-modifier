@@ -194,9 +194,10 @@ Before archival and final state cleanup, use the shared milestone-boundary uplif
 
 - Start from `.planning/STATE.md` `## Project Uplift`
 - Widen into `.planning/UPLIFT-REPORT.md` only when the compact digest does not carry enough milestone-close context
-- Widen into `.planning/UPLIFT-MANIFEST.json` only when basis or annotation ambiguity remains after the first two reads
-- Keep `Compatibility posture: observed_basis_only` explicit when surfaced
-- Keep held runtime annotation as annotation rather than relabeling top-level posture
+- Widen into `.planning/UPLIFT-MANIFEST.json` only when runtime-profile or policy ambiguity remains after the first two reads
+- Keep `Compatibility posture: core_runtime_parity` explicit when surfaced
+- Keep mixed-runtime policy explicit without treating it as a green dual-runtime claim
+- Keep secondary runtime observation as observation rather than relabeling top-level posture
 - Keep this step beside `review_long_horizon_carry`; it does not absorb long-arc or future-carry review
 - Do not run `$gsd-uplift-project --write` from milestone close
 

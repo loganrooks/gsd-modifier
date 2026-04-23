@@ -1,6 +1,7 @@
-import json
 import unittest
 from pathlib import Path
+
+from tooling.codex.tests.overlay_paths import overlay_entry_mode
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -16,12 +17,8 @@ def _heading_section(text: str, heading: str) -> str:
 
 class EntryRuntimeContinuitySharedReferenceContractTests(unittest.TestCase):
     def test_overlay_manifest_owns_shared_reference_as_add(self) -> None:
-        manifest = json.loads(
-            (ROOT / "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json").read_text()
-        )
-        entries = manifest["entries"]
         self.assertEqual(
-            entries.get("get-shit-done/references/entry-runtime-uplift-continuity.md"),
+            overlay_entry_mode("get-shit-done/references/entry-runtime-uplift-continuity.md"),
             "add",
         )
 
@@ -36,9 +33,9 @@ class EntryRuntimeContinuitySharedReferenceContractTests(unittest.TestCase):
         self.assertIn("## Deeper Typed Read", reference)
         self.assertIn("## Interpretation Frame", reference)
         self.assertIn("## When To Surface", reference)
-        self.assertIn("Compatibility posture: observed_basis_only", reference)
-        self.assertIn("observed `.codex` basis", reference)
-        self.assertIn("held `.claude` annotation", reference)
+        self.assertIn("Compatibility posture: core_runtime_parity", reference)
+        self.assertIn("observed runtime profiles", reference)
+        self.assertIn("Mixed-runtime policy", reference)
         self.assertIn("Do not run `$gsd-uplift-project --write`", reference)
         self.assertIn("### `new-project.md` Greenfield", reference)
         self.assertIn("### `new-project.md` Brownfield", reference)

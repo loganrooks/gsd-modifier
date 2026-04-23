@@ -1,6 +1,7 @@
-import json
 import unittest
 from pathlib import Path
+
+from tooling.codex.tests.overlay_paths import overlay_entry_mode
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -8,12 +9,8 @@ ROOT = Path(__file__).resolve().parents[3]
 
 class ExploreSeedFollowThroughContractTests(unittest.TestCase):
     def test_overlay_manifest_owns_explore_seed_surfaces(self) -> None:
-        manifest = json.loads(
-            (ROOT / "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json").read_text()
-        )
-        entries = manifest["entries"]
-        self.assertEqual(entries["get-shit-done/workflows/explore.md"], "overwrite")
-        self.assertEqual(entries["skills/gsd-explore/SKILL.md"], "overwrite")
+        self.assertEqual(overlay_entry_mode("get-shit-done/workflows/explore.md"), "overwrite")
+        self.assertEqual(overlay_entry_mode("skills/gsd-explore/SKILL.md"), "overwrite")
 
     def test_explore_workflow_routes_seed_outputs_through_current_seed_contract(self) -> None:
         text = (
@@ -34,4 +31,3 @@ class ExploreSeedFollowThroughContractTests(unittest.TestCase):
         ).read_text()
         self.assertIn("$gsd-plant-seed", text)
         self.assertIn("legacy seed shape", text)
-

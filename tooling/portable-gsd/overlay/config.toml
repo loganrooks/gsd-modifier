@@ -4,18 +4,10 @@ plan_mode_reasoning_effort = "xhigh"
 experimental_compact_prompt_file = "__COMPACT_PROMPT_FILE__"
 
 # GSD Agent Configuration — managed by get-shit-done installer
-# GSD codex_hooks ownership: section
 
 # Repo-default compaction prompt should be the general project prompt.
 # `scripts/setup-portable-gsd.sh` may substitute a worktree-local override such as
 # `tooling/compact-prompts/readiness.md` when bootstrapping a focused branch.
-
-[features]
-codex_hooks = true
-
-# Repo hook posture: the active pilot lives in `.codex/hooks.json`.
-# Keep hook automation narrow, deterministic, and easy to remove.
-# Do not reintroduce legacy `[[hooks]]` stanzas casually.
 
 [agents.gsd-advisor-researcher]
 description = "Researches a single gray area decision and returns a structured comparison table with rationale. Spawned by discuss-phase advisor mode."

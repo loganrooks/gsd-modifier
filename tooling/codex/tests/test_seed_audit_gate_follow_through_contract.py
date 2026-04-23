@@ -6,6 +6,8 @@ import textwrap
 import unittest
 from pathlib import Path
 
+from tooling.codex.tests.overlay_paths import overlay_entry_mode
+
 
 ROOT = Path(__file__).resolve().parents[3]
 AUDIT_HELPER = ROOT / "tooling/portable-gsd/overlay/get-shit-done/bin/lib/audit.cjs"
@@ -101,9 +103,8 @@ class SeedAuditGateFollowThroughContractTests(unittest.TestCase):
             self.assertIn("carry: Intensify the current route", payload["report"])
 
     def test_overlay_manifest_and_milestone_close_keep_seed_audit_contract_visible(self) -> None:
-        manifest = json.loads(OVERLAY_MANIFEST.read_text(encoding="utf-8"))
         self.assertEqual(
-            manifest["entries"].get("get-shit-done/bin/lib/audit.cjs"),
+            overlay_entry_mode("get-shit-done/bin/lib/audit.cjs"),
             "overwrite",
         )
 

@@ -1,4 +1,3 @@
-import json
 import unittest
 from pathlib import Path
 
@@ -9,10 +8,6 @@ ROOT = Path(__file__).resolve().parents[3]
 
 class PropagationReviewRouteContractTests(unittest.TestCase):
     def test_overlay_manifest_owns_propagation_review_surfaces(self) -> None:
-        manifest = json.loads(
-            (ROOT / "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json").read_text()
-        )
-        entries = manifest["entries"]
         self.assertEqual(
             overlay_entry_mode("get-shit-done/workflows/propagation-review.md"), "add"
         )

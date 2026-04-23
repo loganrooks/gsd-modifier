@@ -8,8 +8,8 @@ Use this reference at entry routes when initialization or doc ingest needs bound
   - `new-project.md`: `init.new-project`, current execution-context runtime, and whether the route is greenfield or brownfield
   - `ingest-docs.md`: `MODE`, current execution-context runtime, and whether `.planning/STATE.md` already carries `## Project Uplift`
 - For this continuity surface, treat the runtime signal as:
-  - observed `.codex` basis when present in the repo-local continuity carriers
-  - held `.claude` annotation when present in the repo-local continuity carriers
+  - observed runtime profiles when present in the repo-local continuity carriers
+  - mixed-runtime policy when present in the repo-local continuity carriers
 - If `.planning/STATE.md` already exists and carries `## Project Uplift`, read that compact block first
 - When `.planning/` does not exist yet, keep the compact read at route-state plus current execution context rather than pretending durable uplift memory already exists
 
@@ -20,14 +20,15 @@ Use this reference at entry routes when initialization or doc ingest needs bound
 
 ## Deeper Typed Read
 
-- Widen into `.planning/UPLIFT-MANIFEST.json` only when existing uplift memory exists and basis or annotation ambiguity remains after the compact digest plus narrative report
-- Use the typed surface to clarify observed basis, held runtime annotation, pending doctrine-sensitive proposals, or held-later family state when the entry route materially depends on those distinctions
+- Widen into `.planning/UPLIFT-MANIFEST.json` only when existing uplift memory exists and profile or policy ambiguity remains after the compact digest plus narrative report
+- Use the typed surface to clarify observed runtime profiles, mixed-runtime policy, secondary runtime observation, pending doctrine-sensitive proposals, or held-later family state when the entry route materially depends on those distinctions
 
 ## Interpretation Frame
 
-- `Compatibility posture: observed_basis_only` remains the top-level posture
-- Held runtime annotation stays annotation, not dual-basis relabeling
-- Repo-local entry continuity here is about observed `.codex` basis plus held `.claude` annotation
+- `Compatibility posture: core_runtime_parity` remains the top-level posture
+- `Observed runtime profiles` stay the compact runtime evidence line
+- `Mixed-runtime policy` stays policy, not a claim that dual-runtime support is already green
+- `Secondary runtime observation` remains a helper line, not the parity claim itself
 - Broader installer/runtime detection across additional providers remains a separate workflow concern in this slice
 - Unlike the milestone-boundary sibling, the entry-side compact state read is conditional: use the `Project Uplift` digest when it already exists, and keep the route-state plus execution-context read primary when `.planning/` is still absent
 - Entry routes may surface this continuity; they do not widen it into parity, translation, matrix, or version-window claims
@@ -43,7 +44,7 @@ Surface the continuity route only when one or more of these are true:
 - `.codex/` or `.claude/` repo-local runtime files are already present while `.planning/` is still absent
 - repo-local runtime or governing doctrine is already present in the repo and should remain explicit in the first canon
 - the initialization route explicitly raises runtime or governing continuity pressure that later uplift work would otherwise have to rediscover
-- the operator needs to keep observed `.codex` basis plus held `.claude` annotation explicit while still leaving write-side uplift for later
+- the operator needs to keep shared-runtime parity posture explicit while still leaving write-side uplift for later
 
 ### `new-project.md` Brownfield
 
@@ -51,7 +52,7 @@ Surface the continuity route when one or more of these are true:
 
 - existing code or docs show this repo is not a blank start even though `.planning/` is absent
 - brownfield mapping, prior findings, or repo-local doctrine suggests later uplift or migration pressure
-- initialization needs to keep observed `.codex` basis plus held `.claude` annotation explicit without widening into write-side uplift
+- initialization needs to keep observed runtime profiles and mixed-runtime policy explicit without widening into write-side uplift
 
 ### `ingest-docs.md` New Mode
 

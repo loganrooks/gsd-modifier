@@ -1,8 +1,7 @@
-import json
 import unittest
 from pathlib import Path
 
-from tooling.codex.tests.overlay_paths import overlay_source_path
+from tooling.codex.tests.overlay_paths import overlay_entry_mode, overlay_source_path
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -10,10 +9,8 @@ ROOT = Path(__file__).resolve().parents[3]
 
 class ReadPacketTiersContractTests(unittest.TestCase):
     def test_overlay_manifest_owns_mandatory_initial_read_reference(self) -> None:
-        manifest_path = ROOT / "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json"
-        manifest = json.loads(manifest_path.read_text())
         self.assertEqual(
-            manifest["entries"].get("get-shit-done/references/mandatory-initial-read.md"),
+            overlay_entry_mode("get-shit-done/references/mandatory-initial-read.md"),
             "overwrite",
         )
 

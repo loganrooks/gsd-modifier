@@ -1,6 +1,7 @@
-import json
 import unittest
 from pathlib import Path
+
+from tooling.codex.tests.overlay_paths import overlay_entry_mode
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -8,12 +9,8 @@ ROOT = Path(__file__).resolve().parents[3]
 
 class UpdateFollowThroughContractTests(unittest.TestCase):
     def test_overlay_manifest_owns_update_surfaces(self) -> None:
-        manifest = json.loads(
-            (ROOT / "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json").read_text()
-        )
-        entries = manifest["entries"]
-        self.assertEqual(entries["get-shit-done/workflows/update.md"], "overwrite")
-        self.assertEqual(entries["skills/gsd-update/SKILL.md"], "overwrite")
+        self.assertEqual(overlay_entry_mode("get-shit-done/workflows/update.md"), "overwrite")
+        self.assertEqual(overlay_entry_mode("skills/gsd-update/SKILL.md"), "overwrite")
 
     def test_update_workflow_uses_layered_packet_and_explicit_routes(self) -> None:
         text = (

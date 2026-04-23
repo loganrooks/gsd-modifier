@@ -62,9 +62,10 @@ Use the shared milestone-boundary uplift reference to decide whether uplift cont
 
 - Start from `STATE.md` `## Project Uplift`
 - Widen into `.planning/UPLIFT-REPORT.md` only when the compact digest does not carry enough milestone-opening context
-- Widen into `.planning/UPLIFT-MANIFEST.json` only when basis or annotation ambiguity remains after the first two reads
-- Keep `Compatibility posture: observed_basis_only` explicit when surfaced
-- Keep held runtime annotation as annotation rather than relabeling top-level posture
+- Widen into `.planning/UPLIFT-MANIFEST.json` only when runtime-profile or policy ambiguity remains after the first two reads
+- Keep `Compatibility posture: core_runtime_parity` explicit when surfaced
+- Keep mixed-runtime policy explicit without treating it as a green dual-runtime claim
+- Keep secondary runtime observation as observation rather than relabeling top-level posture
 - Do not run `$gsd-uplift-project --write` from milestone open
 - Keep this review beside `LONG-ARC.md` and `Future Carry Forward`, not as a replacement for them
 

@@ -21,7 +21,7 @@ class HealthUpliftDeepenInPlaceContractTests(unittest.TestCase):
         self.assertIn(".planning/STATE.md", workflow)
         self.assertIn(".planning/UPLIFT-REPORT.md", workflow)
         self.assertIn(".planning/UPLIFT-MANIFEST.json", workflow)
-        self.assertIn("Compatibility posture: observed_basis_only", workflow)
+        self.assertIn("Compatibility posture: core_runtime_parity", workflow)
         self.assertIn("Do not run `$gsd-uplift-project --write` from inside it.", workflow)
         self.assertIn(
             "Only surface this step after all structural health validation is complete, including `verify_repairs` when `--repair` was used.",
@@ -42,8 +42,9 @@ class HealthUpliftDeepenInPlaceContractTests(unittest.TestCase):
             / "tooling/portable-gsd/overlay/get-shit-done/workflows/health.md"
         ).read_text(encoding="utf-8")
 
-        self.assertIn("`Compatibility posture` is not exactly `observed_basis_only`", workflow)
-        self.assertIn("`Held runtime annotation` is present and not `none`", workflow)
+        self.assertIn("`Compatibility posture` is not exactly `core_runtime_parity`", workflow)
+        self.assertIn("`Mixed-runtime policy` is not exactly `dual-runtime-core (active)`", workflow)
+        self.assertIn("`Secondary runtime observation` is present and not `none`", workflow)
         self.assertIn(
             "`Current recommendation` is not exactly `Continue with ordinary routing.`",
             workflow,
@@ -75,7 +76,8 @@ class HealthUpliftDeepenInPlaceContractTests(unittest.TestCase):
             workflow,
         )
         self.assertIn("structural health itself is still the unresolved question", workflow)
-        self.assertIn("Held runtime annotation: none", workflow)
+        self.assertIn("Mixed-runtime policy: dual-runtime-core (active)", workflow)
+        self.assertIn("Secondary runtime observation: none", workflow)
         self.assertIn("Current recommendation: Continue with ordinary routing.", workflow)
 
     def test_skill_wrapper_keeps_read_only_continuity_and_later_refresh_split(self) -> None:

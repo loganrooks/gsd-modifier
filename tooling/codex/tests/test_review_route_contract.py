@@ -1,6 +1,7 @@
-import json
 import unittest
 from pathlib import Path
+
+from tooling.codex.tests.overlay_paths import overlay_entry_mode
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -8,12 +9,8 @@ ROOT = Path(__file__).resolve().parents[3]
 
 class ReviewRouteContractTests(unittest.TestCase):
     def test_overlay_manifest_owns_review_surfaces(self) -> None:
-        manifest = json.loads(
-            (ROOT / "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json").read_text()
-        )
-        entries = manifest["entries"]
-        self.assertEqual(entries["get-shit-done/workflows/review.md"], "overwrite")
-        self.assertEqual(entries["skills/gsd-review/SKILL.md"], "overwrite")
+        self.assertEqual(overlay_entry_mode("get-shit-done/workflows/review.md"), "overwrite")
+        self.assertEqual(overlay_entry_mode("skills/gsd-review/SKILL.md"), "overwrite")
 
     def test_review_workflow_uses_run_home_and_helper_layer(self) -> None:
         text = (

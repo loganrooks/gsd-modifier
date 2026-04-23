@@ -29,7 +29,7 @@ Status: active helper authority map
 - [d:r:i] runtime-dir policy now routes through typed observation data
 - [d:r:i] uplift planning-output policy now routes through typed output-policy data
 - [d:r:i] seed contract shape now routes through typed seed-contract data
-- [d:r:i] compatibility-anchor routing stays declaration-driven, with `.codex` observed basis and `.claude` held annotation preserved
+- [d:r:i] compatibility-anchor routing stays declaration-driven, with active core runtime profiles and mixed-runtime policy preserved
 - [d:r:i] host-doctrine carrier rows now route through typed uplift carrier-catalog data
 - [d:r:i] rerun-boundary phrases, inspect/write commands, and recommendation sentences now route through typed uplift vocabulary data
 - [d:r:i] `Project Uplift` state-slot shape now routes through typed `state_section` data

@@ -217,6 +217,18 @@ class ProjectUpliftTests(unittest.TestCase):
             STATE_SECTION["selector_labels"]["current_uplift_manifest"],
             "Current uplift manifest",
         )
+        self.assertEqual(
+            STATE_SECTION["selector_labels"]["observed_runtime_basis"],
+            "Observed runtime profiles",
+        )
+        self.assertEqual(
+            STATE_SECTION["selector_labels"]["mixed_runtime_policy"],
+            "Mixed-runtime policy",
+        )
+        self.assertEqual(
+            STATE_SECTION["selector_labels"]["held_runtime_annotation"],
+            "Secondary runtime observation",
+        )
 
     def test_detect_classifies_vanilla_project(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -631,7 +643,7 @@ class ProjectUpliftTests(unittest.TestCase):
                     for item in held_later
                 )
             )
-            self.assertEqual(manifest["compatibility_basis"]["compatibility_posture"], "observed_basis_only")
+            self.assertEqual(manifest["compatibility_basis"]["compatibility_posture"], "core_runtime_parity")
             self.assertEqual(manifest["compatibility_basis"]["observed_runtime_version"], "1.38.1")
             self.assertTrue(manifest["compatibility_basis"]["observed_runtime_version_aligned"])
             self.assertEqual(manifest["seed_corpus_posture"]["posture"], "no_seed_corpus")
@@ -654,7 +666,7 @@ class ProjectUpliftTests(unittest.TestCase):
             analysis = pu.analyze_repo(repo_root)
 
             compatibility = analysis["compatibility_basis"]
-            self.assertEqual(compatibility["compatibility_posture"], "observed_basis_only")
+            self.assertEqual(compatibility["compatibility_posture"], "core_runtime_parity")
             self.assertEqual(
                 compatibility["compatibility_declaration_path"],
                 "harness_modifier/compatibility/declaration.json",
@@ -663,13 +675,14 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertEqual(compatibility["observed_runtime_manifest_version"], "1.38.1")
             self.assertTrue(compatibility["observed_runtime_version_aligned"])
             self.assertEqual(compatibility["runtime_basis"]["runtime"], ".codex")
-            self.assertEqual(compatibility["declared_overlay_schema_version"], 2)
+            self.assertEqual(compatibility["declared_overlay_schema_version"], 3)
             self.assertEqual(compatibility["overlay_manifest_schema_version"], 2)
             self.assertTrue(compatibility["overlay_manifest_schema_version_matches_declaration"])
             self.assertEqual(compatibility["uplift_manifest_schema_version"], 6)
-            self.assertEqual(compatibility["upstream_compatibility_window"]["state"], "unknown")
+            self.assertEqual(compatibility["upstream_compatibility_window"]["state"], "active")
             self.assertEqual(compatibility["parity_scan_baseline"]["rule_count"], 3)
-            self.assertIn("version-window claims beyond the observed runtime basis", compatibility["held_later"])
+            self.assertEqual(compatibility["support_claims"]["active_core_profiles"], ["codex", "claude"])
+            self.assertNotIn("dual-runtime-core release claims before the parity matrix is green", compatibility["held_later"])
 
     def test_compatibility_basis_carries_held_claude_annotation_without_relabeling_posture(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -680,13 +693,13 @@ class ProjectUpliftTests(unittest.TestCase):
 
             compatibility = pu.analyze_repo(repo_root)["compatibility_basis"]
 
-            self.assertEqual(compatibility["compatibility_posture"], "observed_basis_only")
+            self.assertEqual(compatibility["compatibility_posture"], "core_runtime_parity")
             self.assertEqual(compatibility["observed_runtime_version"], "1.38.1")
             self.assertEqual(compatibility["held_runtime_annotation"]["runtime"], ".claude")
             self.assertEqual(compatibility["held_runtime_annotation"]["version"], "1.34.2")
             self.assertEqual(compatibility["held_runtime_annotation"]["version_source"], ".claude/get-shit-done/VERSION")
-            self.assertEqual(compatibility["held_runtime_annotation"]["annotation_posture"], "held_annotation")
-            self.assertEqual(compatibility["held_runtime_annotation_summary"], ".claude 1.34.2 (held_annotation)")
+            self.assertEqual(compatibility["held_runtime_annotation"]["annotation_posture"], "active_core_profile")
+            self.assertEqual(compatibility["held_runtime_annotation_summary"], ".claude 1.34.2 (active_core_profile)")
 
     def test_progress_note_recommends_write_after_runtime_basis_movement(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -723,10 +736,10 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertTrue(note["recommend_write"])
             self.assertFalse(note["recommend_detect_only"])
             self.assertTrue(note["compatibility_basis_changed"])
-            self.assertEqual(note["held_runtime_annotation"], ".claude 1.34.2 (held_annotation)")
+            self.assertEqual(note["held_runtime_annotation"], ".claude 1.34.2 (active_core_profile)")
             self.assertTrue(
                 any(
-                    "held runtime annotation moved from .claude 1.34.2 (held_annotation) to .claude 1.34.3 (held_annotation)"
+                    "held runtime annotation moved from .claude 1.34.2 (active_core_profile) to .claude 1.34.3 (active_core_profile)"
                     in reason
                     for reason in note["reasons"]
                 )
@@ -835,13 +848,14 @@ class ProjectUpliftTests(unittest.TestCase):
                 manifest["compatibility_basis"]["compatibility_declaration_path"],
                 "harness_modifier/compatibility/declaration.json",
             )
-            self.assertEqual(manifest["compatibility_basis"]["held_runtime_annotation_summary"], ".claude 1.34.2 (held_annotation)")
+            self.assertEqual(manifest["compatibility_basis"]["held_runtime_annotation_summary"], ".claude 1.34.2 (active_core_profile)")
             self.assertIn("- Compatibility declaration: harness_modifier/compatibility/declaration.json", report_text)
-            self.assertIn("### Held Runtime Annotation", report_text)
-            self.assertLess(report_text.index("### Compatibility Check Protocol"), report_text.index("### Held Runtime Annotation"))
+            self.assertIn("### Secondary Core Runtime Observation", report_text)
+            self.assertLess(report_text.index("### Compatibility Check Protocol"), report_text.index("### Secondary Core Runtime Observation"))
             self.assertIn("Compatibility declaration: harness_modifier/compatibility/declaration.json", state_text)
-            self.assertIn("Held runtime annotation: .claude 1.34.2 (held_annotation)", state_text)
-            self.assertEqual(note["held_runtime_annotation"], ".claude 1.34.2 (held_annotation)")
+            self.assertIn("Mixed-runtime policy: dual-runtime-core (active)", state_text)
+            self.assertIn("Secondary runtime observation: .claude 1.34.2 (active_core_profile)", state_text)
+            self.assertEqual(note["held_runtime_annotation"], ".claude 1.34.2 (active_core_profile)")
 
     def test_cross_runtime_primary_class_preserves_mid_phase_secondary_signal(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
