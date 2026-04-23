@@ -99,7 +99,7 @@ class ClosureHostExercisePacketWriterTests(unittest.TestCase):
     def test_validate_rejects_same_repo_host_path(self) -> None:
         payload = self._payload()
         payload["host_repo_path"] = str(pathlib.Path(__file__).resolve().parents[3])
-        with self.assertRaisesRegex(ValueError, "disjoint from prix-guesser"):
+        with self.assertRaisesRegex(ValueError, "disjoint from the current modifier workspace"):
             host_exercise_packet_writer.validate_host_exercise_packet(payload)
 
     def test_validate_rejects_dirty_worktree_capture(self) -> None:

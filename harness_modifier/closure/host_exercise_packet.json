@@ -98,6 +98,6 @@
     "requires_no_reflect_artifacts": true,
     "requires_clean_worktree": true,
     "requires_known_basis_commit": true,
-    "host_repo_coupling": "disjoint-from-prix-guesser"
+    "host_repo_coupling": "disjoint-from-current-modifier-workspace"
   }
 }

@@ -20,6 +20,28 @@ class AuditRefmapTests(unittest.TestCase):
             self.assertEqual(resolved, target.resolve())
             self.assertEqual(line_suffix, ":12")
 
+    def test_normalize_local_path_ignores_braced_template_target(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = pathlib.Path(tmpdir)
+            source = root / "notes.md"
+            source.write_text("# Notes\n", encoding="utf-8")
+
+            resolved, line_suffix = audit_refmap.normalize_local_path("./{phase}-USER-SETUP.md", source)
+
+            self.assertIsNone(resolved)
+            self.assertEqual(line_suffix, "")
+
+    def test_normalize_local_path_ignores_shell_style_template_target(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = pathlib.Path(tmpdir)
+            source = root / "notes.md"
+            source.write_text("# Notes\n", encoding="utf-8")
+
+            resolved, line_suffix = audit_refmap.normalize_local_path("./quick/${quick_id}-${slug}/", source)
+
+            self.assertIsNone(resolved)
+            self.assertEqual(line_suffix, "")
+
 
 if __name__ == "__main__":
     unittest.main()

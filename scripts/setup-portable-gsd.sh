@@ -38,11 +38,11 @@ echo "Capturing fresh-install pristine copies for overwrite-mode carriers..."
 python3 "${REPO_ROOT}/harness_modifier/contract/portable_gsd_contract.py" \
   capture-pristine-overwrites "${REPO_ROOT}" --strict
 
-echo "Validating tracked prix-guesser GSD overlay contract..."
+echo "Validating tracked gsd-modifier GSD overlay contract..."
 python3 "${REPO_ROOT}/harness_modifier/contract/portable_gsd_contract.py" \
   validate-manifest "${REPO_ROOT}" --strict
 
-echo "Applying tracked prix-guesser GSD overlay..."
+echo "Applying tracked gsd-modifier GSD overlay..."
 echo "Using compact prompt: ${COMPACT_PROMPT_FILE}"
 python3 "${REPO_ROOT}/harness_modifier/contract/portable_gsd_contract.py" \
   apply-overlay "${REPO_ROOT}" \

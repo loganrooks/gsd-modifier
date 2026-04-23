@@ -5,8 +5,8 @@ This overlay copy also preserves verifier-side lifecycle carry: when plans recor
 </purpose>
 
 <required_reading>
-@/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/templates/verification-report.md
-@/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/references/verification-patterns.md
+@__PROJECT_ROOT__/.codex/get-shit-done/templates/verification-report.md
+@__PROJECT_ROOT__/.codex/get-shit-done/references/verification-patterns.md
 </required_reading>
 
 <process>

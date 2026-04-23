@@ -52,11 +52,11 @@ This skill owns structural planning health and low-risk repair. It can surface r
 </objective>
 
 <execution_context>
-@/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/health.md
+@__PROJECT_ROOT__/.codex/get-shit-done/workflows/health.md
 </execution_context>
 
 <process>
-Execute the health workflow from @/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/health.md end-to-end.
+Execute the health workflow from @__PROJECT_ROOT__/.codex/get-shit-done/workflows/health.md end-to-end.
 Parse `--repair` flag from arguments and pass to workflow.
 
 Keep the ownership split explicit:

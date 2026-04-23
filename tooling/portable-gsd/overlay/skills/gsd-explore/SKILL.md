@@ -54,10 +54,10 @@ Accepts an optional topic argument: `$gsd-explore authentication strategy`
 </objective>
 
 <execution_context>
-@/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/explore.md
+@__PROJECT_ROOT__/.codex/get-shit-done/workflows/explore.md
 </execution_context>
 
 <process>
-Execute the explore workflow from @/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/explore.md end-to-end.
+Execute the explore workflow from @__PROJECT_ROOT__/.codex/get-shit-done/workflows/explore.md end-to-end.
 When selected outputs include a seed, route through the current `$gsd-plant-seed` / `SEED-NNN-slug` contract rather than minting a legacy seed shape inline.
 </process>

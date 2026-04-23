@@ -56,11 +56,11 @@ Current contract vintage: writes `seed_contract_version: 2`
 </objective>
 
 <execution_context>
-@/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/plant-seed.md
+@__PROJECT_ROOT__/.codex/get-shit-done/workflows/plant-seed.md
 </execution_context>
 
 <process>
-Execute the plant-seed workflow from @/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/plant-seed.md end-to-end.
+Execute the plant-seed workflow from @__PROJECT_ROOT__/.codex/get-shit-done/workflows/plant-seed.md end-to-end.
 Keep the strengthening-carry section explicit when it applies so later seed consumers do not need to infer it from ambient notes.
 Keep the current seed contract vintage explicit too so later consumers can distinguish current seeds from legacy-unversioned ones.
 </process>

@@ -52,10 +52,10 @@ Provides situational awareness before continuing work.
 </objective>
 
 <execution_context>
-@/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/progress.md
+@__PROJECT_ROOT__/.codex/get-shit-done/workflows/progress.md
 </execution_context>
 
 <process>
-Execute the progress workflow from @/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/progress.md end-to-end.
+Execute the progress workflow from @__PROJECT_ROOT__/.codex/get-shit-done/workflows/progress.md end-to-end.
 Preserve all routing logic (Routes A through F) and edge case handling.
 </process>

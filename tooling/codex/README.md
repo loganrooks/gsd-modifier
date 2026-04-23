@@ -1,6 +1,6 @@
 # Codex Tooling Notes
 
-This directory now holds host-boundary Codex utilities plus thin compatibility shims for generic helpers that were rehomed into [`harness_modifier/`](/home/rookslog/workspace/projects/prix-guesser/harness_modifier/README.md).
+This directory now holds extracted-repo Codex development/support utilities plus thin compatibility shims for helpers whose authoritative homes now live in [harness_modifier](../../harness_modifier/README.md).
 
 ## Headless Claude Probe Rule
 
@@ -70,7 +70,7 @@ python3 harness_modifier/capture/run_claude_probe.py \
   - authoritative home: `harness_modifier/capture/capture_launch_truth.py`
   - the local `tooling/codex/capture_launch_truth.py` path is now a thin compatibility shim
   - captures requested-vs-effective Codex launch settings from `~/.codex/state_5.sqlite`
-  - see also the propagation-family lane records under `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/` when launch-truth becomes part of a wider contract-carry question
+  - see also [docs/migration-origin.md](../../docs/migration-origin.md) for the carried origin decision trail
 - `runtime_visibility.py`
   - authoritative home: `harness_modifier/contract/runtime_visibility.py`
   - the local `tooling/codex/runtime_visibility.py` path is now a thin compatibility shim
@@ -88,7 +88,7 @@ python3 harness_modifier/capture/run_claude_probe.py \
   - compares updater/custom-file boundary truth (`gsd-file-manifest.json`), tracked carried-subset truth (`backup-meta.json`), and a frozen selected-lane runtime snapshot
   - use it for manifest/install coherence passes when the question is whether any real contradiction remains after semantic separation, not whether one file can be forced to stand in for all three surfaces
   - `--strict` is the preferred mode for audit checkpoints because it fails on dirty current state, dirty snapshot boundaries, unknown live drift, or currently evidenced obsolete residue inside the selected runtime scope
-  - see also `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/` for the broader producer/consumer/carrier map that decides when coherence belongs in a wider propagation slice
+  - see also [docs/migration-origin.md](../../docs/migration-origin.md) for the carried producer/consumer/coherence lineage
 - `scan_threshold_language.py`
   - heuristically scans docs/specs/prompts/reviews for threshold framing, deficit-oriented pseudo-positive residue, and selected static-positive `enough` phrasing
   - use it only when the task is explicitly a framing-residue audit or a doctrine-sensitive reread already warrants it
@@ -103,7 +103,7 @@ python3 harness_modifier/capture/run_claude_probe.py \
   - detect mode writes `.planning/UPLIFT-REPORT.md`, `.planning/UPLIFT-MANIFEST.json`, and a `STATE.md` uplift section when `--write` is used
   - progress-note mode is the thin read-only hook for the live routed consumers `gsd-progress` and `gsd-resume-work`; it reads structured uplift memory and current doctrine fingerprints rather than prose
   - the current harden slice now carries multi-axis posture (`project_class` plus `secondary_signals`), marker-local section hashes for strengthening carriers, normalized TOML hashes for runtime registry carriers, structured doctrine-sensitive proposal states (`absent` vs `drifted`), phase-boundary signal capture from active `CONTEXT.md`, an explicit observed-basis compatibility block, and bounded seed-corpus posture scanning
-  - the compatibility block now reads its posture, held-runtime annotation semantics, parity baseline, and window posture from the authoritative portable declaration at [`harness_modifier/compatibility/declaration.json`](/home/rookslog/workspace/projects/prix-guesser/harness_modifier/compatibility/declaration.json)
+  - the compatibility block reads its posture, held-runtime annotation semantics, parity baseline, and window posture from [harness_modifier/compatibility/declaration.json](../../harness_modifier/compatibility/declaration.json)
   - that block still records the currently observed GSD runtime basis from the canonical repo-local runtime path (`.codex/get-shit-done/VERSION`) plus `.codex/gsd-file-manifest.json` when present, alongside the declaration path, overlay schema anchor, uplift schema anchor, and the check protocol for later runtime movement without overclaiming a broad version window
   - the seed-corpus block records whether `.planning/seeds/` is absent, current-contract-only, legacy-unversioned, or mixed, and keeps later migration explicit rather than silently absorbing it into detect-only
   - when that observed runtime basis moves after the last durable uplift write, progress-note now routes the live consumers toward `$gsd-uplift-project --write` so compatibility drift reaches the active consumer chain instead of remaining only in stored uplift memory
@@ -112,7 +112,7 @@ python3 harness_modifier/capture/run_claude_probe.py \
   - the current network-carry chain now includes:
     - workflow consumers: `uplift-project`, `progress`, `resume-project`
     - durable outputs: `.planning/UPLIFT-REPORT.md`, `.planning/UPLIFT-MANIFEST.json`, and the `Project Uplift` section in `.planning/STATE.md`
-    - audit lineage: `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/`
+    - carried decision lineage: [docs/migration-origin.md](../../docs/migration-origin.md)
 - `seed_migration_inventory.py`
   - inventories legacy or drifted seed-corpus posture without rewriting seed files
   - detect mode can write `.planning/SEED-MIGRATION-REPORT.md` and `.planning/SEED-MIGRATION-MANIFEST.json` when `--write` is used
@@ -134,8 +134,8 @@ python3 harness_modifier/capture/run_claude_probe.py \
   - authoritative home: `harness_modifier/contract/portable_gsd_contract.py`
   - the local `tooling/codex/portable_gsd_contract.py` path is now a thin compatibility shim
   - owns the tracked overlay install contract for repo-local GSD materialization
-  - validates [OVERLAY-MANIFEST.json](/home/rookslog/workspace/projects/prix-guesser/tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json), captures fresh-install pristine overwrite copies when upstream no longer leaves them behind, applies overlay files, applies repo-local reasoning defaults, and verifies post-materialization coherence
-  - `verify-materialized` now also reads and echoes the authoritative compatibility declaration at [`harness_modifier/compatibility/declaration.json`](/home/rookslog/workspace/projects/prix-guesser/harness_modifier/compatibility/declaration.json), including the declared runtime basis, held-runtime annotation posture, parity baseline rule count, and overlay-schema alignment
+  - validates [OVERLAY-MANIFEST.json](../portable-gsd/overlay/OVERLAY-MANIFEST.json), captures fresh-install pristine overwrite copies when upstream no longer leaves them behind, applies overlay files, applies repo-local reasoning defaults, and verifies post-materialization coherence
+  - `verify-materialized` now also reads and echoes the authoritative compatibility declaration at [harness_modifier/compatibility/declaration.json](../../harness_modifier/compatibility/declaration.json), including the declared runtime basis, held-runtime annotation posture, parity baseline rule count, and overlay-schema alignment
   - `verify-materialized` now also reports typed runtime-specific `.claude` reference hits inside live `.codex/` materialization:
     - preserves the current known baseline explicitly
     - keeps contextual hits separate from unreviewed hits

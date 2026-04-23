@@ -59,7 +59,7 @@ This skill owns format migration. It does not by itself install the broader repo
 
 1. **Locate the .gsd/ directory** — check the current working directory (or `--path` argument):
    ```bash
-   node "/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/bin/gsd-tools.cjs" from-gsd2 --dry-run
+   node "__PROJECT_ROOT__/.codex/get-shit-done/bin/gsd-tools.cjs" from-gsd2 --dry-run
    ```
    If no `.gsd/` is found, report the error and stop.
 
@@ -67,7 +67,7 @@ This skill owns format migration. It does not by itself install the broader repo
 
 3. **Run the migration** after confirmation:
    ```bash
-   node "/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/bin/gsd-tools.cjs" from-gsd2
+   node "__PROJECT_ROOT__/.codex/get-shit-done/bin/gsd-tools.cjs" from-gsd2
    ```
    Use `--force` if `.planning/` already exists and the user has confirmed overwrite.
 

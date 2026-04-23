@@ -1,0 +1,143 @@
+{
+  "entries": [
+    {
+      "contract_vintage": "legacy_unversioned",
+      "current_contract_version": "2",
+      "migration_move_kinds": [
+        "stamp_seed_contract_version",
+        "add_frontmatter_keys",
+        "add_sections"
+      ],
+      "migration_moves": [
+        "stamp `seed_contract_version: 2`",
+        "add frontmatter keys: `planted`, `planted_during`, `scope`",
+        "add sections: `Scope Estimate`, `Strengthening Carry`, `Breadcrumbs`, `Notes`"
+      ],
+      "missing_frontmatter_keys": [
+        "seed_contract_version",
+        "planted",
+        "planted_during",
+        "scope"
+      ],
+      "missing_section_headings": [
+        "Scope Estimate",
+        "Strengthening Carry",
+        "Breadcrumbs",
+        "Notes"
+      ],
+      "rel_path": ".planning/seeds/SEED-001-legacy.md",
+      "route_state": "migration_candidate",
+      "seed_id": "SEED-001",
+      "title": "Legacy"
+    },
+    {
+      "contract_vintage": "current_contract",
+      "current_contract_version": "2",
+      "migration_move_kinds": [
+        "add_frontmatter_keys",
+        "add_sections"
+      ],
+      "migration_moves": [
+        "add frontmatter keys: `planted`, `planted_during`, `scope`",
+        "add sections: `Scope Estimate`, `Strengthening Carry`, `Breadcrumbs`, `Notes`"
+      ],
+      "missing_frontmatter_keys": [
+        "planted",
+        "planted_during",
+        "scope"
+      ],
+      "missing_section_headings": [
+        "Scope Estimate",
+        "Strengthening Carry",
+        "Breadcrumbs",
+        "Notes"
+      ],
+      "rel_path": ".planning/seeds/SEED-002-current-gap.md",
+      "route_state": "migration_candidate",
+      "seed_id": "SEED-002",
+      "title": "Current Gap"
+    },
+    {
+      "contract_vintage": "noncurrent:1",
+      "current_contract_version": "2",
+      "migration_move_kinds": [
+        "move_seed_contract_version"
+      ],
+      "migration_moves": [
+        "move `seed_contract_version` from `1` to `2`"
+      ],
+      "missing_frontmatter_keys": [],
+      "missing_section_headings": [],
+      "rel_path": ".planning/seeds/SEED-003-old-version.md",
+      "route_state": "migration_candidate",
+      "seed_id": "SEED-003",
+      "title": "Old Version"
+    }
+  ],
+  "generated_at": "__dynamic__",
+  "inventory_fingerprint": "66119128e9667abe4eddad23c2c08f5af960d83f80f65f9f85e12614fd4ff6e8",
+  "migration_candidate_count": 3,
+  "mode": "detect-only",
+  "reasons": [
+    "legacy-unversioned seeds still present: 1",
+    "noncurrent seed contract versions still present: v1=1",
+    "current-contract seed shape gaps still present: 1",
+    "seed contract-shape gaps still visible: 2"
+  ],
+  "recommend_write": false,
+  "recommendation": "The specialist seed-migration packet now carries the durable inventory. Rerun when seed posture moves.",
+  "repo_root": "__fixture_root__",
+  "route_state": "surfaced",
+  "schema_version": 1,
+  "seed_corpus_posture": {
+    "corpus_fingerprint": "e2c963cda7df1de290df22ccbbd6d8807ef24ee94832fb2a75aa61e9373199f0",
+    "current_contract_count": 1,
+    "current_contract_shape_gap_count": 1,
+    "current_contract_shape_gap_examples": [
+      {
+        "missing_frontmatter_keys": [
+          "planted",
+          "planted_during",
+          "scope"
+        ],
+        "missing_section_headings": [
+          "Scope Estimate",
+          "Strengthening Carry",
+          "Breadcrumbs",
+          "Notes"
+        ],
+        "path": ".planning/seeds/SEED-002-current-gap.md"
+      }
+    ],
+    "current_contract_version": "2",
+    "legacy_unversioned_count": 1,
+    "legacy_unversioned_examples": [
+      ".planning/seeds/SEED-001-legacy.md"
+    ],
+    "migration_candidate_breakdown": {
+      "current_contract_shape_gap": 1,
+      "legacy_unversioned": 1,
+      "noncurrent_version": 1
+    },
+    "migration_candidate_count": 3,
+    "noncurrent_version_counts": {
+      "1": 1
+    },
+    "noncurrent_version_examples": [
+      {
+        "path": ".planning/seeds/SEED-003-old-version.md",
+        "version": "1"
+      }
+    ],
+    "noncurrent_version_total": 1,
+    "posture": "mixed_with_noncurrent_versions",
+    "seed_dir_present": true,
+    "seed_dir_rel_path": ".planning/seeds",
+    "seed_file_count": 3
+  },
+  "seed_count": 3,
+  "written_outputs": {
+    "manifest_path": ".planning/SEED-MIGRATION-MANIFEST.json",
+    "report_path": ".planning/SEED-MIGRATION-REPORT.md"
+  }
+}

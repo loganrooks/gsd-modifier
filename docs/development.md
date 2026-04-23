@@ -1,0 +1,37 @@
+# Development
+
+## Current Shape
+
+This repo currently carries three distinct but connected layers:
+
+- runtime/shipped modifier surface
+  - `harness_modifier/`
+  - `tooling/portable-gsd/overlay/`
+  - `scripts/setup-portable-gsd.sh`
+- development-support and compatibility surface
+  - `tooling/codex/`
+  - `tooling/codex/tests/`
+- origin/provenance carry
+  - [docs/migration-origin.md](migration-origin.md)
+  - [docs/origin-audit](origin-audit)
+
+## Immediate Goal
+
+Keep the extracted repo executable, auditable, and portable on its own.
+
+That means:
+- fix portability defects before widening features
+- keep root onboarding clear
+- keep verification runnable locally
+- do not assume the old host repo is present
+
+## Typical Verification
+
+```bash
+python3 -m py_compile $(find harness_modifier tooling/codex -name '*.py' -type f | tr '\n' ' ')
+python3 -m unittest discover -s tooling/codex/tests
+./scripts/setup-portable-gsd.sh
+python3 harness_modifier/contract/portable_gsd_contract.py validate-manifest . --strict
+python3 harness_modifier/contract/portable_gsd_contract.py verify-materialized . --strict
+git diff --check
+```

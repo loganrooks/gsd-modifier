@@ -61,11 +61,11 @@ This skill may surface repo-local entry/runtime continuity only when the active 
 </objective>
 
 <execution_context>
-@/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/update.md
+@__PROJECT_ROOT__/.codex/get-shit-done/workflows/update.md
 </execution_context>
 
 <process>
-**Follow the update workflow** from `@/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/update.md`.
+**Follow the update workflow** from `@__PROJECT_ROOT__/.codex/get-shit-done/workflows/update.md`.
 
 The workflow handles all logic including:
 1. Installed version detection (local/global)

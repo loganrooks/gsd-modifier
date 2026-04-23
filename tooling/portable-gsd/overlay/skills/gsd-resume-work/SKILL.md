@@ -58,11 +58,11 @@ Routes to the resume-project workflow which handles:
 </objective>
 
 <execution_context>
-@/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/resume-project.md
+@__PROJECT_ROOT__/.codex/get-shit-done/workflows/resume-project.md
 </execution_context>
 
 <process>
-**Follow the resume-project workflow** from `@/home/rookslog/workspace/projects/prix-guesser/.codex/get-shit-done/workflows/resume-project.md`.
+**Follow the resume-project workflow** from `@__PROJECT_ROOT__/.codex/get-shit-done/workflows/resume-project.md`.
 
 The workflow handles all resumption logic including:
 

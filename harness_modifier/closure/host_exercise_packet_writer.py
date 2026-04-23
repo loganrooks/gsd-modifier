@@ -174,7 +174,7 @@ def validate_host_exercise_packet(payload: dict[str, Any]) -> dict[str, Any]:
 
     host_repo_path = pathlib.Path(normalized["host_repo_path"]).expanduser().resolve()
     if _paths_overlap(host_repo_path, REPO_ROOT):
-        raise ValueError("first host packet must target a repo disjoint from prix-guesser")
+        raise ValueError("first host packet must target a repo disjoint from the current modifier workspace")
 
     host_has_regular_gsd = normalized["host_has_regular_gsd"]
     if not isinstance(host_has_regular_gsd, bool):
