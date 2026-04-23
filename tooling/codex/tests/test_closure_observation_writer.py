@@ -14,7 +14,7 @@ class ClosureObservationWriterTests(unittest.TestCase):
             "observed_at": "2026-04-23T15:00:00+00:00",
             "basis_commit": "4172c52",
             "exercise_id": "exercise-001",
-            "target_host_class": "codex-disjoint-gsd-installed",
+            "target_host_class": "codex-disjoint-gsd-installed-no-reflect",
             "evidence_family": "modifier",
             "disposition": "accept",
             "deployment_context": [
@@ -53,7 +53,6 @@ class ClosureObservationWriterTests(unittest.TestCase):
         self.assertEqual(policy["format"], "json_only")
         self.assertIn("contract-mismatch", policy["semantic_deviation_subtypes"])
         self.assertIn("authority-clarified", policy["positive_gain_subtypes"])
-        self.assertIn("level-1", policy["automation_skip_reasons"])
 
     def test_write_observation_record_applies_defaults(self) -> None:
         payload = self._payload()
@@ -87,6 +86,12 @@ class ClosureObservationWriterTests(unittest.TestCase):
         payload = self._payload()
         payload["positive_gain"][0]["signal_subtype"] = "unknown-gain"
         with self.assertRaisesRegex(ValueError, "positive_gain"):
+            observation_writer.validate_observation_record(payload)
+
+    def test_validate_rejects_unknown_target_host_class(self) -> None:
+        payload = self._payload()
+        payload["target_host_class"] = "unknown-host-class"
+        with self.assertRaisesRegex(ValueError, "target_host_class"):
             observation_writer.validate_observation_record(payload)
 
     def test_validate_rejects_unexpected_top_level_field(self) -> None:

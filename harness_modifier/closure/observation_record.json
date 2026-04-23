@@ -18,12 +18,6 @@
     "refuse",
     "shift-mode"
   ],
-  "check_outcome_vocab": [
-    "accept",
-    "warn",
-    "refuse",
-    "shift-mode"
-  ],
   "evidence_family_vocab": [
     "runtime",
     "derived",
@@ -54,22 +48,6 @@
     "authority-clarified",
     "portability-broadened",
     "verification-surface-sharpened"
-  ],
-  "automation_skip_reasons": [
-    "level-0",
-    "level-1",
-    "level-2",
-    "reentrancy",
-    "lock-race",
-    "disabled",
-    "threshold-not-met",
-    "insufficient-signals",
-    "session-cooldown",
-    "collection-error",
-    "parse-error",
-    "agent-error",
-    "timeout",
-    "context_deferred"
   ],
   "optional_fields": [
     "narrative_summary"

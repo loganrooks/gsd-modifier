@@ -7,11 +7,16 @@ import json
 import pathlib
 from typing import Any
 
+from harness_modifier.closure import host_exercise_packet
 from harness_modifier.closure import observation_record
 
 
 def observation_record_policy() -> dict[str, Any]:
     return observation_record.load_observation_record()
+
+
+def host_exercise_packet_policy() -> dict[str, Any]:
+    return host_exercise_packet.load_host_exercise_packet()
 
 
 def _required_top_level_fields() -> tuple[str, ...]:
@@ -43,9 +48,9 @@ def _validate_row_subtypes(rows: list[dict[str, Any]], allowed: set[str], field_
             raise ValueError(f"{field_name} signal_subtype must be one of {sorted(allowed)}")
 
 
-def _validate_expectation_rows(rows: list[dict[str, Any]], policy: dict[str, Any]) -> None:
-    allowed_outcomes = set(policy["check_outcome_vocab"])
-    allowed_skip_reasons = set(policy["automation_skip_reasons"])
+def _validate_expectation_rows(rows: list[dict[str, Any]], packet_policy: dict[str, Any]) -> None:
+    allowed_outcomes = set(packet_policy["check_outcome_vocab"])
+    allowed_skip_reasons = set(packet_policy["automation_skip_reasons"])
     for entry in rows:
         check_outcome = entry.get("check_outcome")
         if check_outcome is not None and check_outcome not in allowed_outcomes:
@@ -79,6 +84,7 @@ def _apply_defaults(payload: dict[str, Any], policy: dict[str, Any]) -> dict[str
 
 def validate_observation_record(payload: dict[str, Any]) -> dict[str, Any]:
     policy = observation_record_policy()
+    packet_policy = host_exercise_packet_policy()
     normalized = _apply_defaults(payload, policy)
     allowed_top_level_fields = set(policy["required_top_level_fields"]) | set(policy["optional_fields"])
 
@@ -126,6 +132,10 @@ def validate_observation_record(payload: dict[str, Any]) -> dict[str, Any]:
         raise ValueError(f"evidence_family must be one of {sorted(policy['evidence_family_vocab'])}")
     if normalized["disposition"] not in set(policy["disposition_vocab"]):
         raise ValueError(f"disposition must be one of {sorted(policy['disposition_vocab'])}")
+    if normalized["target_host_class"] not in set(packet_policy["target_host_class_vocab"]):
+        raise ValueError(
+            f"target_host_class must be one of {sorted(packet_policy['target_host_class_vocab'])}"
+        )
 
     if "narrative_summary" in normalized:
         _string_field(normalized, "narrative_summary")
@@ -148,7 +158,7 @@ def validate_observation_record(payload: dict[str, Any]) -> dict[str, Any]:
         set(policy["positive_gain_subtypes"]),
         "positive_gain",
     )
-    _validate_expectation_rows(expectation_rows, policy)
+    _validate_expectation_rows(expectation_rows, packet_policy)
 
     for key in policy["signal_family_keys"]:
         if key == "measurement_provenance":

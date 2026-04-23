@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "default_packet_version": 1,
+  "bundle_family": "responsible-closure",
+  "exercise_mode": "observe-only",
+  "required_top_level_fields": [
+    "packet_id",
+    "packet_version",
+    "bundle_family",
+    "exercise_mode",
+    "target_host_class",
+    "host_reference",
+    "host_repo_path",
+    "runtime_class",
+    "host_shape",
+    "host_has_regular_gsd",
+    "host_has_reflect_artifacts",
+    "host_has_reflect_artifacts_rationale",
+    "host_age_posture",
+    "declaration_capture",
+    "preflight_reads",
+    "output_targets",
+    "abort_conditions"
+  ],
+  "target_host_class_vocab": [
+    "codex-disjoint-gsd-installed-no-reflect"
+  ],
+  "runtime_class_vocab": [
+    "codex-only"
+  ],
+  "host_shape_vocab": [
+    "disjoint-codex-only"
+  ],
+  "host_age_posture_vocab": [
+    "pristine",
+    "lightly-aged",
+    "drifted"
+  ],
+  "required_preflight_reads": [
+    "compatibility_declaration",
+    "overlay_install_contract",
+    "runtime_visibility"
+  ],
+  "conditional_preflight_reads": [
+    "manifest_install_coherence_if_materialized"
+  ],
+  "declaration_capture_fields": [
+    "declaration_posture",
+    "observed_basis_runtime",
+    "held_annotation_runtime",
+    "compatibility_window_state",
+    "basis_commit",
+    "dirty_worktree"
+  ],
+  "output_pointer_fields": [
+    "observation_record_path",
+    "runtime_visibility_snapshot_path",
+    "verify_materialized_summary"
+  ],
+  "abort_condition_codes": [
+    "outside_compatibility_window",
+    "dirty_worktree",
+    "unknown_basis_commit",
+    "requires_write_side_install_mutation",
+    "single_writer_host_governance_touch",
+    "reflect_artifact_presence"
+  ],
+  "reflect_artifact_abort_list": [
+    ".planning/knowledge-base/",
+    "commands/gsd/signal.md",
+    "commands/gsd/reflect.md",
+    "session_meta_postlude"
+  ],
+  "check_outcome_vocab": [
+    "accept",
+    "warn",
+    "refuse",
+    "shift-mode"
+  ],
+  "automation_skip_reasons": [
+    "level-0",
+    "level-1",
+    "level-2",
+    "reentrancy",
+    "lock-race",
+    "disabled",
+    "threshold-not-met",
+    "insufficient-signals",
+    "session-cooldown",
+    "collection-error",
+    "parse-error",
+    "agent-error",
+    "timeout",
+    "context_deferred"
+  ],
+  "first_host_scope": {
+    "requires_regular_gsd": true,
+    "requires_no_reflect_artifacts": true,
+    "requires_clean_worktree": true,
+    "requires_known_basis_commit": true,
+    "host_repo_coupling": "disjoint-from-prix-guesser"
+  }
+}

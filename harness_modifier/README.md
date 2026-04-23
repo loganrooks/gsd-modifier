@@ -8,8 +8,9 @@ Current first-slice split:
   - runtime/install visibility and coherence helpers
   - bounded canary surfaces
 - `closure/`
-  - responsible-closure observation-record carrier
-  - validated writer for the first JSON-only responsible-closure observation record
+  - responsible-closure observation-record carrier and writer
+  - responsible-closure host-exercise packet contract and writer
+  - shared exercise vocabulary owned at the packet layer and consumed by the observation writer
 - `capture/`
   - launch-truth capture
   - runtime snapshot capture
