@@ -25,6 +25,15 @@ That means:
 - keep verification runnable locally
 - do not assume the old host repo is present
 
+## Current Install Profile
+
+Use [install-profiles.md](install-profiles.md) as the current runtime/install claim surface.
+
+Right now:
+- `codex-core` is the only actively exercised profile
+- `.claude` remains a held runtime-development surface
+- mixed-runtime claims remain later
+
 ## Typical Verification
 
 ```bash
@@ -35,3 +44,11 @@ python3 harness_modifier/contract/portable_gsd_contract.py validate-manifest . -
 python3 harness_modifier/contract/portable_gsd_contract.py verify-materialized . --strict
 git diff --check
 ```
+
+## CI Gates
+
+Canonical CI entrypoints live in:
+- `scripts/ci/check-deterministic.sh`
+- `scripts/ci/check-bootstrap.sh`
+
+GitHub Actions uses those scripts directly so local and remote verification stay aligned.

@@ -30,6 +30,10 @@ This repo is the standalone home for `gsd-modifier`.
   - shipped/runtime surfaces
   - development-program-only helpers
   - carried origin-audit context
+- keep install-profile claims disciplined:
+  - `codex-core` is the active exercised profile
+  - `.claude` is still held runtime-development carry
+  - mixed-runtime claims are later
 - prefer changes that keep the extracted repo executable and auditable on its own, not ones that quietly depend on the old host repo
 
 ## Verification
@@ -41,6 +45,10 @@ Default verification stack for substantive changes:
 - `python3 harness_modifier/contract/portable_gsd_contract.py validate-manifest . --strict`
 - `python3 harness_modifier/contract/portable_gsd_contract.py verify-materialized . --strict`
 - `git diff --check`
+
+Canonical CI scripts:
+- `bash scripts/ci/check-deterministic.sh`
+- `bash scripts/ci/check-bootstrap.sh`
 
 If you change bootstrap/governance docs:
 - `python3 tooling/codex/audit_refmap.py verify .`

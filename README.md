@@ -24,6 +24,7 @@ Start here:
 - [AGENTS.md](AGENTS.md)
 - [WORKFLOW.md](WORKFLOW.md)
 - [docs/development.md](docs/development.md)
+- [docs/install-profiles.md](docs/install-profiles.md)
 - [docs/onboarding/codex.md](docs/onboarding/codex.md)
 - [docs/onboarding/claude.md](docs/onboarding/claude.md)
 - [docs/migration-origin.md](docs/migration-origin.md)
@@ -35,3 +36,7 @@ Quick bootstrap:
 python3 -m py_compile $(find harness_modifier tooling/codex -name '*.py' -type f | tr '\n' ' ')
 python3 -m unittest discover -s tooling/codex/tests
 ```
+
+CI:
+- deterministic/package gate: `bash scripts/ci/check-deterministic.sh`
+- bootstrap/integration gate: `bash scripts/ci/check-bootstrap.sh`
