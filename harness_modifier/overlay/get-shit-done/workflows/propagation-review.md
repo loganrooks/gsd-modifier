@@ -47,6 +47,11 @@ State the trigger, then map the slice under these headings:
 - durable outputs and state surfaces
 - intentionally held neighbors
 
+For review-family or audit-program slices, also treat these as propagation-relevant carriers when they moved:
+- `launch-truth-lite` artifacts
+- timing-calibration carriers
+- reviewer-state classification carriers
+
 For each important carrier, say whether it belongs to:
 - upstream-pristine baseline
 - repo-local delta

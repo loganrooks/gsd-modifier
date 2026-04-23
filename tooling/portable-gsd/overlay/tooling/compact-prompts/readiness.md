@@ -30,6 +30,16 @@ Prioritize, in order:
    - deferred residue
    - doctrine / protected seam
    - audit-family memory
+13. if the work is inside a harness-program tranche rather than host-product delivery:
+   - preserve the active tranche id and its adjacent proposal/implementation carrier
+   - preserve lifecycle-loop state:
+     - intended effects
+     - propagation obligations
+     - monitor target
+     - current disposition verb
+   - preserve the paired propagation companion id and state when one exists
+   - preserve any scheduled bounded verification/review work that was explicitly earned by the slice
+   - preserve the explicit Phase 01 rerun hold across that tranche
 
 Prefer exact repo file paths over vague prose.
 
