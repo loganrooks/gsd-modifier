@@ -8,10 +8,11 @@ This file is the short operator workflow for developing `gsd-modifier` in its ex
 
 1. read [AGENTS.md](AGENTS.md)
 2. read [docs/development.md](docs/development.md)
-3. read [docs/migration-origin.md](docs/migration-origin.md) when the current task touches extraction rationale, carried doctrine, or deferred strategy
-4. make bounded changes
-5. run the relevant verification stack
-6. leave an auditable commit boundary
+3. read [docs/handoff/current.md](docs/handoff/current.md) for the active execution boundary and next move
+4. read [docs/migration-origin.md](docs/migration-origin.md) when the current task touches extraction rationale, carried doctrine, or deferred strategy
+5. make bounded changes
+6. run the relevant verification stack
+7. leave an auditable commit boundary
 
 ## Priority
 

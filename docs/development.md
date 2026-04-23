@@ -15,6 +15,10 @@ This repo currently carries three distinct but connected layers:
   - [docs/migration-origin.md](migration-origin.md)
   - [docs/origin-audit](origin-audit)
 
+## Re-entry
+
+Use [handoff/current.md](handoff/current.md) as the stable re-entry and current-boundary surface.
+
 ## Immediate Goal
 
 Keep the extracted repo executable, auditable, and portable on its own.

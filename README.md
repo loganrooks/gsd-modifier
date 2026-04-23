@@ -23,6 +23,7 @@ Current posture:
 Start here:
 - [AGENTS.md](AGENTS.md)
 - [WORKFLOW.md](WORKFLOW.md)
+- [docs/handoff/current.md](docs/handoff/current.md)
 - [docs/development.md](docs/development.md)
 - [docs/install-profiles.md](docs/install-profiles.md)
 - [docs/onboarding/codex.md](docs/onboarding/codex.md)
