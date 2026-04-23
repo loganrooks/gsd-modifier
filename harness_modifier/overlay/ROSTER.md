@@ -22,7 +22,9 @@ Context rule:
     context tokens instead of host-absolute embedded paths
 - the remaining live blockers are now narrower:
   - helper-payload authority now splits more sharply:
-    - the first three `project_uplift.py` neutralization tranches are now landed, so the next helper question is post-third-neutralization payload-home judgment rather than carrier extraction
+    - the first three `project_uplift.py` neutralization tranches are now landed, and the post-third-neutralization payload-home judgment is now completed too
+    - the next extraction object is now install-contract pointer neutralization rather than another ambient payload-home reread
+    - held-later artifact-home movement remains the sibling after that, not a bundled companion
     - `seed_migration_inventory.py` is downstream of `project_uplift.py`
     - `audit_refmap.py` is now out of the later payload-movement candidate set and remains repo-local audit tooling
   - overwrite-family workflow/template/reference carriers that still preserve
@@ -174,7 +176,8 @@ Current blocker state:
 - the next remaining blockers are no longer the specialist trio:
   - helper-payload authority split now lives explicitly in
     `harness_modifier/overlay/helpers/AUTHORITY-MAP.md`
-  - post-third-neutralization `project_uplift.py` payload-home judgment before any later payload movement
+  - `project_uplift.py` install-contract pointer neutralization before any later payload movement
+  - held-later artifact-home sibling decision after that install-contract slice
   - `seed_migration_inventory.py` as a downstream helper that cannot lead
     movement
   - `audit_refmap.py` as a sharper repo-local audit-tooling family rather than
@@ -190,8 +193,9 @@ Current blocker state:
 Later slices after that first rehome:
 - helper authority map now landed under
   `harness_modifier/overlay/helpers/AUTHORITY-MAP.md`
-- next bounded move: post-third-neutralization `project_uplift.py` payload-home
-  judgment before any later helper payload movement
+- next bounded move: `project_uplift.py` install-contract pointer neutralization
+  before any later helper payload movement
+- held-later sibling after that: `UPLIFT-HELD-LATER.md` artifact-home decision
 - continuity references
 - `gsd-rigorous-research` generic tranche
 - overwrite workflow/template/reference families

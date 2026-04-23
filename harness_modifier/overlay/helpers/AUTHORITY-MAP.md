@@ -12,7 +12,7 @@ Status: active helper authority map
 
 | Helper | Shim Role | Payload Home | Authority Posture | Blockers Before Any Later Movement | Family |
 | --- | --- | --- | --- | --- | --- |
-| `project_uplift.py` | temporary bridge | `tooling/codex/project_uplift.py` | modifier-facing payload candidate | reopen payload-home judgment after the first three neutralization tranches before any relocation slice | extraction / uplift |
+| `project_uplift.py` | temporary bridge | `tooling/codex/project_uplift.py` | modifier-facing payload candidate with narrowed remaining-coupling split | land install-contract pointer neutralization first, keep held-later artifact-home as sibling later, only then reopen payload-home again | extraction / uplift |
 | `seed_migration_inventory.py` | derivative bridge | `tooling/codex/seed_migration_inventory.py` | downstream specialist consumer; cannot lead movement | inherits the cleaner post-second-neutralization `project_uplift.py` judgment first | extraction / uplift |
 | `audit_refmap.py` | stable long-lived source/install boundary | `tooling/codex/audit_refmap.py` | sharper shared-boundary helper; out of the later payload-movement candidate set | not a relocation candidate in this family; any later work is repo-local audit-tooling neutralization, not payload movement | repo-local audit tooling |
 
@@ -39,5 +39,6 @@ Status: active helper authority map
 
 ## Exact Next Move
 
-- [d:r:i] Judge `project_uplift.py` again after the third neutralization tranche rather than assuming the earlier payload-candidate posture still answers the later movement question by itself.
-- [d:r:i] Do not relocate any helper payload in the same slice as that post-neutralization judgment.
+- [d:r:i] The post-third-neutralization payload-home judgment is now completed and inherited through [../../../.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/dispositions/10-harness-modifier-project-uplift-post-host-planning-shape-payload-home-judgment-reread-inheritance.md](/home/rookslog/workspace/projects/prix-guesser/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/dispositions/10-harness-modifier-project-uplift-post-host-planning-shape-payload-home-judgment-reread-inheritance.md).
+- [d:r:i] The next bounded helper move is now [../../../.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/167-harness-modifier-project-uplift-install-contract-pointer-neutralization-proposal.md](/home/rookslog/workspace/projects/prix-guesser/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/167-harness-modifier-project-uplift-install-contract-pointer-neutralization-proposal.md), not relocation.
+- [d:r:i] Keep the held-later artifact-home question explicit through [../../../.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/168-harness-modifier-project-uplift-held-later-artifact-home-sibling-note.md](/home/rookslog/workspace/projects/prix-guesser/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/168-harness-modifier-project-uplift-held-later-artifact-home-sibling-note.md).
