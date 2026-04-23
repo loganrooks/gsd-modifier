@@ -22,7 +22,7 @@ Context rule:
     context tokens instead of host-absolute embedded paths
 - the remaining live blockers are now narrower:
   - helper-payload authority now splits more sharply:
-    - `project_uplift.py` neutralization is now landed, so the next helper question is post-neutralization payload-home judgment rather than carrier extraction
+    - the first two `project_uplift.py` neutralization tranches are now landed, so the next helper question is post-second-neutralization payload-home judgment rather than carrier extraction
     - `seed_migration_inventory.py` is downstream of `project_uplift.py`
     - `audit_refmap.py` is now out of the later payload-movement candidate set and remains repo-local audit tooling
   - overwrite-family workflow/template/reference carriers that still preserve

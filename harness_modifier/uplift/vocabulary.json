@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "commands": {
+    "uplift_detect_only": "$gsd-uplift-project --detect-only",
+    "uplift_write": "$gsd-uplift-project --write",
+    "seed_migration_inventory": "$gsd-seed-migration-inventory",
+    "seed_migration_write": "$gsd-seed-migration-inventory --write"
+  },
+  "rerun_boundary_patterns": [
+    "pre-rerun",
+    "fresh discuss \\+ plan required",
+    "rerun-boundary",
+    "input to the next discuss pass"
+  ],
+  "phase_boundary_notes": {
+    "no_active_phase": "no active phase boundary signal",
+    "active_phase_missing_context": "active phase detected but no phase CONTEXT carrier found",
+    "marker_present": "phase CONTEXT carries explicit rerun-boundary posture",
+    "marker_missing_doctrine_changed": "phase CONTEXT lacks explicit rerun-boundary posture while doctrine moved",
+    "marker_missing": "phase CONTEXT present without explicit rerun-boundary posture"
+  },
+  "recommendations": {
+    "report_detect_only": "Run `$gsd-uplift-project --detect-only` again after doctrine movement or review queued proposals",
+    "report_continue": "Continue with current routing",
+    "report_no_reasons": "Current uplift memory keeps ordinary routing explicit without queuing another detect-only pass.",
+    "state_detect_only": "Run `$gsd-uplift-project --detect-only` before treating ordinary routing as settled.",
+    "state_continue": "Continue with ordinary routing; uplift memory keeps this posture explicit.",
+    "progress_no_manifest": "Run `$gsd-uplift-project --detect-only` to record uplift memory.",
+    "progress_no_memory": "No uplift memory available.",
+    "progress_write_refresh": "Run `$gsd-uplift-project --write` to refresh uplift memory after runtime or seed-corpus movement.",
+    "progress_detect_refresh": "Run `$gsd-uplift-project --detect-only` to refresh uplift memory.",
+    "progress_continue": "Continue with current routing."
+  }
+}

@@ -2,16 +2,21 @@ import json
 import pathlib
 import tempfile
 import unittest
+from unittest import mock
 
 from harness_modifier.compatibility import observation as compatibility_observation
 from harness_modifier.compatibility import seed_contract as compatibility_seed_contract
+from harness_modifier.uplift import carrier_catalog as uplift_carrier_catalog
 from harness_modifier.uplift import output_policy as uplift_output_policy
+from harness_modifier.uplift import vocabulary as uplift_vocabulary
 from tooling.codex import project_uplift as pu
 
 
 OBSERVATION_POLICY = compatibility_observation.load_observation()
 SEED_CONTRACT = compatibility_seed_contract.load_seed_contract()
+CARRIER_CATALOG = uplift_carrier_catalog.load_carrier_catalog()
 OUTPUT_POLICY = uplift_output_policy.load_output_policy()
+VOCABULARY = uplift_vocabulary.load_vocabulary()
 
 
 STATE_TEMPLATE = """---
@@ -58,6 +63,19 @@ class ProjectUpliftTests(unittest.TestCase):
             "- cross-runtime uplift composition — held\n"
             "- legacy seed corpus migration — partially landed: harness_modifier/overlay/get-shit-done/workflows/seed-migration-inventory.md | intervention-proposals/92-seed-migration-pointer-bridge-harden-follow-through-implementation.md | propagation-audit/38-seed-migration-pointer-bridge-harden-change-triggered-refresh.md\n"
             "- routed-entry hooks beyond `progress` — partially landed: propagation-audit/04-resume-project-second-consumer-implementation.md\n",
+        )
+
+    def _reordered_carrier_catalog(self) -> dict:
+        catalog = json.loads(json.dumps(CARRIER_CATALOG))
+        catalog["file_carriers"] = list(reversed(catalog["file_carriers"]))
+        catalog["marker_carriers"] = list(reversed(catalog["marker_carriers"]))
+        return catalog
+
+    def _recommendation_line(self, report_text: str) -> str:
+        return next(
+            line
+            for line in report_text.splitlines()
+            if line.startswith("- Recommendation: ")
         )
 
     def _write_strengthening_carriers(self, root: pathlib.Path) -> None:
@@ -159,6 +177,24 @@ class ProjectUpliftTests(unittest.TestCase):
         self.assertEqual(OUTPUT_POLICY["report_rel_path"], ".planning/UPLIFT-REPORT.md")
         self.assertEqual(OUTPUT_POLICY["manifest_rel_path"], ".planning/UPLIFT-MANIFEST.json")
         self.assertEqual(OUTPUT_POLICY["state_heading"], "## Project Uplift")
+        self.assertEqual(CARRIER_CATALOG["ordering_rule"], "stable_by_key_within_section")
+        self.assertEqual(CARRIER_CATALOG["runtime_agent_registry"]["rel_path_glob"], ".codex/agents/*.toml")
+        self.assertEqual(CARRIER_CATALOG["runtime_agent_registry"]["key_prefix"], "runtime_agent_")
+        self.assertEqual(
+            [spec.key for spec in pu.file_carrier_specs()],
+            sorted(spec.key for spec in pu.file_carrier_specs()),
+        )
+        self.assertEqual(
+            [spec.key for spec in pu.marker_carrier_specs()],
+            sorted(spec.key for spec in pu.marker_carrier_specs()),
+        )
+        self.assertEqual(pu.SEED_MIGRATION_SKILL_COMMAND, VOCABULARY["commands"]["seed_migration_inventory"])
+        self.assertEqual(pu.SEED_MIGRATION_WRITE_COMMAND, VOCABULARY["commands"]["seed_migration_write"])
+        self.assertIn("rerun-boundary", VOCABULARY["rerun_boundary_patterns"])
+        self.assertEqual(
+            VOCABULARY["recommendations"]["progress_continue"],
+            "Continue with current routing.",
+        )
 
     def test_detect_classifies_vanilla_project(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -175,6 +211,78 @@ class ProjectUpliftTests(unittest.TestCase):
                     proposal["label"] == "Root CLAUDE" and proposal["proposal_state"] == "absent"
                     for proposal in analysis["pending_doctrine_sensitive_proposals"]
                 )
+            )
+
+    def test_catalog_reordering_keeps_absent_additive_routes_stable(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="completed")
+
+            baseline = pu.analyze_repo(repo_root)
+            with mock.patch(
+                "tooling.codex.project_uplift.carrier_catalog_policy",
+                return_value=self._reordered_carrier_catalog(),
+            ):
+                reordered = pu.analyze_repo(repo_root)
+
+            self.assertEqual(
+                baseline["absent_additive_carriers"],
+                reordered["absent_additive_carriers"],
+            )
+            self.assertEqual(
+                baseline["doctrine_reference_hash"],
+                reordered["doctrine_reference_hash"],
+            )
+
+    def test_catalog_reordering_keeps_fingerprints_and_recommendations_equivalent(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="completed")
+            self._write_doctrine_stack(repo_root)
+
+            pu.write_outputs(repo_root, pu.analyze_repo(repo_root))
+            self._write(repo_root, "AGENTS.md", "# Agents changed\n")
+
+            baseline_analysis = pu.analyze_repo(repo_root)
+            baseline_note = pu.build_progress_note(repo_root)
+            baseline_carriers = {
+                carrier["key"]: (
+                    carrier["status"],
+                    carrier["fingerprint_shape"],
+                    carrier["fingerprint"],
+                )
+                for carrier in baseline_analysis["carriers"]
+            }
+
+            with mock.patch(
+                "tooling.codex.project_uplift.carrier_catalog_policy",
+                return_value=self._reordered_carrier_catalog(),
+            ):
+                reordered_analysis = pu.analyze_repo(repo_root)
+                reordered_note = pu.build_progress_note(repo_root)
+
+            reordered_carriers = {
+                carrier["key"]: (
+                    carrier["status"],
+                    carrier["fingerprint_shape"],
+                    carrier["fingerprint"],
+                )
+                for carrier in reordered_analysis["carriers"]
+            }
+
+            self.assertEqual(baseline_carriers, reordered_carriers)
+            self.assertEqual(
+                baseline_analysis["pending_doctrine_sensitive_proposals"],
+                reordered_analysis["pending_doctrine_sensitive_proposals"],
+            )
+            self.assertEqual(baseline_note["reasons"], reordered_note["reasons"])
+            self.assertEqual(
+                baseline_note["recommendation"],
+                reordered_note["recommendation"],
+            )
+            self.assertEqual(
+                self._recommendation_line(pu.render_report(baseline_analysis)),
+                self._recommendation_line(pu.render_report(reordered_analysis)),
             )
 
     def test_detect_classifies_lightly_aged_project(self) -> None:

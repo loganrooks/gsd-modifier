@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "ordering_rule": "stable_by_key_within_section",
+  "file_carriers": [
+    {
+      "key": "claim_types",
+      "group": "additive_install",
+      "rel_path": ".planning/CLAIM-TYPES.md",
+      "label": "Claim Types",
+      "fingerprint_shape": "content_sha256"
+    },
+    {
+      "key": "long_arc",
+      "group": "additive_install",
+      "rel_path": ".planning/LONG-ARC.md",
+      "label": "Long Arc",
+      "fingerprint_shape": "frontmatter_hash"
+    },
+    {
+      "key": "planning_agents",
+      "group": "doctrine_sensitive",
+      "rel_path": ".planning/AGENTS.md",
+      "label": "Planning AGENTS",
+      "fingerprint_shape": "content_sha256"
+    },
+    {
+      "key": "planning_claude",
+      "group": "doctrine_sensitive",
+      "rel_path": ".planning/CLAUDE.md",
+      "label": "Planning CLAUDE",
+      "fingerprint_shape": "content_sha256"
+    },
+    {
+      "key": "root_agents",
+      "group": "doctrine_sensitive",
+      "rel_path": "AGENTS.md",
+      "label": "Root AGENTS",
+      "fingerprint_shape": "content_sha256"
+    },
+    {
+      "key": "root_claude",
+      "group": "doctrine_sensitive",
+      "rel_path": "CLAUDE.md",
+      "label": "Root CLAUDE",
+      "fingerprint_shape": "content_sha256"
+    },
+    {
+      "key": "verification_report_template",
+      "group": "doctrine_sensitive",
+      "rel_path": ".codex/get-shit-done/templates/verification-report.md",
+      "label": "Verification Report Template",
+      "fingerprint_shape": "content_sha256"
+    },
+    {
+      "key": "verification_workflow",
+      "group": "doctrine_sensitive",
+      "rel_path": ".codex/get-shit-done/workflows/verify-phase.md",
+      "label": "Verification Workflow",
+      "fingerprint_shape": "content_sha256"
+    },
+    {
+      "key": "runtime_config",
+      "group": "runtime_registry",
+      "rel_path": ".codex/config.toml",
+      "label": "Runtime Config",
+      "fingerprint_shape": "normalized_toml_hash"
+    },
+    {
+      "key": "tooling_inventory",
+      "group": "additive_install",
+      "rel_path": "tooling/codex/README.md",
+      "label": "Tooling Inventory",
+      "fingerprint_shape": "inventory_item_hash"
+    }
+  ],
+  "runtime_agent_registry": {
+    "key_prefix": "runtime_agent_",
+    "group": "runtime_registry",
+    "rel_path_glob": ".codex/agents/*.toml",
+    "label_prefix": "Runtime Agent Contract: ",
+    "fingerprint_shape": "normalized_toml_hash"
+  },
+  "marker_carriers": [
+    {
+      "key": "strengthening_context",
+      "group": "doctrine_sensitive",
+      "rel_path": ".codex/get-shit-done/templates/context.md",
+      "label": "Context Strengthening Route",
+      "marker": "Strengthening Opportunities",
+      "fingerprint_shape": "marker_block_hash"
+    },
+    {
+      "key": "strengthening_discuss",
+      "group": "doctrine_sensitive",
+      "rel_path": ".codex/get-shit-done/workflows/discuss-phase.md",
+      "label": "Discuss Strengthening Route",
+      "marker": "Strengthening Opportunities",
+      "fingerprint_shape": "marker_block_hash"
+    },
+    {
+      "key": "strengthening_plan",
+      "group": "doctrine_sensitive",
+      "rel_path": ".codex/get-shit-done/workflows/plan-phase.md",
+      "label": "Plan Strengthening Route",
+      "marker": "Strengthening Opportunities",
+      "fingerprint_shape": "marker_block_hash"
+    },
+    {
+      "key": "strengthening_research",
+      "group": "doctrine_sensitive",
+      "rel_path": ".codex/skills/gsd-rigorous-research/references/output-template.md",
+      "label": "Research Strengthening Route",
+      "marker": "Strengthening Opportunities",
+      "fingerprint_shape": "marker_block_hash"
+    }
+  ]
+}

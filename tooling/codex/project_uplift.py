@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import dataclasses
+import functools
 import hashlib
 import json
 import pathlib
@@ -20,7 +21,9 @@ if str(REPO_ROOT_FOR_IMPORTS) not in sys.path:
 from harness_modifier.compatibility import declaration as compatibility_declaration
 from harness_modifier.compatibility import observation as compatibility_observation
 from harness_modifier.compatibility import seed_contract as compatibility_seed_contract
+from harness_modifier.uplift import carrier_catalog as uplift_carrier_catalog
 from harness_modifier.uplift import output_policy as uplift_output_policy
+from harness_modifier.uplift import vocabulary as uplift_vocabulary
 
 
 OVERLAY_MANIFEST_REL_PATH = "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json"
@@ -39,15 +42,6 @@ SEED_MIGRATION_CANDIDATE_LABEL = "Seed migration candidates"
 SEED_MIGRATION_BREAKDOWN_LABEL = "Seed migration breakdown"
 SEED_MIGRATION_INSPECT_POINTER_LABEL = "Seed migration inventory"
 SEED_MIGRATION_WRITE_POINTER_LABEL = "Seed migration write packet"
-SEED_MIGRATION_SKILL_COMMAND = "$gsd-seed-migration-inventory"
-SEED_MIGRATION_WRITE_COMMAND = f"{SEED_MIGRATION_SKILL_COMMAND} --write"
-
-RERUN_BOUNDARY_PATTERNS = [
-    re.compile(r"pre-rerun", re.I),
-    re.compile(r"fresh discuss \+ plan required", re.I),
-    re.compile(r"rerun-boundary", re.I),
-    re.compile(r"input to the next discuss pass", re.I),
-]
 
 
 def compatibility_policy() -> dict:
@@ -68,6 +62,42 @@ def seed_contract_policy() -> dict:
 
 def uplift_output_policy_data() -> dict:
     return uplift_output_policy.load_output_policy()
+
+
+def carrier_catalog_policy() -> dict:
+    return uplift_carrier_catalog.load_carrier_catalog()
+
+
+def vocabulary_policy() -> dict:
+    return uplift_vocabulary.load_vocabulary()
+
+
+def command_text(key: str) -> str:
+    return str(vocabulary_policy()["commands"][key])
+
+
+def recommendation_text(key: str) -> str:
+    return str(vocabulary_policy()["recommendations"][key])
+
+
+def phase_boundary_note(key: str) -> str:
+    return str(vocabulary_policy()["phase_boundary_notes"][key])
+
+
+def carrier_catalog_ordering_rule() -> str:
+    return str(carrier_catalog_policy()["ordering_rule"])
+
+
+@functools.lru_cache(maxsize=1)
+def _compiled_rerun_boundary_patterns() -> tuple[re.Pattern[str], ...]:
+    return tuple(
+        re.compile(pattern, re.I)
+        for pattern in vocabulary_policy()["rerun_boundary_patterns"]
+    )
+
+
+SEED_MIGRATION_SKILL_COMMAND = command_text("seed_migration_inventory")
+SEED_MIGRATION_WRITE_COMMAND = command_text("seed_migration_write")
 
 
 def state_heading() -> str:
@@ -109,77 +139,60 @@ class MarkerCarrierSpec:
     fingerprint_shape: str = "marker_block_hash"
 
 
-STATIC_FILE_CARRIERS = [
-    FileCarrierSpec("root_agents", "doctrine_sensitive", "AGENTS.md", "Root AGENTS"),
-    FileCarrierSpec("planning_agents", "doctrine_sensitive", ".planning/AGENTS.md", "Planning AGENTS"),
-    FileCarrierSpec("root_claude", "doctrine_sensitive", "CLAUDE.md", "Root CLAUDE"),
-    FileCarrierSpec("planning_claude", "doctrine_sensitive", ".planning/CLAUDE.md", "Planning CLAUDE"),
-    FileCarrierSpec(
-        "verification_workflow",
-        "doctrine_sensitive",
-        ".codex/get-shit-done/workflows/verify-phase.md",
-        "Verification Workflow",
-    ),
-    FileCarrierSpec(
-        "verification_report_template",
-        "doctrine_sensitive",
-        ".codex/get-shit-done/templates/verification-report.md",
-        "Verification Report Template",
-    ),
-    FileCarrierSpec("claim_types", "additive_install", ".planning/CLAIM-TYPES.md", "Claim Types"),
-    FileCarrierSpec(
-        "long_arc",
-        "additive_install",
-        ".planning/LONG-ARC.md",
-        "Long Arc",
-        fingerprint_shape="frontmatter_hash",
-    ),
-    FileCarrierSpec(
-        "tooling_inventory",
-        "additive_install",
-        "tooling/codex/README.md",
-        "Tooling Inventory",
-        fingerprint_shape="inventory_item_hash",
-    ),
-    FileCarrierSpec(
-        "runtime_config",
-        "runtime_registry",
-        ".codex/config.toml",
-        "Runtime Config",
-        fingerprint_shape="normalized_toml_hash",
-    ),
-]
+@dataclasses.dataclass(frozen=True)
+class RuntimeAgentRegistrySpec:
+    key_prefix: str
+    group: str
+    rel_path_glob: str
+    label_prefix: str
+    fingerprint_shape: str = "normalized_toml_hash"
 
-MARKER_CARRIERS = [
-    MarkerCarrierSpec(
-        "strengthening_discuss",
-        "doctrine_sensitive",
-        ".codex/get-shit-done/workflows/discuss-phase.md",
-        "Discuss Strengthening Route",
-        "Strengthening Opportunities",
-    ),
-    MarkerCarrierSpec(
-        "strengthening_context",
-        "doctrine_sensitive",
-        ".codex/get-shit-done/templates/context.md",
-        "Context Strengthening Route",
-        "Strengthening Opportunities",
-    ),
-    MarkerCarrierSpec(
-        "strengthening_plan",
-        "doctrine_sensitive",
-        ".codex/get-shit-done/workflows/plan-phase.md",
-        "Plan Strengthening Route",
-        "Strengthening Opportunities",
-    ),
-    MarkerCarrierSpec(
-        "strengthening_research",
-        "doctrine_sensitive",
-        ".codex/skills/gsd-rigorous-research/references/output-template.md",
-        "Research Strengthening Route",
-        "Strengthening Opportunities",
-    ),
-]
+
+def _canonicalize_catalog_rows(rows: list[dict]) -> list[dict]:
+    ordering_rule = carrier_catalog_ordering_rule()
+    if ordering_rule == "stable_by_key_within_section":
+        return sorted(rows, key=lambda row: str(row["key"]))
+    return list(rows)
+
+
+def file_carrier_specs() -> list[FileCarrierSpec]:
+    rows = _canonicalize_catalog_rows(list(carrier_catalog_policy()["file_carriers"]))
+    return [
+        FileCarrierSpec(
+            key=str(row["key"]),
+            group=str(row["group"]),
+            rel_path=str(row["rel_path"]),
+            label=str(row["label"]),
+            fingerprint_shape=str(row.get("fingerprint_shape", "content_sha256")),
+        )
+        for row in rows
+    ]
+
+
+def marker_carrier_specs() -> list[MarkerCarrierSpec]:
+    rows = _canonicalize_catalog_rows(list(carrier_catalog_policy()["marker_carriers"]))
+    return [
+        MarkerCarrierSpec(
+            key=str(row["key"]),
+            group=str(row["group"]),
+            rel_path=str(row["rel_path"]),
+            label=str(row["label"]),
+            marker=str(row["marker"]),
+            fingerprint_shape=str(row.get("fingerprint_shape", "marker_block_hash")),
+        )
+        for row in rows
+    ]
+
+
+def runtime_agent_registry_spec() -> RuntimeAgentRegistrySpec:
+    row = dict(carrier_catalog_policy()["runtime_agent_registry"])
+    return RuntimeAgentRegistrySpec(
+        key_prefix=str(row["key_prefix"]),
+        group=str(row["group"]),
+        rel_path_glob=str(row["rel_path_glob"]),
+        label_prefix=str(row["label_prefix"]),
+        fingerprint_shape=str(row.get("fingerprint_shape", "normalized_toml_hash")),
+    )
 
 
 def sha256_text(text: str) -> str:
@@ -475,7 +488,7 @@ def latest_phase_context_path(repo_root: pathlib.Path) -> pathlib.Path | None:
 
 
 def has_rerun_boundary_marker(text: str) -> bool:
-    return any(pattern.search(text) for pattern in RERUN_BOUNDARY_PATTERNS)
+    return any(pattern.search(text) for pattern in _compiled_rerun_boundary_patterns())
 
 
 def phase_boundary_signal(repo_root: pathlib.Path, active_phase: bool, doctrine_changed: bool) -> dict:
@@ -485,7 +498,7 @@ def phase_boundary_signal(repo_root: pathlib.Path, active_phase: bool, doctrine_
             "context_present": False,
             "rerun_boundary_marker_present": False,
             "mid_phase_signal": False,
-            "note": "no active phase boundary signal",
+            "note": phase_boundary_note("no_active_phase"),
         }
 
     context_path = latest_phase_context_path(repo_root)
@@ -495,18 +508,18 @@ def phase_boundary_signal(repo_root: pathlib.Path, active_phase: bool, doctrine_
             "context_present": False,
             "rerun_boundary_marker_present": False,
             "mid_phase_signal": False,
-            "note": "active phase detected but no phase CONTEXT carrier found",
+            "note": phase_boundary_note("active_phase_missing_context"),
         }
 
     text = read_text(context_path) or ""
     marker_present = has_rerun_boundary_marker(text)
     mid_phase_signal = marker_present or doctrine_changed
     if marker_present:
-        note = "phase CONTEXT carries explicit rerun-boundary posture"
+        note = phase_boundary_note("marker_present")
     elif doctrine_changed:
-        note = "phase CONTEXT lacks explicit rerun-boundary posture while doctrine moved"
+        note = phase_boundary_note("marker_missing_doctrine_changed")
     else:
-        note = "phase CONTEXT present without explicit rerun-boundary posture"
+        note = phase_boundary_note("marker_missing")
     return {
         "context_path": rel_path(repo_root, context_path),
         "context_present": True,
@@ -517,19 +530,23 @@ def phase_boundary_signal(repo_root: pathlib.Path, active_phase: bool, doctrine_
 
 
 def build_runtime_agent_specs(repo_root: pathlib.Path) -> list[FileCarrierSpec]:
-    agent_root = repo_root / ".codex" / "agents"
-    if not agent_root.exists():
+    registry = runtime_agent_registry_spec()
+    agent_paths = sorted(
+        repo_root.glob(registry.rel_path_glob),
+        key=lambda path: rel_path(repo_root, path),
+    )
+    if not agent_paths:
         return []
     specs: list[FileCarrierSpec] = []
-    for path in sorted(agent_root.glob("*.toml")):
+    for path in agent_paths:
         stem = path.stem
         specs.append(
             FileCarrierSpec(
-                key=f"runtime_agent_{stem}",
-                group="runtime_registry",
+                key=f"{registry.key_prefix}{stem}",
+                group=registry.group,
                 rel_path=rel_path(repo_root, path),
-                label=f"Runtime Agent Contract: {stem}",
-                fingerprint_shape="normalized_toml_hash",
+                label=f"{registry.label_prefix}{stem}",
+                fingerprint_shape=registry.fingerprint_shape,
             )
         )
     return specs
@@ -1080,9 +1097,9 @@ def analyze_repo(repo_root: pathlib.Path) -> dict:
     summary_count = count_phase_files(repo_root, "*/*-SUMMARY.md")
     active_phase = current_status.lower() not in {"completed", "unknown"} or plan_count > summary_count
 
-    file_specs = STATIC_FILE_CARRIERS + build_runtime_agent_specs(repo_root)
+    file_specs = file_carrier_specs() + build_runtime_agent_specs(repo_root)
     carriers = [build_file_carrier(repo_root, spec) for spec in file_specs]
-    carriers.extend(build_marker_carrier(repo_root, spec) for spec in MARKER_CARRIERS)
+    carriers.extend(build_marker_carrier(repo_root, spec) for spec in marker_carrier_specs())
 
     previous_manifest_present = manifest is not None
     doctrine_hash = doctrine_reference_hash(carriers)
@@ -1178,7 +1195,7 @@ def render_report(analysis: dict) -> str:
         "- Mode: detect-only",
         f"- Project class: {analysis['project_class']}",
         f"- Secondary signals: {secondary}",
-        f"- Recommendation: {'Run `$gsd-uplift-project --detect-only` again after doctrine movement or review queued proposals' if analysis['recommend_detect_only'] else 'Continue with current routing'}",
+        f"- Recommendation: {recommendation_text('report_detect_only') if analysis['recommend_detect_only'] else recommendation_text('report_continue')}",
         "",
         "## Before-State Posture",
         "",
@@ -1196,7 +1213,7 @@ def render_report(analysis: dict) -> str:
     if analysis["recommendation_reasons"]:
         lines.extend(f"- {reason}" for reason in analysis["recommendation_reasons"])
     else:
-        lines.append("- Current uplift memory keeps ordinary routing explicit without queuing another detect-only pass.")
+        lines.append(f"- {recommendation_text('report_no_reasons')}")
 
     compatibility = analysis["compatibility_basis"]
     version_alignment = "aligned" if compatibility["observed_runtime_version_aligned"] else "split-or-partial"
@@ -1355,9 +1372,9 @@ def post_write_analysis(analysis: dict) -> dict:
 def state_section_text(analysis: dict) -> str:
     output_policy = uplift_output_policy_data()
     recommendation = (
-        "Run `$gsd-uplift-project --detect-only` before treating ordinary routing as settled."
+        recommendation_text("state_detect_only")
         if analysis["recommend_detect_only"]
-        else "Continue with ordinary routing; uplift memory keeps this posture explicit."
+        else recommendation_text("state_continue")
     )
     pending_count = len(analysis["pending_doctrine_sensitive_proposals"])
     secondary = ", ".join(analysis["secondary_signals"]) if analysis["secondary_signals"] else "none"
@@ -1470,7 +1487,7 @@ def build_progress_note(repo_root: pathlib.Path) -> dict:
             "doctrine_reference_changed": False,
             "seed_corpus_basis_changed": False,
             "pending_doctrine_sensitive_proposals": [],
-            "recommendation": "Run `$gsd-uplift-project --detect-only` to record uplift memory." if show else "No uplift memory available.",
+            "recommendation": recommendation_text("progress_no_manifest") if show else recommendation_text("progress_no_memory"),
             "reasons": ["no uplift manifest recorded yet"] if show else [],
             "report_path": output_policy["report_rel_path"],
             "manifest_path": output_policy["manifest_rel_path"],
@@ -1502,12 +1519,12 @@ def build_progress_note(repo_root: pathlib.Path) -> dict:
     reasons.extend(compatibility_reasons)
     reasons.extend(seed_corpus_rewrite_reasons)
     recommendation = (
-        "Run `$gsd-uplift-project --write` to refresh uplift memory after runtime or seed-corpus movement."
+        recommendation_text("progress_write_refresh")
         if recommend_write
         else (
-            "Run `$gsd-uplift-project --detect-only` to refresh uplift memory."
+            recommendation_text("progress_detect_refresh")
             if recommend_detect_only
-            else "Continue with current routing."
+            else recommendation_text("progress_continue")
         )
     )
     return {
