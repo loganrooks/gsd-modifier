@@ -5,45 +5,55 @@
 This file records the current installation/runtime profiles for `gsd-modifier`.
 
 It separates:
-- what is actively exercised now
-- what is readable but still held later
+- what is part of the active core parity contract
+- what is runtime-specific by design
 - what is not yet claimed
 
-## Active Profile
+## Active Core Profiles
 
 ### `codex-core`
 
-This is the current actively exercised profile.
+This is one active core profile.
 
 It means:
 - local runtime basis is `.codex`
-- bootstrap/install path is `./scripts/setup-portable-gsd.sh`
-- CI is allowed to assert this profile
+- bootstrap/install path is `./scripts/setup-portable-gsd-runtime.sh --runtime codex`
 - manifest/materialization verification and shipped-contract checks are expected to pass here
 
-Current CI coverage:
-- deterministic/package gate
-- bootstrap/integration gate
+### `claude-core`
 
-## Held Later Profiles
+This is the other active core profile.
 
-### `claude-runtime-development`
+- local runtime basis is `.claude`
+- bootstrap/install path is `./scripts/setup-portable-gsd-runtime.sh --runtime claude`
+- shared modifier-owned workflow, reference, template, and agent-markdown carriers are expected to pass here
 
-This profile remains explicitly later.
+## Runtime-Specific Carriers
+
+These are allowed to differ by runtime without failing parity on their own.
+
+Current examples:
+- Codex skill wrappers and TOML registry/config carriers
+- Claude command wrappers and `settings.json` / hook carriers
+
+Parity rule:
+- shared core outcomes must stay aligned
+- runtime-specific wrappers may differ when they are declared as such
+
+## Mixed Runtime
+
+### `dual-runtime-core`
+
+This profile is now active.
 
 It means:
-- `.claude` is still a held parity/runtime-development surface
-- the repo should remain readable and developable from Claude
-- the repo does not yet claim full `.claude` materialization parity in CI
+- the repo-self bootstrap/install path is `./scripts/setup-portable-gsd-runtime.sh --runtime both`
+- repo-self CI and bootstrap run manifest/materialization verification across both runtimes together
+- `python3 harness_modifier/contract/harness_canary.py report . --all-supported --strict` is part of the active mixed-runtime proof surface
 
-### `mixed-runtime`
-
-This profile also remains later.
-
-It means:
-- no claim yet that one install pass, one CI pass, or one support window covers both `.codex` and `.claude`
-- mixed-runtime behavior needs its own bounded widening lane before it becomes a release claim
+The manual host proof for this profile is still separate from standard CI:
+- `python3 harness_modifier/closure/host_exercise_matrix.py . --profile all --output-dir .planning/measurement/host-exercise-matrix --strict`
 
 ## Rule
 
-Do not widen CI or release language beyond `codex-core` until the later runtime profiles are exercised and accepted explicitly.
+Keep repo-self dual-runtime proof in CI/bootstrap, and rerun the synthetic host matrix before widening broader host compatibility or release language beyond the current bounded matrix.

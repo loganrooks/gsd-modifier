@@ -34,18 +34,21 @@ That means:
 Use [install-profiles.md](install-profiles.md) as the current runtime/install claim surface.
 
 Right now:
-- `codex-core` is the only actively exercised profile
-- `.claude` remains a held runtime-development surface
-- mixed-runtime claims remain later
+- `codex-core` and `claude-core` are the active core profiles
+- parity is defined at the shared capability layer, not the wrapper/config file layer
+- `dual-runtime-core` is active at the repo-self proof layer
+- the synthetic host matrix remains the manual release-readiness gate for broader host-shape language
+
+Use [host-exercise-matrix.md](host-exercise-matrix.md) for the current Codex plus dual-runtime host proof matrix.
 
 ## Typical Verification
 
 ```bash
 python3 -m py_compile $(find harness_modifier tooling/codex -name '*.py' -type f | tr '\n' ' ')
 python3 -m unittest discover -s tooling/codex/tests
-./scripts/setup-portable-gsd.sh
-python3 harness_modifier/contract/portable_gsd_contract.py validate-manifest . --strict
-python3 harness_modifier/contract/portable_gsd_contract.py verify-materialized . --strict
+./scripts/setup-portable-gsd-runtime.sh --runtime both
+python3 harness_modifier/contract/portable_gsd_contract.py validate-manifest . --all-supported --strict
+python3 harness_modifier/contract/portable_gsd_contract.py verify-materialized . --all-supported --strict
 git diff --check
 ```
 

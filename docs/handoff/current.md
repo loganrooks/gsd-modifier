@@ -3,8 +3,8 @@
 Date: 2026-04-23
 Repo: `/home/rookslog/workspace/projects/gsd-modifier`
 Branch: `main`
-Head: `ba0236e`
-Status: active standalone modifier repo
+Head baseline: `ba0236e`
+Status: active standalone modifier repo with dual-runtime-core promotion in the live worktree
 
 ## Role
 
@@ -16,10 +16,10 @@ Use this file to re-enter the repo without depending on chat memory.
 
 - migration is complete in the practical sense
 - this repo is now the active home for modifier work
-- `prix-guesser` is no longer the main execution home for modifier release-readiness work
-- filtered history was preserved for the migrated project surface
-- fresh bootstrap/onboarding/governance was added on top of that history
 - the extracted repo is self-hosting and locally verifiable
+- `codex-core`, `claude-core`, and `dual-runtime-core` are the active repo-self proof profiles
+- `.planning/` remains the shared runtime-neutral project canon
+- the synthetic host matrix now covers Codex-only and dual-runtime read-side, aligned, and conflict cases
 
 ## Governing Surfaces
 
@@ -29,56 +29,28 @@ Read in this order:
 2. [WORKFLOW.md](../../WORKFLOW.md)
 3. [docs/development.md](../development.md)
 4. [docs/install-profiles.md](../install-profiles.md)
-5. [docs/migration-origin.md](../migration-origin.md)
+5. [docs/host-exercise-matrix.md](../host-exercise-matrix.md)
 
 Historical carry:
 - compact orientation: [docs/origin-audit/current-route.md](../origin-audit/current-route.md)
 - historical archive: [docs/origin-audit/archive/README.md](../origin-audit/archive/README.md)
 
-## Migration Boundary
-
-Filtered history was carried for:
-- `harness_modifier/`
-- `tooling/codex/`
-- `tooling/portable-gsd/overlay/`
-- `scripts/setup-portable-gsd.sh`
-
-Freshly created in this repo:
-- root bootstrap docs
-- root governance/operator docs
-- `.planning/config.json`
-- Codex and Claude onboarding docs
-- carried origin-audit dossier and archive
-- first standalone CI layer
-
-Important consequence:
-- the current internal layout is still transitional
-- `tooling/portable-gsd/overlay/` and `harness_modifier/` remain one project even though they are not yet path-collapsed
-- internal path collapse is later work, not a blocker on current development
-
 ## Current Runtime / Install Claim
 
-Active profile:
+Active core profiles:
 - `codex-core`
+- `claude-core`
+- `dual-runtime-core`
 
-Held later:
-- `.claude` runtime-development widening
-- mixed-runtime support
-- broader optional install-profile matrix
+Repo-self proof is now carried by:
+- `./scripts/setup-portable-gsd-runtime.sh --runtime both`
+- `python3 harness_modifier/contract/harness_canary.py report . --all-supported --strict`
+- `python3 harness_modifier/contract/portable_gsd_contract.py validate-manifest . --all-supported --strict`
+- `python3 harness_modifier/contract/portable_gsd_contract.py verify-materialized . --all-supported --strict`
 
-Do not widen release or CI language beyond `codex-core` unless a later bounded widening slice is actually exercised and accepted.
-
-## Latest Accepted Checkpoints
-
-Migration/bootstrap:
-- `86e9f1c` `bootstrap: make extracted repo self-hosting and auditable`
-
-First standalone CI layer:
-- `ba0236e` `ci: add first standalone verification gates`
-
-Origin-side execution record:
-- `prix-guesser` records the completed move at origin commit `156fca3`
-- provenance summary is explained locally in [docs/migration-origin.md](../migration-origin.md)
+The synthetic host matrix remains a manual release-readiness gate for broader host-language changes:
+- [docs/host-exercise-matrix.md](../host-exercise-matrix.md)
+- [matrix-summary.json](../../.planning/measurement/host-exercise-matrix/matrix-summary.json)
 
 ## Verification Baseline
 
@@ -94,21 +66,19 @@ Canonical bootstrap/integration gate:
 bash scripts/ci/check-bootstrap.sh
 ```
 
-Those currently cover:
-- Python compile checks
-- shell syntax checks for CI/bootstrap scripts
-- deterministic unit subset
-- full repo bootstrap via `./scripts/setup-portable-gsd.sh`
-- full `tooling/codex/tests` suite
-- overlay manifest validation
-- materialized runtime verification
-- local markdown refmap verification
-- audit archive checksum verification
-- `git diff --check`
+Manual host-proof gate:
 
-Latest known result:
-- both CI scripts passed locally at `ba0236e`
-- full suite count: `147` tests passing
+```bash
+python3 harness_modifier/closure/host_exercise_matrix.py . \
+  --profile all \
+  --output-dir .planning/measurement/host-exercise-matrix \
+  --strict
+```
+
+Latest known local result:
+- `bash scripts/ci/check-deterministic.sh` passed
+- `bash scripts/ci/check-bootstrap.sh` passed
+- `.planning/measurement/host-exercise-matrix/matrix-summary.json` is currently `status: ok` across all six synthetic scenarios
 
 ## Current Repo Shape
 
@@ -116,6 +86,7 @@ Runtime/shipped surfaces:
 - `harness_modifier/`
 - `tooling/portable-gsd/overlay/`
 - `scripts/setup-portable-gsd.sh`
+- `scripts/setup-portable-gsd-runtime.sh`
 
 Development-support surfaces:
 - `tooling/codex/`
@@ -129,29 +100,20 @@ Historical carry:
 
 ## Immediate Next Move
 
-The next bounded release-readiness step should be the first host-fixture / canary deployment matrix.
+The next bounded release-readiness step is to widen host proof beyond the current synthetic matrix without reopening the parity architecture.
 
 That means:
-- define the first 2-3 host shapes we actually want to support
-- make those host shapes reproducible as fixtures, scripts, or packets
-- use them as the next release-readiness gate before widening `.claude` or mixed-runtime claims
-
-Recommended order:
-
-1. codify first host-shape matrix
-2. add reproducible host-exercise entrypoints
-3. prove them locally
-4. only then widen CI or release claims
+- keep the repo-self dual-runtime proof green
+- extend the host matrix beyond the current synthetic aligned/read-side/conflict shapes
+- start testing more realistic mixed-runtime host conditions and compatibility-drift cases
 
 ## Explicitly Later
 
-- `.claude` full materialization parity
-- mixed-runtime claims
-- richer optional install profiles
+- semantic merge tolerance for changed runtime-specific wrappers
+- upstream-template drift compatibility beyond exact declared carriers
+- richer optional install profiles beyond the current core contract
 - internal path collapse / overlay rehome cleanup
 - `modifier route vs own harness` strategy revisit
-
-These are not forgotten. They are later because the current strongest carry comes from keeping the extracted repo stable, testable, and honest about what it actively supports.
 
 ## Resume Checklist
 
@@ -162,8 +124,9 @@ When resuming work:
    - `git rev-parse --short HEAD`
 2. re-read the governing surfaces above
 3. run at least the deterministic gate if the work touches shipped or install-facing surfaces
-4. run the bootstrap gate before closing any release-readiness boundary
-5. leave a clean commit boundary
+4. run the bootstrap gate before closing any repo-self proof boundary
+5. rerun the host matrix if the work changes mixed-runtime host claims or host-proof semantics
+6. leave a clean commit boundary
 
 ## Anti-Drift Rule
 

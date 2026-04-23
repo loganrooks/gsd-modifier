@@ -14,7 +14,7 @@ This is the day-one Codex bootstrap for continuing `gsd-modifier` development in
 ## Bootstrap
 
 ```bash
-./scripts/setup-portable-gsd.sh
+./scripts/setup-portable-gsd-runtime.sh --runtime codex
 python3 -m py_compile $(find harness_modifier tooling/codex -name '*.py' -type f | tr '\n' ' ')
 python3 -m unittest discover -s tooling/codex/tests
 ```
@@ -23,4 +23,5 @@ python3 -m unittest discover -s tooling/codex/tests
 
 - this repo now owns the modifier project directly
 - `tooling/portable-gsd/overlay/` is still part of the same project even though the internal layout is transitional
+- parity is now defined at the shared capability layer across Codex and Claude, not by identical runtime wrappers
 - the carried origin-audit context is in [docs/origin-audit](../origin-audit), not in chat memory
