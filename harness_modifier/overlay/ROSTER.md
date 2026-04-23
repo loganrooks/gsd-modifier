@@ -22,7 +22,7 @@ Context rule:
     context tokens instead of host-absolute embedded paths
 - the remaining live blockers are now narrower:
   - helper-payload authority now splits more sharply:
-    - the first two `project_uplift.py` neutralization tranches are now landed, so the next helper question is post-second-neutralization payload-home judgment rather than carrier extraction
+    - the first three `project_uplift.py` neutralization tranches are now landed, so the next helper question is post-third-neutralization payload-home judgment rather than carrier extraction
     - `seed_migration_inventory.py` is downstream of `project_uplift.py`
     - `audit_refmap.py` is now out of the later payload-movement candidate set and remains repo-local audit tooling
   - overwrite-family workflow/template/reference carriers that still preserve
@@ -174,7 +174,7 @@ Current blocker state:
 - the next remaining blockers are no longer the specialist trio:
   - helper-payload authority split now lives explicitly in
     `harness_modifier/overlay/helpers/AUTHORITY-MAP.md`
-  - post-neutralization `project_uplift.py` payload-home judgment before any later payload movement
+  - post-third-neutralization `project_uplift.py` payload-home judgment before any later payload movement
   - `seed_migration_inventory.py` as a downstream helper that cannot lead
     movement
   - `audit_refmap.py` as a sharper repo-local audit-tooling family rather than
@@ -190,7 +190,7 @@ Current blocker state:
 Later slices after that first rehome:
 - helper authority map now landed under
   `harness_modifier/overlay/helpers/AUTHORITY-MAP.md`
-- next bounded move: post-neutralization `project_uplift.py` payload-home
+- next bounded move: post-third-neutralization `project_uplift.py` payload-home
   judgment before any later helper payload movement
 - continuity references
 - `gsd-rigorous-research` generic tranche

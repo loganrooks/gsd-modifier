@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "state_rel_path": ".planning/STATE.md",
+  "sibling_markers": [
+    "## Deferred Items",
+    "## Session Continuity"
+  ],
+  "ordered_selector_keys": [
+    "last_uplift_pass",
+    "last_uplift_class",
+    "last_uplift_secondary_signals",
+    "phase_boundary_signal",
+    "doctrine_reference_changed",
+    "compatibility_posture",
+    "compatibility_declaration",
+    "observed_runtime_basis",
+    "held_runtime_annotation",
+    "seed_corpus_posture",
+    "pending_doctrine_sensitive_proposals",
+    "current_recommendation",
+    "current_uplift_report",
+    "current_uplift_manifest"
+  ],
+  "selector_labels": {
+    "last_uplift_pass": "Last uplift pass",
+    "last_uplift_class": "Last uplift class",
+    "last_uplift_secondary_signals": "Last uplift secondary signals",
+    "phase_boundary_signal": "Phase boundary signal",
+    "doctrine_reference_changed": "Doctrine reference changed since prior uplift",
+    "compatibility_posture": "Compatibility posture",
+    "compatibility_declaration": "Compatibility declaration",
+    "observed_runtime_basis": "Observed runtime basis",
+    "held_runtime_annotation": "Held runtime annotation",
+    "seed_corpus_posture": "Seed corpus posture",
+    "pending_doctrine_sensitive_proposals": "Pending doctrine-sensitive proposals",
+    "current_recommendation": "Current recommendation",
+    "current_uplift_report": "Current uplift report",
+    "current_uplift_manifest": "Current uplift manifest"
+  }
+}

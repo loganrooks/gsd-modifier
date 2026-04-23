@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "phase_root_rel_path": ".planning/phases",
+  "document_globs": {
+    "context": "*/*-CONTEXT.md",
+    "plan": "*/*-PLAN.md",
+    "summary": "*/*-SUMMARY.md"
+  },
+  "phase_name_delimiter": "-",
+  "phase_segment_delimiter": "."
+}

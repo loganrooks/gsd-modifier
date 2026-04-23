@@ -23,6 +23,8 @@ from harness_modifier.compatibility import observation as compatibility_observat
 from harness_modifier.compatibility import seed_contract as compatibility_seed_contract
 from harness_modifier.uplift import carrier_catalog as uplift_carrier_catalog
 from harness_modifier.uplift import output_policy as uplift_output_policy
+from harness_modifier.uplift import phase_layout as uplift_phase_layout
+from harness_modifier.uplift import state_writer as uplift_state_writer
 from harness_modifier.uplift import vocabulary as uplift_vocabulary
 
 
@@ -62,6 +64,10 @@ def seed_contract_policy() -> dict:
 
 def uplift_output_policy_data() -> dict:
     return uplift_output_policy.load_output_policy()
+
+
+def phase_layout_policy() -> dict:
+    return uplift_phase_layout.load_phase_layout()
 
 
 def carrier_catalog_policy() -> dict:
@@ -244,7 +250,7 @@ def read_runtime_version_at(repo_root: pathlib.Path, rel_path_str: str) -> tuple
 
 
 def state_status(repo_root: pathlib.Path) -> str:
-    state_path = repo_root / ".planning" / "STATE.md"
+    state_path = repo_root / uplift_state_writer.state_rel_path()
     text = read_text(state_path)
     if not text:
         return "unknown"
@@ -261,11 +267,19 @@ def state_status(repo_root: pathlib.Path) -> str:
     return "unknown"
 
 
-def count_phase_files(repo_root: pathlib.Path, pattern: str) -> int:
-    phase_root = repo_root / ".planning" / "phases"
+def phase_root_path(repo_root: pathlib.Path) -> pathlib.Path:
+    return repo_root / str(phase_layout_policy()["phase_root_rel_path"])
+
+
+def phase_document_glob(kind: str) -> str:
+    return str(phase_layout_policy()["document_globs"][kind])
+
+
+def count_phase_files(repo_root: pathlib.Path, kind: str) -> int:
+    phase_root = phase_root_path(repo_root)
     if not phase_root.exists():
         return 0
-    return sum(1 for _ in phase_root.glob(pattern))
+    return sum(1 for _ in phase_root.glob(phase_document_glob(kind)))
 
 
 def runtime_dirs_present(repo_root: pathlib.Path) -> list[str]:
@@ -467,9 +481,10 @@ def load_held_later_families(repo_root: pathlib.Path) -> list[dict]:
 
 
 def phase_sort_key(path: pathlib.Path) -> tuple:
-    prefix = path.parent.name.split("-", 1)[0]
+    layout = phase_layout_policy()
+    prefix = path.parent.name.split(str(layout["phase_name_delimiter"]), 1)[0]
     parts: list[tuple[int, int | str]] = []
-    for piece in prefix.split("."):
+    for piece in prefix.split(str(layout["phase_segment_delimiter"])):
         if piece.isdigit():
             parts.append((0, int(piece)))
         else:
@@ -478,10 +493,10 @@ def phase_sort_key(path: pathlib.Path) -> tuple:
 
 
 def latest_phase_context_path(repo_root: pathlib.Path) -> pathlib.Path | None:
-    phase_root = repo_root / ".planning" / "phases"
+    phase_root = phase_root_path(repo_root)
     if not phase_root.exists():
         return None
-    context_paths = list(phase_root.glob("*/*-CONTEXT.md"))
+    context_paths = list(phase_root.glob(phase_document_glob("context")))
     if not context_paths:
         return None
     return sorted(context_paths, key=phase_sort_key)[-1]
@@ -1093,8 +1108,8 @@ def analyze_repo(repo_root: pathlib.Path) -> dict:
     state_exists = (planning_root / "STATE.md").exists()
     runtime_dirs = runtime_dirs_present(repo_root)
     current_status = state_status(repo_root)
-    plan_count = count_phase_files(repo_root, "*/*-PLAN.md")
-    summary_count = count_phase_files(repo_root, "*/*-SUMMARY.md")
+    plan_count = count_phase_files(repo_root, "plan")
+    summary_count = count_phase_files(repo_root, "summary")
     active_phase = current_status.lower() not in {"completed", "unknown"} or plan_count > summary_count
 
     file_specs = file_carrier_specs() + build_runtime_agent_specs(repo_root)
@@ -1369,7 +1384,7 @@ def post_write_analysis(analysis: dict) -> dict:
     }
 
 
-def state_section_text(analysis: dict) -> str:
+def build_state_section_values(analysis: dict) -> dict[str, str]:
     output_policy = uplift_output_policy_data()
     recommendation = (
         recommendation_text("state_detect_only")
@@ -1379,53 +1394,34 @@ def state_section_text(analysis: dict) -> str:
     pending_count = len(analysis["pending_doctrine_sensitive_proposals"])
     secondary = ", ".join(analysis["secondary_signals"]) if analysis["secondary_signals"] else "none"
     compatibility = analysis["compatibility_basis"]
-    return "\n".join(
-        [
-            output_policy["state_heading"],
-            "",
-            f"Last uplift pass: {analysis['generated_at']}",
-            f"Last uplift class: {analysis['project_class']}",
-            f"Last uplift secondary signals: {secondary}",
-            f"Phase boundary signal: {analysis['phase_boundary_signal']['note']}",
-            f"Doctrine reference changed since prior uplift: {'yes' if analysis['doctrine_reference_changed'] else 'no'}",
-            f"Compatibility posture: {compatibility['compatibility_posture']}",
-            f"Compatibility declaration: {compatibility['compatibility_declaration_path']}",
-            f"Observed runtime basis: {', '.join(compatibility['observed_runtime_version_set']) if compatibility['observed_runtime_version_set'] else 'unrecorded'}",
-            (
-                f"Held runtime annotation: {compatibility['held_runtime_annotation_summary']}"
-                if compatibility["held_runtime_annotation_summary"]
-                else "Held runtime annotation: none"
-            ),
-            f"Seed corpus posture: {seed_corpus_summary(analysis['seed_corpus_posture'])}",
-            f"Pending doctrine-sensitive proposals: {pending_count}",
-            f"Current recommendation: {recommendation}",
-            f"Current uplift report: {output_policy['report_rel_path']}",
-            f"Current uplift manifest: {output_policy['manifest_rel_path']}",
-            "",
-        ]
-    )
+    return {
+        "last_uplift_pass": str(analysis["generated_at"]),
+        "last_uplift_class": str(analysis["project_class"]),
+        "last_uplift_secondary_signals": secondary,
+        "phase_boundary_signal": str(analysis["phase_boundary_signal"]["note"]),
+        "doctrine_reference_changed": "yes" if analysis["doctrine_reference_changed"] else "no",
+        "compatibility_posture": str(compatibility["compatibility_posture"]),
+        "compatibility_declaration": str(compatibility["compatibility_declaration_path"]),
+        "observed_runtime_basis": (
+            ", ".join(compatibility["observed_runtime_version_set"])
+            if compatibility["observed_runtime_version_set"]
+            else "unrecorded"
+        ),
+        "held_runtime_annotation": compatibility["held_runtime_annotation_summary"] or "none",
+        "seed_corpus_posture": seed_corpus_summary(analysis["seed_corpus_posture"]),
+        "pending_doctrine_sensitive_proposals": str(pending_count),
+        "current_recommendation": recommendation,
+        "current_uplift_report": str(output_policy["report_rel_path"]),
+        "current_uplift_manifest": str(output_policy["manifest_rel_path"]),
+    }
+
+
+def state_section_text(analysis: dict) -> str:
+    return uplift_state_writer.render_state_section(build_state_section_values(analysis))
 
 
 def update_state_section(repo_root: pathlib.Path, analysis: dict) -> None:
-    heading = state_heading()
-    state_path = repo_root / ".planning" / "STATE.md"
-    text = read_text(state_path)
-    if text is None:
-        return
-    section = state_section_text(analysis)
-    pattern = re.compile(rf"\n{re.escape(heading)}\n[\s\S]*?(?=\n## |\Z)")
-    if pattern.search(text):
-        updated = pattern.sub("\n" + section.rstrip() + "\n", text)
-    else:
-        deferred_marker = "\n## Deferred Items"
-        session_marker = "\n## Session Continuity"
-        if deferred_marker in text:
-            updated = text.replace(deferred_marker, "\n" + section.rstrip() + "\n" + deferred_marker, 1)
-        elif session_marker in text:
-            updated = text.replace(session_marker, "\n" + section.rstrip() + "\n" + session_marker, 1)
-        else:
-            updated = text.rstrip() + "\n\n" + section
-    state_path.write_text(updated, encoding="utf-8")
+    uplift_state_writer.write_state_section(repo_root, build_state_section_values(analysis))
 
 
 def write_outputs(repo_root: pathlib.Path, analysis: dict) -> dict:

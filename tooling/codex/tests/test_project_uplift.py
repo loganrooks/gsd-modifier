@@ -8,6 +8,9 @@ from harness_modifier.compatibility import observation as compatibility_observat
 from harness_modifier.compatibility import seed_contract as compatibility_seed_contract
 from harness_modifier.uplift import carrier_catalog as uplift_carrier_catalog
 from harness_modifier.uplift import output_policy as uplift_output_policy
+from harness_modifier.uplift import phase_layout as uplift_phase_layout
+from harness_modifier.uplift import state_section as uplift_state_section
+from harness_modifier.uplift import state_writer as uplift_state_writer
 from harness_modifier.uplift import vocabulary as uplift_vocabulary
 from tooling.codex import project_uplift as pu
 
@@ -16,6 +19,8 @@ OBSERVATION_POLICY = compatibility_observation.load_observation()
 SEED_CONTRACT = compatibility_seed_contract.load_seed_contract()
 CARRIER_CATALOG = uplift_carrier_catalog.load_carrier_catalog()
 OUTPUT_POLICY = uplift_output_policy.load_output_policy()
+PHASE_LAYOUT = uplift_phase_layout.load_phase_layout()
+STATE_SECTION = uplift_state_section.load_state_section()
 VOCABULARY = uplift_vocabulary.load_vocabulary()
 
 
@@ -194,6 +199,23 @@ class ProjectUpliftTests(unittest.TestCase):
         self.assertEqual(
             VOCABULARY["recommendations"]["progress_continue"],
             "Continue with current routing.",
+        )
+        self.assertEqual(PHASE_LAYOUT["phase_root_rel_path"], ".planning/phases")
+        self.assertEqual(PHASE_LAYOUT["document_globs"]["context"], "*/*-CONTEXT.md")
+        self.assertEqual(PHASE_LAYOUT["phase_name_delimiter"], "-")
+        self.assertEqual(PHASE_LAYOUT["phase_segment_delimiter"], ".")
+        self.assertEqual(STATE_SECTION["state_rel_path"], ".planning/STATE.md")
+        self.assertEqual(
+            STATE_SECTION["sibling_markers"],
+            ["## Deferred Items", "## Session Continuity"],
+        )
+        self.assertEqual(
+            STATE_SECTION["ordered_selector_keys"][:3],
+            ["last_uplift_pass", "last_uplift_class", "last_uplift_secondary_signals"],
+        )
+        self.assertEqual(
+            STATE_SECTION["selector_labels"]["current_uplift_manifest"],
+            "Current uplift manifest",
         )
 
     def test_detect_classifies_vanilla_project(self) -> None:
@@ -405,6 +427,91 @@ class ProjectUpliftTests(unittest.TestCase):
                     proposal["label"] == "Root AGENTS" and proposal["proposal_state"] == "drifted"
                     for proposal in changed_note["pending_doctrine_sensitive_proposals"]
                 )
+            )
+
+    def test_state_writer_inserts_before_deferred_items(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="completed")
+            self._write_doctrine_stack(repo_root)
+            self._write(
+                repo_root,
+                ".planning/STATE.md",
+                "---\nstatus: completed\n---\n\n# Project State\n\n## Deferred Items\n- later\n",
+            )
+
+            analysis = pu.analyze_repo(repo_root)
+            pu.update_state_section(repo_root, analysis)
+
+            state_text = (repo_root / ".planning/STATE.md").read_text(encoding="utf-8")
+            self.assertLess(state_text.index("## Project Uplift"), state_text.index("## Deferred Items"))
+            self.assertIn("Current uplift manifest: .planning/UPLIFT-MANIFEST.json", state_text)
+
+    def test_state_writer_replaces_existing_section_in_place(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="completed")
+            self._write_doctrine_stack(repo_root)
+
+            analysis = pu.analyze_repo(repo_root)
+            initial_values = pu.build_state_section_values(analysis)
+            existing_text = "\n".join(
+                [
+                    "---",
+                    "status: completed",
+                    "---",
+                    "",
+                    "# Project State",
+                    "",
+                    uplift_state_writer.render_state_section(initial_values).rstrip(),
+                    "",
+                    "## Session Continuity",
+                    "Resume file: None",
+                    "",
+                ]
+            )
+            self._write(repo_root, ".planning/STATE.md", existing_text)
+
+            analysis["project_class"] = "cross-runtime uplift"
+            pu.update_state_section(repo_root, analysis)
+
+            state_text = (repo_root / ".planning/STATE.md").read_text(encoding="utf-8")
+            self.assertEqual(state_text.count("## Project Uplift"), 1)
+            self.assertIn("Last uplift class: cross-runtime uplift", state_text)
+
+    def test_state_writer_appends_when_no_sibling_marker_exists(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="completed")
+            self._write_doctrine_stack(repo_root)
+            self._write(
+                repo_root,
+                ".planning/STATE.md",
+                "---\nstatus: completed\n---\n\n# Project State\n\nNo markers here.\n",
+            )
+
+            analysis = pu.analyze_repo(repo_root)
+            pu.update_state_section(repo_root, analysis)
+
+            state_text = (repo_root / ".planning/STATE.md").read_text(encoding="utf-8")
+            self.assertTrue(state_text.rstrip().endswith("Current uplift manifest: .planning/UPLIFT-MANIFEST.json"))
+
+    def test_phase_layout_drives_count_and_latest_context_selection(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._minimal_project(repo_root, status="planning")
+            self._write_doctrine_stack(repo_root)
+            self._write(repo_root, ".planning/phases/2.9-earlier/2.9-CONTEXT.md", "# Context\n")
+            self._write(repo_root, ".planning/phases/2.10-later/2.10-CONTEXT.md", "# Context\n")
+            self._write(repo_root, ".planning/phases/2.9-earlier/2.9-PLAN.md", "# Plan\n")
+            self._write(repo_root, ".planning/phases/2.10-later/2.10-PLAN.md", "# Plan\n")
+            self._write(repo_root, ".planning/phases/2.9-earlier/2.9-SUMMARY.md", "# Summary\n")
+
+            self.assertEqual(pu.count_phase_files(repo_root, "plan"), 2)
+            self.assertEqual(pu.count_phase_files(repo_root, "summary"), 1)
+            self.assertEqual(
+                pu.latest_phase_context_path(repo_root),
+                repo_root / ".planning/phases/2.10-later/2.10-CONTEXT.md",
             )
 
     def test_progress_note_render_contract_matches_overlay_consumers(self) -> None:
