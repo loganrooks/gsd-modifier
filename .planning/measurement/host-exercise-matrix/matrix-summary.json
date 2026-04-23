@@ -1,0 +1,160 @@
+{
+  "captured_at": "2026-04-23T14:59:18.832173+00:00",
+  "host_staging_root": "/home/rookslog/workspace/projects/.gsd-modifier-host-exercise-matrix",
+  "issues": [],
+  "matrix_id": "host-exercise-matrix",
+  "modifier_repo_root": "/home/rookslog/workspace/projects/gsd-modifier",
+  "output_dir": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix",
+  "profile": "all",
+  "scenario_count": 6,
+  "scenarios": [
+    {
+      "actual_disposition": "shift-mode",
+      "artifact_paths": {
+        "observation_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/pristine-read-side/artifacts/pristine-read-side-observation.json",
+        "packet_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/pristine-read-side/artifacts/pristine-read-side-packet.json",
+        "runtime_visibility_snapshot_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/pristine-read-side/artifacts/pristine-read-side-runtime-visibility-snapshot.json",
+        "verify_materialized_summary_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/pristine-read-side/artifacts/pristine-read-side-verify-materialized-summary.md"
+      },
+      "compatibility_window_state": "inside-window",
+      "expected_disposition": "shift-mode",
+      "fixture_kind": "pristine-read-side",
+      "host_age_posture": "pristine",
+      "host_reference": "fixture-pristine-read-side",
+      "host_repo_root": "/home/rookslog/workspace/projects/.gsd-modifier-host-exercise-matrix/pristine-read-side/host",
+      "issues": [],
+      "parity_state": "single-runtime",
+      "profile": "codex",
+      "runtime_targets": [
+        "codex"
+      ],
+      "scenario_id": "pristine-read-side",
+      "verify_materialized_hard_failure_count": 0,
+      "verify_materialized_skipped": true
+    },
+    {
+      "actual_disposition": "accept",
+      "artifact_paths": {
+        "observation_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/materialized-aligned/artifacts/materialized-aligned-observation.json",
+        "packet_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/materialized-aligned/artifacts/materialized-aligned-packet.json",
+        "runtime_visibility_snapshot_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/materialized-aligned/artifacts/materialized-aligned-runtime-visibility-snapshot.json",
+        "verify_materialized_summary_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/materialized-aligned/artifacts/materialized-aligned-verify-materialized-summary.md"
+      },
+      "compatibility_window_state": "inside-window",
+      "expected_disposition": "accept",
+      "fixture_kind": "materialized-aligned",
+      "host_age_posture": "lightly-aged",
+      "host_reference": "fixture-materialized-aligned",
+      "host_repo_root": "/home/rookslog/workspace/projects/.gsd-modifier-host-exercise-matrix/materialized-aligned/host",
+      "issues": [],
+      "parity_state": "single-runtime",
+      "profile": "codex",
+      "runtime_targets": [
+        "codex"
+      ],
+      "scenario_id": "materialized-aligned",
+      "verify_materialized_hard_failure_count": 0,
+      "verify_materialized_skipped": false
+    },
+    {
+      "actual_disposition": "refuse",
+      "artifact_paths": {
+        "observation_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/version-drift/artifacts/version-drift-observation.json",
+        "packet_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/version-drift/artifacts/version-drift-packet.json",
+        "runtime_visibility_snapshot_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/version-drift/artifacts/version-drift-runtime-visibility-snapshot.json",
+        "verify_materialized_summary_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/version-drift/artifacts/version-drift-verify-materialized-summary.md"
+      },
+      "compatibility_window_state": "outside-window",
+      "expected_disposition": "refuse",
+      "fixture_kind": "version-drift",
+      "host_age_posture": "drifted",
+      "host_reference": "fixture-version-drift",
+      "host_repo_root": "/home/rookslog/workspace/projects/.gsd-modifier-host-exercise-matrix/version-drift/host",
+      "issues": [],
+      "parity_state": "single-runtime",
+      "profile": "codex",
+      "runtime_targets": [
+        "codex"
+      ],
+      "scenario_id": "version-drift",
+      "verify_materialized_hard_failure_count": 0,
+      "verify_materialized_skipped": true
+    },
+    {
+      "actual_disposition": "shift-mode",
+      "artifact_paths": {
+        "observation_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/dual-runtime-read-side/artifacts/dual-runtime-read-side-observation.json",
+        "packet_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/dual-runtime-read-side/artifacts/dual-runtime-read-side-packet.json",
+        "runtime_visibility_snapshot_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/dual-runtime-read-side/artifacts/dual-runtime-read-side-runtime-visibility-snapshot.json",
+        "verify_materialized_summary_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/dual-runtime-read-side/artifacts/dual-runtime-read-side-verify-materialized-summary.md"
+      },
+      "compatibility_window_state": "inside-window",
+      "expected_disposition": "shift-mode",
+      "fixture_kind": "dual-runtime-read-side",
+      "host_age_posture": "pristine",
+      "host_reference": "fixture-dual-runtime-read-side",
+      "host_repo_root": "/home/rookslog/workspace/projects/.gsd-modifier-host-exercise-matrix/dual-runtime-read-side/host",
+      "issues": [],
+      "parity_state": "dual-runtime-read-side",
+      "profile": "dual-runtime",
+      "runtime_targets": [
+        "codex",
+        "claude"
+      ],
+      "scenario_id": "dual-runtime-read-side",
+      "verify_materialized_hard_failure_count": 0,
+      "verify_materialized_skipped": true
+    },
+    {
+      "actual_disposition": "accept",
+      "artifact_paths": {
+        "observation_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/dual-runtime-aligned/artifacts/dual-runtime-aligned-observation.json",
+        "packet_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/dual-runtime-aligned/artifacts/dual-runtime-aligned-packet.json",
+        "runtime_visibility_snapshot_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/dual-runtime-aligned/artifacts/dual-runtime-aligned-runtime-visibility-snapshot.json",
+        "verify_materialized_summary_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/dual-runtime-aligned/artifacts/dual-runtime-aligned-verify-materialized-summary.md"
+      },
+      "compatibility_window_state": "inside-window",
+      "expected_disposition": "accept",
+      "fixture_kind": "dual-runtime-aligned",
+      "host_age_posture": "lightly-aged",
+      "host_reference": "fixture-dual-runtime-aligned",
+      "host_repo_root": "/home/rookslog/workspace/projects/.gsd-modifier-host-exercise-matrix/dual-runtime-aligned/host",
+      "issues": [],
+      "parity_state": "dual-runtime-aligned",
+      "profile": "dual-runtime",
+      "runtime_targets": [
+        "codex",
+        "claude"
+      ],
+      "scenario_id": "dual-runtime-aligned",
+      "verify_materialized_hard_failure_count": 0,
+      "verify_materialized_skipped": false
+    },
+    {
+      "actual_disposition": "refuse",
+      "artifact_paths": {
+        "observation_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/dual-runtime-core-conflict/artifacts/dual-runtime-core-conflict-observation.json",
+        "packet_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/dual-runtime-core-conflict/artifacts/dual-runtime-core-conflict-packet.json",
+        "runtime_visibility_snapshot_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/dual-runtime-core-conflict/artifacts/dual-runtime-core-conflict-runtime-visibility-snapshot.json",
+        "verify_materialized_summary_path": "/home/rookslog/workspace/projects/gsd-modifier/.planning/measurement/host-exercise-matrix/dual-runtime-core-conflict/artifacts/dual-runtime-core-conflict-verify-materialized-summary.md"
+      },
+      "compatibility_window_state": "outside-window",
+      "expected_disposition": "refuse",
+      "fixture_kind": "dual-runtime-core-conflict",
+      "host_age_posture": "drifted",
+      "host_reference": "fixture-dual-runtime-core-conflict",
+      "host_repo_root": "/home/rookslog/workspace/projects/.gsd-modifier-host-exercise-matrix/dual-runtime-core-conflict/host",
+      "issues": [],
+      "parity_state": "dual-runtime-conflict",
+      "profile": "dual-runtime",
+      "runtime_targets": [
+        "codex",
+        "claude"
+      ],
+      "scenario_id": "dual-runtime-core-conflict",
+      "verify_materialized_hard_failure_count": 0,
+      "verify_materialized_skipped": false
+    }
+  ],
+  "status": "ok"
+}
