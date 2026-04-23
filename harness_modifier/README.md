@@ -7,6 +7,9 @@ Current first-slice split:
   - portable install/materialization contract helpers
   - runtime/install visibility and coherence helpers
   - bounded canary surfaces
+- `closure/`
+  - responsible-closure observation-record carrier
+  - validated writer for the first JSON-only responsible-closure observation record
 - `capture/`
   - launch-truth capture
   - runtime snapshot capture

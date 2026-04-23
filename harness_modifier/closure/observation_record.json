@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "default_carrier_version": 1,
+  "bundle_family": "responsible-closure",
+  "default_provenance_schema": "v2_split",
+  "default_status": "recorded",
+  "initial_automation_level": 1,
+  "format": "json_only",
+  "status_vocab": [
+    "recorded",
+    "reviewed",
+    "revised",
+    "superseded"
+  ],
+  "disposition_vocab": [
+    "accept",
+    "warn",
+    "refuse",
+    "shift-mode"
+  ],
+  "check_outcome_vocab": [
+    "accept",
+    "warn",
+    "refuse",
+    "shift-mode"
+  ],
+  "evidence_family_vocab": [
+    "runtime",
+    "derived",
+    "modifier"
+  ],
+  "signal_family_keys": [
+    "deployment_context",
+    "expectation_vs_observation",
+    "semantic_deviation",
+    "positive_gain",
+    "measurement_provenance"
+  ],
+  "measurement_provenance_keys": [
+    "detected_by",
+    "written_by",
+    "about_work"
+  ],
+  "semantic_deviation_subtypes": [
+    "config-mismatch",
+    "capability-gap",
+    "contract-mismatch",
+    "overlay-authority-drift",
+    "refmap-topology-drift",
+    "parity-classifier-drift"
+  ],
+  "positive_gain_subtypes": [
+    "carry-broadened",
+    "authority-clarified",
+    "portability-broadened",
+    "verification-surface-sharpened"
+  ],
+  "automation_skip_reasons": [
+    "level-0",
+    "level-1",
+    "level-2",
+    "reentrancy",
+    "lock-race",
+    "disabled",
+    "threshold-not-met",
+    "insufficient-signals",
+    "session-cooldown",
+    "collection-error",
+    "parse-error",
+    "agent-error",
+    "timeout",
+    "context_deferred"
+  ],
+  "optional_fields": [
+    "narrative_summary"
+  ],
+  "required_top_level_fields": [
+    "observation_id",
+    "carrier_version",
+    "provenance_schema",
+    "status",
+    "automation_level",
+    "observed_at",
+    "basis_commit",
+    "bundle_family",
+    "exercise_id",
+    "target_host_class",
+    "evidence_family",
+    "disposition",
+    "deployment_context",
+    "expectation_vs_observation",
+    "semantic_deviation",
+    "positive_gain",
+    "measurement_provenance"
+  ]
+}
