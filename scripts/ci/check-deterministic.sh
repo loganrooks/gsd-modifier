@@ -15,7 +15,9 @@ bash -n scripts/ci/check-bootstrap.sh
 python3 -m unittest \
   tooling.codex.tests.test_audit_refmap \
   tooling.codex.tests.test_closure_observation_writer \
+  tooling.codex.tests.test_closure_host_exercise_matrix \
   tooling.codex.tests.test_closure_host_exercise_packet_writer \
+  tooling.codex.tests.test_runtime_adapter_parity \
   tooling.codex.tests.test_harness_canary
 
 python3 harness_modifier/contract/portable_gsd_contract.py validate-manifest . --strict

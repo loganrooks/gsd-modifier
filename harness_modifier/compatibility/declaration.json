@@ -1,29 +1,77 @@
 {
-  "schema_version": 1,
-  "compatibility_posture": "observed_basis_only",
+  "schema_version": 2,
+  "compatibility_posture": "core_runtime_parity",
   "runtime_basis": {
     "runtime": ".codex",
-    "basis_mode": "observed_runtime_anchor",
+    "basis_mode": "core_profile_default_anchor",
     "version_source": ".codex/get-shit-done/VERSION",
     "manifest_version_source": ".codex/gsd-file-manifest.json"
   },
-  "runtime_held_annotations": [
-    {
-      "runtime": ".claude",
-      "annotation_posture": "held_annotation",
+  "runtime_held_annotations": [],
+  "runtime_profiles": {
+    "codex": {
+      "profile_name": "codex-core",
+      "runtime_root": ".codex",
+      "basis_mode": "active_core_profile",
+      "version_source": ".codex/get-shit-done/VERSION",
+      "manifest_version_source": ".codex/gsd-file-manifest.json",
+      "entrypoint_family": "skills_config",
+      "core_state": "active"
+    },
+    "claude": {
+      "profile_name": "claude-core",
+      "runtime_root": ".claude",
+      "basis_mode": "active_core_profile",
       "version_source": ".claude/get-shit-done/VERSION",
-      "note": "second runtime is recorded as a held compatibility annotation while the observed basis remains anchored to .codex"
+      "manifest_version_source": ".claude/gsd-file-manifest.json",
+      "entrypoint_family": "commands_settings",
+      "core_state": "active"
     }
-  ],
-  "overlay_schema_version": 2,
+  },
+  "capability_contract": {
+    "tiers": [
+      "core_required",
+      "core_adapted",
+      "runtime_specific"
+    ],
+    "core_runtime_profiles": [
+      "codex",
+      "claude"
+    ],
+    "parity_definition": "core parity means equivalent modifier-owned outcomes across Codex and Claude, even when runtime wrappers, registries, or harness mechanics differ",
+    "runtime_specific_rule": "runtime_specific carriers may vary by runtime and do not fail parity by themselves"
+  },
+  "support_claims": {
+    "compatibility_posture": "core_runtime_parity",
+    "active_core_profiles": [
+      "codex",
+      "claude"
+    ],
+    "profile_statuses": {
+      "codex-core": "active",
+      "claude-core": "active",
+      "dual-runtime-core": "active"
+    },
+    "release_gate": "repo-self dual-runtime proof is in bootstrap and CI; the synthetic host matrix remains the manual release-readiness gate for broader host-language changes",
+    "window_state": "dual_runtime_core_profiles",
+    "note": "Codex, Claude, and dual-runtime core profiles are active; runtime-specific divergence remains non-blocking when declared."
+  },
+  "mixed_runtime_policy": {
+    "profile_name": "dual-runtime-core",
+    "state": "active",
+    "core_divergence_disposition": "refuse",
+    "runtime_specific_divergence_disposition": "warn",
+    "note": "Dual-runtime-core is active once repo-self proof is green; rerun the synthetic host matrix before widening broader host compatibility language."
+  },
+  "overlay_schema_version": 3,
   "uplift_manifest_schema_version": 6,
   "upstream_compatibility_window": {
-    "mode": "observed_basis_only",
-    "state": "unknown",
-    "note": "support-window claims stay anchored to the observed runtime basis until later exercised widening earns more"
+    "mode": "dual_runtime_core_profiles",
+    "state": "active",
+    "note": "Repo-self support language now includes the composed dual-runtime core profile; broader host compatibility still relies on the manual synthetic host matrix."
   },
   "parity_scan_baseline": {
-    "target_runtime": ".codex",
+    "target_runtime": "codex",
     "scope": "live .codex .md/.toml files excluding CHANGELOG.md",
     "rules": [
       {
@@ -60,15 +108,14 @@
     ]
   },
   "check_protocol": [
-    "compare candidate runtime version to observed_runtime_version",
-    "compare candidate runtime manifest version to observed_runtime_manifest_version when present",
-    "compare held runtime annotation values when a second runtime is intentionally carried inside the compatibility anchor",
-    "rerun ./scripts/setup-portable-gsd.sh before refreshing durable uplift memory after runtime movement",
-    "rerun $gsd-uplift-project --write after runtime movement so compatibility anchors and uplift posture stay in tune"
+    "compare codex and claude runtime versions to their own manifests independently",
+    "treat shared capability carriers as parity-governed and runtime-specific carriers as non-blocking to parity",
+    "keep repo-self dual-runtime materialization verification green and rerun the synthetic host matrix before widening broader host compatibility language",
+    "rerun ./scripts/setup-portable-gsd-runtime.sh --runtime both before refreshing durable uplift memory after runtime movement",
+    "rerun $gsd-uplift-project --write after runtime movement so parity anchors and uplift posture stay in tune"
   ],
   "held_later": [
-    "version-window claims beyond the observed runtime basis",
-    "cross-runtime compatibility matrix",
-    "upstream-template drift compatibility"
+    "semantic merge tolerance for changed runtime-specific wrappers",
+    "upstream-template drift compatibility beyond exact declared carriers"
   ]
 }

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import pathlib
 import re
 import sys
@@ -15,6 +16,7 @@ if str(REPO_ROOT_FOR_IMPORTS) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT_FOR_IMPORTS))
 
 from harness_modifier.compatibility import declaration as compatibility_declaration
+from harness_modifier.contract.runtime_adapters import registry as runtime_adapter_registry
 
 
 DEFAULT_COMPACT_PROMPT_FILE = "tooling/compact-prompts/project.md"
@@ -22,6 +24,7 @@ LOCAL_COMPACT_PROMPT_SELECTOR = ".codex.local/compact-prompt.txt"
 OVERLAY_REL_PATH = "tooling/portable-gsd/overlay"
 OVERLAY_MANIFEST_REL_PATH = "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json"
 VALID_MODES = {"add", "overwrite"}
+VALID_PARITY_TIERS = {"core_required", "core_adapted", "runtime_specific"}
 RUNTIME_SPECIFIC_REFERENCE_PATTERN = re.compile(r"(?:~|\$HOME)\/\.claude\b")
 RUNTIME_SPECIFIC_REFERENCE_SUFFIXES = {".md", ".toml"}
 RUNTIME_SPECIFIC_REFERENCE_EXCLUDED = {"CHANGELOG.md"}
@@ -47,6 +50,8 @@ QUALITY_REASONING = {
     "gsd-doc-verifier": "high",
 }
 
+SUPPORTED_RUNTIMES = tuple(runtime_adapter_registry.supported_runtimes())
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Portable GSD overlay contract helper.")
@@ -54,12 +59,14 @@ def parse_args() -> argparse.Namespace:
 
     validate = subparsers.add_parser("validate-manifest", help="Validate overlay add/overwrite contract.")
     validate.add_argument("repo_root", nargs="?", default=".")
+    add_runtime_args(validate, allow_all_supported=True)
     validate.add_argument("--output")
     validate.add_argument("--pretty", action="store_true")
     validate.add_argument("--strict", action="store_true")
 
     apply_overlay_parser = subparsers.add_parser("apply-overlay", help="Apply tracked overlay into .codex.")
     apply_overlay_parser.add_argument("repo_root", nargs="?", default=".")
+    add_runtime_args(apply_overlay_parser)
     apply_overlay_parser.add_argument("--compact-prompt-file")
 
     capture_pristine = subparsers.add_parser(
@@ -67,21 +74,47 @@ def parse_args() -> argparse.Namespace:
         help="Capture fresh-install pristine copies for overwrite-mode overlay entries.",
     )
     capture_pristine.add_argument("repo_root", nargs="?", default=".")
+    add_runtime_args(capture_pristine)
     capture_pristine.add_argument("--output")
     capture_pristine.add_argument("--pretty", action="store_true")
     capture_pristine.add_argument("--strict", action="store_true")
 
     reasoning = subparsers.add_parser("apply-reasoning-defaults", help="Apply repo-local reasoning defaults.")
     reasoning.add_argument("repo_root", nargs="?", default=".")
+    add_runtime_args(reasoning)
 
     verify = subparsers.add_parser("verify-materialized", help="Verify post-materialization overlay coherence.")
     verify.add_argument("repo_root", nargs="?", default=".")
+    add_runtime_args(verify, allow_all_supported=True)
     verify.add_argument("--compact-prompt-file")
     verify.add_argument("--output")
     verify.add_argument("--pretty", action="store_true")
     verify.add_argument("--strict", action="store_true")
 
     return parser.parse_args()
+
+
+def add_runtime_args(parser: argparse.ArgumentParser, allow_all_supported: bool = False) -> None:
+    if allow_all_supported:
+        group = parser.add_mutually_exclusive_group()
+        group.add_argument(
+            "--runtime",
+            choices=SUPPORTED_RUNTIMES,
+            default="codex",
+            help="Runtime to inspect or materialize. Default: codex.",
+        )
+        group.add_argument(
+            "--all-supported",
+            action="store_true",
+            help="Run the helper across all supported runtimes.",
+        )
+        return
+    parser.add_argument(
+        "--runtime",
+        choices=SUPPORTED_RUNTIMES,
+        default="codex",
+        help="Runtime to inspect or materialize. Default: codex.",
+    )
 
 
 def read_text(path: pathlib.Path) -> str:
@@ -97,6 +130,28 @@ def write_json(payload: dict[str, Any], output: pathlib.Path | None, pretty: boo
     output.write_text(text, encoding="utf-8")
 
 
+def selected_runtimes(args: argparse.Namespace) -> list[str]:
+    if getattr(args, "all_supported", False):
+        return list(SUPPORTED_RUNTIMES)
+    return [getattr(args, "runtime", "codex")]
+
+
+def runtime_root_rel_path(runtime: str) -> str:
+    return compatibility_declaration.runtime_root(runtime)
+
+
+def runtime_root(repo_root: pathlib.Path, runtime: str) -> pathlib.Path:
+    return repo_root / runtime_root_rel_path(runtime)
+
+
+def runtime_version_source(runtime: str) -> str:
+    return compatibility_declaration.version_source(runtime)
+
+
+def runtime_manifest_source(runtime: str) -> str:
+    return compatibility_declaration.manifest_version_source(runtime)
+
+
 def compact_prompt_file(repo_root: pathlib.Path) -> str:
     selector = repo_root / LOCAL_COMPACT_PROMPT_SELECTOR
     if selector.exists():
@@ -106,16 +161,20 @@ def compact_prompt_file(repo_root: pathlib.Path) -> str:
     return DEFAULT_COMPACT_PROMPT_FILE
 
 
-def install_mutation_targets() -> set[str]:
-    return {"config.toml"} | {f"agents/{name}.toml" for name in QUALITY_REASONING}
+def install_mutation_targets(runtime: str = "codex") -> set[str]:
+    if runtime == "codex":
+        return {"config.toml"} | {f"agents/{name}.toml" for name in QUALITY_REASONING}
+    return set()
 
 
 def render_overlay_text(text: str, repo_root: pathlib.Path, compact_prompt: str) -> str:
     return text.replace("__PROJECT_ROOT__", str(repo_root)).replace("__COMPACT_PROMPT_FILE__", compact_prompt)
 
 
-def normalize_reasoning_defaults(rel_path: str, text: str) -> str:
-    if rel_path == "config.toml" or (rel_path.startswith("agents/") and rel_path.endswith(".toml")):
+def normalize_reasoning_defaults(rel_path: str, text: str, runtime: str = "codex") -> str:
+    if runtime == "codex" and (
+        rel_path == "config.toml" or (rel_path.startswith("agents/") and rel_path.endswith(".toml"))
+    ):
         lines = [line for line in text.splitlines() if not line.startswith("model_reasoning_effort = ")]
         normalized = "\n".join(lines)
         if text.endswith("\n"):
@@ -174,30 +233,107 @@ def normalize_overlay_manifest_entry(
         source_rel_path = f"{OVERLAY_REL_PATH}/{rel_path}"
         return {
             "mode": entry,
+            "target_path": rel_path,
             "source_rel_path": source_rel_path,
             "source_path": str((repo_root / source_rel_path).resolve()),
         }
     if isinstance(entry, dict):
         mode = entry.get("mode")
+        target_rel_path = entry.get("target", rel_path)
         source_rel_path = entry.get("source", f"{OVERLAY_REL_PATH}/{rel_path}")
         if not isinstance(mode, str):
             raise ValueError(f"overlay manifest entry {rel_path} is missing string mode")
+        if not isinstance(target_rel_path, str):
+            raise ValueError(f"overlay manifest entry {rel_path} has a non-string target")
         if not isinstance(source_rel_path, str):
             raise ValueError(f"overlay manifest entry {rel_path} has a non-string source")
         return {
             "mode": mode,
+            "target_path": target_rel_path,
             "source_rel_path": source_rel_path,
             "source_path": str((repo_root / source_rel_path).resolve()),
         }
     raise ValueError(f"overlay manifest entry {rel_path} must be a string or object")
 
 
-def load_overlay_manifest_specs(repo_root: pathlib.Path) -> dict[str, dict[str, str]]:
-    entries = load_overlay_manifest(repo_root)
+def normalize_overlay_materializer_entry(
+    repo_root: pathlib.Path,
+    logical_id: str,
+    capability_id: str,
+    parity_tier: str,
+    runtime: str,
+    materializer: dict[str, Any],
+) -> dict[str, str]:
+    mode = materializer.get("mode")
+    target = materializer.get("target")
+    source = materializer.get("source")
+    if not isinstance(mode, str):
+        raise ValueError(f"overlay manifest entry {logical_id} has non-string mode for {runtime}")
+    if not isinstance(target, str) or not target:
+        raise ValueError(f"overlay manifest entry {logical_id} has non-string target for {runtime}")
+    if not isinstance(source, str) or not source:
+        raise ValueError(f"overlay manifest entry {logical_id} has non-string source for {runtime}")
     return {
-        str(rel_path): normalize_overlay_manifest_entry(repo_root, str(rel_path), entry)
-        for rel_path, entry in entries.items()
+        "logical_id": logical_id,
+        "capability_id": capability_id,
+        "parity_tier": parity_tier,
+        "runtime": runtime,
+        "mode": mode,
+        "target_path": target,
+        "source_rel_path": source,
+        "source_path": str((repo_root / source).resolve()),
     }
+
+
+def load_overlay_manifest_specs(repo_root: pathlib.Path, runtime: str = "codex") -> dict[str, dict[str, str]]:
+    payload = load_overlay_manifest_payload(repo_root)
+    schema_version = int(payload.get("schema_version", 2))
+    entries = payload.get("entries", {})
+    if not isinstance(entries, dict):
+        raise ValueError("overlay manifest entries must be an object")
+    if schema_version == 2:
+        return {
+            str(rel_path): {
+                **normalize_overlay_manifest_entry(repo_root, str(rel_path), entry),
+                "logical_id": str(rel_path),
+                "capability_id": str(rel_path),
+                "parity_tier": "runtime_specific",
+                "runtime": "codex",
+            }
+            for rel_path, entry in entries.items()
+            if runtime == "codex"
+        }
+    if schema_version != 3:
+        raise ValueError(f"unsupported overlay manifest schema version: {schema_version}")
+
+    flattened: dict[str, dict[str, str]] = {}
+    for logical_id, entry in entries.items():
+        if not isinstance(entry, dict):
+            raise ValueError(f"overlay manifest entry {logical_id} must be an object under schema 3")
+        capability_id = entry.get("capability_id")
+        parity_tier = entry.get("parity_tier")
+        materializers = entry.get("materializers", {})
+        if not isinstance(capability_id, str) or not capability_id:
+            raise ValueError(f"overlay manifest entry {logical_id} is missing capability_id")
+        if parity_tier not in VALID_PARITY_TIERS:
+            raise ValueError(f"overlay manifest entry {logical_id} has invalid parity_tier")
+        if not isinstance(materializers, dict):
+            raise ValueError(f"overlay manifest entry {logical_id} materializers must be an object")
+        if runtime not in materializers:
+            continue
+        spec = normalize_overlay_materializer_entry(
+            repo_root,
+            str(logical_id),
+            capability_id,
+            parity_tier,
+            runtime,
+            materializers[runtime],
+        )
+        target_path = spec["target_path"]
+        if target_path in flattened:
+            raise ValueError(f"duplicate overlay target for runtime {runtime}: {target_path}")
+        flattened[target_path] = spec
+    return flattened
 
 
 def overlay_entry_source_path(repo_root: pathlib.Path, rel_path: str) -> pathlib.Path:
@@ -284,9 +420,28 @@ def classify_runtime_specific_reference_hit(
 
 
 def build_runtime_specific_reference_report(
-    codex_root: pathlib.Path, overlay_entries: dict[str, str]
+    live_root: pathlib.Path, overlay_entries: dict[str, str], runtime: str
 ) -> dict[str, Any]:
-    raw_hits = iter_runtime_specific_reference_hits(codex_root)
+    if runtime != "codex":
+        return {
+            "pattern": RUNTIME_SPECIFIC_REFERENCE_PATTERN.pattern,
+            "scope": f"runtime-specific reference scan not required for {runtime}",
+            "compatibility_declaration_path": compatibility_declaration.DECLARATION_REL_PATH,
+            "target_runtime": runtime,
+            "baseline_rule_count": 0,
+            "hits": [],
+            "summary": {
+                "total_hits": 0,
+                "expected_baseline_count": 0,
+                "contextual_count": 0,
+                "review_needed_count": 0,
+            },
+            "requires_contextual_reread": False,
+            "notes": [
+                f"{runtime} does not currently use the Codex-specific runtime reference scan.",
+            ],
+        }
+    raw_hits = iter_runtime_specific_reference_hits(live_root)
     hits = [classify_runtime_specific_reference_hit(hit, overlay_entries) for hit in raw_hits]
     expected_baseline_count = sum(1 for hit in hits if hit["expected_baseline"])
     contextual_count = sum(1 for hit in hits if hit["family"] != "needs_contextual_reread")
@@ -315,10 +470,13 @@ def build_runtime_specific_reference_report(
 def build_manifest_validation_report_for_roots(
     modifier_repo_root: pathlib.Path,
     live_repo_root: pathlib.Path,
+    runtime: str = "codex",
 ) -> dict[str, Any]:
     overlay_root = modifier_repo_root / OVERLAY_REL_PATH
     manifest_path = modifier_repo_root / OVERLAY_MANIFEST_REL_PATH
-    codex_root = live_repo_root / ".codex"
+    live_runtime_root = runtime_root(live_repo_root, runtime)
+    manifest_payload = load_overlay_manifest_payload(modifier_repo_root) if manifest_path.exists() else {}
+    manifest_schema_version = int(manifest_payload.get("schema_version", 2)) if manifest_payload else None
 
     hard_failures: list[str] = []
     if not overlay_root.exists():
@@ -327,33 +485,65 @@ def build_manifest_validation_report_for_roots(
         hard_failures.append(f"overlay manifest missing: {manifest_path}")
 
     overlay_paths = list_overlay_paths(overlay_root) if overlay_root.exists() else set()
-    entry_specs = load_overlay_manifest_specs(modifier_repo_root) if manifest_path.exists() else {}
-    backup_paths = load_backup_meta_paths(codex_root) if codex_root.exists() else set()
+    entry_specs = load_overlay_manifest_specs(modifier_repo_root, runtime=runtime) if manifest_path.exists() else {}
+    backup_paths = load_backup_meta_paths(live_runtime_root) if live_runtime_root.exists() else set()
 
-    manifest_paths = set(entry_specs)
+    manifest_paths = {spec["target_path"] for spec in entry_specs.values()}
+    declared_overlay_source_paths: set[str] = set()
+    if manifest_payload:
+        for supported_runtime in SUPPORTED_RUNTIMES:
+            for spec in load_overlay_manifest_specs(
+                modifier_repo_root,
+                runtime=supported_runtime,
+            ).values():
+                source_rel_path = spec["source_rel_path"]
+                if source_rel_path.startswith(f"{OVERLAY_REL_PATH}/"):
+                    declared_overlay_source_paths.add(
+                        source_rel_path.removeprefix(f"{OVERLAY_REL_PATH}/")
+                    )
     default_overlay_paths = {
-        rel_path
-        for rel_path, spec in entry_specs.items()
-        if spec["source_rel_path"] == f"{OVERLAY_REL_PATH}/{rel_path}"
+        spec["target_path"]
+        for spec in entry_specs.values()
+        if spec["source_rel_path"] == f"{OVERLAY_REL_PATH}/{spec['target_path']}"
     }
     invalid_modes = sorted(path for path, spec in entry_specs.items() if spec["mode"] not in VALID_MODES)
-    missing_from_manifest = sorted(overlay_paths - default_overlay_paths)
+    missing_from_manifest = sorted(overlay_paths - declared_overlay_source_paths)
     missing_from_overlay = sorted(default_overlay_paths - overlay_paths)
     missing_source_files = sorted(
         rel_path for rel_path, spec in entry_specs.items() if not pathlib.Path(spec["source_path"]).exists()
     )
-    overwrite_paths = {path for path, spec in entry_specs.items() if spec["mode"] == "overwrite"}
-    add_paths = {path for path, spec in entry_specs.items() if spec["mode"] == "add"}
+    overwrite_paths = {spec["target_path"] for spec in entry_specs.values() if spec["mode"] == "overwrite"}
+    add_paths = {spec["target_path"] for spec in entry_specs.values() if spec["mode"] == "add"}
     external_source_entries = sorted(
         {
-            rel_path: spec["source_rel_path"]
-            for rel_path, spec in entry_specs.items()
-            if spec["source_rel_path"] != f"{OVERLAY_REL_PATH}/{rel_path}"
+            spec["target_path"]: spec["source_rel_path"]
+            for spec in entry_specs.values()
+            if spec["source_rel_path"] != f"{OVERLAY_REL_PATH}/{spec['target_path']}"
         }.items()
     )
     overwrite_missing_in_backup = sorted(overwrite_paths - backup_paths)
     add_present_in_backup = sorted(add_paths & backup_paths)
     backup_overlay_not_overwrite = sorted((backup_paths & overlay_paths) - overwrite_paths)
+
+    if manifest_schema_version == 3:
+        manifest_entries = manifest_payload.get("entries", {})
+        for logical_id, entry in sorted(manifest_entries.items()):
+            if not isinstance(entry, dict):
+                hard_failures.append(f"schema 3 entry {logical_id} must be an object")
+                continue
+            parity_tier = entry.get("parity_tier")
+            materializers = entry.get("materializers")
+            if parity_tier not in VALID_PARITY_TIERS:
+                hard_failures.append(f"schema 3 entry {logical_id} has invalid parity_tier")
+            if not isinstance(materializers, dict):
+                hard_failures.append(f"schema 3 entry {logical_id} must declare materializers")
+                continue
+            if parity_tier in {"core_required", "core_adapted"}:
+                missing_runtimes = sorted(set(SUPPORTED_RUNTIMES) - set(materializers))
+                if missing_runtimes:
+                    hard_failures.append(
+                        f"schema 3 entry {logical_id} is {parity_tier} but is missing materializers for {', '.join(missing_runtimes)}"
+                    )
 
     if invalid_modes:
         hard_failures.append(f"overlay manifest contains invalid modes for {len(invalid_modes)} paths")
@@ -377,9 +567,12 @@ def build_manifest_validation_report_for_roots(
     return {
         "modifier_repo_root": str(modifier_repo_root),
         "live_repo_root": str(live_repo_root),
+        "runtime": runtime,
+        "live_runtime_root": str(live_runtime_root),
         "overlay_root": str(overlay_root),
         "manifest_path": str(manifest_path),
         "summary": {
+            "manifest_schema_version": manifest_schema_version,
             "overlay_file_count": len(overlay_paths),
             "manifest_entry_count": len(manifest_paths),
             "overwrite_count": len(overwrite_paths),
@@ -401,22 +594,22 @@ def build_manifest_validation_report_for_roots(
     }
 
 
-def build_manifest_validation_report(repo_root: pathlib.Path) -> dict[str, Any]:
-    return build_manifest_validation_report_for_roots(repo_root, repo_root)
+def build_manifest_validation_report(repo_root: pathlib.Path, runtime: str = "codex") -> dict[str, Any]:
+    return build_manifest_validation_report_for_roots(repo_root, repo_root, runtime=runtime)
 
 
-def capture_pristine_overwrites(repo_root: pathlib.Path) -> dict[str, Any]:
-    codex_root = repo_root / ".codex"
-    backup_root = codex_root / "gsd-local-patches"
-    entry_specs = load_overlay_manifest_specs(repo_root)
-    overwrite_paths = sorted(path for path, spec in entry_specs.items() if spec["mode"] == "overwrite")
-    runtime_manifest_paths = load_runtime_manifest_paths(codex_root)
+def capture_pristine_overwrites(repo_root: pathlib.Path, runtime: str = "codex") -> dict[str, Any]:
+    live_root = runtime_root(repo_root, runtime)
+    backup_root = live_root / "gsd-local-patches"
+    entry_specs = load_overlay_manifest_specs(repo_root, runtime=runtime)
+    overwrite_paths = sorted(spec["target_path"] for spec in entry_specs.values() if spec["mode"] == "overwrite")
+    runtime_manifest_paths = load_runtime_manifest_paths(live_root)
     copied: list[str] = []
     missing_live: list[str] = []
     missing_runtime_manifest: list[str] = []
 
     for rel_path in overwrite_paths:
-        live_path = codex_root / rel_path
+        live_path = live_root / rel_path
         if not live_path.exists():
             missing_live.append(rel_path)
             continue
@@ -451,6 +644,7 @@ def capture_pristine_overwrites(repo_root: pathlib.Path) -> dict[str, Any]:
 
     return {
         "repo_root": str(repo_root),
+        "runtime": runtime,
         "backup_meta_path": str(backup_meta_path),
         "summary": {
             "overwrite_count": len(overwrite_paths),
@@ -465,23 +659,25 @@ def capture_pristine_overwrites(repo_root: pathlib.Path) -> dict[str, Any]:
     }
 
 
-def apply_overlay(repo_root: pathlib.Path, compact_prompt: str) -> list[str]:
-    codex_root = repo_root / ".codex"
-    entry_specs = load_overlay_manifest_specs(repo_root)
+def apply_overlay(repo_root: pathlib.Path, compact_prompt: str, runtime: str = "codex") -> list[str]:
+    live_root = runtime_root(repo_root, runtime)
+    entry_specs = load_overlay_manifest_specs(repo_root, runtime=runtime)
     written: list[str] = []
-    for rel_path in sorted(entry_specs):
-        source = pathlib.Path(entry_specs[rel_path]["source_path"])
-        target = codex_root / rel_path
+    for rel_path, spec in sorted(entry_specs.items()):
+        source = pathlib.Path(spec["source_path"])
+        target = live_root / spec["target_path"]
         target.parent.mkdir(parents=True, exist_ok=True)
         text = render_overlay_text(read_text(source), repo_root, compact_prompt)
         target.write_text(text, encoding="utf-8")
-        written.append(rel_path)
+        written.append(spec["target_path"])
     return written
 
 
-def apply_reasoning_defaults(repo_root: pathlib.Path) -> None:
-    codex_root = repo_root / ".codex"
-    config_path = codex_root / "config.toml"
+def apply_reasoning_defaults(repo_root: pathlib.Path, runtime: str = "codex") -> None:
+    if runtime != "codex":
+        return
+    live_root = runtime_root(repo_root, runtime)
+    config_path = live_root / "config.toml"
     config_text = read_text(config_path)
     config_text = re.sub(
         r'^model_reasoning_effort = "[^"]+"$',
@@ -493,7 +689,7 @@ def apply_reasoning_defaults(repo_root: pathlib.Path) -> None:
     config_path.write_text(config_text, encoding="utf-8")
 
     for agent_name, effort in QUALITY_REASONING.items():
-        agent_path = codex_root / "agents" / f"{agent_name}.toml"
+        agent_path = live_root / "agents" / f"{agent_name}.toml"
         text = read_text(agent_path)
         line = f'model_reasoning_effort = "{effort}"'
         if re.search(r'^model_reasoning_effort = "[^"]+"$', text, re.M):
@@ -507,18 +703,26 @@ def build_materialization_report_for_roots(
     modifier_repo_root: pathlib.Path,
     live_repo_root: pathlib.Path,
     compact_prompt: str,
+    runtime: str = "codex",
 ) -> dict[str, Any]:
-    validation = build_manifest_validation_report_for_roots(modifier_repo_root, live_repo_root)
+    validation = build_manifest_validation_report_for_roots(
+        modifier_repo_root,
+        live_repo_root,
+        runtime=runtime,
+    )
     hard_failures = list(validation["hard_failures"])
-    codex_root = live_repo_root / ".codex"
-    backup_paths = load_backup_meta_paths(codex_root)
-    entry_specs = load_overlay_manifest_specs(modifier_repo_root)
+    live_root = runtime_root(live_repo_root, runtime)
+    backup_paths = load_backup_meta_paths(live_root)
+    entry_specs = load_overlay_manifest_specs(modifier_repo_root, runtime=runtime)
     overlay_manifest_payload = load_overlay_manifest_payload(modifier_repo_root)
-    overlay_modes = {rel_path: spec["mode"] for rel_path, spec in entry_specs.items()}
-    runtime_specific_reference_scan = build_runtime_specific_reference_report(codex_root, overlay_modes)
-    declared_overlay_schema_version = COMPATIBILITY_DECLARATION["overlay_schema_version"]
+    overlay_modes = {spec["target_path"]: spec["mode"] for spec in entry_specs.values()}
+    runtime_specific_reference_scan = build_runtime_specific_reference_report(live_root, overlay_modes, runtime)
+    declared_overlay_schema_version = compatibility_declaration.overlay_schema_version()
     observed_overlay_schema_version = overlay_manifest_payload.get("schema_version")
-    overlay_schema_version_matches_declaration = observed_overlay_schema_version == declared_overlay_schema_version
+    overlay_schema_version_matches_declaration = observed_overlay_schema_version == declared_overlay_schema_version or {
+        observed_overlay_schema_version,
+        declared_overlay_schema_version,
+    } == {2, 3}
 
     if not overlay_schema_version_matches_declaration:
         hard_failures.append(
@@ -531,9 +735,10 @@ def build_materialization_report_for_roots(
 
     for rel_path, spec in sorted(entry_specs.items()):
         mode = spec["mode"]
-        live_path = codex_root / rel_path
+        target_rel_path = spec["target_path"]
+        live_path = live_root / target_rel_path
         if not live_path.exists():
-            missing_live_targets.append(rel_path)
+            missing_live_targets.append(target_rel_path)
             continue
         overlay_text = render_overlay_text(
             read_text(pathlib.Path(spec["source_path"])),
@@ -541,15 +746,21 @@ def build_materialization_report_for_roots(
             compact_prompt,
         )
         live_text = read_text(live_path)
-        if normalize_reasoning_defaults(rel_path, overlay_text) != normalize_reasoning_defaults(rel_path, live_text):
-            content_mismatch.append(rel_path)
+        if normalize_reasoning_defaults(target_rel_path, overlay_text, runtime=runtime) != normalize_reasoning_defaults(
+            target_rel_path,
+            live_text,
+            runtime=runtime,
+        ):
+            content_mismatch.append(target_rel_path)
         if mode == "overwrite":
-            backup_copy = codex_root / "gsd-local-patches" / rel_path
+            backup_copy = live_root / "gsd-local-patches" / target_rel_path
             if not backup_copy.exists():
-                backup_copy_missing.append(rel_path)
+                backup_copy_missing.append(target_rel_path)
 
     if missing_live_targets:
-        hard_failures.append(f"{len(missing_live_targets)} manifest entries are missing from live .codex")
+        hard_failures.append(
+            f"{len(missing_live_targets)} manifest entries are missing from live {runtime_root_rel_path(runtime)}"
+        )
     if backup_copy_missing:
         hard_failures.append(f"{len(backup_copy_missing)} overwrite entries are missing backup copies")
     if content_mismatch:
@@ -558,14 +769,20 @@ def build_materialization_report_for_roots(
     return {
         "modifier_repo_root": str(modifier_repo_root),
         "live_repo_root": str(live_repo_root),
+        "runtime": runtime,
+        "runtime_root": runtime_root_rel_path(runtime),
         "compact_prompt_file": compact_prompt,
-        "install_mutation_targets": sorted(install_mutation_targets()),
+        "install_mutation_targets": sorted(install_mutation_targets(runtime=runtime)),
         "compatibility_declaration": {
             "path": compatibility_declaration.DECLARATION_REL_PATH,
             "schema_version": COMPATIBILITY_DECLARATION["schema_version"],
             "compatibility_posture": COMPATIBILITY_DECLARATION["compatibility_posture"],
             "runtime_basis": COMPATIBILITY_DECLARATION["runtime_basis"],
             "runtime_held_annotations": COMPATIBILITY_DECLARATION["runtime_held_annotations"],
+            "runtime_profiles": COMPATIBILITY_DECLARATION["runtime_profiles"],
+            "support_claims": COMPATIBILITY_DECLARATION["support_claims"],
+            "mixed_runtime_policy": COMPATIBILITY_DECLARATION["mixed_runtime_policy"],
+            "capability_contract": COMPATIBILITY_DECLARATION["capability_contract"],
             "declared_overlay_schema_version": declared_overlay_schema_version,
             "observed_overlay_schema_version": observed_overlay_schema_version,
             "overlay_schema_version_matches_declaration": overlay_schema_version_matches_declaration,
@@ -596,8 +813,26 @@ def build_materialization_report_for_roots(
     }
 
 
-def build_materialization_report(repo_root: pathlib.Path, compact_prompt: str) -> dict[str, Any]:
-    return build_materialization_report_for_roots(repo_root, repo_root, compact_prompt)
+def build_materialization_report(
+    repo_root: pathlib.Path, compact_prompt: str, runtime: str = "codex"
+) -> dict[str, Any]:
+    return build_materialization_report_for_roots(repo_root, repo_root, compact_prompt, runtime=runtime)
+
+
+def aggregate_runtime_reports(reports: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    hard_failures: list[str] = []
+    for runtime, report in reports.items():
+        for failure in report.get("hard_failures", []):
+            hard_failures.append(f"[{runtime}] {failure}")
+    return {
+        "runtimes": reports,
+        "summary": {
+            "runtime_count": len(reports),
+            "hard_failure_count": len(hard_failures),
+            "failing_runtimes": sorted(runtime for runtime, report in reports.items() if report.get("hard_failures")),
+        },
+        "hard_failures": hard_failures,
+    }
 
 
 def main() -> int:
@@ -605,29 +840,45 @@ def main() -> int:
     repo_root = pathlib.Path(args.repo_root).resolve()
 
     if args.command == "validate-manifest":
-        report = build_manifest_validation_report(repo_root)
+        runtimes = selected_runtimes(args)
+        if len(runtimes) == 1:
+            report = build_manifest_validation_report(repo_root, runtime=runtimes[0])
+        else:
+            report = aggregate_runtime_reports(
+                {runtime: build_manifest_validation_report(repo_root, runtime=runtime) for runtime in runtimes}
+            )
         write_json(report, pathlib.Path(args.output) if args.output else None, pretty=args.pretty or not args.output)
         return 1 if args.strict and report["hard_failures"] else 0
 
     if args.command == "apply-overlay":
         compact_prompt = args.compact_prompt_file or compact_prompt_file(repo_root)
-        written = apply_overlay(repo_root, compact_prompt)
+        runtime = args.runtime
+        written = apply_overlay(repo_root, compact_prompt, runtime=runtime)
         for rel_path in written:
-            print(f"  patched .codex/{rel_path}")
+            print(f"  patched {runtime_root_rel_path(runtime)}/{rel_path}")
         return 0
 
     if args.command == "capture-pristine-overwrites":
-        report = capture_pristine_overwrites(repo_root)
+        report = capture_pristine_overwrites(repo_root, runtime=args.runtime)
         write_json(report, pathlib.Path(args.output) if args.output else None, pretty=args.pretty or not args.output)
         return 1 if args.strict and report["hard_failures"] else 0
 
     if args.command == "apply-reasoning-defaults":
-        apply_reasoning_defaults(repo_root)
+        apply_reasoning_defaults(repo_root, runtime=args.runtime)
         return 0
 
     if args.command == "verify-materialized":
         compact_prompt = args.compact_prompt_file or compact_prompt_file(repo_root)
-        report = build_materialization_report(repo_root, compact_prompt)
+        runtimes = selected_runtimes(args)
+        if len(runtimes) == 1:
+            report = build_materialization_report(repo_root, compact_prompt, runtime=runtimes[0])
+        else:
+            report = aggregate_runtime_reports(
+                {
+                    runtime: build_materialization_report(repo_root, compact_prompt, runtime=runtime)
+                    for runtime in runtimes
+                }
+            )
         write_json(report, pathlib.Path(args.output) if args.output else None, pretty=args.pretty or not args.output)
         return 1 if args.strict and report["hard_failures"] else 0
 

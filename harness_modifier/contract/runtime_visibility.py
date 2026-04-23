@@ -8,11 +8,14 @@ import hashlib
 import json
 import pathlib
 import sys
+from collections import Counter
 from dataclasses import dataclass
+from typing import Any
 
 if __package__ in {None, ""}:
     sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[2]))
 
+from harness_modifier.compatibility import declaration as compatibility_declaration
 from harness_modifier.contract import portable_gsd_contract as pgc
 
 
@@ -36,6 +39,9 @@ SUB_OBSOLETE_UNTRACKED = "untracked_live_only_residue"
 SUB_UNKNOWN_MISSING_LIVE = "overlay_covered_missing_from_live"
 SUB_UNKNOWN_MISSING_BOTH = "missing_from_overlay_and_live"
 SUB_UNKNOWN_UNRESOLVED = "unresolved_overlay_live_divergence"
+
+SINGLE_RUNTIME_SCOPES = tuple(compatibility_declaration.supported_runtimes())
+VALID_RUNTIME_SCOPES = SINGLE_RUNTIME_SCOPES + ("both",)
 
 
 @dataclass(frozen=True)
@@ -62,6 +68,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("repo_root", nargs="?", default=".")
     parser.add_argument(
+        "--runtime",
+        choices=VALID_RUNTIME_SCOPES,
+        default="both",
+        help="Runtime scope to inspect. Default: both.",
+    )
+    parser.add_argument(
         "--output",
         help="Optional path to write the JSON report.",
     )
@@ -81,8 +93,50 @@ def read_text(path: pathlib.Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def load_manifest_paths(codex_root: pathlib.Path) -> set[str]:
-    manifest_path = codex_root / "gsd-file-manifest.json"
+def read_json(path: pathlib.Path) -> dict[str, Any] | None:
+    if not path.exists():
+        return None
+    return json.loads(read_text(path))
+
+
+def supported_runtime_names() -> list[str]:
+    return list(SINGLE_RUNTIME_SCOPES)
+
+
+def runtime_scope_runtimes(runtime_scope: str) -> list[str]:
+    if runtime_scope == "both":
+        return supported_runtime_names()
+    if runtime_scope not in SINGLE_RUNTIME_SCOPES:
+        raise ValueError(f"unsupported runtime scope: {runtime_scope}")
+    return [runtime_scope]
+
+
+def runtime_root_rel_path(runtime: str) -> str:
+    return compatibility_declaration.runtime_root(runtime)
+
+
+def runtime_root_path(live_repo_root: pathlib.Path, runtime: str) -> pathlib.Path:
+    return live_repo_root / runtime_root_rel_path(runtime)
+
+
+def read_runtime_version(repo_root: pathlib.Path, runtime: str) -> str | None:
+    path = repo_root / compatibility_declaration.version_source(runtime)
+    if not path.exists():
+        return None
+    lines = [line.strip() for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    if not lines:
+        return None
+    return lines[0]
+
+
+def read_runtime_manifest_version(repo_root: pathlib.Path, runtime: str) -> str | None:
+    payload = read_json(repo_root / compatibility_declaration.manifest_version_source(runtime)) or {}
+    value = payload.get("version")
+    return value if isinstance(value, str) and value else None
+
+
+def load_manifest_paths(runtime_root: pathlib.Path) -> set[str]:
+    manifest_path = runtime_root / "gsd-file-manifest.json"
     if not manifest_path.exists():
         return set()
     manifest = json.loads(read_text(manifest_path))
@@ -94,8 +148,8 @@ def load_manifest_paths(codex_root: pathlib.Path) -> set[str]:
     return set()
 
 
-def load_backup_paths(codex_root: pathlib.Path) -> set[str]:
-    backup_meta_path = codex_root / "gsd-local-patches" / "backup-meta.json"
+def load_backup_paths(runtime_root: pathlib.Path) -> set[str]:
+    backup_meta_path = runtime_root / "gsd-local-patches" / "backup-meta.json"
     if not backup_meta_path.exists():
         return set()
     backup_meta = json.loads(read_text(backup_meta_path))
@@ -107,8 +161,8 @@ def load_backup_paths(codex_root: pathlib.Path) -> set[str]:
     return set()
 
 
-def load_install_mutation_targets(repo_root: pathlib.Path) -> set[str]:
-    return pgc.install_mutation_targets()
+def load_install_mutation_targets(repo_root: pathlib.Path, runtime: str = "codex") -> set[str]:
+    return pgc.install_mutation_targets(runtime=runtime)
 
 
 def compact_prompt_file(repo_root: pathlib.Path) -> str:
@@ -217,132 +271,295 @@ def collect_rel_paths(root: pathlib.Path, rel_glob: str) -> set[str]:
     return {path.relative_to(root).as_posix() for path in root.glob(rel_glob) if path.is_file()}
 
 
-def build_report_for_runtime_roots(
+def entry_specs_for_family(
+    modifier_repo_root: pathlib.Path,
+    runtime: str,
+    rel_glob: str,
+) -> dict[str, dict[str, str]]:
+    return {
+        rel_path: spec
+        for rel_path, spec in pgc.load_overlay_manifest_specs(modifier_repo_root, runtime=runtime).items()
+        if pathlib.PurePosixPath(rel_path).match(rel_glob)
+    }
+
+
+def empty_summary() -> dict[str, int]:
+    return {
+        "total_entries": 0,
+        "intentional_materialized_carry": 0,
+        "repo_local_config_carry": 0,
+        "selective_overlay_boundary": 0,
+        "obsolete_live_residue": 0,
+        "unknown_live_drift": 0,
+    }
+
+
+def subclassification_summary(entries: list[dict[str, Any]]) -> dict[str, int]:
+    return {
+        key: count
+        for key, count in sorted(Counter(entry["subclassification"] for entry in entries).items())
+        if count
+    }
+
+
+def summarize_entries(entries: list[dict[str, Any]]) -> dict[str, int]:
+    return {
+        "total_entries": len(entries),
+        "intentional_materialized_carry": sum(1 for entry in entries if entry["classification"] == INTENTIONAL),
+        "repo_local_config_carry": sum(1 for entry in entries if entry["classification"] == REPO_LOCAL),
+        "selective_overlay_boundary": sum(1 for entry in entries if entry["classification"] == SELECTIVE),
+        "obsolete_live_residue": sum(1 for entry in entries if entry["classification"] == OBSOLETE),
+        "unknown_live_drift": sum(1 for entry in entries if entry["classification"] == UNKNOWN),
+    }
+
+
+def build_runtime_report_for_runtime_roots(
     modifier_repo_root: pathlib.Path,
     live_repo_root: pathlib.Path,
-) -> dict:
+    runtime: str,
+) -> dict[str, Any]:
     overlay_root = modifier_repo_root / "tooling" / "portable-gsd" / "overlay"
-    live_root = live_repo_root / ".codex"
+    live_root = runtime_root_path(live_repo_root, runtime)
     compact_prompt = compact_prompt_file(modifier_repo_root)
-    manifest_paths = load_manifest_paths(live_root)
-    backup_paths = load_backup_paths(live_root)
-    install_mutation_targets = load_install_mutation_targets(modifier_repo_root)
-    entries = []
+    present = live_root.exists()
+    manifest_paths = load_manifest_paths(live_root) if present else set()
+    backup_paths = load_backup_paths(live_root) if present else set()
+    install_targets = load_install_mutation_targets(modifier_repo_root, runtime=runtime)
+    entries: list[dict[str, Any]] = []
 
     if not overlay_root.exists():
         raise SystemExit(f"Overlay root not found: {overlay_root}")
-    if not live_root.exists():
-        raise SystemExit(f"Live runtime root not found: {live_root}")
 
-    for spec in SURFACE_SPECS:
-        overlay_paths = collect_rel_paths(overlay_root, spec.rel_glob)
-        live_paths = collect_rel_paths(live_root, spec.rel_glob)
-        for rel_path in sorted(overlay_paths | live_paths):
-            overlay_path = overlay_root / rel_path
-            live_path = live_root / rel_path
-            overlay_exists = overlay_path.exists()
-            live_exists = live_path.exists()
-            in_manifest = rel_path in manifest_paths
-            in_backup_meta = rel_path in backup_paths
-            is_install_mutation_target = rel_path in install_mutation_targets
-            overlay_text = None
-            live_text = None
-            normalized_overlay = None
-            raw_equal = False
-            normalized_equal = False
+    if present:
+        for spec in SURFACE_SPECS:
+            runtime_entry_specs = entry_specs_for_family(modifier_repo_root, runtime, spec.rel_glob)
+            overlay_paths = set(runtime_entry_specs)
+            live_paths = collect_rel_paths(live_root, spec.rel_glob)
+            for rel_path in sorted(overlay_paths | live_paths):
+                overlay_spec = runtime_entry_specs.get(rel_path)
+                overlay_path = pathlib.Path(overlay_spec["source_path"]) if overlay_spec else overlay_root / rel_path
+                live_path = live_root / rel_path
+                overlay_exists = overlay_spec is not None and overlay_path.exists()
+                live_exists = live_path.exists()
+                in_manifest = rel_path in manifest_paths
+                in_backup_meta = rel_path in backup_paths
+                is_install_mutation_target = rel_path in install_targets
+                overlay_text = None
+                live_text = None
+                normalized_overlay = None
+                raw_equal = False
+                normalized_equal = False
 
-            if overlay_exists:
-                overlay_text = read_text(overlay_path)
-                normalized_overlay = normalize_overlay_text(
-                    overlay_text,
-                    modifier_repo_root,
-                    compact_prompt,
+                if overlay_exists:
+                    overlay_text = read_text(overlay_path)
+                    normalized_overlay = normalize_overlay_text(
+                        overlay_text,
+                        modifier_repo_root,
+                        compact_prompt,
+                    )
+                if live_exists:
+                    live_text = read_text(live_path)
+
+                if overlay_text is not None and live_text is not None:
+                    raw_equal = overlay_text == live_text
+                if normalized_overlay is not None and live_text is not None:
+                    normalized_equal = normalized_overlay == live_text
+
+                classification, subclassification, note = classify(
+                    family=spec.family,
+                    rel_path=rel_path,
+                    overlay_exists=overlay_exists,
+                    live_exists=live_exists,
+                    in_manifest=in_manifest,
+                    in_backup_meta=in_backup_meta,
+                    is_install_mutation_target=is_install_mutation_target,
+                    raw_equal=raw_equal,
+                    normalized_equal=normalized_equal,
+                    overlay_text=normalized_overlay if normalized_overlay is not None else overlay_text,
+                    live_text=live_text,
                 )
-            if live_exists:
-                live_text = read_text(live_path)
 
-            if overlay_text is not None and live_text is not None:
-                raw_equal = overlay_text == live_text
-            if normalized_overlay is not None and live_text is not None:
-                normalized_equal = normalized_overlay == live_text
+                entries.append(
+                    {
+                        "family": spec.family,
+                        "rel_path": rel_path,
+                        "overlay_exists": overlay_exists,
+                        "live_exists": live_exists,
+                        "overlay_path": str(overlay_path) if overlay_exists else None,
+                        "live_path": str(live_path) if live_exists else None,
+                        "in_manifest": in_manifest,
+                        "in_backup_meta": in_backup_meta,
+                        "is_install_mutation_target": is_install_mutation_target,
+                        "overlay_sha256": sha256_text(overlay_text) if overlay_text is not None else None,
+                        "normalized_overlay_sha256": sha256_text(normalized_overlay) if normalized_overlay is not None else None,
+                        "live_sha256": sha256_text(live_text) if live_text is not None else None,
+                        "raw_equal": raw_equal,
+                        "normalized_equal": normalized_equal,
+                        "classification": classification,
+                        "subclassification": subclassification,
+                        "note": note,
+                    }
+                )
 
-            classification, subclassification, note = classify(
-                family=spec.family,
-                rel_path=rel_path,
-                overlay_exists=overlay_exists,
-                live_exists=live_exists,
-                in_manifest=in_manifest,
-                in_backup_meta=in_backup_meta,
-                is_install_mutation_target=is_install_mutation_target,
-                raw_equal=raw_equal,
-                normalized_equal=normalized_equal,
-                overlay_text=normalized_overlay if normalized_overlay is not None else overlay_text,
-                live_text=live_text,
-            )
-
-            entries.append(
-                {
-                    "family": spec.family,
-                    "rel_path": rel_path,
-                    "overlay_exists": overlay_exists,
-                    "live_exists": live_exists,
-                    "overlay_path": str(overlay_path) if overlay_exists else None,
-                    "live_path": str(live_path) if live_exists else None,
-                    "in_manifest": in_manifest,
-                    "in_backup_meta": in_backup_meta,
-                    "is_install_mutation_target": is_install_mutation_target,
-                    "overlay_sha256": sha256_text(overlay_text) if overlay_text is not None else None,
-                    "normalized_overlay_sha256": sha256_text(normalized_overlay) if normalized_overlay is not None else None,
-                    "live_sha256": sha256_text(live_text) if live_text is not None else None,
-                    "raw_equal": raw_equal,
-                    "normalized_equal": normalized_equal,
-                    "classification": classification,
-                    "subclassification": subclassification,
-                    "note": note,
-                }
-            )
-
-    summary = {
-        "total_entries": len(entries),
-        "intentional_materialized_carry": sum(1 for e in entries if e["classification"] == INTENTIONAL),
-        "repo_local_config_carry": sum(1 for e in entries if e["classification"] == REPO_LOCAL),
-        "selective_overlay_boundary": sum(1 for e in entries if e["classification"] == SELECTIVE),
-        "obsolete_live_residue": sum(1 for e in entries if e["classification"] == OBSOLETE),
-        "unknown_live_drift": sum(1 for e in entries if e["classification"] == UNKNOWN),
-    }
-    subclassification_summary = {
-        key: count
-        for key, count in sorted(
-            (
-                subclassification,
-                sum(1 for e in entries if e["subclassification"] == subclassification),
-            )
-            for subclassification in {e["subclassification"] for e in entries}
-        )
-        if count
-    }
+    live_version = read_runtime_version(live_repo_root, runtime)
+    live_manifest_version = read_runtime_manifest_version(live_repo_root, runtime)
+    observed_version = read_runtime_version(modifier_repo_root, runtime)
+    observed_manifest_version = read_runtime_manifest_version(modifier_repo_root, runtime)
 
     return {
         "modifier_repo_root": str(modifier_repo_root),
         "live_repo_root": str(live_repo_root),
+        "runtime": runtime,
+        "profile_name": compatibility_declaration.runtime_profile(runtime)["profile_name"],
+        "runtime_root": runtime_root_rel_path(runtime),
         "overlay_root": str(overlay_root),
         "live_root": str(live_root),
+        "present": present,
+        "has_modifier_materialization_marker": (live_root / "gsd-local-patches" / "backup-meta.json").exists(),
+        "version_source": compatibility_declaration.version_source(runtime),
+        "manifest_version_source": compatibility_declaration.manifest_version_source(runtime),
+        "observed_runtime_version": observed_version,
+        "live_runtime_version": live_version,
+        "observed_runtime_manifest_version": observed_manifest_version,
+        "live_runtime_manifest_version": live_manifest_version,
         "compact_prompt_file": compact_prompt,
         "normalized_overlay_sha_scope": "checkout-local",
-        "summary": summary,
-        "subclassification_summary": subclassification_summary,
+        "summary": summarize_entries(entries),
+        "subclassification_summary": subclassification_summary(entries),
         "entries": entries,
     }
 
 
-def build_report(repo_root: pathlib.Path) -> dict:
-    return build_report_for_runtime_roots(repo_root, repo_root)
+def build_parity_assessment(runtime_reports: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    present_runtimes = [runtime for runtime, report in runtime_reports.items() if report["present"]]
+    missing_runtimes = [runtime for runtime, report in runtime_reports.items() if not report["present"]]
+    read_side_runtimes = [
+        runtime
+        for runtime, report in runtime_reports.items()
+        if report["present"] and not report["has_modifier_materialization_marker"]
+    ]
+    conflicting_runtimes = [
+        runtime
+        for runtime, report in runtime_reports.items()
+        if report["present"]
+        and (
+            report["summary"]["unknown_live_drift"] > 0
+            or report["summary"]["obsolete_live_residue"] > 0
+        )
+    ]
+    present_versions = {
+        runtime: report["live_runtime_version"]
+        for runtime, report in runtime_reports.items()
+        if report["present"]
+    }
+    present_manifest_versions = {
+        runtime: report["live_runtime_manifest_version"]
+        for runtime, report in runtime_reports.items()
+        if report["present"]
+    }
+    version_values = [value for value in present_versions.values() if value]
+    manifest_values = [value for value in present_manifest_versions.values() if value]
+    version_alignment = (
+        len(present_versions) < 2
+        or (len(version_values) == len(present_versions) and len(set(version_values)) == 1)
+    )
+    manifest_alignment = (
+        len(present_manifest_versions) < 2
+        or (len(manifest_values) == len(present_manifest_versions) and len(set(manifest_values)) == 1)
+    )
+
+    if len(present_runtimes) < 2:
+        parity_state = "single-runtime"
+    elif read_side_runtimes:
+        parity_state = "dual-runtime-read-side"
+    elif conflicting_runtimes or not version_alignment or not manifest_alignment:
+        parity_state = "dual-runtime-conflict"
+    else:
+        parity_state = "dual-runtime-aligned"
+
+    notes: list[str] = []
+    if read_side_runtimes:
+        notes.append(
+            "dual-runtime repo is still read-side because one or more runtimes lack modifier-side materialization markers"
+        )
+    if conflicting_runtimes:
+        notes.append(
+            "dual-runtime repo has runtime-local unknown drift or obsolete residue in at least one present runtime"
+        )
+    if len(present_runtimes) >= 2 and not version_alignment:
+        notes.append("present runtimes disagree on runtime version anchors")
+    if len(present_runtimes) >= 2 and not manifest_alignment:
+        notes.append("present runtimes disagree on manifest version anchors")
+
+    return {
+        "parity_state": parity_state,
+        "present_runtimes": present_runtimes,
+        "missing_runtimes": missing_runtimes,
+        "read_side_runtimes": read_side_runtimes,
+        "conflicting_runtimes": conflicting_runtimes,
+        "version_alignment": {
+            "aligned": version_alignment,
+            "values": present_versions,
+        },
+        "manifest_alignment": {
+            "aligned": manifest_alignment,
+            "values": present_manifest_versions,
+        },
+        "notes": notes,
+    }
+
+
+def build_report_for_runtime_roots(
+    modifier_repo_root: pathlib.Path,
+    live_repo_root: pathlib.Path,
+    runtime_scope: str = "both",
+) -> dict[str, Any]:
+    runtimes = runtime_scope_runtimes(runtime_scope)
+    runtime_reports = {
+        runtime: build_runtime_report_for_runtime_roots(modifier_repo_root, live_repo_root, runtime)
+        for runtime in runtimes
+    }
+    summary = empty_summary()
+    subclassifications: Counter[str] = Counter()
+    for report in runtime_reports.values():
+        for key, value in report["summary"].items():
+            summary[key] += value
+        subclassifications.update(report["subclassification_summary"])
+
+    parity = build_parity_assessment(runtime_reports)
+    summary.update(
+        {
+            "requested_runtime_count": len(runtimes),
+            "present_runtime_count": len(parity["present_runtimes"]),
+            "present_runtimes": parity["present_runtimes"],
+            "missing_runtimes": parity["missing_runtimes"],
+            "read_side_runtime_count": len(parity["read_side_runtimes"]),
+            "dual_runtime_version_aligned": parity["version_alignment"]["aligned"],
+            "dual_runtime_manifest_aligned": parity["manifest_alignment"]["aligned"],
+        }
+    )
+
+    return {
+        "modifier_repo_root": str(modifier_repo_root),
+        "live_repo_root": str(live_repo_root),
+        "runtime_scope": runtime_scope,
+        "parity_state": parity["parity_state"],
+        "parity_details": parity,
+        "runtimes": runtime_reports,
+        "normalized_overlay_sha_scope": "checkout-local",
+        "summary": summary,
+        "subclassification_summary": {key: count for key, count in sorted(subclassifications.items()) if count},
+    }
+
+
+def build_report(repo_root: pathlib.Path, runtime_scope: str = "both") -> dict[str, Any]:
+    return build_report_for_runtime_roots(repo_root, repo_root, runtime_scope=runtime_scope)
 
 
 def main() -> int:
     args = parse_args()
     repo_root = pathlib.Path(args.repo_root).resolve()
-    report = build_report(repo_root)
+    report = build_report(repo_root, runtime_scope=args.runtime)
     indent = 2 if args.pretty or not args.output else None
     payload = json.dumps(report, indent=indent, sort_keys=False)
 

@@ -50,7 +50,7 @@ class ClosureHostExercisePacketWriterTests(unittest.TestCase):
             self.assertEqual(written["exercise_mode"], "observe-only")
             self.assertEqual(
                 written["declaration_capture"]["declaration_posture"],
-                "observed_basis_only",
+                "core_runtime_parity",
             )
             self.assertEqual(
                 written["declaration_capture"]["observed_basis_runtime"],
@@ -58,7 +58,7 @@ class ClosureHostExercisePacketWriterTests(unittest.TestCase):
             )
             self.assertEqual(
                 written["declaration_capture"]["compatibility_window_state"],
-                "unknown",
+                "active",
             )
             self.assertIn("runtime_visibility", written["preflight_reads"])
             self.assertIn("reflect_artifact_presence", written["abort_conditions"])

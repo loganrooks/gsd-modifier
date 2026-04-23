@@ -40,6 +40,29 @@ def _validate_string_list(value: Any, field_name: str) -> list[str]:
     return normalized
 
 
+def _validate_runtime_results(value: Any, policy: dict[str, Any]) -> dict[str, dict[str, str]]:
+    if not isinstance(value, dict) or not value:
+        raise ValueError("runtime_results must be a non-empty object")
+    normalized: dict[str, dict[str, str]] = {}
+    allowed_runtimes = set(policy["runtime_target_vocab"])
+    for runtime, entry in value.items():
+        if runtime not in allowed_runtimes:
+            raise ValueError(f"runtime_results keys must be one of {sorted(allowed_runtimes)}")
+        if not isinstance(entry, dict):
+            raise ValueError("runtime_results entries must be objects")
+        runtime_root = entry.get("runtime_root")
+        compatibility_window_state = entry.get("compatibility_window_state")
+        if not isinstance(runtime_root, str) or not runtime_root.strip():
+            raise ValueError("runtime_results.runtime_root must be a non-empty string")
+        if not isinstance(compatibility_window_state, str) or not compatibility_window_state.strip():
+            raise ValueError("runtime_results.compatibility_window_state must be a non-empty string")
+        normalized[runtime] = {
+            "runtime_root": runtime_root,
+            "compatibility_window_state": compatibility_window_state,
+        }
+    return normalized
+
+
 def _paths_overlap(left: pathlib.Path, right: pathlib.Path) -> bool:
     return left == right or left in right.parents or right in left.parents
 
@@ -56,6 +79,17 @@ def _apply_defaults(payload: dict[str, Any], policy: dict[str, Any]) -> dict[str
         policy["required_preflight_reads"] + policy["conditional_preflight_reads"],
     )
     normalized.setdefault("abort_conditions", policy["abort_condition_codes"])
+    normalized.setdefault("runtime_targets", ["codex"])
+    normalized.setdefault(
+        "runtime_results",
+        {
+            "codex": {
+                "runtime_root": ".codex",
+                "compatibility_window_state": compatibility["upstream_compatibility_window"]["state"],
+            }
+        },
+    )
+    normalized.setdefault("parity_state", "single-runtime-prototype")
 
     declaration_capture = normalized.setdefault("declaration_capture", {})
     declaration_capture.setdefault("declaration_posture", compatibility["compatibility_posture"])
@@ -142,6 +176,7 @@ def validate_host_exercise_packet(payload: dict[str, Any]) -> dict[str, Any]:
         "target_host_class",
         "host_reference",
         "host_repo_path",
+        "parity_state",
         "runtime_class",
         "host_shape",
         "host_has_reflect_artifacts_rationale",
@@ -171,6 +206,15 @@ def validate_host_exercise_packet(payload: dict[str, Any]) -> dict[str, Any]:
         raise ValueError(
             f"host_age_posture must be one of {sorted(policy['host_age_posture_vocab'])}"
         )
+
+    runtime_targets = _validate_string_list(normalized["runtime_targets"], "runtime_targets")
+    if not set(runtime_targets).issubset(set(policy["runtime_target_vocab"])):
+        raise ValueError(
+            f"runtime_targets must be drawn from {sorted(policy['runtime_target_vocab'])}"
+        )
+    runtime_results = _validate_runtime_results(normalized["runtime_results"], policy)
+    if set(runtime_targets) != set(runtime_results):
+        raise ValueError("runtime_targets and runtime_results must describe the same runtimes")
 
     host_repo_path = pathlib.Path(normalized["host_repo_path"]).expanduser().resolve()
     if _paths_overlap(host_repo_path, REPO_ROOT):
@@ -212,6 +256,8 @@ def validate_host_exercise_packet(payload: dict[str, Any]) -> dict[str, Any]:
     output_targets = _validate_output_targets(normalized, policy)
 
     normalized["declaration_capture"] = declaration_capture
+    normalized["runtime_targets"] = runtime_targets
+    normalized["runtime_results"] = runtime_results
     normalized["preflight_reads"] = preflight_reads
     normalized["abort_conditions"] = abort_conditions
     normalized["output_targets"] = output_targets

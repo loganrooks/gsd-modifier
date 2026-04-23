@@ -19,11 +19,16 @@ class CaptureRuntimeVisibilitySnapshotTests(unittest.TestCase):
             subprocess.run(["git", "add", "README.md"], cwd=repo_root, check=True, capture_output=True)
             subprocess.run(["git", "commit", "-m", "init"], cwd=repo_root, check=True, capture_output=True)
 
-            with mock.patch.object(crvs.runtime_visibility, "build_report", return_value={"summary": {"total_entries": 1}}):
-                snapshot = crvs.build_snapshot(repo_root, "baseline", "snapshot note")
+            with mock.patch.object(
+                crvs.runtime_visibility,
+                "build_report",
+                return_value={"runtime_scope": "both", "summary": {"total_entries": 1}},
+            ):
+                snapshot = crvs.build_snapshot(repo_root, "baseline", "snapshot note", runtime_scope="both")
 
             self.assertEqual(snapshot["label"], "baseline")
             self.assertEqual(snapshot["notes"], "snapshot note")
+            self.assertEqual(snapshot["runtime_scope"], "both")
             self.assertEqual(snapshot["dirty_worktree"], False)
             self.assertRegex(snapshot["basis_commit"], r"^[0-9a-f]{40}$")
             self.assertIn("runtime_visibility_report", snapshot)
@@ -41,6 +46,10 @@ class CaptureRuntimeVisibilitySnapshotTests(unittest.TestCase):
             overlay_root.mkdir(parents=True)
             live_root.mkdir(parents=True)
             (overlay_root / "config.toml").write_text("model = \"overlay\"\n", encoding="utf-8")
+            (overlay_root / "OVERLAY-MANIFEST.json").write_text(
+                "{\"schema_version\": 2, \"entries\": {\"config.toml\": \"add\"}}\n",
+                encoding="utf-8",
+            )
             (live_root / "config.toml").write_text("model = \"overlay\"\n", encoding="utf-8")
             (live_root / "gsd-file-manifest.json").write_text("{\"files\": [\"config.toml\"]}\n", encoding="utf-8")
             (live_root / "gsd-local-patches").mkdir(parents=True)
@@ -56,6 +65,8 @@ class CaptureRuntimeVisibilitySnapshotTests(unittest.TestCase):
                     sys.executable,
                     str(script_path),
                     str(repo_root),
+                    "--runtime",
+                    "codex",
                     "--label",
                     "direct-script",
                     "--output",
@@ -69,6 +80,7 @@ class CaptureRuntimeVisibilitySnapshotTests(unittest.TestCase):
 
             payload = output_path.read_text(encoding="utf-8")
             self.assertIn('"label": "direct-script"', payload)
+            self.assertIn('"runtime_scope": "codex"', payload)
             self.assertIn('"runtime_visibility_report"', payload)
 
 

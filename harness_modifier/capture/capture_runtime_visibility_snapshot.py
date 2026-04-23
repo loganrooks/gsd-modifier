@@ -24,6 +24,12 @@ def parse_args() -> argparse.Namespace:
         )
     )
     parser.add_argument("repo_root", nargs="?", default=".")
+    parser.add_argument(
+        "--runtime",
+        choices=tuple(runtime_visibility.VALID_RUNTIME_SCOPES),
+        default="both",
+        help="Runtime scope to capture. Default: both.",
+    )
     parser.add_argument("--label", required=True, help="Short label for this snapshot.")
     parser.add_argument("--output", required=True, help="Output JSON path.")
     parser.add_argument(
@@ -47,14 +53,20 @@ def git_output(repo_root: pathlib.Path, *args: str) -> str | None:
     return result.stdout.strip()
 
 
-def build_snapshot(repo_root: pathlib.Path, label: str, notes: str | None) -> dict:
-    report = runtime_visibility.build_report(repo_root)
+def build_snapshot(
+    repo_root: pathlib.Path,
+    label: str,
+    notes: str | None,
+    runtime_scope: str = "both",
+) -> dict:
+    report = runtime_visibility.build_report(repo_root, runtime_scope=runtime_scope)
     basis_commit = git_output(repo_root, "rev-parse", "HEAD")
     branch = git_output(repo_root, "rev-parse", "--abbrev-ref", "HEAD")
     dirty = bool(git_output(repo_root, "status", "--short"))
     return {
         "captured_at": datetime.now(timezone.utc).isoformat(),
         "label": label,
+        "runtime_scope": runtime_scope,
         "basis_commit": basis_commit,
         "branch": branch,
         "dirty_worktree": dirty,
@@ -70,7 +82,7 @@ def main() -> int:
     if not output_path.is_absolute():
         output_path = (repo_root / output_path).resolve()
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    payload = build_snapshot(repo_root, args.label, args.notes)
+    payload = build_snapshot(repo_root, args.label, args.notes, runtime_scope=args.runtime)
     output_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     return 0
 

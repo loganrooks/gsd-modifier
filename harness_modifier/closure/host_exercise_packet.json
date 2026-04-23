@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "default_packet_version": 1,
   "bundle_family": "responsible-closure",
   "exercise_mode": "observe-only",
@@ -11,6 +11,9 @@
     "target_host_class",
     "host_reference",
     "host_repo_path",
+    "runtime_targets",
+    "runtime_results",
+    "parity_state",
     "runtime_class",
     "host_shape",
     "host_has_regular_gsd",
@@ -23,13 +26,23 @@
     "abort_conditions"
   ],
   "target_host_class_vocab": [
-    "codex-disjoint-gsd-installed-no-reflect"
+    "codex-disjoint-gsd-installed-no-reflect",
+    "claude-disjoint-gsd-installed-no-reflect",
+    "dual-runtime-disjoint-gsd-installed-no-reflect"
   ],
   "runtime_class_vocab": [
-    "codex-only"
+    "codex-only",
+    "claude-only",
+    "dual-runtime"
   ],
   "host_shape_vocab": [
-    "disjoint-codex-only"
+    "disjoint-codex-only",
+    "disjoint-claude-only",
+    "disjoint-dual-runtime"
+  ],
+  "runtime_target_vocab": [
+    "codex",
+    "claude"
   ],
   "host_age_posture_vocab": [
     "pristine",
