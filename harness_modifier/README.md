@@ -2,6 +2,31 @@
 
 This package is the authoritative in-repo home for generic harness-modifier carriers.
 
+Current shipped/install contract posture:
+- `runtime-core`
+  - installer entrypoint and install/materialization contract
+  - installed runtime config, agent, patched CLI-lib, reference, template, overwrite workflow, and overwrite skill carriers
+  - package `contract/` and `compatibility/`
+- `runtime-support`
+  - additive modifier workflows/skills
+  - package `uplift/`
+  - package `capture/`
+- `transitional shipped/install support`
+  - installed compact prompts that are still host-local / non-portable
+  - current bridge paths such as `project_uplift.py`, `seed_migration_inventory.py`, and thin `tooling/codex/` compatibility shims
+- `pre-run experimental`
+  - package `closure/`
+- `development-program-only`
+  - repo-local audit-tooling boundaries such as `audit_refmap.py`
+
+Current durable ledger:
+- [.planning/.../02-shipped-install-contract-classification-v1.json](/home/rookslog/workspace/projects/prix-guesser/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/responsible-closure-audit/artifacts/02-shipped-install-contract-classification-v1.json)
+
+Future extracted-project boundary:
+- the later standalone modifier repo should not extract `harness_modifier/` alone
+- it should carry the modifier package together with the live overlay/install-materialization contract and installer entrypoints
+- repo-local audit/governance tooling and installed-but-host-local compact-prompt bodies still require explicit classification before they travel
+
 Current first-slice split:
 - `contract/`
   - portable install/materialization contract helpers
