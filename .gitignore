@@ -4,4 +4,8 @@ __pycache__/
 .venv/
 .codex/
 .claude/
-.planning/measurement/
+.planning/measurement/*
+!.planning/measurement/model-role-benchmark/
+!.planning/measurement/model-role-benchmark/**
+.planning/measurement/model-role-benchmark/raw-pages/
+.planning/measurement/model-role-benchmark/extracted-text/

@@ -1,0 +1,399 @@
+[
+  {
+    "claim_tags": [
+      "usage",
+      "pricing",
+      "quota",
+      "capability"
+    ],
+    "collection_caveat": "Search-indexed Reddit sample; not representative.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/codex/comments/1strtsk/it_is_over/.json",
+    "fetched_at": "2026-04-23T22:55:46+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/codex \"It is over\" \"GPT-5.5\" \"usage\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260423T225546Z/reddit-codex-2026-04-23-usage-it-is-over.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-codex-2026-04-23-usage-it-is-over",
+    "text_char_count": 13338,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260423T225546Z/reddit-codex-2026-04-23-usage-it-is-over.txt",
+    "url": "https://www.reddit.com/r/codex/comments/1strtsk/it_is_over/"
+  },
+  {
+    "claim_tags": [
+      "capability",
+      "usage",
+      "frontend",
+      "large-codebase"
+    ],
+    "collection_caveat": "Single-user Reddit experience report; anecdotal.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/codex/comments/1stt056/my_thoughts_on_gpt5_after_more_than_an_hour_of_use/.json",
+    "fetched_at": "2026-04-23T22:55:46+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/codex \"GPT-5.5\" \"more than an hour\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260423T225546Z/reddit-codex-2026-04-23-hour-use.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-codex-2026-04-23-hour-use",
+    "text_char_count": 7605,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260423T225546Z/reddit-codex-2026-04-23-hour-use.txt",
+    "url": "https://www.reddit.com/r/codex/comments/1stt056/my_thoughts_on_gpt5_after_more_than_an_hour_of_use/"
+  },
+  {
+    "claim_tags": [
+      "capability",
+      "usage",
+      "launch"
+    ],
+    "collection_caveat": "Launch thread with mixed first reactions; anecdotal.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/codex/comments/1stqg9y/gpt55_is_here_lets_gooo/.json",
+    "fetched_at": "2026-04-23T22:55:47+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/codex \"GPT-5.5\" \"Codex\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260423T225546Z/reddit-codex-2026-04-23-here-lets-go.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-codex-2026-04-23-here-lets-go",
+    "text_char_count": 12147,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260423T225546Z/reddit-codex-2026-04-23-here-lets-go.txt",
+    "url": "https://www.reddit.com/r/codex/comments/1stqg9y/gpt55_is_here_lets_gooo/"
+  },
+  {
+    "claim_tags": [
+      "access",
+      "rollout",
+      "error"
+    ],
+    "collection_caveat": "Launch-window access thread; may reflect transient rollout behavior.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/codex/comments/1ssabg9/gpt55_now_on_codex/.json",
+    "fetched_at": "2026-04-23T22:55:47+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/codex \"GPT5.5 now on Codex\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260423T225546Z/reddit-codex-2026-04-22-now-on-codex.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-codex-2026-04-22-now-on-codex",
+    "text_char_count": 11588,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260423T225546Z/reddit-codex-2026-04-22-now-on-codex.txt",
+    "url": "https://www.reddit.com/r/codex/comments/1ssabg9/gpt55_now_on_codex/"
+  },
+  {
+    "claim_tags": [
+      "usage",
+      "fast-mode",
+      "pricing"
+    ],
+    "collection_caveat": "User interpretation of plan usage language; verify against official docs.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/codex/comments/1stub4j/openai_silently_increased_codex_fast_mode_plan/.json",
+    "fetched_at": "2026-04-23T22:55:48+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/codex \"GPT-5.5\" \"Fast mode\" \"usage\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260423T225546Z/reddit-codex-2026-04-23-fast-mode-usage.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-codex-2026-04-23-fast-mode-usage",
+    "text_char_count": 808,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260423T225546Z/reddit-codex-2026-04-23-fast-mode-usage.txt",
+    "url": "https://www.reddit.com/r/codex/comments/1stub4j/openai_silently_increased_codex_fast_mode_plan/"
+  },
+  {
+    "claim_tags": [
+      "pricing",
+      "usage",
+      "comparison"
+    ],
+    "collection_caveat": "Pricing complaint thread; claims require official-price cross-check.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/codex/comments/1sts42p/gpt_55_is_2x_more_expensive_in_comparison_to_54/.json",
+    "fetched_at": "2026-04-23T22:55:49+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/codex \"GPT 5.5\" \"2x more expensive\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260423T225546Z/reddit-codex-2026-04-23-pricing-2x.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-codex-2026-04-23-pricing-2x",
+    "text_char_count": 11249,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260423T225546Z/reddit-codex-2026-04-23-pricing-2x.txt",
+    "url": "https://www.reddit.com/r/codex/comments/1sts42p/gpt_55_is_2x_more_expensive_in_comparison_to_54/"
+  },
+  {
+    "claim_tags": [
+      "context-window",
+      "usage",
+      "codex"
+    ],
+    "collection_caveat": "Single-thread report about context availability; verify locally and officially.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/codex/comments/1stvd0t/just_found_out_they_turned_off_1m_context_gpt55/.json",
+    "fetched_at": "2026-04-23T22:55:50+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/codex \"GPT-5.5\" \"1M context\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260423T225546Z/reddit-codex-2026-04-23-context-disabled.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-codex-2026-04-23-context-disabled",
+    "text_char_count": 2999,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260423T225546Z/reddit-codex-2026-04-23-context-disabled.txt",
+    "url": "https://www.reddit.com/r/codex/comments/1stvd0t/just_found_out_they_turned_off_1m_context_gpt55/"
+  },
+  {
+    "claim_tags": [
+      "access",
+      "error",
+      "rollout"
+    ],
+    "collection_caveat": "Access-error report; likely launch-window sensitive.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/codex/comments/1sttyvr/gpt_55_error_in_the_latest_codex_anyone_else/.json",
+    "fetched_at": "2026-04-23T22:55:50+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/codex \"gpt 5.5 error in the latest codex\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260423T225546Z/reddit-codex-2026-04-23-error-latest-codex.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-codex-2026-04-23-error-latest-codex",
+    "text_char_count": 270,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260423T225546Z/reddit-codex-2026-04-23-error-latest-codex.txt",
+    "url": "https://www.reddit.com/r/codex/comments/1sttyvr/gpt_55_error_in_the_latest_codex_anyone_else/"
+  },
+  {
+    "claim_tags": [
+      "capability",
+      "frontend",
+      "role-execution"
+    ],
+    "collection_caveat": "Single-task capability anecdote; needs task artifact or reproduction.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/codex/comments/1stray7/gpt_55_is_way_better_than_gpt_54_for_uifrontend/.json",
+    "fetched_at": "2026-04-23T22:55:50+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/codex \"way better than GPT-5.4\" \"GPT-5.5\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260423T225546Z/reddit-codex-2026-04-23-frontend-better.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-codex-2026-04-23-frontend-better",
+    "text_char_count": 1992,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260423T225546Z/reddit-codex-2026-04-23-frontend-better.txt",
+    "url": "https://www.reddit.com/r/codex/comments/1stray7/gpt_55_is_way_better_than_gpt_54_for_uifrontend/"
+  },
+  {
+    "claim_tags": [
+      "launch",
+      "capability",
+      "pricing"
+    ],
+    "collection_caveat": "General OpenAI subreddit release discussion; not Codex-specific enough alone.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/OpenAI/comments/1stqe2n/openai_releases_spud_gpt55_model/.json",
+    "fetched_at": "2026-04-23T22:55:50+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/OpenAI \"GPT-5.5\" \"Codex\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260423T225546Z/reddit-openai-2026-04-23-release-thread.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-openai-2026-04-23-release-thread",
+    "text_char_count": 3412,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260423T225546Z/reddit-openai-2026-04-23-release-thread.txt",
+    "url": "https://www.reddit.com/r/OpenAI/comments/1stqe2n/openai_releases_spud_gpt55_model/"
+  },
+  {
+    "claim_tags": [
+      "access",
+      "rollout",
+      "leak"
+    ],
+    "collection_caveat": "Pre-release leak/access thread; use only for rollout-context hypotheses.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/OpenAI/comments/1ssb4jy/caught_the_massive_openai_codex_model_leak_on/.json",
+    "fetched_at": "2026-04-23T22:55:51+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/OpenAI \"gpt-5.5\" \"not supported\" \"ChatGPT account\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260423T225546Z/reddit-openai-2026-04-22-leak-thread.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-openai-2026-04-22-leak-thread",
+    "text_char_count": 1817,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260423T225546Z/reddit-openai-2026-04-22-leak-thread.txt",
+    "url": "https://www.reddit.com/r/OpenAI/comments/1ssb4jy/caught_the_massive_openai_codex_model_leak_on/"
+  },
+  {
+    "claim_tags": [
+      "comparison",
+      "capability",
+      "usage"
+    ],
+    "collection_caveat": "Cross-community comparison thread; likely partisan sampling.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/ClaudeCode/comments/1sszxc4/with_codex_55_dropping_today_anthropics_might_be/.json",
+    "fetched_at": "2026-04-23T22:55:51+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/ClaudeCode \"Codex 5.5\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260423T225546Z/reddit-claudecode-2026-04-22-codex-55-comparison.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-claudecode-2026-04-22-codex-55-comparison",
+    "text_char_count": 47967,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260423T225546Z/reddit-claudecode-2026-04-22-codex-55-comparison.txt",
+    "url": "https://www.reddit.com/r/ClaudeCode/comments/1sszxc4/with_codex_55_dropping_today_anthropics_might_be/"
+  },
+  {
+    "claim_tags": [
+      "x-indexed",
+      "launch",
+      "capability"
+    ],
+    "collection_caveat": "Aggregator page with selected social/media links, not direct X corpus.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.techmeme.com/260423/p48",
+    "fetched_at": "2026-04-23T22:55:52+00:00",
+    "http_status": 200,
+    "platform": "x-indexed-aggregator",
+    "query": "\"GPT-5.5\" \"Codex\" \"@\" \"Techmeme\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260423T225546Z/techmeme-2026-04-23-gpt55-launch.html",
+    "safe_headers": {
+      "content-type": "text/html; charset=UTF-8"
+    },
+    "source_id": "techmeme-2026-04-23-gpt55-launch",
+    "text_char_count": 106513,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260423T225546Z/techmeme-2026-04-23-gpt55-launch.txt",
+    "url": "https://www.techmeme.com/260423/p48"
+  },
+  {
+    "claim_tags": [
+      "access",
+      "rollout",
+      "error"
+    ],
+    "collection_caveat": "Secondary article summarizing public reports; not a primary user source.",
+    "error": "http_status_403",
+    "extract_status": "skipped_fetch_failed",
+    "fetch_status": "failed",
+    "fetch_url": "https://www.gate.com/zh-tw/news/detail/gpt-55-appears-in-openai-codex-model-selector-ahead-of-official-20499731",
+    "fetched_at": "2026-04-23T22:55:52+00:00",
+    "http_status": 403,
+    "platform": "article",
+    "query": "\"GPT-5.5\" \"not supported\" \"Codex\"",
+    "raw_path": "not_available",
+    "safe_headers": {
+      "cache-control": "max-age=0",
+      "content-type": "text/html"
+    },
+    "source_id": "gate-2026-04-22-codex-400-error",
+    "text_path": "not_available",
+    "url": "https://www.gate.com/zh-tw/news/detail/gpt-55-appears-in-openai-codex-model-selector-ahead-of-official-20499731"
+  },
+  {
+    "claim_tags": [
+      "usage",
+      "access",
+      "non-english-forum"
+    ],
+    "collection_caveat": "Machine-translated forum view; interpret cautiously.",
+    "error": "http_status_403",
+    "extract_status": "skipped_fetch_failed",
+    "fetch_status": "failed",
+    "fetch_url": "https://linux.do/t/topic/2039946?tl=en",
+    "fetched_at": "2026-04-23T22:55:53+00:00",
+    "http_status": 403,
+    "platform": "forum",
+    "query": "\"GPT-5.5\" \"Codex\" \"usage\" \"LINUX DO\"",
+    "raw_path": "not_available",
+    "safe_headers": {
+      "content-type": "text/html; charset=UTF-8"
+    },
+    "source_id": "linuxdo-2026-04-23-codex-55-thread",
+    "text_path": "not_available",
+    "url": "https://linux.do/t/topic/2039946?tl=en"
+  },
+  {
+    "claim_tags": [
+      "launch",
+      "capability",
+      "analysis"
+    ],
+    "collection_caveat": "Secondary analysis article; useful for source leads, not user sentiment alone.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://webiano.digital/openais-gpt-5-5-release-is-really-a-bet-on-agentic-work/",
+    "fetched_at": "2026-04-23T22:55:53+00:00",
+    "http_status": 200,
+    "platform": "article",
+    "query": "\"OpenAI\u2019s ChatGPT-5.5 release is really a bet on agentic work\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260423T225546Z/webiano-2026-04-23-gpt55-agentic-work.html",
+    "safe_headers": {
+      "content-type": "text/html; charset=UTF-8"
+    },
+    "source_id": "webiano-2026-04-23-gpt55-agentic-work",
+    "text_char_count": 41816,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260423T225546Z/webiano-2026-04-23-gpt55-agentic-work.txt",
+    "url": "https://webiano.digital/openais-gpt-5-5-release-is-really-a-bet-on-agentic-work/"
+  }
+]
