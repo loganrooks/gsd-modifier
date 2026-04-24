@@ -63,10 +63,21 @@ First matrix:
   "elapsed_seconds": 300,
   "git_baseline": "abc1234",
   "status": "completed",
+  "access_preflight": {
+    "surface": "cli|desktop|ide|subagent|not_available",
+    "account_tier": "not_recorded",
+    "client_version": "not_available",
+    "model_selector_state": "not_available",
+    "launch_result": "not_run|launched|access_failed|metadata_missing|model_not_found",
+    "failure_class": "not_available"
+  },
   "usage": {
     "input_tokens": "not_available",
     "output_tokens": "not_available",
     "reasoning_tokens": "not_available",
+    "quota_delta": "not_available",
+    "status_before": "not_available",
+    "status_after": "not_available",
     "usage_metric_status": "not_available"
   },
   "artifacts": {
@@ -86,9 +97,10 @@ First matrix:
 3. Start Codex with explicit model and reasoning overrides when the CLI supports both.
 4. Capture requested settings before launch.
 5. Capture effective settings from runtime evidence when available.
-6. Preserve raw response, diff, test output, and run metadata.
-7. Score outputs with the rubric.
-8. Write a run summary and leave raw artifacts intact.
+6. Capture access preflight, quota/status before, and effective context evidence where available.
+7. Preserve raw response, diff, test output, and run metadata.
+8. Score outputs with the rubric.
+9. Write a run summary and leave raw artifacts intact.
 
 ## Requested-Vs-Effective Discipline
 
@@ -109,6 +121,15 @@ Allowed `effective_settings_source` values:
 - `not_available`
 
 If effective settings cannot be proven, record `not_available` and keep the run usable only for qualitative review.
+
+Allowed run status values:
+
+- `completed`
+- `access_failed`
+- `routing_unproven`
+- `quota_blocked`
+- `execution_failed`
+- `verification_failed`
 
 ## Safety Rules
 

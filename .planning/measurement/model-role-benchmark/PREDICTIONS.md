@@ -37,3 +37,5 @@ Do not change production defaults unless the evidence shows one of these outcome
 - Single-run comparisons are not enough; repeated runs or task diversity are needed.
 - Human scoring can bias toward more confident prose unless the rubric penalizes unsupported claims.
 - Token usage may not be directly visible for every Codex run; missing metrics must be recorded as `not_available`.
+- Selector visibility, launch access, quota enforcement, and documented context windows may diverge from effective runtime behavior; runs without proven effective settings are qualitative only.
+- Fast mode must be measured as a separate lane because speed, quota burn, and model quality can move independently.
