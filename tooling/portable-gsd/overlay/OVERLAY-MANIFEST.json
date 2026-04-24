@@ -255,6 +255,22 @@
         }
       }
     },
+    "get-shit-done/bin/generate-instruction.cjs": {
+      "capability_id": "get-shit-done/bin/generate-instruction.cjs",
+      "parity_tier": "core_required",
+      "materializers": {
+        "codex": {
+          "mode": "add",
+          "target": "get-shit-done/bin/generate-instruction.cjs",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/bin/generate-instruction.cjs"
+        },
+        "claude": {
+          "mode": "add",
+          "target": "get-shit-done/bin/generate-instruction.cjs",
+          "source": "tooling/portable-gsd/overlay/get-shit-done/bin/generate-instruction.cjs"
+        }
+      }
+    },
     "get-shit-done/references/agent-contracts.md": {
       "capability_id": "get-shit-done/references/agent-contracts.md",
       "parity_tier": "core_required",

@@ -1265,7 +1265,13 @@ Use AskUserQuestion:
 **Generate or refresh project instruction file before final commit:**
 
 ```bash
-gsd-sdk query generate-claude-md --output "$INSTRUCTION_FILE"
+case "$RUNTIME" in
+  codex) GSD_RUNTIME_ROOT="__PROJECT_ROOT__/.codex" ;;
+  claude) GSD_RUNTIME_ROOT="__PROJECT_ROOT__/.claude" ;;
+  *) GSD_RUNTIME_ROOT="__PROJECT_ROOT__/.codex" ;;
+esac
+GSD_INSTRUCTION_GENERATOR="$GSD_RUNTIME_ROOT/get-shit-done/bin/generate-instruction.cjs"
+node "$GSD_INSTRUCTION_GENERATOR" --output "$INSTRUCTION_FILE" --runtime "$RUNTIME"
 ```
 
 This ensures new projects get the default GSD workflow-enforcement guidance and current project context in `$INSTRUCTION_FILE`.
