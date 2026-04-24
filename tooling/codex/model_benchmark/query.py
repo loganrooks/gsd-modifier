@@ -7,8 +7,22 @@ import re
 import sqlite3
 from typing import Any
 
+from tooling.codex.model_benchmark.enums import (
+    COMPARABILITY_VALUES,
+    CONTENT_CONTRACTS,
+    COST_EVIDENCE_MODES,
+    EVIDENCE_CLASSES,
+    OBSERVATION_STATUSES,
+    RELIABILITY_MODES,
+)
+
 
 _HASH_RE = re.compile(r"^sha256:[0-9a-f]{64}$")
+_NOT_COLLECTED = "not_collected"
+_USAGE_METRIC_PREFIX = "usage."
+_LEGACY_SCORE_METRIC = "legacy.score.overall"
+_DIAGNOSTIC_METRIC = "source.parse_status"
+_DIAGNOSTIC_FIELDS = ("line_number", "status", "error_type", "content_contract")
 
 
 def _latest_rebuild(conn: sqlite3.Connection) -> sqlite3.Row:
@@ -37,8 +51,153 @@ def _validate_hash(value: str, field: str, strict: bool) -> None:
         raise ValueError(f"{field} must be a sha256 hash")
 
 
+def _check_enum(value: Any, allowed: frozenset[str], field: str, strict: bool) -> None:
+    if value is None:
+        return
+    if strict and value not in allowed:
+        raise ValueError(f"{field} must be one of {sorted(allowed)}")
+
+
+def _validate_observation_row(row: sqlite3.Row, strict: bool) -> None:
+    _check_enum(row["status"], OBSERVATION_STATUSES, "status", strict)
+    _check_enum(row["evidence_class"], EVIDENCE_CLASSES, "evidence_class", strict)
+    _check_enum(row["reliability_mode"], RELIABILITY_MODES, "reliability_mode", strict)
+    _check_enum(row["content_contract"], CONTENT_CONTRACTS, "content_contract", strict)
+    _check_enum(row["comparability"], COMPARABILITY_VALUES, "comparability", strict)
+
+
+def _validate_cost_row(row: sqlite3.Row, strict: bool) -> None:
+    _check_enum(row["cost_evidence_mode"], COST_EVIDENCE_MODES, "cost_evidence_mode", strict)
+    _check_enum(row["comparability"], COMPARABILITY_VALUES, "comparability", strict)
+
+
+def _validate_usage_payload(payload: dict[str, Any], strict: bool) -> None:
+    _check_enum(payload.get("missingness"), OBSERVATION_STATUSES, "missingness", strict)
+    _check_enum(payload.get("availability_status"), OBSERVATION_STATUSES, "availability_status", strict)
+
+
 def _table_json_rows(conn: sqlite3.Connection, sql: str, args: tuple[Any, ...] = ()) -> list[dict[str, Any]]:
     return [_json_object(row[0]) for row in conn.execute(sql, args).fetchall()]
+
+
+def _count_rows(conn: sqlite3.Connection, table: str) -> int:
+    return int(conn.execute(f"SELECT COUNT(*) AS count FROM {table}").fetchone()["count"])
+
+
+def _count_observations(conn: sqlite3.Connection, where: str, args: tuple[Any, ...] = ()) -> int:
+    row = conn.execute(f"SELECT COUNT(*) AS count FROM observations WHERE {where}", args).fetchone()
+    return int(row["count"])
+
+
+def _status_counts(conn: sqlite3.Connection, sql: str, args: tuple[Any, ...] = ()) -> dict[str, int]:
+    rows = conn.execute(sql, args).fetchall()
+    return {str(row["status"]): int(row["count"]) for row in rows}
+
+
+def _usage_missingness_counts(conn: sqlite3.Connection) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    rows = conn.execute(
+        """
+        SELECT value_json
+        FROM observations
+        WHERE metric_id LIKE ?
+        ORDER BY id
+        """,
+        (f"{_USAGE_METRIC_PREFIX}%",),
+    ).fetchall()
+    for row in rows:
+        value = _json_object(row["value_json"])
+        missingness = str(value.get("missingness", "unknown"))
+        counts[missingness] = counts.get(missingness, 0) + 1
+    return dict(sorted(counts.items()))
+
+
+def _cost_evidence_mode_counts(conn: sqlite3.Connection) -> dict[str, int]:
+    counts = {mode: 0 for mode in sorted(COST_EVIDENCE_MODES)}
+    rows = conn.execute(
+        """
+        SELECT cost_evidence_mode, COUNT(*) AS count
+        FROM cost_estimates
+        GROUP BY cost_evidence_mode
+        ORDER BY cost_evidence_mode
+        """
+    ).fetchall()
+    for row in rows:
+        counts[str(row["cost_evidence_mode"])] = int(row["count"])
+    return counts
+
+
+def _source_artifacts(conn: sqlite3.Connection) -> list[dict[str, Any]]:
+    return [
+        {
+            "source_kind": str(row["source_kind"]),
+            "source_uri": str(row["source_uri"]),
+            "source_hash": row["source_hash"],
+            "content_contract": str(row["content_contract"]),
+        }
+        for row in conn.execute(
+            """
+            SELECT source_kind, source_uri, source_hash, content_contract
+            FROM source_artifacts
+            ORDER BY id
+            """
+        ).fetchall()
+    ]
+
+
+def sanitize_diagnostic_payload(value: dict[str, Any], strict: bool) -> dict[str, Any]:
+    """Return the report-safe diagnostic subset from a persisted payload."""
+
+    diagnostic = {field: value[field] for field in _DIAGNOSTIC_FIELDS if field in value}
+    _check_enum(diagnostic.get("status"), OBSERVATION_STATUSES, "diagnostic.status", strict)
+    _check_enum(diagnostic.get("content_contract"), CONTENT_CONTRACTS, "diagnostic.content_contract", strict)
+    return diagnostic
+
+
+def _diagnostics(conn: sqlite3.Connection, strict: bool) -> list[dict[str, Any]]:
+    rows = conn.execute(
+        """
+        SELECT value_json
+        FROM observations
+        WHERE metric_id = ? AND status = ?
+        ORDER BY id
+        """,
+        (_DIAGNOSTIC_METRIC, "malformed_source"),
+    ).fetchall()
+    return [sanitize_diagnostic_payload(_json_object(row["value_json"]), strict) for row in rows]
+
+
+def _validate_migration_rows(conn: sqlite3.Connection, strict: bool) -> None:
+    rows = conn.execute(
+        """
+        SELECT status, evidence_class, reliability_mode, content_contract, comparability, metric_id, value_json
+        FROM observations
+        ORDER BY id
+        """
+    ).fetchall()
+    for row in rows:
+        _validate_observation_row(row, strict)
+        if str(row["metric_id"] or "").startswith(_USAGE_METRIC_PREFIX):
+            _validate_usage_payload(_json_object(row["value_json"]), strict)
+
+    rows = conn.execute(
+        """
+        SELECT status, evidence_class, reliability_mode, content_contract, comparability
+        FROM rubric_observations
+        ORDER BY id
+        """
+    ).fetchall()
+    for row in rows:
+        _validate_observation_row(row, strict)
+
+    for row in conn.execute(
+        """
+        SELECT cost_evidence_mode, comparability
+        FROM cost_estimates
+        ORDER BY id
+        """
+    ).fetchall():
+        _validate_cost_row(row, strict)
 
 
 def query_rebuild_summary(
@@ -63,7 +222,10 @@ def query_rebuild_summary(
         """,
         ("malformed_source",),
     ).fetchall()
-    diagnostics = [_json_object(row["value_json"]) for row in diagnostic_rows]
+    diagnostics = [
+        sanitize_diagnostic_payload(_json_object(row["value_json"]), strict)
+        for row in diagnostic_rows
+    ]
     return {
         "rebuild_id": int(rebuild["id"]),
         "schema_version": str(rebuild["schema_version"]),
@@ -71,6 +233,47 @@ def query_rebuild_summary(
         "registry_hash": actual_hash,
         "source_set_hash": str(rebuild["source_set_hash"]),
         "status": str(rebuild["status"]),
+        "diagnostic_count": len(diagnostics),
+        "diagnostics": diagnostics,
+    }
+
+
+def query_migration_state(
+    conn: sqlite3.Connection,
+    *,
+    strict: bool = True,
+) -> dict[str, Any]:
+    """Return small v0 compatibility migration counts without raw content."""
+
+    _validate_migration_rows(conn, strict)
+    diagnostics = _diagnostics(conn, strict)
+    return {
+        "v0_compatibility_status": "compatibility_active",
+        "registry_hash": _NOT_COLLECTED,
+        "source_set_hash": _NOT_COLLECTED,
+        "counts": {
+            "runs": _count_rows(conn, "runs"),
+            "observations": _count_rows(conn, "observations"),
+            "legacy_score_observations": _count_observations(conn, "metric_id = ?", (_LEGACY_SCORE_METRIC,)),
+            "rubric_observations": _count_rows(conn, "rubric_observations"),
+            "cost_estimates": _count_rows(conn, "cost_estimates"),
+            "source_artifacts": _count_rows(conn, "source_artifacts"),
+            "diagnostics": len(diagnostics),
+        },
+        "usage_observation_status_counts": _status_counts(
+            conn,
+            """
+            SELECT status, COUNT(*) AS count
+            FROM observations
+            WHERE metric_id LIKE ?
+            GROUP BY status
+            ORDER BY status
+            """,
+            (f"{_USAGE_METRIC_PREFIX}%",),
+        ),
+        "usage_missingness_counts": _usage_missingness_counts(conn),
+        "cost_evidence_mode_counts": _cost_evidence_mode_counts(conn),
+        "source_artifacts": _source_artifacts(conn),
         "diagnostic_count": len(diagnostics),
         "diagnostics": diagnostics,
     }

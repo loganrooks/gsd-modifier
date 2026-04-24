@@ -1,3 +1,4 @@
+import json
 import sqlite3
 import tempfile
 import unittest
@@ -79,6 +80,56 @@ class ModelBenchmarkReportParityTests(unittest.TestCase):
 
         with self.assertRaisesRegex(ValueError, "registry_hash mismatch"):
             reports.telemetry_rebuild_report(query_output, registry_hash="sha256:not-the-registry", strict=True)
+
+    def test_rebuild_query_and_report_sanitize_diagnostic_payloads(self):
+        conn = self._connect()
+        registry = self._manifest()
+        rebuild.rebuild_fixture_sources(conn, registry, [self._source('{"record_type":"ok"}\n')])
+        source_artifact_id = store.insert_source_artifact(
+            conn,
+            {
+                "source_kind": "diagnostic.malformed_jsonl",
+                "source_uri": "fixture://malicious-diagnostic",
+                "source_hash": "sha256:" + "0" * 64,
+                "content_contract": "metadata_only",
+                "provenance_json": {"test": "report-parity"},
+            },
+        )
+        store.insert_observation(
+            conn,
+            {
+                "entity_type": "source_artifact",
+                "entity_id": str(source_artifact_id),
+                "metric_id": "source.parse_status",
+                "status": "malformed_source",
+                "evidence_class": "synthetic_fixture",
+                "reliability_mode": "direct_field",
+                "content_contract": "metadata_only",
+                "comparability": "not_comparable",
+                "source_artifact_id": source_artifact_id,
+                "value_json": {
+                    "status": "malformed_source",
+                    "line_number": 9,
+                    "error_type": "schema_validation_failed",
+                    "content_contract": "metadata_only",
+                    "prompt": "PRIVATE PROMPT FROM REBUILD DIAGNOSTIC",
+                    "assistant": "PRIVATE ASSISTANT FROM REBUILD DIAGNOSTIC",
+                    "tool_result": "PRIVATE TOOL RESULT FROM REBUILD DIAGNOSTIC",
+                    "transcript": "PRIVATE TRANSCRIPT FROM REBUILD DIAGNOSTIC",
+                },
+                "provenance_json": {"test": "report-parity"},
+            },
+        )
+
+        query_output = query.query_rebuild_summary(conn, registry_hash=registry["registry_hash"], strict=True)
+        report = reports.telemetry_rebuild_report(query_output, registry_hash=registry["registry_hash"], strict=True)
+
+        for serialized in (json.dumps(query_output, sort_keys=True), json.dumps(report, sort_keys=True)):
+            self.assertIn("schema_validation_failed", serialized)
+            self.assertNotIn("PRIVATE PROMPT FROM REBUILD DIAGNOSTIC", serialized)
+            self.assertNotIn("PRIVATE ASSISTANT FROM REBUILD DIAGNOSTIC", serialized)
+            self.assertNotIn("PRIVATE TOOL RESULT FROM REBUILD DIAGNOSTIC", serialized)
+            self.assertNotIn("PRIVATE TRANSCRIPT FROM REBUILD DIAGNOSTIC", serialized)
 
     def test_strict_report_input_validation_rejects_undeclared_enums(self):
         cases = (

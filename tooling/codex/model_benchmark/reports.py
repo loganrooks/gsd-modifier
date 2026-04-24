@@ -13,6 +13,7 @@ from tooling.codex.model_benchmark.enums import (
     OBSERVATION_STATUSES,
     RELIABILITY_MODES,
 )
+from tooling.codex.model_benchmark import query
 from tooling.codex.model_benchmark.schema import NOT_AVAILABLE, total_known_tokens, validate_run_record
 
 
@@ -223,11 +224,33 @@ def telemetry_rebuild_report(
         if not isinstance(diagnostic, dict):
             raise ValueError("diagnostics entries must be objects")
         _validate_report_diagnostic(diagnostic, strict)
+    safe_diagnostics = [
+        query.sanitize_diagnostic_payload(diagnostic, strict)
+        for diagnostic in diagnostics
+    ]
     return {
         "registry_hash": actual_hash,
         "registry_version": query_output.get("registry_version"),
         "source_set_hash": query_output.get("source_set_hash"),
         "status": query_output.get("status"),
-        "diagnostic_count": len(diagnostics),
-        "diagnostics": diagnostics,
+        "diagnostic_count": len(safe_diagnostics),
+        "diagnostics": safe_diagnostics,
+    }
+
+
+def telemetry_migration_report(conn: Any, *, strict: bool = True) -> dict[str, Any]:
+    """Render a small v0 compatibility report from the telemetry store."""
+
+    state = query.query_migration_state(conn, strict=strict)
+    return {
+        "v0_compatibility_status": state["v0_compatibility_status"],
+        "registry_hash": state["registry_hash"],
+        "source_set_hash": state["source_set_hash"],
+        "counts": state["counts"],
+        "usage_observation_status_counts": state["usage_observation_status_counts"],
+        "usage_missingness_counts": state["usage_missingness_counts"],
+        "cost_evidence_mode_counts": state["cost_evidence_mode_counts"],
+        "source_artifact_count": state["counts"]["source_artifacts"],
+        "diagnostic_count": state["diagnostic_count"],
+        "diagnostics": state["diagnostics"],
     }
