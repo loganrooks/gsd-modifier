@@ -26,7 +26,7 @@ LOCAL_PATH_RE = re.compile(
     r"|(?:\.planning|tooling|scripts)/[^\s`\"'()<>]+"
     r")"
 )
-LINE_SUFFIX_RE = re.compile(r"^(.*?)(:\d+)?$")
+LINE_SUFFIX_RE = re.compile(r"^(.*?)(:\d+(?:-\d+)?)?$")
 URL_SCHEME_RE = re.compile(r"^[a-zA-Z][a-zA-Z0-9+.-]*:")
 DYNAMIC_TEMPLATE_RE = re.compile(r"\$\{[^}]+\}|\{[^}/]+\}")
 
@@ -47,6 +47,14 @@ class LinkOccurrence:
     line: int
     resolved: str | None
     status: str
+
+
+@dataclass(frozen=True)
+class MoveIndex:
+    by_old_abs: dict[str, Move]
+    by_old_rel: dict[str, Move]
+    by_old_name: dict[str, Move]
+    by_new_abs: dict[str, Move]
 
 
 def parse_args() -> argparse.Namespace:
@@ -160,24 +168,29 @@ def normalize_local_path(raw: str, source_file: Path) -> tuple[Path | None, str]
         return None, ""
     if stripped.startswith("<") and stripped.endswith(">"):
         stripped = stripped[1:-1]
-    if stripped.startswith("#") or URL_SCHEME_RE.match(stripped):
-        return None, ""
-    if DYNAMIC_TEMPLATE_RE.search(stripped):
-        return None, ""
 
     path_part = stripped
     line_suffix = ""
     head, sep, tail = stripped.rpartition(":")
-    if sep and tail.isdigit():
+    if sep and re.fullmatch(r"\d+(?:-\d+)?", tail):
         path_part = head
         line_suffix = f":{tail}"
+
+    if path_part.startswith("#") or URL_SCHEME_RE.match(path_part):
+        return None, ""
+    if DYNAMIC_TEMPLATE_RE.search(path_part):
+        return None, ""
 
     if path_part.startswith("/"):
         candidate = Path(path_part).resolve()
         return candidate, line_suffix
+    if path_part.startswith(".planning/") or path_part.startswith("tooling/") or path_part.startswith("scripts/"):
+        return (REPO_ROOT / path_part).resolve(), line_suffix
 
     relative_candidate = (source_file.parent / path_part).resolve()
     if relative_candidate.exists():
+        return relative_candidate, line_suffix
+    if path_part.startswith("."):
         return relative_candidate, line_suffix
 
     repo_candidate = (REPO_ROOT / path_part).resolve()
@@ -355,8 +368,10 @@ def load_moves(path: Path) -> list[Move]:
         if not stripped or stripped.startswith("#"):
             continue
         old_raw, new_raw = stripped.split("\t", 1)
-        old_abs = (REPO_ROOT / old_raw).resolve()
-        new_abs = (REPO_ROOT / new_raw).resolve()
+        old_path = Path(old_raw)
+        new_path = Path(new_raw)
+        old_abs = old_path.resolve() if old_path.is_absolute() else (REPO_ROOT / old_path).resolve()
+        new_abs = new_path.resolve() if new_path.is_absolute() else (REPO_ROOT / new_path).resolve()
         moves.append(
             Move(
                 old_abs=old_abs.as_posix(),
@@ -369,36 +384,90 @@ def load_moves(path: Path) -> list[Move]:
     return moves
 
 
+def build_move_index(moves: list[Move]) -> MoveIndex:
+    by_old_abs: dict[str, Move] = {}
+    by_old_rel: dict[str, Move] = {}
+    by_new_abs: dict[str, Move] = {}
+    moves_by_old_name: dict[str, list[Move]] = defaultdict(list)
+
+    for move in moves:
+        by_old_abs[move.old_abs] = move
+        by_old_rel[move.old_rel] = move
+        by_new_abs[move.new_abs] = move
+        try:
+            by_old_rel[repo_relative(Path(move.old_abs))] = move
+        except RuntimeError:
+            pass
+        moves_by_old_name[move.old_name].append(move)
+
+    by_old_name: dict[str, Move] = {}
+    for old_name, named_moves in moves_by_old_name.items():
+        new_targets = {move.new_abs for move in named_moves}
+        if len(new_targets) == 1:
+            by_old_name[old_name] = named_moves[0]
+
+    return MoveIndex(
+        by_old_abs=by_old_abs,
+        by_old_rel=by_old_rel,
+        by_old_name=by_old_name,
+        by_new_abs=by_new_abs,
+    )
+
+
+def find_target_move(
+    raw_target: str,
+    source_file: Path,
+    move_index: MoveIndex,
+) -> tuple[Move | None, str]:
+    stripped = raw_target.strip()
+    had_brackets = stripped.startswith("<") and stripped.endswith(">")
+    core = stripped[1:-1] if had_brackets else stripped
+    line_match = LINE_SUFFIX_RE.match(core)
+    assert line_match is not None
+    target_core = line_match.group(1)
+    resolved_path, line_suffix = normalize_local_path(raw_target, source_file)
+    move: Move | None = None
+    if resolved_path is not None:
+        move = move_index.by_old_abs.get(resolved_path.as_posix())
+        if move is None:
+            move = move_index.by_old_rel.get(repo_relative(resolved_path))
+    if move is None:
+        move = move_index.by_old_rel.get(target_core)
+    if move is None and "/" not in target_core:
+        move = move_index.by_old_name.get(target_core)
+    return move, line_suffix
+
+
 def rewrite_links(
     text: str,
     source_file: Path,
-    move_by_old_abs: dict[str, Move],
-    move_by_old_rel: dict[str, Move],
-    move_by_old_name: dict[str, Move],
+    move_index: MoveIndex,
 ) -> tuple[str, int]:
     replacements = 0
+    source_move = move_index.by_new_abs.get(source_file.resolve().as_posix())
 
     def repl(match: re.Match[str]) -> str:
         nonlocal replacements
         label, raw_target = match.group(1), match.group(2)
-        stripped = raw_target.strip()
-        had_brackets = stripped.startswith("<") and stripped.endswith(">")
-        core = stripped[1:-1] if had_brackets else stripped
-        line_match = LINE_SUFFIX_RE.match(core)
-        assert line_match is not None
-        target_core = line_match.group(1)
-        resolved_path, line_suffix = normalize_local_path(raw_target, source_file)
-        move: Move | None = None
-        if resolved_path is not None:
-            move = move_by_old_abs.get(resolved_path.as_posix())
-        if move is None:
-            move = move_by_old_rel.get(target_core)
-        if move is None and "/" not in target_core:
-            move = move_by_old_name.get(target_core)
-        if move is None:
+        move, line_suffix = find_target_move(raw_target, source_file, move_index)
+        destination: Path | None = Path(move.new_abs) if move is not None else None
+
+        if destination is None and source_move is not None:
+            old_source = Path(source_move.old_abs)
+            old_resolved_path, line_suffix = normalize_local_path(raw_target, old_source)
+            if old_resolved_path is not None:
+                old_target_move = move_index.by_old_abs.get(old_resolved_path.as_posix())
+                if old_target_move is None:
+                    old_target_move = move_index.by_old_rel.get(repo_relative(old_resolved_path))
+                if old_target_move is not None:
+                    destination = Path(old_target_move.new_abs)
+                elif old_resolved_path.exists():
+                    destination = old_resolved_path
+
+        if destination is None:
             return match.group(0)
         replacements += 1
-        rewritten = format_target(raw_target, source_file, Path(move.new_abs), line_suffix)
+        rewritten = format_target(raw_target, source_file, destination, line_suffix)
         return f"[{label}]({rewritten})"
 
     return MARKDOWN_LINK_RE.sub(repl, text), replacements
@@ -417,7 +486,8 @@ def rewrite_literal_paths(text: str, source_file: Path, moves: list[Move]) -> tu
 
     for move in sorted(moves, key=lambda item: len(item.old_abs), reverse=True):
         replace_if_present(move.old_abs, move.new_abs)
-        replace_if_present(move.old_rel, move.new_rel)
+        if "/" in move.old_rel or move.old_rel.startswith("."):
+            replace_if_present(move.old_rel, move.new_rel)
 
         rendered_rel = os.path.relpath(Path(move.new_abs), start=source_file.parent).replace(os.sep, "/")
         replace_if_present(f"`{move.old_name}`", f"`{rendered_rel}`")
@@ -426,12 +496,7 @@ def rewrite_literal_paths(text: str, source_file: Path, moves: list[Move]) -> tu
 
 
 def rewrite_workspace(root: Path, moves: list[Move], apply: bool) -> str:
-    move_by_old_abs = {move.old_abs: move for move in moves}
-    move_by_old_rel = {move.old_rel: move for move in moves}
-    basename_counter = Counter(move.old_name for move in moves)
-    move_by_old_name = {
-        move.old_name: move for move in moves if basename_counter[move.old_name] == 1
-    }
+    move_index = build_move_index(moves)
     changed_files: list[tuple[str, int]] = []
 
     for source_file in iter_markdown_files(root):
@@ -439,9 +504,7 @@ def rewrite_workspace(root: Path, moves: list[Move], apply: bool) -> str:
         updated, link_replacements = rewrite_links(
             original,
             source_file,
-            move_by_old_abs,
-            move_by_old_rel,
-            move_by_old_name,
+            move_index,
         )
         updated, literal_replacements = rewrite_literal_paths(updated, source_file, moves)
         replacement_count = link_replacements + literal_replacements
