@@ -1,0 +1,26 @@
+{
+  "schema_version": "synthetic-codex-sqlite-index/v1",
+  "content_contract": "metadata_only",
+  "source_artifact": {
+    "artifact_id": "codex-thread-sqlite-001",
+    "kind": "sqlite_index_export",
+    "hash": "sha256:fixture-codex-sqlite-minimal"
+  },
+  "tables": {
+    "sessions": [
+      {
+        "session_id": "codex-session-001",
+        "created_at": "2026-04-24T00:00:00Z"
+      }
+    ],
+    "runtime_items": [
+      {
+        "item_id": "codex-item-001",
+        "session_id": "codex-session-001",
+        "item_type": "assistant_message",
+        "content_state": "redacted",
+        "correlation_status": "uncorrelated"
+      }
+    ]
+  }
+}

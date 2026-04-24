@@ -1,0 +1,35 @@
+{
+  "schema_version": "rebuild-parity-fixture/v1",
+  "content_contract": "metadata_only",
+  "registry": {
+    "registry_version": "2026.04.24-fixture",
+    "registry_hash": "sha256:fixture-registry-001"
+  },
+  "rebuild_run": {
+    "rebuild_id": "rebuild-fixture-001",
+    "schema_version": "telemetry-cache/v1",
+    "registry_version": "2026.04.24-fixture",
+    "registry_hash": "sha256:fixture-registry-001",
+    "source_set_hash": "sha256:fixture-source-set-001"
+  },
+  "query_output": {
+    "registry_hash": "sha256:fixture-registry-001",
+    "source_set_hash": "sha256:fixture-source-set-001",
+    "rows": [
+      {
+        "session_id": "codex-session-001",
+        "runtime_item_count": 1
+      }
+    ]
+  },
+  "report_output": {
+    "registry_hash": "sha256:fixture-registry-001",
+    "source_set_hash": "sha256:fixture-source-set-001",
+    "summaries": [
+      {
+        "fixture_id": "codex_sqlite_minimal_thread",
+        "privacy_contract": "metadata_only"
+      }
+    ]
+  }
+}

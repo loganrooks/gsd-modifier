@@ -1,0 +1,54 @@
+{
+  "schema_version": "provider-denominator-fixture/v1",
+  "content_contract": "metadata_only",
+  "observations": {
+    "openai": {
+      "input_tokens": {
+        "value": 1000,
+        "status": "measured",
+        "denominator": "input_tokens"
+      },
+      "cache_read_tokens": {
+        "value": 250,
+        "status": "measured",
+        "denominator": "cached_input_tokens"
+      },
+      "reasoning_tokens": {
+        "value": 80,
+        "status": "measured",
+        "denominator": "reasoning_tokens"
+      },
+      "cost": {
+        "value": "0.004200",
+        "cost_evidence_mode": "provider_reported_per_request"
+      },
+      "quota": {
+        "status": "not_exposed"
+      }
+    },
+    "anthropic": {
+      "input_tokens": {
+        "value": 900,
+        "status": "measured",
+        "denominator": "input_tokens"
+      },
+      "cache_read_tokens": {
+        "value": 300,
+        "status": "measured",
+        "denominator": "cache_read_input_tokens"
+      },
+      "reasoning_tokens": {
+        "value": "not_exposed",
+        "status": "not_exposed",
+        "denominator": "not_exposed"
+      },
+      "cost": {
+        "value": "0.003100",
+        "cost_evidence_mode": "pricing_table_estimate"
+      },
+      "quota": {
+        "status": "not_collected"
+      }
+    }
+  }
+}

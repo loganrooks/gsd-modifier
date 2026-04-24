@@ -1,0 +1,16 @@
+{
+  "schema_version": "normalized-telemetry-fixture/v1",
+  "source_kind": "runtime.codex_cli.rollout_stream",
+  "content_contract": "redacted_content_reference",
+  "runtime_response_items": [
+    {
+      "runtime_item_id": "codex-rollout-item-001",
+      "namespace": "runtime.codex_cli",
+      "item_type": "tool_request",
+      "redaction_state": "redacted",
+      "content_ref": "redacted://fixture/codex-rollout-item-001",
+      "correlation_status": "unknown",
+      "model_call_id": null
+    }
+  ]
+}

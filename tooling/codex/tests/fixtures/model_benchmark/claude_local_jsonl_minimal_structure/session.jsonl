@@ -1,0 +1,5 @@
+{"record_type":"session","session_id":"claude-session-001","runtime_namespace":"runtime.claude_code","redaction_state":"synthetic","content_contract":"structural_only"}
+{"record_type":"message","message_id":"claude-message-001","session_id":"claude-session-001","role":"user","redaction_state":"redacted","content_ref":"redacted://fixture/claude-message-001","content_contract":"redacted_content_reference"}
+{"record_type":"tool","tool_call_id":"claude-tool-001","session_id":"claude-session-001","tool_name":"Read","redaction_state":"redacted","argument_shape":{"path":"synthetic/path.txt"},"result_state":"redacted","content_contract":"structural_only"}
+{"record_type":"parse_diagnostic","session_id":"claude-session-001","line_number":4,"status":"malformed_source","redaction_state":"synthetic","content_contract":"metadata_only"}
+{"record_type":"sidechain_agent","agent_id":"claude-agent-001","session_id":"claude-session-001","agent_role":"reviewer","redaction_state":"synthetic","content_contract":"structural_only"}

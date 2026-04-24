@@ -1,0 +1,12 @@
+{
+  "schema_version": "parse-diagnostics-fixture/v1",
+  "content_contract": "metadata_only",
+  "diagnostics": [
+    {
+      "source_path": "malformed.jsonl",
+      "line_number": 2,
+      "status": "malformed_source",
+      "content_contract": "metadata_only"
+    }
+  ]
+}

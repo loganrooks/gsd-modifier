@@ -1,0 +1,29 @@
+{
+  "schema_version": "manual-benchmark-run/v1",
+  "run_id": "manual-run-001",
+  "task_id": "fixture-task-001",
+  "runtime_provider": "manual",
+  "content_contract": "derived_features_only",
+  "rubric_observations": [
+    {
+      "rubric_id": "quality.task_boundary",
+      "dimension_id": "follows_task_boundary",
+      "value": 1,
+      "status": "measured",
+      "evidence_class": "manual_evidence",
+      "reliability_mode": "manual_label",
+      "content_contract": "derived_features_only",
+      "comparability": "partial"
+    },
+    {
+      "rubric_id": "quality.auditability",
+      "dimension_id": "records_verification",
+      "value": 1,
+      "status": "measured",
+      "evidence_class": "manual_evidence",
+      "reliability_mode": "manual_label",
+      "content_contract": "derived_features_only",
+      "comparability": "partial"
+    }
+  ]
+}

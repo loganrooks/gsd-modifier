@@ -1,0 +1,61 @@
+{
+  "schema_version": "model-benchmark-fixtures/v1",
+  "fixtures": {
+    "codex_sqlite_minimal_thread": {
+      "path": "codex_sqlite_minimal_thread",
+      "source_kind": "runtime.codex_cli.sqlite_index",
+      "expected_privacy_contract": "metadata_only",
+      "expected_outputs": {
+        "normalized": "expected_normalized.json"
+      }
+    },
+    "codex_rollout_redacted_stream": {
+      "path": "codex_rollout_redacted_stream",
+      "source_kind": "runtime.codex_cli.rollout_stream",
+      "expected_privacy_contract": "redacted_content_reference",
+      "expected_outputs": {
+        "normalized": "expected_normalized.json"
+      }
+    },
+    "manual_run_with_rubric_dimensions": {
+      "path": "manual_run_with_rubric_dimensions",
+      "source_kind": "benchmark.manual_run",
+      "expected_privacy_contract": "derived_features_only",
+      "expected_outputs": {
+        "run": "manual_run.json"
+      }
+    },
+    "claude_local_jsonl_minimal_structure": {
+      "path": "claude_local_jsonl_minimal_structure",
+      "source_kind": "runtime.claude_code.local_jsonl",
+      "expected_privacy_contract": "structural_only",
+      "expected_outputs": {
+        "session": "session.jsonl"
+      }
+    },
+    "provider_denominator_mismatch": {
+      "path": "provider_denominator_mismatch",
+      "source_kind": "provider.usage_fixture",
+      "expected_privacy_contract": "metadata_only",
+      "expected_outputs": {
+        "normalized": "expected_normalized.json"
+      }
+    },
+    "malformed_jsonl_fixture": {
+      "path": "malformed_jsonl_fixture",
+      "source_kind": "diagnostic.malformed_jsonl",
+      "expected_privacy_contract": "metadata_only",
+      "expected_outputs": {
+        "diagnostics": "expected_diagnostics.json"
+      }
+    },
+    "rebuild_parity_fixture_set": {
+      "path": "rebuild_parity_fixture_set",
+      "source_kind": "rebuild.fixture_set",
+      "expected_privacy_contract": "metadata_only",
+      "expected_outputs": {
+        "parity": "expected_parity.json"
+      }
+    }
+  }
+}

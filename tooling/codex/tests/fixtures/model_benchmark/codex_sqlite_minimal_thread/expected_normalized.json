@@ -1,0 +1,22 @@
+{
+  "schema_version": "normalized-telemetry-fixture/v1",
+  "source_kind": "runtime.codex_cli.sqlite_index",
+  "content_contract": "metadata_only",
+  "sessions": [
+    {
+      "session_id": "codex-session-001",
+      "source_artifact_id": "codex-thread-sqlite-001"
+    }
+  ],
+  "runtime_response_items": [
+    {
+      "runtime_item_id": "codex-item-001",
+      "source_kind": "runtime.codex_cli.sqlite_index",
+      "namespace": "runtime.codex_cli",
+      "item_type": "assistant_message",
+      "redaction_state": "redacted",
+      "correlation_status": "uncorrelated",
+      "model_call_id": null
+    }
+  ]
+}

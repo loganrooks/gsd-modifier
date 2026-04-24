@@ -1,0 +1,2 @@
+{"record_type":"session_meta","session_id":"codex-rollout-001","redaction_state":"synthetic","content_contract":"redacted_content_reference"}
+{"record_type":"runtime_item","runtime_item_id":"codex-rollout-item-001","item_type":"tool_request","redaction_state":"redacted","content_ref":"redacted://fixture/codex-rollout-item-001","correlation_status":"unknown"}
