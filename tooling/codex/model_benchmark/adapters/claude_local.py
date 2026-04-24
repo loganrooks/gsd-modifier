@@ -8,16 +8,17 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from pathlib import Path
 from typing import Any
 
 from tooling.codex.model_benchmark.adapters import empty_adapter_output
+from tooling.codex.model_benchmark.enums import OBSERVATION_STATUSES, RUNTIME_ITEM_CORRELATION_STATUSES
 
 
 SOURCE_KIND = "runtime.claude_code.local_jsonl"
 PROVIDER_NAMESPACE = "provider.anthropic"
 RUNTIME_NAMESPACE = "runtime.claude_code"
-INTEGRATION_BOUNDARY = "provider_neutrality_rebuild_integration_deferred_to_task_05"
 
 DISALLOWED_PATH_PARTS = frozenset(
     {
@@ -58,6 +59,7 @@ SAFE_CONTENT_CONTRACTS = frozenset(
         "structural_only",
     }
 )
+SAFE_CONTENT_STATES = frozenset({"metadata_only", "redacted_reference", "structural_only", "unknown"})
 SAFE_REDACTION_STATES = frozenset({"redacted", "synthetic", "unknown"})
 SAFE_ROLES = frozenset({"assistant", "system", "tool", "user"})
 SAFE_RESULT_STATES = frozenset({"error", "redacted", "success", "synthetic", "unknown"})
@@ -71,6 +73,20 @@ SAFE_TOOL_NAMES = frozenset(
         "Task",
         "TodoWrite",
         "Write",
+    }
+)
+SAFE_IDENTIFIER_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$")
+RAW_IDENTIFIER_MARKERS = frozenset(
+    {
+        "api_key",
+        "apikey",
+        "credential",
+        "private",
+        "raw_api",
+        "raw_body",
+        "raw_content",
+        "secret",
+        "token",
     }
 )
 
@@ -153,6 +169,18 @@ def _safe_member(value: Any, allowed: frozenset[str], default: str = "unknown") 
     return default
 
 
+def _safe_identifier(value: Any, fallback: str) -> str:
+    if isinstance(value, str) and SAFE_IDENTIFIER_RE.match(value):
+        lowered = value.lower()
+        if not any(marker in lowered for marker in RAW_IDENTIFIER_MARKERS):
+            return value
+    return fallback
+
+
+def _safe_content_contract(value: Any, default: str = "structural_only") -> str:
+    return _safe_member(value, SAFE_CONTENT_CONTRACTS, default)
+
+
 def _safe_record_type(value: Any) -> str:
     return _safe_member(value, SAFE_RECORD_TYPES)
 
@@ -172,14 +200,15 @@ def _safe_list_count(value: Any) -> int:
 def _content_state(record: dict[str, Any]) -> str:
     if record.get("content_ref"):
         return "redacted_reference"
-    return record.get("content_state") or "structural_only"
+    return _safe_member(record.get("content_state"), SAFE_CONTENT_STATES, "structural_only")
 
 
 def _runtime_item_id(record: dict[str, Any], artifact_id: str, line_number: int) -> str:
     for field in ("message_id", "tool_call_id", "agent_id", "summary_id", "session_id", "item_id"):
         value = record.get(field)
-        if isinstance(value, str) and value:
-            return value
+        safe_value = _safe_identifier(value, "")
+        if safe_value:
+            return safe_value
     return f"{artifact_id}:line:{line_number}"
 
 
@@ -223,20 +252,20 @@ def _runtime_item(
     session_id: str | None,
 ) -> dict[str, Any]:
     record_type = _safe_record_type(record.get("record_type", "unknown"))
-    content_contract = record.get("content_contract", "structural_only")
+    content_contract = _safe_content_contract(record.get("content_contract"), "structural_only")
     return {
         "runtime_item_id": _runtime_item_id(record, artifact_id, line_number),
-        "session_id": record.get("session_id") or session_id,
+        "session_id": _safe_identifier(record.get("session_id") or session_id, f"{artifact_id}:session:{line_number}"),
         "model_call_id": None,
         "source_kind": SOURCE_KIND,
         "provider_namespace": PROVIDER_NAMESPACE,
         "runtime_namespace": RUNTIME_NAMESPACE,
         "item_type": record_type,
-        "status": record.get("status", "unknown"),
-        "role": _safe_member(record.get("role"), SAFE_ROLES) if "role" in record else None,
-        "redaction_state": record.get("redaction_state", "synthetic"),
+        "status": _safe_member(record.get("status"), OBSERVATION_STATUSES, "unknown"),
+        "role": (_safe_member(record.get("role"), SAFE_ROLES, "") or None) if "role" in record else None,
+        "redaction_state": _safe_member(record.get("redaction_state"), SAFE_REDACTION_STATES, "synthetic"),
         "content_state": _content_state(record),
-        "correlation_status": record.get("correlation_status", "unknown"),
+        "correlation_status": _safe_member(record.get("correlation_status"), RUNTIME_ITEM_CORRELATION_STATUSES, "unknown"),
         "source_artifact_ref": _source_ref(
             path,
             line_number=line_number,
@@ -250,8 +279,9 @@ def _runtime_item(
 
 
 def _session_row(path: Path, line_number: int, line: str, record: dict[str, Any], artifact_id: str) -> dict[str, Any]:
+    content_contract = _safe_content_contract(record.get("content_contract"), "structural_only")
     return {
-        "session_id": record["session_id"],
+        "session_id": _safe_identifier(record["session_id"], f"{artifact_id}:session:{line_number}"),
         "provider_namespace": PROVIDER_NAMESPACE,
         "runtime_namespace": RUNTIME_NAMESPACE,
         "source_artifact_ref": _source_ref(
@@ -259,7 +289,7 @@ def _session_row(path: Path, line_number: int, line: str, record: dict[str, Any]
             line_number=line_number,
             line=line,
             artifact_id=artifact_id,
-            content_contract=record.get("content_contract", "structural_only"),
+            content_contract=content_contract,
         ),
         "provenance": _provenance(path, line_number),
         "payload": {
@@ -323,7 +353,7 @@ def _diagnostic(
     artifact_id: str,
     record: dict[str, Any],
 ) -> dict[str, Any]:
-    content_contract = record.get("content_contract", "metadata_only")
+    content_contract = _safe_content_contract(record.get("content_contract"), "metadata_only")
     ref = _source_ref(
         path,
         line_number=int(record.get("line_number", line_number)),
@@ -332,7 +362,7 @@ def _diagnostic(
         content_contract=content_contract,
     )
     return {
-        "status": record.get("status", "malformed_source"),
+        "status": _safe_member(record.get("status"), OBSERVATION_STATUSES, "malformed_source"),
         "evidence_class": "synthetic_fixture",
         "reliability_mode": "local_structural_field",
         "content_contract": content_contract,
@@ -340,7 +370,7 @@ def _diagnostic(
         "comparability": "not_comparable",
         "source_artifact_ref": ref,
         "line_number": ref["line_number"],
-        "redaction_state": record.get("redaction_state", "synthetic"),
+        "redaction_state": _safe_member(record.get("redaction_state"), SAFE_REDACTION_STATES, "synthetic"),
         "provenance": _provenance(path, line_number),
     }
 
@@ -381,7 +411,7 @@ def normalize_local_jsonl(path: str | Path) -> dict[str, Any]:
                 continue
 
             record_type = str(record.get("record_type", "unknown"))
-            content_contract = record.get("content_contract", "structural_only")
+            content_contract = _safe_content_contract(record.get("content_contract"), "structural_only")
             ref = _source_ref(
                 path_obj,
                 line_number=line_number,
@@ -399,7 +429,7 @@ def normalize_local_jsonl(path: str | Path) -> dict[str, Any]:
                 continue
 
             if record_type == "session" and isinstance(record.get("session_id"), str):
-                session_id = record["session_id"]
+                session_id = _safe_identifier(record["session_id"], f"{artifact_id}:session:{line_number}")
                 output["sessions"].append(_session_row(path_obj, line_number, line, record, artifact_id))
                 output["observations"].append(
                     _observation(
@@ -438,10 +468,13 @@ def normalize_local_jsonl(path: str | Path) -> dict[str, Any]:
             if record_type == "tool":
                 output["tool_calls"].append(
                     {
-                        "tool_call_id": record.get("tool_call_id") or runtime_item["runtime_item_id"],
+                        "tool_call_id": _safe_identifier(
+                            record.get("tool_call_id") or runtime_item["runtime_item_id"],
+                            runtime_item["runtime_item_id"],
+                        ),
                         "session_id": runtime_item["session_id"],
                         "tool_name": _safe_tool_name(record.get("tool_name")),
-                        "redaction_state": record.get("redaction_state", "synthetic"),
+                        "redaction_state": _safe_member(record.get("redaction_state"), SAFE_REDACTION_STATES, "synthetic"),
                         "content_contract": content_contract,
                         "source_artifact_ref": ref,
                         "provenance": provenance,
@@ -449,7 +482,7 @@ def normalize_local_jsonl(path: str | Path) -> dict[str, Any]:
                     }
                 )
             elif record_type == "sidechain_agent":
-                agent_id = record.get("agent_id") or runtime_item["runtime_item_id"]
+                agent_id = _safe_identifier(record.get("agent_id") or runtime_item["runtime_item_id"], runtime_item["runtime_item_id"])
                 output["entity_edges"].append(
                     {
                         "source_entity_type": "session",

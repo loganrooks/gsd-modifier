@@ -181,6 +181,50 @@ class ModelBenchmarkClaudeAdapterTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "correlation_status"):
             validate_adapter_output(output, strict=True)
 
+    def test_sanitizes_top_level_runtime_item_fields_before_strict_persistence(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "session.jsonl"
+            path.write_text(
+                '{"record_type":"session","session_id":"SECRET-RAW-SESSION","content_contract":"structural_only",'
+                '"redaction_state":"SECRET-RAW-STATE","content_state":"SECRET-RAW-CONTENT"}\n'
+                '{"record_type":"message","message_id":"SECRET-RAW-MESSAGE","session_id":"SECRET-RAW-SESSION",'
+                '"role":"SECRET-RAW-ROLE","status":"SECRET-RAW-STATUS","redaction_state":"SECRET-RAW-STATE",'
+                '"content_state":"SECRET-RAW-CONTENT","correlation_status":"SECRET-RAW-CORRELATION",'
+                '"content_contract":"structural_only"}\n',
+                encoding="utf-8",
+            )
+
+            output = claude_local.normalize_local_jsonl(path)
+
+        validate_adapter_output(output, strict=True)
+        encoded = json.dumps(output, sort_keys=True)
+        self.assertNotIn("SECRET-RAW-SESSION", encoded)
+        self.assertNotIn("SECRET-RAW-MESSAGE", encoded)
+        self.assertNotIn("SECRET-RAW-ROLE", encoded)
+        self.assertNotIn("SECRET-RAW-STATUS", encoded)
+        self.assertNotIn("SECRET-RAW-STATE", encoded)
+        self.assertNotIn("SECRET-RAW-CONTENT", encoded)
+        self.assertNotIn("SECRET-RAW-CORRELATION", encoded)
+
+    def test_strict_validation_rejects_raw_top_level_runtime_item_fields(self):
+        output = claude_local.normalize_local_jsonl(
+            fixtures.fixture_path("claude_local_jsonl_minimal_structure") / "session.jsonl"
+        )
+        output["runtime_response_items"][0].update(
+            {
+                "runtime_item_id": "SECRET-RAW-ITEM",
+                "session_id": "SECRET-RAW-SESSION",
+                "status": "SECRET-RAW-STATUS",
+                "role": "SECRET-RAW-ROLE",
+                "redaction_state": "SECRET-RAW-STATE",
+                "content_state": "SECRET-RAW-CONTENT",
+                "correlation_status": "SECRET-RAW-CORRELATION",
+            }
+        )
+
+        with self.assertRaisesRegex(ValueError, "runtime_response_items"):
+            validate_adapter_output(output, strict=True)
+
     def test_payload_namespace_validation_matches_provider_and_runtime_namespaces(self):
         claude_output = claude_local.normalize_local_jsonl(
             fixtures.fixture_path("claude_local_jsonl_minimal_structure") / "session.jsonl"
@@ -201,8 +245,8 @@ class ModelBenchmarkClaudeAdapterTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "payload namespace"):
             validate_adapter_output(codex_like_output, strict=True)
 
-    def test_provider_neutrality_rebuild_integration_boundary_is_explicit(self):
-        self.assertEqual(claude_local.INTEGRATION_BOUNDARY, "provider_neutrality_rebuild_integration_deferred_to_task_05")
+    def test_stale_provider_neutrality_rebuild_integration_boundary_marker_is_removed(self):
+        self.assertFalse(hasattr(claude_local, "INTEGRATION_BOUNDARY"))
 
     def test_requires_explicit_path_and_does_not_open_home_claude_state(self):
         fixture_path = fixtures.fixture_path("claude_local_jsonl_minimal_structure") / "session.jsonl"

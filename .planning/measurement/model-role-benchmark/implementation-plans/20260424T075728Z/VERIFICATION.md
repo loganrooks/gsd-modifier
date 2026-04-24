@@ -2,7 +2,7 @@
 
 ## Status
 
-Pass with scoped verification.
+Pass with scoped verification plus uncommitted merge-gate review fixes.
 
 This report covers the second implementation slice planned in `PLAN.md`. The work was executed in the isolated worktree `/home/rookslog/workspace/projects/gsd-modifier-telemetry-slice-2` on branch `telemetry-substrate-slice-2`.
 
@@ -10,12 +10,13 @@ This report covers the second implementation slice planned in `PLAN.md`. The wor
 
 | Commit | Scope | Disposition |
 | --- | --- | --- |
-| `4be4857` | Second implementation plan | Accepted as execution authority |
-| `0f38b2f` | Task 01 v0 run JSONL import into telemetry store | Accepted after revise-and-review |
-| `bd73656` | Task 02 v0 migration report/query surface | Accepted after two revise-and-review loops |
-| `6668eaa` | Task 03 local telemetry CLI commands | Accepted after revise-and-review |
-| `6dc0e15` | Task 04 fixture-backed Claude local JSONL adapter | Accepted after revise-and-review |
-| `4e0b54a` | Task 05 integrated compatibility/provider-neutrality gate | Accepted after review |
+| `0302ca4` | Task 01 v0 run JSONL import into telemetry store | Accepted after revise-and-review |
+| `e079e73` | Task 02 v0 migration report/query surface | Accepted after two revise-and-review loops |
+| `c3a8ca3` | Task 03 local telemetry CLI commands | Accepted after revise-and-review |
+| `678e42e` | Task 04 fixture-backed Claude local JSONL adapter | Accepted after revise-and-review |
+| `e0e361a` | Task 05 integrated compatibility/provider-neutrality gate | Accepted after review |
+| `54ec00c` | Second-slice integration verification | Accepted after review |
+| Uncommitted | Merge-gate review fixes for provider-neutrality evidence minimums, latest-rebuild source-artifact scoping, Claude strict-field sanitization, and stale boundary marker removal | Pending local patch; no commit by instruction |
 
 ## Commands Run
 
@@ -26,10 +27,28 @@ python3 -m unittest tooling.codex.tests.test_model_benchmark tooling.codex.tests
 Result: pass, 121 tests.
 
 ```bash
+python3 -m unittest tooling.codex.tests.test_model_benchmark_provider_neutrality tooling.codex.tests.test_model_benchmark_claude_adapter tooling.codex.tests.test_model_benchmark_integration
+```
+
+Result after merge-gate fixes and blocker revision: pass, 30 tests.
+
+```bash
+python3 -m unittest discover -s tooling/codex/tests -p 'test_model_benchmark*.py'
+```
+
+Result after merge-gate fixes and blocker revision: pass, 127 tests.
+
+```bash
 git diff --check -- tooling/codex/model_benchmark tooling/codex/tests/test_model_benchmark.py tooling/codex/tests/test_model_benchmark_manifest.py tooling/codex/tests/test_model_benchmark_fixtures.py tooling/codex/tests/test_model_benchmark_store.py tooling/codex/tests/test_model_benchmark_rebuild.py tooling/codex/tests/test_model_benchmark_report_parity.py tooling/codex/tests/test_model_benchmark_adapters.py tooling/codex/tests/test_model_benchmark_provider_neutrality.py tooling/codex/tests/test_model_benchmark_migrate.py tooling/codex/tests/test_model_benchmark_migration_report.py tooling/codex/tests/test_model_benchmark_cli.py tooling/codex/tests/test_model_benchmark_claude_adapter.py tooling/codex/tests/test_model_benchmark_integration.py
 ```
 
 Result: pass, no whitespace errors reported.
+
+```bash
+git diff --check -- .planning/measurement/model-role-benchmark tooling/codex/model_benchmark tooling/codex/tests/test_model_benchmark_provider_neutrality.py tooling/codex/tests/test_model_benchmark_claude_adapter.py tooling/codex/tests/test_model_benchmark_integration.py
+```
+
+Result after merge-gate fixes: pass, no whitespace errors reported.
 
 ## Acceptance Criteria
 
@@ -58,6 +77,8 @@ Task 03 was revised after review found unsafe overwrite behavior and non-read-on
 Task 04 was revised after review found explicit home-provider path read risk, unsanitized tool payloads, and provider/runtime namespace validation gaps.
 
 Task 05 passed review after reconciling the Claude adapter with the provider-neutrality rebuild path.
+
+Merge-gate review fixes were applied as an uncommitted local patch by instruction. The provider-neutrality gate now requires fixture IDs, minimum persisted evidence, and latest-rebuild `source_artifact_ids_by_fixture` provenance. Query-time evidence is scoped to the latest rebuild's mapped source artifact IDs; a newer rebuild row with only fixture IDs, missing mapping, or wrong per-fixture mapping reports `not_passed` rather than borrowing stale persisted rows. Claude local normalization and strict adapter validation now block raw-looking top-level runtime fields; the stale Task 05 integration boundary marker was removed because Task 05 implemented that integration.
 
 ## Scope Notes
 

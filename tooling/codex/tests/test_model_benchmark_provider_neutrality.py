@@ -96,6 +96,29 @@ class ModelBenchmarkProviderNeutralityTests(unittest.TestCase):
             fixtures.fixture_path("provider_denominator_mismatch") / "expected_normalized.json",
         ]
 
+    def _named_gate_sources(
+        self,
+        root: Path,
+        *,
+        manual_payload: dict,
+        claude_jsonl: str,
+        provider_payload: dict,
+    ) -> list[Path]:
+        manual_dir = root / "manual_run_with_rubric_dimensions"
+        claude_dir = root / "claude_local_jsonl_minimal_structure"
+        provider_dir = root / "provider_denominator_mismatch"
+        manual_dir.mkdir()
+        claude_dir.mkdir()
+        provider_dir.mkdir()
+
+        manual_path = manual_dir / "manual_run.json"
+        claude_path = claude_dir / "session.jsonl"
+        provider_path = provider_dir / "expected_normalized.json"
+        manual_path.write_text(json.dumps(manual_payload), encoding="utf-8")
+        claude_path.write_text(claude_jsonl, encoding="utf-8")
+        provider_path.write_text(json.dumps(provider_payload), encoding="utf-8")
+        return [manual_path, claude_path, provider_path]
+
     def test_provider_neutrality_gate_requires_strict_rebuild_and_query_validation(self):
         conn = self._connect()
         registry = self._registry()
@@ -118,6 +141,151 @@ class ModelBenchmarkProviderNeutralityTests(unittest.TestCase):
         self.assertEqual(gate["provider_neutrality_gate"]["status"], "passed")
         self.assertNotIn("provider_neutrality_claim", gate)
         self.assertNotIn("score.overall", json.dumps(gate, sort_keys=True))
+
+    def test_correctly_named_empty_gate_sources_do_not_pass_without_required_evidence(self):
+        conn = self._connect()
+        registry = self._registry()
+        with tempfile.TemporaryDirectory() as tmpdir:
+            sources = self._named_gate_sources(
+                Path(tmpdir),
+                manual_payload={"run_id": "empty-manual", "rubric_observations": []},
+                claude_jsonl="",
+                provider_payload={"observations": {}},
+            )
+
+            rebuild_result = rebuild.rebuild_provider_neutrality_gate(conn, registry, sources, strict=True)
+            gate = query.query_provider_neutrality_gate(conn, registry_hash=registry["registry_hash"], strict=True)
+
+        self.assertEqual(rebuild_result["provider_neutrality_gate"]["status"], "not_passed")
+        self.assertEqual(gate["provider_neutrality_gate"]["status"], "not_passed")
+        required_evidence = gate["provider_neutrality_gate"]["required_evidence"]
+        self.assertEqual(required_evidence["manual_run_with_rubric_dimensions"]["status"], "missing_evidence")
+        self.assertEqual(required_evidence["claude_local_jsonl_minimal_structure"]["status"], "missing_evidence")
+        self.assertEqual(required_evidence["provider_denominator_mismatch"]["status"], "missing_evidence")
+
+    def test_correctly_named_minimal_sources_do_not_pass_when_any_required_evidence_is_absent(self):
+        registry = self._registry()
+        cases = [
+            (
+                "manual_without_rubrics",
+                {"run_id": "empty-manual", "rubric_observations": []},
+                (fixtures.fixture_path("claude_local_jsonl_minimal_structure") / "session.jsonl").read_text(encoding="utf-8"),
+                json.loads((fixtures.fixture_path("provider_denominator_mismatch") / "expected_normalized.json").read_text(encoding="utf-8")),
+                "manual_run_with_rubric_dimensions",
+            ),
+            (
+                "claude_without_items_or_diagnostics",
+                json.loads((fixtures.fixture_path("manual_run_with_rubric_dimensions") / "manual_run.json").read_text(encoding="utf-8")),
+                "",
+                json.loads((fixtures.fixture_path("provider_denominator_mismatch") / "expected_normalized.json").read_text(encoding="utf-8")),
+                "claude_local_jsonl_minimal_structure",
+            ),
+            (
+                "provider_without_usage_observations",
+                json.loads((fixtures.fixture_path("manual_run_with_rubric_dimensions") / "manual_run.json").read_text(encoding="utf-8")),
+                (fixtures.fixture_path("claude_local_jsonl_minimal_structure") / "session.jsonl").read_text(encoding="utf-8"),
+                {"observations": {}},
+                "provider_denominator_mismatch",
+            ),
+        ]
+        for name, manual_payload, claude_jsonl, provider_payload, missing_fixture in cases:
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as tmpdir:
+                conn = self._connect()
+                sources = self._named_gate_sources(
+                    Path(tmpdir),
+                    manual_payload=manual_payload,
+                    claude_jsonl=claude_jsonl,
+                    provider_payload=provider_payload,
+                )
+
+                rebuild.rebuild_provider_neutrality_gate(conn, registry, sources, strict=True)
+                gate = query.query_provider_neutrality_gate(conn, registry_hash=registry["registry_hash"], strict=True)
+
+                self.assertEqual(gate["provider_neutrality_gate"]["status"], "not_passed")
+                self.assertEqual(
+                    gate["provider_neutrality_gate"]["required_evidence"][missing_fixture]["status"],
+                    "missing_evidence",
+                )
+
+    def test_latest_forged_gate_without_source_artifact_mapping_cannot_reuse_stale_evidence(self):
+        conn = self._connect()
+        registry = self._registry()
+
+        rebuild_result = rebuild.rebuild_provider_neutrality_gate(
+            conn,
+            registry,
+            self._gate_sources(),
+            strict=True,
+        )
+        self.assertEqual(rebuild_result["provider_neutrality_gate"]["status"], "passed")
+
+        store.insert_rebuild_run(
+            conn,
+            {
+                "schema_version": store.SCHEMA_VERSION,
+                "registry_version": registry["registry_version"],
+                "registry_hash": registry["registry_hash"],
+                "source_set_hash": rebuild_result["source_set_hash"],
+                "status": "completed",
+                "completed_at": "1970-01-01T00:00:00Z",
+                "provenance_json": {
+                    "provider_neutrality_gate": True,
+                    "gate_status": "passed",
+                    "fixture_ids": sorted(rebuild.PROVIDER_NEUTRALITY_REQUIRED_FIXTURES),
+                },
+            },
+        )
+
+        gate = query.query_provider_neutrality_gate(conn, registry_hash=registry["registry_hash"], strict=True)
+
+        self.assertEqual(gate["provider_neutrality_gate"]["status"], "not_passed")
+        self.assertEqual(gate["provider_neutrality_gate"]["source_artifact_ids_by_fixture"], {})
+        self.assertEqual(gate["rubric_observations"], [])
+        self.assertEqual(gate["runtime_response_items"], [])
+        self.assertEqual(gate["provider_usage_evidence"], {})
+        for evidence in gate["provider_neutrality_gate"]["required_evidence"].values():
+            self.assertEqual(evidence["status"], "missing_evidence")
+
+    def test_latest_forged_gate_with_wrong_source_artifact_mapping_cannot_reuse_stale_evidence(self):
+        conn = self._connect()
+        registry = self._registry()
+
+        rebuild_result = rebuild.rebuild_provider_neutrality_gate(
+            conn,
+            registry,
+            self._gate_sources(),
+            strict=True,
+        )
+        source_artifacts = rebuild_result["source_artifact_ids_by_fixture"]
+        wrong_mapping = {
+            "manual_run_with_rubric_dimensions": source_artifacts["provider_denominator_mismatch"],
+            "claude_local_jsonl_minimal_structure": source_artifacts["manual_run_with_rubric_dimensions"],
+            "provider_denominator_mismatch": source_artifacts["claude_local_jsonl_minimal_structure"],
+        }
+        store.insert_rebuild_run(
+            conn,
+            {
+                "schema_version": store.SCHEMA_VERSION,
+                "registry_version": registry["registry_version"],
+                "registry_hash": registry["registry_hash"],
+                "source_set_hash": rebuild_result["source_set_hash"],
+                "status": "completed",
+                "completed_at": "1970-01-01T00:00:00Z",
+                "provenance_json": {
+                    "provider_neutrality_gate": True,
+                    "gate_status": "passed",
+                    "fixture_ids": sorted(rebuild.PROVIDER_NEUTRALITY_REQUIRED_FIXTURES),
+                    "source_artifact_ids_by_fixture": wrong_mapping,
+                },
+            },
+        )
+
+        gate = query.query_provider_neutrality_gate(conn, registry_hash=registry["registry_hash"], strict=True)
+
+        self.assertEqual(gate["provider_neutrality_gate"]["status"], "not_passed")
+        self.assertEqual(gate["provider_neutrality_gate"]["source_artifact_ids_by_fixture"], wrong_mapping)
+        for evidence in gate["provider_neutrality_gate"]["required_evidence"].values():
+            self.assertEqual(evidence["status"], "missing_evidence")
 
     def test_manual_rubric_fixture_round_trips_without_canonical_overall_score(self):
         conn = self._connect()

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from tooling.codex.model_benchmark.enums import (
@@ -26,6 +27,25 @@ OUTPUT_SECTIONS = (
     "observations",
     "parse_diagnostics",
 )
+RUNTIME_ITEM_CONTENT_STATES = frozenset(
+    {"metadata_only", "no_content", "redacted", "redacted_reference", "structural_only", "unknown"}
+)
+RUNTIME_ITEM_REDACTION_STATES = frozenset({"redacted", "synthetic", "unknown"})
+RUNTIME_ITEM_ROLES = frozenset({"assistant", "system", "tool", "user"})
+_SAFE_IDENTIFIER_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$")
+_RAW_IDENTIFIER_MARKERS = frozenset(
+    {
+        "api_key",
+        "apikey",
+        "credential",
+        "private",
+        "raw_api",
+        "raw_body",
+        "raw_content",
+        "secret",
+        "token",
+    }
+)
 
 
 def empty_adapter_output(source_kind: str) -> dict[str, Any]:
@@ -40,6 +60,18 @@ def _check_enum(value: Any, allowed: frozenset[str], field: str, strict: bool) -
         return
     if strict and value not in allowed:
         raise ValueError(f"{field} must be one of {sorted(allowed)}")
+
+
+def _check_safe_identifier(value: Any, field: str, strict: bool) -> None:
+    if value is None:
+        return
+    if not strict:
+        return
+    if not isinstance(value, str) or not _SAFE_IDENTIFIER_RE.match(value):
+        raise ValueError(f"{field} must be a metadata-safe identifier")
+    lowered = value.lower()
+    if any(marker in lowered for marker in _RAW_IDENTIFIER_MARKERS):
+        raise ValueError(f"{field} must not contain raw or secret-looking content")
 
 
 def _require_mapping(value: Any, field: str) -> dict[str, Any]:
@@ -92,6 +124,13 @@ def _validate_runtime_item(row: dict[str, Any], strict: bool) -> None:
         "correlation_status",
     ):
         _require(row, field)
+    _check_safe_identifier(row.get("runtime_item_id"), "runtime_response_items[].runtime_item_id", strict)
+    _check_safe_identifier(row.get("session_id"), "runtime_response_items[].session_id", strict)
+    _check_safe_identifier(row.get("model_call_id"), "runtime_response_items[].model_call_id", strict)
+    _check_enum(row.get("status"), OBSERVATION_STATUSES, "runtime_response_items[].status", strict)
+    _check_enum(row.get("role"), RUNTIME_ITEM_ROLES, "runtime_response_items[].role", strict)
+    _check_enum(row.get("redaction_state"), RUNTIME_ITEM_REDACTION_STATES, "runtime_response_items[].redaction_state", strict)
+    _check_enum(row.get("content_state"), RUNTIME_ITEM_CONTENT_STATES, "runtime_response_items[].content_state", strict)
     _check_enum(row.get("correlation_status"), RUNTIME_ITEM_CORRELATION_STATUSES, "correlation_status", strict)
     _validate_source_ref(row["source_artifact_ref"], strict)
     _require_mapping(row["provenance"], "provenance")

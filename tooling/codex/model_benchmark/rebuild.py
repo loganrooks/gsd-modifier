@@ -20,6 +20,11 @@ PROVIDER_NEUTRALITY_REQUIRED_FIXTURES = frozenset(
         "provider_denominator_mismatch",
     }
 )
+PROVIDER_NEUTRALITY_EVIDENCE_MINIMUMS = {
+    "manual_run_with_rubric_dimensions": {"rubric_observations": 1},
+    "claude_local_jsonl_minimal_structure": {"runtime_items_or_diagnostics": 1},
+    "provider_denominator_mismatch": {"provider_observations": 1},
+}
 
 
 def _hash_bytes(value: bytes) -> str:
@@ -105,6 +110,50 @@ def _fixture_identity(path: Path) -> tuple[str, str]:
 
 def _registry_source_kinds(registry: dict[str, Any]) -> set[str]:
     return {str(item["id"]) for item in registry.get("source_kinds", [])}
+
+
+def provider_neutrality_evidence_summary(
+    fixture_ids: set[str],
+    counts: dict[str, int],
+) -> dict[str, dict[str, Any]]:
+    """Return per-fixture provider-neutrality evidence status."""
+
+    def count(fixture_id: str, key: str) -> int:
+        return counts.get(f"{fixture_id}.{key}", counts.get(key, 0))
+
+    summary: dict[str, dict[str, Any]] = {}
+    for fixture_id in sorted(PROVIDER_NEUTRALITY_REQUIRED_FIXTURES):
+        fixture_present = fixture_id in fixture_ids
+        observed: dict[str, int] = {}
+        minimums = PROVIDER_NEUTRALITY_EVIDENCE_MINIMUMS[fixture_id]
+        if fixture_id == "manual_run_with_rubric_dimensions":
+            observed["rubric_observations"] = count(fixture_id, "rubric_observations")
+            evidence_present = observed["rubric_observations"] >= minimums["rubric_observations"]
+        elif fixture_id == "claude_local_jsonl_minimal_structure":
+            observed["runtime_items"] = count(fixture_id, "runtime_items")
+            observed["diagnostics"] = count(fixture_id, "diagnostics")
+            evidence_present = (
+                observed["runtime_items"] + observed["diagnostics"]
+            ) >= minimums["runtime_items_or_diagnostics"]
+        else:
+            observed["provider_observations"] = count(fixture_id, "provider_observations")
+            evidence_present = observed["provider_observations"] >= minimums["provider_observations"]
+        summary[fixture_id] = {
+            "fixture_present": fixture_present,
+            "status": "passed" if fixture_present and evidence_present else "missing_evidence",
+            "minimums": minimums,
+            "observed": observed,
+        }
+    return summary
+
+
+def provider_neutrality_gate_status(
+    fixture_ids: set[str],
+    counts: dict[str, int],
+) -> tuple[str, dict[str, dict[str, Any]]]:
+    evidence_summary = provider_neutrality_evidence_summary(fixture_ids, counts)
+    passed = all(item["status"] == "passed" for item in evidence_summary.values())
+    return ("passed" if passed else "not_passed", evidence_summary)
 
 
 def _insert_rubric_observation(conn: sqlite3.Connection, row: dict[str, Any]) -> int:
@@ -402,6 +451,7 @@ def rebuild_provider_neutrality_gate(
     declared_source_kinds = _registry_source_kinds(registry)
     source_infos: list[dict[str, str]] = []
     fixture_ids: list[str] = []
+    source_artifact_ids_by_fixture: dict[str, list[int]] = {}
     counts = {"rubric_observations": 0, "runtime_items": 0, "diagnostics": 0, "provider_observations": 0}
 
     store.insert_registry(
@@ -441,14 +491,29 @@ def rebuild_provider_neutrality_gate(
                 },
             },
         )
+        source_artifact_ids_by_fixture.setdefault(fixture_id, []).append(source_artifact_id)
         if fixture_id == "manual_run_with_rubric_dimensions":
-            counts["rubric_observations"] += _insert_manual_rubrics(conn, path, source_artifact_id)
+            inserted = _insert_manual_rubrics(conn, path, source_artifact_id)
+            counts["rubric_observations"] += inserted
+            counts[f"{fixture_id}.rubric_observations"] = (
+                counts.get(f"{fixture_id}.rubric_observations", 0) + inserted
+            )
         elif fixture_id == "claude_local_jsonl_minimal_structure":
             claude_counts = _insert_claude_jsonl(conn, path, source_artifact_id)
             counts["runtime_items"] += claude_counts["runtime_items"]
             counts["diagnostics"] += claude_counts["diagnostics"]
+            counts[f"{fixture_id}.runtime_items"] = (
+                counts.get(f"{fixture_id}.runtime_items", 0) + claude_counts["runtime_items"]
+            )
+            counts[f"{fixture_id}.diagnostics"] = (
+                counts.get(f"{fixture_id}.diagnostics", 0) + claude_counts["diagnostics"]
+            )
         elif fixture_id == "provider_denominator_mismatch":
-            counts["provider_observations"] += _insert_provider_usage(conn, path, source_artifact_id)
+            inserted = _insert_provider_usage(conn, path, source_artifact_id)
+            counts["provider_observations"] += inserted
+            counts[f"{fixture_id}.provider_observations"] = (
+                counts.get(f"{fixture_id}.provider_observations", 0) + inserted
+            )
         else:
             for diagnostic in _parse_jsonl_diagnostics(path):
                 counts["diagnostics"] += 1
@@ -470,7 +535,7 @@ def rebuild_provider_neutrality_gate(
                 )
 
     source_hash = _source_set_hash(source_infos)
-    gate_passed = PROVIDER_NEUTRALITY_REQUIRED_FIXTURES.issubset(set(fixture_ids))
+    gate_status, required_evidence = provider_neutrality_gate_status(set(fixture_ids), counts)
     rebuild_id = store.insert_rebuild_run(
         conn,
         {
@@ -482,8 +547,20 @@ def rebuild_provider_neutrality_gate(
             "completed_at": "1970-01-01T00:00:00Z",
             "provenance_json": {
                 "provider_neutrality_gate": True,
-                "gate_status": "passed" if gate_passed else "not_passed",
+                "gate_status": gate_status,
                 "fixture_ids": sorted(set(fixture_ids)),
+                "source_artifact_ids": sorted(
+                    {
+                        source_artifact_id
+                        for fixture_artifact_ids in source_artifact_ids_by_fixture.values()
+                        for source_artifact_id in fixture_artifact_ids
+                    }
+                ),
+                "source_artifact_ids_by_fixture": {
+                    fixture_id: sorted(source_artifact_ids)
+                    for fixture_id, source_artifact_ids in sorted(source_artifact_ids_by_fixture.items())
+                },
+                "required_evidence": required_evidence,
                 **counts,
             },
         },
@@ -494,6 +571,10 @@ def rebuild_provider_neutrality_gate(
         "registry_version": registry["registry_version"],
         "registry_hash": registry["registry_hash"],
         "source_set_hash": source_hash,
-        "provider_neutrality_gate": {"status": "passed" if gate_passed else "not_passed"},
+        "provider_neutrality_gate": {"status": gate_status, "required_evidence": required_evidence},
+        "source_artifact_ids_by_fixture": {
+            fixture_id: sorted(source_artifact_ids)
+            for fixture_id, source_artifact_ids in sorted(source_artifact_ids_by_fixture.items())
+        },
         **counts,
     }

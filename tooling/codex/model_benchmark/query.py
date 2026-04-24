@@ -15,6 +15,11 @@ from tooling.codex.model_benchmark.enums import (
     OBSERVATION_STATUSES,
     RELIABILITY_MODES,
 )
+from tooling.codex.model_benchmark.rebuild import (
+    PROVIDER_NEUTRALITY_REQUIRED_FIXTURES,
+    _source_set_hash,
+    provider_neutrality_gate_status,
+)
 
 
 _HASH_RE = re.compile(r"^sha256:[0-9a-f]{64}$")
@@ -87,6 +92,90 @@ def _count_rows(conn: sqlite3.Connection, table: str) -> int:
 def _count_observations(conn: sqlite3.Connection, where: str, args: tuple[Any, ...] = ()) -> int:
     row = conn.execute(f"SELECT COUNT(*) AS count FROM observations WHERE {where}", args).fetchone()
     return int(row["count"])
+
+
+def _source_artifact_filter(source_artifact_ids: set[int]) -> tuple[str, tuple[Any, ...]]:
+    if not source_artifact_ids:
+        return "0 = 1", ()
+    placeholders = ", ".join("?" for _ in source_artifact_ids)
+    return f"source_artifact_id IN ({placeholders})", tuple(sorted(source_artifact_ids))
+
+
+def _gate_source_artifact_ids_by_fixture(
+    conn: sqlite3.Connection,
+    provenance: dict[str, Any],
+    source_set_hash: str,
+    strict: bool,
+) -> dict[str, set[int]]:
+    raw_mapping = provenance.get("source_artifact_ids_by_fixture")
+    if raw_mapping is None:
+        return {}
+    if not isinstance(raw_mapping, dict):
+        if strict:
+            raise ValueError("source_artifact_ids_by_fixture must be an object")
+        return {}
+
+    mapping: dict[str, set[int]] = {}
+    for fixture_id, raw_ids in raw_mapping.items():
+        if not isinstance(raw_ids, list):
+            if strict:
+                raise ValueError("source_artifact_ids_by_fixture values must be arrays")
+            continue
+        artifact_ids: set[int] = set()
+        for raw_id in raw_ids:
+            if not isinstance(raw_id, int) or raw_id <= 0:
+                if strict:
+                    raise ValueError("source_artifact_ids_by_fixture values must contain positive integer ids")
+                continue
+            artifact_ids.add(raw_id)
+        mapping[str(fixture_id)] = artifact_ids
+
+    all_artifact_ids = {artifact_id for artifact_ids in mapping.values() for artifact_id in artifact_ids}
+    if not all_artifact_ids:
+        return mapping
+
+    placeholders = ", ".join("?" for _ in all_artifact_ids)
+    rows = conn.execute(
+        f"""
+        SELECT id, source_uri, source_hash
+        FROM source_artifacts
+        WHERE id IN ({placeholders})
+        ORDER BY id
+        """,
+        tuple(sorted(all_artifact_ids)),
+    ).fetchall()
+    if len(rows) != len(all_artifact_ids):
+        if strict:
+            raise ValueError("source_artifact_ids_by_fixture references missing source_artifacts")
+        return {}
+
+    source_infos = [
+        {"source_uri": str(row["source_uri"]), "source_hash": str(row["source_hash"])}
+        for row in rows
+    ]
+    if _source_set_hash(source_infos) != source_set_hash:
+        return {}
+    return mapping
+
+
+def _count_fixture_rows(
+    conn: sqlite3.Connection,
+    table: str,
+    fixture_id: str,
+    source_artifact_ids: set[int],
+    where: str = "1 = 1",
+) -> int:
+    source_filter, args = _source_artifact_filter(source_artifact_ids)
+    rows = conn.execute(
+        f"SELECT provenance_json FROM {table} WHERE {where} AND {source_filter}",
+        args,
+    ).fetchall()
+    count = 0
+    for row in rows:
+        provenance = _json_object(row["provenance_json"])
+        if provenance.get("fixture_id") == fixture_id:
+            count += 1
+    return count
 
 
 def _status_counts(conn: sqlite3.Connection, sql: str, args: tuple[Any, ...] = ()) -> dict[str, int]:
@@ -299,9 +388,29 @@ def query_provider_neutrality_gate(
     if strict and provenance.get("provider_neutrality_gate") is not True:
         raise ValueError("provider_neutrality_gate rebuild provenance is required")
 
+    fixture_ids = set(provenance.get("fixture_ids", []))
+    source_artifact_ids_by_fixture = _gate_source_artifact_ids_by_fixture(
+        conn,
+        provenance,
+        source_set_hash,
+        strict,
+    )
+    all_gate_source_artifact_ids = {
+        source_artifact_id
+        for source_artifact_ids in source_artifact_ids_by_fixture.values()
+        for source_artifact_id in source_artifact_ids
+    }
+    all_source_filter, all_source_args = _source_artifact_filter(all_gate_source_artifact_ids)
+    manual_source_ids = source_artifact_ids_by_fixture.get("manual_run_with_rubric_dimensions", set())
+    claude_source_ids = source_artifact_ids_by_fixture.get("claude_local_jsonl_minimal_structure", set())
+    provider_source_ids = source_artifact_ids_by_fixture.get("provider_denominator_mismatch", set())
+    manual_source_filter, manual_source_args = _source_artifact_filter(manual_source_ids)
+    claude_source_filter, claude_source_args = _source_artifact_filter(claude_source_ids)
+    provider_source_filter, provider_source_args = _source_artifact_filter(provider_source_ids)
+
     rubric_observations = _table_json_rows(
         conn,
-        """
+        f"""
         SELECT json_object(
             'entity_type', entity_type,
             'entity_id', entity_id,
@@ -316,13 +425,15 @@ def query_provider_neutrality_gate(
             'provenance', json(provenance_json)
         )
         FROM rubric_observations
+        WHERE {manual_source_filter}
         ORDER BY id
         """,
+        manual_source_args,
     )
 
     runtime_response_items = _table_json_rows(
         conn,
-        """
+        f"""
         SELECT json_object(
             'source_kind', source_kind,
             'provider_namespace', provider_namespace,
@@ -337,30 +448,32 @@ def query_provider_neutrality_gate(
             'provenance', json(provenance_json)
         )
         FROM runtime_response_items
+        WHERE {claude_source_filter}
         ORDER BY id
         """,
+        claude_source_args,
     )
 
     diagnostics = _table_json_rows(
         conn,
-        """
+        f"""
         SELECT value_json
         FROM observations
-        WHERE status = ?
+        WHERE status = ? AND {all_source_filter}
         ORDER BY id
         """,
-        ("malformed_source",),
+        ("malformed_source", *all_source_args),
     )
 
     provider_usage: dict[str, dict[str, Any]] = {}
     rows = conn.execute(
-        """
+        f"""
         SELECT value_json
         FROM observations
-        WHERE entity_type = ?
+        WHERE entity_type = ? AND {provider_source_filter}
         ORDER BY id
         """,
-        ("provider_usage",),
+        ("provider_usage", *provider_source_args),
     ).fetchall()
     for row in rows:
         value = _json_object(row["value_json"])
@@ -368,13 +481,35 @@ def query_provider_neutrality_gate(
         axis = str(value.pop("axis"))
         provider_usage.setdefault(provider, {})[axis] = value
 
-    fixture_ids = set(provenance.get("fixture_ids", []))
-    required = {
-        "manual_run_with_rubric_dimensions",
-        "claude_local_jsonl_minimal_structure",
-        "provider_denominator_mismatch",
+    counts = {
+        "manual_run_with_rubric_dimensions.rubric_observations": _count_fixture_rows(
+            conn,
+            "rubric_observations",
+            "manual_run_with_rubric_dimensions",
+            manual_source_ids,
+        ),
+        "claude_local_jsonl_minimal_structure.runtime_items": _count_fixture_rows(
+            conn,
+            "runtime_response_items",
+            "claude_local_jsonl_minimal_structure",
+            claude_source_ids,
+        ),
+        "claude_local_jsonl_minimal_structure.diagnostics": _count_fixture_rows(
+            conn,
+            "observations",
+            "claude_local_jsonl_minimal_structure",
+            claude_source_ids,
+            "status = 'malformed_source'",
+        ),
+        "provider_denominator_mismatch.provider_observations": _count_fixture_rows(
+            conn,
+            "observations",
+            "provider_denominator_mismatch",
+            provider_source_ids,
+            "entity_type = 'provider_usage'",
+        ),
     }
-    gate_status = "passed" if required.issubset(fixture_ids) else "not_passed"
+    gate_status, required_evidence = provider_neutrality_gate_status(fixture_ids, counts)
     return {
         "rebuild_id": int(rebuild["id"]),
         "schema_version": str(rebuild["schema_version"]),
@@ -384,8 +519,13 @@ def query_provider_neutrality_gate(
         "status": str(rebuild["status"]),
         "provider_neutrality_gate": {
             "status": gate_status,
-            "required_fixtures": sorted(required),
+            "required_fixtures": sorted(PROVIDER_NEUTRALITY_REQUIRED_FIXTURES),
             "observed_fixtures": sorted(fixture_ids),
+            "source_artifact_ids_by_fixture": {
+                fixture_id: sorted(source_artifact_ids)
+                for fixture_id, source_artifact_ids in sorted(source_artifact_ids_by_fixture.items())
+            },
+            "required_evidence": required_evidence,
         },
         "rubric_observations": rubric_observations,
         "runtime_response_items": runtime_response_items,
