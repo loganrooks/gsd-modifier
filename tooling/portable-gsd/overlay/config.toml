@@ -1,6 +1,6 @@
-model = "gpt-5.4"
-model_reasoning_effort = "xhigh"
-plan_mode_reasoning_effort = "xhigh"
+model = "gpt-5.5"
+model_reasoning_effort = "medium"
+plan_mode_reasoning_effort = "high"
 experimental_compact_prompt_file = "__COMPACT_PROMPT_FILE__"
 
 # GSD Agent Configuration — managed by get-shit-done installer
