@@ -2,7 +2,8 @@
 
 ## Boundary
 
-This document defines the later executable harness. It is not implemented in this slice.
+This document defines the current manual-ingest layer and the later executable
+harness. Live execution adapters are not implemented in this slice.
 
 Proposed code location:
 
@@ -11,6 +12,20 @@ Proposed code location:
 Proposed output location:
 
 - `.planning/measurement/model-role-benchmark/runs/<timestamp>/`
+
+Current implemented code:
+
+- `tooling/codex/model_benchmark/schema.py`
+- `tooling/codex/model_benchmark/profiles.py`
+- `tooling/codex/model_benchmark/io.py`
+- `tooling/codex/model_benchmark/costs.py`
+- `tooling/codex/model_benchmark/reports.py`
+- `tooling/codex/model_benchmark/cli.py`
+
+This implementation is ingest-only. It validates manually collected run records,
+checks candidate-profile consistency, attaches sourced API-equivalent cost
+estimates, and summarizes already-recorded runs. It does not launch Codex,
+Claude, API, or paid/quota-consuming model runs.
 
 ## Candidate Profile Schema
 
@@ -33,6 +48,12 @@ First matrix:
 - `55-high`: `gpt-5.5`, `high`
 
 The `55-low` and `55-medium` profiles are explicit execution-cost hypotheses. They must be scored against the same fixtures as higher-reasoning profiles before any default-setting change.
+
+The default ingest registry currently contains exactly these six profiles. A run
+whose `candidate_profile`, `model`, or `reasoning_effort` conflicts with the
+registry is invalid for comparison rather than a soft warning. Legacy profile
+records that use `role_family` normalize to `role_families` so older design text
+and current ingest files remain compatible.
 
 ## Task Spec Schema
 
@@ -121,6 +142,64 @@ Cost and usage comparisons must keep reasoning effort visible. A lower-reasoning
 
 If a provider reports total tokens without a reasoning-token split, preserve the total and mark the split `not_available`. Never infer zero reasoning tokens from absent data.
 
+## Manual Ingest Protocol
+
+Manual benchmark records are newline-delimited JSON objects. Use JSONL so
+completed, failed, partial, and routing-unproven runs can be appended and
+validated independently without overwriting prior evidence.
+
+Validation:
+
+```bash
+python3 -m tooling.codex.model_benchmark.cli validate-runs \
+  --runs path/to/runs.jsonl \
+  --profiles path/to/profiles.json
+```
+
+The `--profiles` argument is optional. When omitted, the CLI uses the built-in
+six-profile matrix from this document. Validation preserves unknown top-level
+and telemetry fields, but normalizes known usage categories to explicit values.
+Missing token categories become `not_available`; negative or boolean token
+values fail validation.
+
+Cost estimation:
+
+```bash
+python3 -m tooling.codex.model_benchmark.cli estimate-costs \
+  --runs path/to/runs.jsonl \
+  --rates path/to/rates.json \
+  --output path/to/estimated.jsonl
+```
+
+The rate table must include `model`, `currency`, `source_url`, `retrieved_at`,
+and `effective_date`. The first committed tests use synthetic `example.test`
+pricing metadata only. Synthetic fixtures are not benchmark evidence and should
+stay under `tooling/codex/tests/`, not under
+`.planning/measurement/model-role-benchmark/runs/`. Real pricing tables must cite
+official sources and retrieval dates before they are used for decision evidence.
+
+Cost output is API-equivalent only. It is not direct ChatGPT, Claude, or Codex
+plan quota burn. If any token category or required rate is missing, the estimate
+is `partial`; if no token categories are available, it is `not_available`.
+
+Summaries:
+
+```bash
+python3 -m tooling.codex.model_benchmark.cli summarize-runs \
+  --runs path/to/estimated.jsonl \
+  --output path/to/summary.json
+```
+
+Summaries group by `task_id`, `candidate_profile`, and `reasoning_effort`. They
+include qualitative-only counts, partial-cost counts, score averages when
+present, known-token averages, and reasoning-token aggregates when available.
+They intentionally do not rank profiles, declare a global winner, or imply any
+production default change.
+
+The CLI refuses to overwrite outputs unless `--overwrite` is supplied. This is
+part of the evidence-preservation rule: reruns should usually write a new output
+artifact or deliberately replace a disposable derived file.
+
 ## Future Telemetry Horizon
 
 The benchmark record is the seed of a broader harness telemetry system. This slice only implements ingest and comparison helpers, but the schema reserves fields for later telemetry that can inform harness design and config decisions:
@@ -132,6 +211,11 @@ The benchmark record is the seed of a broader harness telemetry system. This sli
 - semantic/friction analyzers that may later identify frustration or repeated points of failure, with versioned feature extractors and auditable provenance
 
 The initial implementation must not hard-code a cost-only worldview. Cost is one feature among quality, reliability, friction, traceability, and intervention effectiveness.
+
+Current ingest validation preserves unknown run-record and telemetry keys so
+future adapters can add intervention, friction, delegation-economics,
+responsibility-tracing, and semantic-friction features without changing the
+basic run-record contract first.
 
 ## Runner Flow
 
@@ -187,3 +271,7 @@ Allowed run status values:
 ## Future Implementation Notes
 
 The runner should prefer standard-library Python for the first implementation. It can reuse existing measurement-provenance conventions from `harness_modifier/closure/`, but should not force model benchmark records into host-exercise observation schemas unless the schema is extended deliberately.
+
+Live Codex and Claude execution adapters remain deferred. When implemented, they
+must normalize their output into the same run-record contract used by manual
+ingest and must keep requested settings separate from effective routing evidence.

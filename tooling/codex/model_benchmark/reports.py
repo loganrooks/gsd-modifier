@@ -32,6 +32,14 @@ def _cost_value(record: dict[str, Any]) -> Decimal | None:
     return Decimal(str(value))
 
 
+def _cost_status(record: dict[str, Any]) -> str | None:
+    cost = record.get("cost_estimate")
+    if not isinstance(cost, dict):
+        return None
+    value = cost.get("estimate_status")
+    return value if isinstance(value, str) else None
+
+
 def summarize_runs(records: list[dict[str, Any]]) -> dict[str, Any]:
     groups: dict[tuple[str, str, str], dict[str, Any]] = {}
     for raw_record in records:
@@ -47,8 +55,11 @@ def summarize_runs(records: list[dict[str, Any]]) -> dict[str, Any]:
                 "qualitative_only_count": 0,
                 "known_token_total": 0,
                 "known_token_run_count": 0,
+                "reasoning_token_total": 0,
+                "reasoning_token_run_count": 0,
                 "estimated_cost_total": Decimal("0"),
                 "estimated_cost_run_count": 0,
+                "partial_cost_count": 0,
                 "score_total": 0.0,
                 "score_count": 0,
                 "statuses": {},
@@ -66,10 +77,17 @@ def summarize_runs(records: list[dict[str, Any]]) -> dict[str, Any]:
             group["known_token_total"] += token_total
             group["known_token_run_count"] += 1
 
+        reasoning_tokens = record["usage"].get("reasoning_tokens", NOT_AVAILABLE)
+        if isinstance(reasoning_tokens, int):
+            group["reasoning_token_total"] += reasoning_tokens
+            group["reasoning_token_run_count"] += 1
+
         cost = _cost_value(raw_record)
         if cost is not None:
             group["estimated_cost_total"] += cost
             group["estimated_cost_run_count"] += 1
+        if _cost_status(raw_record) == "partial":
+            group["partial_cost_count"] += 1
 
         score = _score_value(raw_record)
         if score is not None:
@@ -82,6 +100,14 @@ def summarize_runs(records: list[dict[str, Any]]) -> dict[str, Any]:
         summary["average_known_tokens"] = (
             round(group["known_token_total"] / group["known_token_run_count"], 2)
             if group["known_token_run_count"]
+            else NOT_AVAILABLE
+        )
+        summary["reasoning_token_total"] = (
+            group["reasoning_token_total"] if group["reasoning_token_run_count"] else NOT_AVAILABLE
+        )
+        summary["average_reasoning_tokens"] = (
+            round(group["reasoning_token_total"] / group["reasoning_token_run_count"], 2)
+            if group["reasoning_token_run_count"]
             else NOT_AVAILABLE
         )
         summary["total_estimated_cost"] = str(group["estimated_cost_total"].quantize(Decimal("0.000001")))

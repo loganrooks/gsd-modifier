@@ -35,6 +35,7 @@ ALLOWED_GRANULARITY = {
     "intervention_window",
     NOT_AVAILABLE,
 }
+DEFAULT_SCHEMA_VERSION = "model-benchmark-run/v1"
 
 REQUIRED_RUN_FIELDS = (
     "run_id",
@@ -118,11 +119,15 @@ def normalize_telemetry_features(raw_features: Any) -> dict[str, Any]:
     return features
 
 
-def validate_run_record(record: dict[str, Any]) -> dict[str, Any]:
+def validate_run_record(record: dict[str, Any], profile_registry: Any | None = None) -> dict[str, Any]:
     normalized = copy.deepcopy(require_object(record, "run_record"))
     missing = [field for field in REQUIRED_RUN_FIELDS if field not in normalized]
     if missing:
         raise ValueError(f"run_record missing required fields: {', '.join(missing)}")
+
+    normalized["schema_version"] = require_string(
+        normalized.get("schema_version", DEFAULT_SCHEMA_VERSION), "schema_version"
+    )
 
     for field in ("run_id", "task_id", "candidate_profile", "model"):
         normalized[field] = require_string(normalized[field], field)
@@ -150,6 +155,11 @@ def validate_run_record(record: dict[str, Any]) -> dict[str, Any]:
     normalized["effective_model"] = effective_model or NOT_AVAILABLE
     normalized["effective_reasoning_effort"] = effective_reasoning or NOT_AVAILABLE
     normalized["qualitative_only"] = normalized["effective_model"] == NOT_AVAILABLE or normalized["effective_reasoning_effort"] == NOT_AVAILABLE
+    normalized["profile_consistency_status"] = normalized.get("profile_consistency_status", "not_checked")
+    if profile_registry is not None:
+        from tooling.codex.model_benchmark.profiles import validate_run_profile_consistency
+
+        normalized = validate_run_profile_consistency(normalized, profile_registry)
     return normalized
 
 

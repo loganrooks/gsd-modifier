@@ -5,7 +5,14 @@ from __future__ import annotations
 from decimal import Decimal, ROUND_HALF_UP
 from typing import Any
 
-from tooling.codex.model_benchmark.schema import NOT_AVAILABLE, TOKEN_FIELDS, normalize_usage_record, require_object, require_string
+from tooling.codex.model_benchmark.schema import (
+    NOT_AVAILABLE,
+    TOKEN_FIELDS,
+    normalize_usage_record,
+    require_object,
+    require_string,
+    validate_run_record,
+)
 
 RATE_FIELDS = {
     "input_tokens": "input_per_million",
@@ -104,3 +111,35 @@ def estimate_cost(usage_record: dict[str, Any], rate_table: dict[str, Any]) -> d
         "missing_rate_fields": sorted(set(missing_rate_fields)),
         "caveat": "API-equivalent estimate only; not direct ChatGPT or Codex plan quota burn.",
     }
+
+
+def _rate_rows(raw_rate_table: dict[str, Any]) -> list[dict[str, Any]]:
+    table = require_object(raw_rate_table, "rate_table")
+    if "rates" in table:
+        rates = table["rates"]
+        if not isinstance(rates, list):
+            raise ValueError("rate_table.rates must be a list")
+        return rates
+    return [table]
+
+
+def select_rate_table(run: dict[str, Any], raw_rate_table: dict[str, Any]) -> dict[str, Any]:
+    target_model = run.get("effective_model")
+    if target_model in (None, NOT_AVAILABLE):
+        target_model = run.get("model")
+    matching = [
+        rate for rate in _rate_rows(raw_rate_table) if isinstance(rate, dict) and rate.get("model") == target_model
+    ]
+    if not matching:
+        raise ValueError(f"no rate table found for model {target_model}")
+    if len(matching) > 1:
+        raise ValueError(f"multiple rate tables found for model {target_model}")
+    return matching[0]
+
+
+def attach_cost_estimate(run: dict[str, Any], rate_table: dict[str, Any]) -> dict[str, Any]:
+    normalized = validate_run_record(run)
+    selected_rates = select_rate_table(normalized, rate_table)
+    estimated = dict(normalized)
+    estimated["cost_estimate"] = estimate_cost(normalized["usage"], selected_rates)
+    return estimated
