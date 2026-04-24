@@ -39,6 +39,10 @@ returned JSON from `gsd-sdk` and did not create the output file.
 ## Inferences
 
 - The current workflow command is a false file-write contract: it can succeed while leaving `$INSTRUCTION_FILE` absent.
-- The all-`AGENTS.md` target policy is a modifier overlay decision, not the installed upstream default.
-- Directly switching the workflow to the CJS command would repair file creation, but it would bind the modifier's `AGENTS.md` policy to runtime-specific materialized CJS/template bodies whose semantics differ between Codex and Claude roots.
-- A repo-owned wrapper is the least ambiguous ownership boundary because it can name `AGENTS.md` as the target, define runtime-neutral body semantics, and use one command contract for both materialized runtimes.
+- The all-`AGENTS.md` target policy was a modifier overlay decision, not the installed upstream default.
+- Directly switching the workflow to the CJS command would repair file creation, but it would also change which runtime-local template body owns the generated content.
+- A repo-owned wrapper is useful only as a file-write contract boundary; it should preserve the workflow's runtime-selected target file rather than using the wrapper to justify all-`AGENTS.md` behavior.
+
+## Post-Implementation Correction
+
+After comparing the local upstream clone, the modifier overlay should not treat all-`AGENTS.md` as an uplift. Upstream `new-project.md` is runtime-sensitive: Codex initializes `AGENTS.md`, while Claude/non-Codex initializes `CLAUDE.md`.

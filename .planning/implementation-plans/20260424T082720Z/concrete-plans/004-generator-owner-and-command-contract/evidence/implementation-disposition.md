@@ -2,7 +2,7 @@
 
 ## Selected Option
 
-Option A: Repo-Owned Runtime-Neutral Wrapper.
+Option A, corrected: Repo-Owned File-Writing Wrapper With Runtime-Sensitive Targets.
 
 ## Files Changed
 
@@ -30,8 +30,8 @@ node "$GSD_INSTRUCTION_GENERATOR" --output "$INSTRUCTION_FILE" --runtime "$RUNTI
 
 The wrapper contract is:
 
-- output target is `AGENTS.md` for this shared initialization route;
-- body is runtime-neutral and does not describe the file as `CLAUDE.md`;
+- output target is the runtime-selected `$INSTRUCTION_FILE`: `AGENTS.md` for Codex and `CLAUDE.md` for Claude/non-Codex;
+- body is filename-safe and does not claim that all runtimes should use `AGENTS.md`;
 - missing files are created;
 - GSD marker sections are refreshed;
 - unmarked user content is preserved.
@@ -56,12 +56,12 @@ Result: both Codex and Claude runtime roots materialized the wrapper and passed 
 
 ## Intentionally Held Surfaces
 
-- `CLAUDE.md` generation remains unchanged and tracked-only for this slice.
+- `CLAUDE.md` companion generation remains held, but Claude/non-Codex initialization now preserves the upstream-compatible `CLAUDE.md` target.
 - The SDK `generate-claude-md` handler remains an upstream defect or migration gap; this repo no longer depends on it for `new-project.md` instruction-file writes.
 - Broader compact-prompt, host-matrix semantics, and governance seeding are unchanged.
 - Other runtime names in detection prose are not broadened into support claims; this slice proves Codex and Claude because those are the manifest-supported runtime roots.
 
 ## Remaining Risks
 
-- The wrapper is intentionally narrower than the legacy CJS `generate-claude-md` command. If future work wants companion `CLAUDE.md` generation or richer profile integration, it should be planned as a separate generated-companion contract.
+- The wrapper is intentionally narrower than the legacy CJS `generate-claude-md` command. If future work wants both generated companion files, richer profile integration, or direct upstream CJS reuse, it should be planned as a separate generated-instruction contract.
 - The command name `generate-instruction.cjs` is repo-owned; upstream may later repair SDK generation semantics under a different name. If that happens, this wrapper should be reassessed rather than silently replaced.

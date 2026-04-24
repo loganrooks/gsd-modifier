@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
- * Runtime-neutral project instruction generator.
+ * Runtime-sensitive project instruction generator.
  *
- * This wrapper owns the modifier repo's AGENTS.md generation contract. It
- * intentionally avoids the upstream generate-claude-md body because that
- * command still carries CLAUDE.md naming and runtime-specific templates.
+ * This wrapper owns the modifier repo's file-write contract for generated
+ * project instructions while preserving the workflow's runtime-selected
+ * output path.
  */
 
 const fs = require('fs');
@@ -65,9 +65,9 @@ function parseArgs(argv) {
 
 function usage() {
   return [
-    'Usage: node generate-instruction.cjs --output AGENTS.md [--runtime codex|claude]',
+    'Usage: node generate-instruction.cjs --output <instruction-file> [--runtime codex|claude]',
     '',
-    'Creates or refreshes GSD marker-bounded sections in a runtime-neutral AGENTS.md file.',
+    'Creates or refreshes GSD marker-bounded sections in the selected project instruction file.',
   ].join('\n');
 }
 
@@ -286,7 +286,7 @@ function writeInstructionFile(cwd, outputPath) {
     sections_fallback: sectionsFallback,
     sections_total: MANAGED_SECTIONS.length,
     profile_status: fileContent.includes('<!-- GSD:profile-start') ? 'present' : 'absent',
-    message: `${action === 'created' ? 'Created' : 'Updated'} AGENTS.md instruction file.`,
+    message: `${action === 'created' ? 'Created' : 'Updated'} ${path.basename(outputPath)} instruction file.`,
   };
 }
 

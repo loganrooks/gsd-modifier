@@ -45,6 +45,10 @@ class InitializationReadPacketContractTests(unittest.TestCase):
     def test_new_project_uses_repo_owned_instruction_generator(self) -> None:
         new_project = NEW_PROJECT.read_text(encoding="utf-8")
 
+        self.assertIn(
+            'if [ "$RUNTIME" = "codex" ]; then INSTRUCTION_FILE="AGENTS.md"; else INSTRUCTION_FILE="CLAUDE.md"; fi',
+            new_project,
+        )
         self.assertNotIn(
             'gsd-sdk query generate-claude-md --output "$INSTRUCTION_FILE"',
             new_project,
@@ -88,6 +92,30 @@ class InitializationReadPacketContractTests(unittest.TestCase):
             self.assertIn("## GSD Workflow Enforcement", content)
             self.assertIn("$gsd-quick", content)
             self.assertNotIn("CLAUDE.md Template", content)
+
+    def test_instruction_generator_honors_runtime_selected_output_file(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / ".planning").mkdir()
+            (root / ".planning/PROJECT.md").write_text(
+                "# Sample Project\n\n## What This Is\n\nA sample project.\n",
+                encoding="utf-8",
+            )
+
+            result = subprocess.run(
+                ["node", str(GENERATOR), "--output", "CLAUDE.md", "--runtime", "claude"],
+                cwd=root,
+                text=True,
+                capture_output=True,
+                check=True,
+            )
+
+            self.assertFalse((root / "AGENTS.md").exists())
+            content = (root / "CLAUDE.md").read_text(encoding="utf-8")
+            self.assertIn('"action": "created"', result.stdout)
+            self.assertIn("Created CLAUDE.md instruction file", result.stdout)
+            self.assertIn("<!-- GSD:project-start source:PROJECT.md -->", content)
+            self.assertIn("## GSD Workflow Enforcement", content)
 
     def test_instruction_generator_refreshes_markers_without_overwriting_user_content(
         self,

@@ -32,6 +32,6 @@
 ## Inferences
 
 - Using the installed upstream or materialized Claude CJS body to write `AGENTS.md` would be semantically misleading because the body still describes a Claude-oriented instruction file.
-- Using the materialized Codex CJS writer from a shared workflow would produce a more honest `AGENTS.md` body, but it would make a shared initialization workflow depend on a Codex runtime root.
-- The right source-level body contract is a runtime-neutral `AGENTS.md` body owned by this repo and materialized into both supported runtime roots.
+- Using the materialized Codex CJS writer from a shared workflow would produce a more honest Codex `AGENTS.md` body, but it would make a shared initialization workflow depend on a Codex runtime root.
+- The right source-level wrapper contract is a filename-safe body that honors the runtime-selected output path rather than forcing `AGENTS.md` for every runtime.
 - The existing marker-section model is a good conflict/update policy to preserve because it avoids overwriting user content outside GSD markers.
