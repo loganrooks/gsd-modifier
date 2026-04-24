@@ -21,6 +21,8 @@ Use a 0-4 scale for each dimension.
 | Scope Control | Does it avoid unrelated work, unapproved rewrites, and hidden expansion? |
 | Auditability | Can a later reviewer reconstruct evidence, decisions, assumptions, and uncertainty? |
 | Efficiency | Token usage, elapsed time, tool count, retries, and unnecessary context loading |
+| Reasoning-Cost Efficiency | Reasoning-token spend, retry-adjusted estimated cost, and cost per successful/verified task |
+| Telemetry Readiness | Whether the run preserves enough provenance and granularity for later harness/config decisions |
 
 ## Planning Dimensions
 
@@ -70,8 +72,9 @@ Each run should record:
 - `tests_passed`
 - `diff_stat`
 - `tool_call_count` when available
-- `input_tokens`, `output_tokens`, and `reasoning_tokens` when available
-- `usage_metric_status`: `measured`, `estimated`, or `not_available`
+- `input_tokens`, `cached_input_tokens`, `output_tokens`, `reasoning_tokens`, `initialization_tokens`, and `tool_result_tokens` when available
+- `usage_metric_status`: `measured`, `estimated`, `derived`, or `not_available`
+- `trace_id`, `parent_trace_id`, `runtime_provider`, `intervention_id`, `metric_granularity`, and `derived_feature_version` when available
 
 ## Review Process
 
@@ -90,3 +93,4 @@ Do not use a single aggregate score to choose profiles. Compare by role:
 - Planner defaults should prioritize ambiguity handling, decomposition, and propagation awareness.
 - Reviewer defaults should prioritize true positives, severity calibration, and false-positive control.
 - Usage metrics should influence default choices only after quality is acceptable.
+- Lower-reasoning model profiles should be evaluated on quality first, then reasoning-token-adjusted total cost and friction.

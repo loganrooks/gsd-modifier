@@ -25,9 +25,14 @@ Proposed output location:
 
 First matrix:
 
+- `54-medium`: `gpt-5.4`, `medium`
 - `54-high`: `gpt-5.4`, `high`
 - `54-xhigh`: `gpt-5.4`, `xhigh`
+- `55-low`: `gpt-5.5`, `low`
+- `55-medium`: `gpt-5.5`, `medium`
 - `55-high`: `gpt-5.5`, `high`
+
+The `55-low` and `55-medium` profiles are explicit execution-cost hypotheses. They must be scored against the same fixtures as higher-reasoning profiles before any default-setting change.
 
 ## Task Spec Schema
 
@@ -73,12 +78,25 @@ First matrix:
   },
   "usage": {
     "input_tokens": "not_available",
+    "cached_input_tokens": "not_available",
     "output_tokens": "not_available",
     "reasoning_tokens": "not_available",
+    "initialization_tokens": "not_available",
+    "tool_result_tokens": "not_available",
     "quota_delta": "not_available",
     "status_before": "not_available",
     "status_after": "not_available",
     "usage_metric_status": "not_available"
+  },
+  "telemetry_features": {
+    "trace_id": "not_available",
+    "parent_trace_id": "not_available",
+    "runtime_provider": "codex_cli|claude_code|api|manual|not_available",
+    "agent_role": "executor|planner|reviewer|researcher|general|not_available",
+    "intervention_id": "not_available",
+    "metric_granularity": "run",
+    "provenance": "not_available",
+    "derived_feature_version": "not_available"
   },
   "artifacts": {
     "prompt": "prompt.md",
@@ -89,6 +107,31 @@ First matrix:
   }
 }
 ```
+
+
+## Usage And Reasoning Accounting
+
+Cost and usage comparisons must keep reasoning effort visible. A lower-reasoning `gpt-5.5` execution profile can only be judged fairly if the runner preserves:
+
+- input, cached-input, output, reasoning, initialization, and tool-result token categories separately
+- whether each metric is `measured`, `estimated`, `derived`, or `not_available`
+- retry-adjusted cost and verification-adjusted cost, not only first-attempt cost
+- the pricing table source, retrieval time, currency, effective date, and provider-specific reasoning-token rule
+- the caveat that API-equivalent cost is not direct ChatGPT/Codex plan quota burn
+
+If a provider reports total tokens without a reasoning-token split, preserve the total and mark the split `not_available`. Never infer zero reasoning tokens from absent data.
+
+## Future Telemetry Horizon
+
+The benchmark record is the seed of a broader harness telemetry system. This slice only implements ingest and comparison helpers, but the schema reserves fields for later telemetry that can inform harness design and config decisions:
+
+- intervention tracking for model, reasoning, prompt, delegation, tool, workflow, and config changes
+- friction markers such as retries, interruptions, user corrections, approval loops, stalled runs, false completion, and scope creep
+- efficiency features such as tokens per tool call, tokens per accepted diff, initialization tokens, compaction frequency, and estimated delegation savings
+- responsibility tracing across session, run, task, turn, agent, tool-call, file/diff, config-profile, and intervention-window levels
+- semantic/friction analyzers that may later identify frustration or repeated points of failure, with versioned feature extractors and auditable provenance
+
+The initial implementation must not hard-code a cost-only worldview. Cost is one feature among quality, reliability, friction, traceability, and intervention effectiveness.
 
 ## Runner Flow
 
@@ -138,6 +181,8 @@ Allowed run status values:
 - Never treat reviewer self-scoring as final scoring.
 - Never overwrite prior runs; use timestamped run directories.
 - Preserve failed runs because failures are evidence.
+- Never treat missing token categories as zero usage.
+- Never compare lower-reasoning profiles without preserving reasoning-token visibility or explicit `not_available` markers.
 
 ## Future Implementation Notes
 

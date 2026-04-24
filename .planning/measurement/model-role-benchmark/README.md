@@ -4,7 +4,7 @@
 
 This packet defines an auditable experiment lane for deciding which Codex model and reasoning settings should be used for different agent roles in `gsd-modifier`.
 
-It does not change production GSD defaults. It defines predictions, research dispatch, a task corpus, scoring rubrics, and a later runner design so model-profile changes can be justified by evidence rather than launch hype or isolated anecdotes.
+It does not change production GSD defaults. It defines predictions, research dispatch, a task corpus, scoring rubrics, and a later runner design so model-profile changes can be justified by same-task evidence rather than launch hype or isolated anecdotes. The runner design also reserves seams for a future telemetry system that can evaluate interventions, friction, delegation economics, and harness/config decisions beyond cost alone.
 
 ## Extraction Tooling
 
@@ -31,6 +31,8 @@ Raw HTML and full extracted text stay ignored by default. Checked-in artifacts s
 ## Current Boundary
 
 This is a design packet plus first-pass extraction tooling. The next step is to seed focused URLs, run the collection-first flow in `OPINION-MINING-PLAN.md`, dispatch the read-only research agents described in `RESEARCH-DISPATCH.md`, synthesize their findings, then decide whether to implement the runner in `tooling/codex/model_benchmark/`.
+
+The immediate benchmark implementation is ingest-first: it can validate records, estimate API-equivalent costs, preserve reasoning-token visibility, and summarize results, but it should not launch paid/quota-consuming live runs yet.
 
 Production settings that remain unchanged by this packet:
 
