@@ -69,6 +69,73 @@ If implementation proceeds, also create:
 
 Each evidence file must distinguish observed facts from inference.
 
+## Pivotal Decisions Reserved To The Primary Operator
+
+Agents or delegated reviewers may gather evidence, check claims, and propose options. They must not make or silently settle any load-bearing decision.
+
+The primary operator must decide these points in `evidence/decision.md`:
+
+1. Generator owner:
+   - repo-owned wrapper
+   - upstream SDK fix
+   - direct CJS command
+   - generated companion contract
+2. Generated target policy:
+   - `AGENTS.md` only
+   - `CLAUDE.md` only for non-Codex
+   - both files
+   - defer all generation changes
+3. Body semantics:
+   - whether the existing `CLAUDE.md` template can honestly be used for `AGENTS.md`
+   - whether a runtime-neutral template is required
+4. Command path:
+   - SDK query
+   - materialized CJS path
+   - repo-local wrapper path
+   - upstream-only route
+5. Conflict policy:
+   - create-only
+   - marker-section refresh
+   - overwrite allowed only inside GSD markers
+   - never overwrite without explicit user approval
+6. Verification boundary:
+   - source-only proof is enough
+   - materialized runtime proof is required
+   - host matrix proof is required
+7. Catalog semantics:
+   - `CLAUDE.md` remains tracked-only
+   - `CLAUDE.md` becomes generated companion
+   - catalog change deferred
+
+If any of these remain undecided, implementation must stop at evidence and decision notes. Do not let an implementation worker, explorer, test failure, or convenient code path decide by default.
+
+## Delegation Rules
+
+Delegation is optional and evidence-only unless the user explicitly authorizes implementation delegation after `evidence/decision.md` exists.
+
+Allowed delegated tasks before the decision:
+
+- inspect installed SDK/CJS command behavior and report exact command outputs;
+- inspect template body semantics and identify runtime-specific language;
+- inspect manifest/materialization command paths and report whether shared workflows map to Codex, Claude, or both;
+- review the decision artifact for missing evidence or unsupported inference.
+
+Delegated agents must return one of:
+
+- `evidence-only: no recommendation`
+- `recommendation: non-binding`
+- `blocker: evidence missing or contradictory`
+
+Delegated agents must not:
+
+- edit `new-project.md`;
+- edit `carrier_catalog.json`;
+- edit `OVERLAY-MANIFEST.json`;
+- edit setup or contract scripts;
+- choose the target file policy;
+- choose the command path;
+- claim materialized parity without running the materialized checks.
+
 ## Non-Goals
 
 - Do not broaden compact-prompt capability behavior.
@@ -203,6 +270,21 @@ Allowed write sets by option:
   - carrier catalog only if generated/tracked semantics change.
 
 If a needed write is outside the selected write set, stop and revise the decision artifact before editing.
+
+## Pitfalls And Mitigations
+
+| Pitfall | Why it matters | Mitigation |
+| --- | --- | --- |
+| Treating `generate-claude-md` name as proof that Claude needs `CLAUDE.md` | Naming can be stale or historical; target-file policy needs authority evidence. | Require template/body semantics evidence and consumer authority evidence before choosing target files. |
+| Treating current all-`AGENTS.md` behavior as proof it is correct | The modifier overlay changed upstream behavior, but the rationale is not yet fully recorded. | Require the decision artifact to justify single-file generation from consumers and onboarding docs. |
+| Fixing the filename but leaving the command non-writing | The current SDK command can return success without writing the file. | Add a guard test or probe that proves the selected command creates or updates the target file. |
+| Calling CJS from a Codex-only path inside a shared workflow | Shared workflows may materialize into Claude too. | Runtime-path evidence must prove the command path works for each materialized runtime or route through a repo-owned wrapper. |
+| Using a `CLAUDE.md` body as `AGENTS.md` without semantic review | The generated file may contain Claude-specific assumptions. | Template evidence must classify each generated section as runtime-neutral, Claude-specific, or unsafe for `AGENTS.md`. |
+| Removing `CLAUDE.md` from uplift tracking because Codex does not govern from it | Tracked doctrine carrier is not the same as Codex authority. | Catalog changes are allowed only if the decision proves generated/tracked semantics changed. |
+| Letting tests define product semantics | A passing test can lock the wrong contract if the decision is under-specified. | Write the decision first; tests must encode the named contract, not discover it. |
+| Claiming source validation as runtime parity | Source checks do not prove materialized runtime roots. | If workflow behavior changes, run setup plus strict materialized verification before claiming runtime parity. |
+| Hiding upstream defects behind local overlay workarounds | A local workaround may make this repo pass while upstream workflows remain broken. | Option B must remain available; if local work is a workaround, record that boundary explicitly. |
+| Expanding into compact prompt or governance seeding | This task sits before those workstreams and can easily absorb them. | Keep compact-prompt and governance artifacts out of scope unless a decision artifact records a direct dependency. |
 
 ## Auditability Requirements
 
