@@ -25,6 +25,7 @@ SCHEMA_VERSION = "telemetry-plugin-manifest/v1"
 HASH_ALGORITHM = "sha256"
 _HASH_FIELD = "registry_hash"
 _LIST_SECTIONS = ("source_kinds", "namespaces", "predicates", "metrics", "rubrics", "emits")
+FORBIDDEN_CANONICAL_QUALITY_METRICS = frozenset({"score.overall", "core.quality.overall"})
 
 
 def _require_object(value: Any, label: str) -> dict[str, Any]:
@@ -109,6 +110,9 @@ def _normalize_manifest(raw_manifest: dict[str, Any]) -> dict[str, Any]:
 
     for index, metric in enumerate(normalized["metrics"], start=1):
         label = f"metrics[{index}]"
+        metric_id = _require_string(metric.get("id"), f"{label}.id")
+        if metric_id in FORBIDDEN_CANONICAL_QUALITY_METRICS:
+            raise ValueError(f"{label}.id cannot be a canonical aggregate quality metric: {metric_id}")
         _require_enum(metric, "status", OBSERVATION_STATUSES, label)
         _require_enum(metric, "evidence_class", EVIDENCE_CLASSES, label)
         _require_enum(metric, "reliability_mode", RELIABILITY_MODES, label)

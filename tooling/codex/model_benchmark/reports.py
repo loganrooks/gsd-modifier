@@ -30,6 +30,12 @@ def _score_value(record: dict[str, Any]) -> float | None:
     return None
 
 
+def _numeric_value(value: Any) -> float | None:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return None
+    return float(value)
+
+
 def _cost_value(record: dict[str, Any]) -> Decimal | None:
     cost = record.get("cost_estimate")
     if not isinstance(cost, dict):
@@ -70,6 +76,7 @@ def summarize_runs(records: list[dict[str, Any]]) -> dict[str, Any]:
                 "partial_cost_count": 0,
                 "score_total": 0.0,
                 "score_count": 0,
+                "rubric_dimensions": {},
                 "statuses": {},
             },
         )
@@ -102,6 +109,31 @@ def summarize_runs(records: list[dict[str, Any]]) -> dict[str, Any]:
             group["score_total"] += score
             group["score_count"] += 1
 
+        for observation in record.get("rubric_observations", []):
+            dimension_id = observation["dimension_id"]
+            dimension = group["rubric_dimensions"].setdefault(
+                dimension_id,
+                {
+                    "dimension_id": dimension_id,
+                    "rubric_ids": set(),
+                    "evaluator_ids": set(),
+                    "rubric_versions": set(),
+                    "status_counts": {},
+                    "value_total": 0.0,
+                    "value_count": 0,
+                },
+            )
+            dimension["rubric_ids"].add(observation["rubric_id"])
+            dimension["evaluator_ids"].add(observation["evaluator_id"])
+            dimension["rubric_versions"].add(observation["rubric_version"])
+            dimension["status_counts"][observation["status"]] = (
+                dimension["status_counts"].get(observation["status"], 0) + 1
+            )
+            value = _numeric_value(observation.get("value"))
+            if value is not None:
+                dimension["value_total"] += value
+                dimension["value_count"] += 1
+
     summaries = []
     for group in groups.values():
         summary = dict(group)
@@ -127,7 +159,31 @@ def summarize_runs(records: list[dict[str, Any]]) -> dict[str, Any]:
         summary["average_score"] = (
             round(group["score_total"] / group["score_count"], 3) if group["score_count"] else NOT_AVAILABLE
         )
-        for internal in ("estimated_cost_total", "score_total"):
+        if group["score_count"]:
+            summary["legacy_score_label"] = "compatibility-only"
+        rubric_dimension_summaries = {}
+        for dimension_id, dimension in sorted(group["rubric_dimensions"].items()):
+            rubric_dimension_summaries[dimension_id] = {
+                "dimension_id": dimension_id,
+                "rubric_ids": sorted(dimension["rubric_ids"]),
+                "evaluator_ids": sorted(dimension["evaluator_ids"]),
+                "rubric_versions": sorted(dimension["rubric_versions"]),
+                "status_counts": dict(sorted(dimension["status_counts"].items())),
+                "average_value": (
+                    round(dimension["value_total"] / dimension["value_count"], 3)
+                    if dimension["value_count"]
+                    else NOT_AVAILABLE
+                ),
+                "value_count": dimension["value_count"],
+            }
+        if rubric_dimension_summaries:
+            summary["quality_summary_source"] = "rubric_dimensions"
+            summary["rubric_dimension_summaries"] = rubric_dimension_summaries
+        elif group["score_count"]:
+            summary["quality_summary_source"] = "legacy_score_compatibility"
+        else:
+            summary["quality_summary_source"] = NOT_AVAILABLE
+        for internal in ("estimated_cost_total", "score_total", "rubric_dimensions"):
             summary.pop(internal)
         summaries.append(summary)
     return {"groups": sorted(summaries, key=lambda item: (item["task_id"], item["candidate_profile"], item["reasoning_effort"]))}

@@ -134,6 +134,14 @@ emits:
         with self.assertRaisesRegex(ValueError, "undeclared metric_id"):
             manifest.load_manifest(path)
 
+    def test_canonical_overall_quality_metrics_are_rejected(self):
+        for metric_id in ("score.overall", "core.quality.overall"):
+            with self.subTest(metric_id=metric_id):
+                path = self._write_manifest(self._minimal_manifest().replace("id: tokens.input", f"id: {metric_id}"))
+
+                with self.assertRaisesRegex(ValueError, "canonical aggregate quality"):
+                    manifest.load_manifest(path)
+
     def test_raw_content_modes_require_explicit_consent(self):
         path = self._write_manifest(
             self._minimal_manifest().replace("content_contract: metadata_only", "content_contract: raw_content_allowed")

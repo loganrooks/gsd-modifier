@@ -101,6 +101,56 @@ class ModelBenchmarkTests(unittest.TestCase):
         self.assertEqual(normalized["schema_version"], "model-benchmark-run/v1")
         self.assertEqual(normalized["profile_consistency_status"], "not_checked")
         self.assertEqual(normalized["usage"]["reasoning_tokens"], 400)
+        self.assertEqual(normalized["legacy_score"]["overall"], 3.5)
+        self.assertEqual(normalized["legacy_score"]["compatibility"], "compatibility_only")
+
+    def test_validate_run_record_validates_rubric_observations(self):
+        normalized = schema.validate_run_record(
+            self._run_record(
+                score=None,
+                rubric_observations=[
+                    {
+                        "rubric_id": "quality.task_boundary",
+                        "dimension_id": "follows_task_boundary",
+                        "evaluator_id": "fixture.manual-reviewer",
+                        "rubric_version": "2026.04.24",
+                        "value": 1,
+                        "status": "measured",
+                        "evidence_class": "manual_evidence",
+                        "reliability_mode": "manual_label",
+                        "content_contract": "derived_features_only",
+                        "comparability": "partial",
+                        "provenance": {"source": "synthetic_fixture"},
+                    }
+                ],
+            )
+        )
+
+        observation = normalized["rubric_observations"][0]
+        self.assertEqual(observation["dimension_id"], "follows_task_boundary")
+        self.assertEqual(observation["evaluator_id"], "fixture.manual-reviewer")
+        self.assertEqual(observation["rubric_version"], "2026.04.24")
+
+    def test_validate_run_record_rejects_invalid_rubric_observation(self):
+        record = self._run_record(
+            rubric_observations=[
+                {
+                    "rubric_id": "quality.task_boundary",
+                    "dimension_id": "follows_task_boundary",
+                    "evaluator_id": "fixture.manual-reviewer",
+                    "rubric_version": "2026.04.24",
+                    "value": 1,
+                    "status": "locally_true",
+                    "evidence_class": "manual_evidence",
+                    "reliability_mode": "manual_label",
+                    "content_contract": "derived_features_only",
+                    "provenance": {"source": "synthetic_fixture"},
+                }
+            ]
+        )
+
+        with self.assertRaisesRegex(ValueError, "rubric_observations\\[1\\].status"):
+            schema.validate_run_record(record)
 
     def test_validate_run_record_normalizes_missing_usage_categories(self):
         normalized = schema.validate_run_record(self._run_record(usage={"usage_metric_status": "not_available"}))
@@ -275,8 +325,50 @@ class ModelBenchmarkTests(unittest.TestCase):
         qualitative = [group for group in summary["groups"] if group["candidate_profile"] == "54-high"][0]
         self.assertEqual(qualitative["qualitative_only_count"], 1)
         self.assertEqual(qualitative["average_score"], 3.0)
+        self.assertEqual(qualitative["legacy_score_label"], "compatibility-only")
         self.assertNotIn("winner", summary)
         self.assertNotIn("recommendation", summary)
+
+    def test_summarize_runs_prefers_rubric_dimension_summaries(self):
+        record = self._run_record(
+            score={"overall": 1.0},
+            rubric_observations=[
+                {
+                    "rubric_id": "quality.task_boundary",
+                    "dimension_id": "follows_task_boundary",
+                    "evaluator_id": "fixture.manual-reviewer",
+                    "rubric_version": "2026.04.24",
+                    "value": 1,
+                    "status": "measured",
+                    "evidence_class": "manual_evidence",
+                    "reliability_mode": "manual_label",
+                    "content_contract": "derived_features_only",
+                    "comparability": "partial",
+                    "provenance": {"source": "synthetic_fixture"},
+                },
+                {
+                    "rubric_id": "quality.auditability",
+                    "dimension_id": "records_verification",
+                    "evaluator_id": "fixture.manual-reviewer",
+                    "rubric_version": "2026.04.24",
+                    "value": 0,
+                    "status": "measured",
+                    "evidence_class": "manual_evidence",
+                    "reliability_mode": "manual_label",
+                    "content_contract": "derived_features_only",
+                    "comparability": "partial",
+                    "provenance": {"source": "synthetic_fixture"},
+                },
+            ],
+        )
+
+        summary = reports.summarize_runs([record])
+        group = summary["groups"][0]
+
+        self.assertEqual(group["quality_summary_source"], "rubric_dimensions")
+        self.assertEqual(group["rubric_dimension_summaries"]["follows_task_boundary"]["average_value"], 1.0)
+        self.assertEqual(group["rubric_dimension_summaries"]["records_verification"]["average_value"], 0.0)
+        self.assertEqual(group["legacy_score_label"], "compatibility-only")
 
     def test_summarize_runs_does_not_treat_missing_tokens_as_zero(self):
         record = self._run_record(usage={"usage_metric_status": "not_available"})

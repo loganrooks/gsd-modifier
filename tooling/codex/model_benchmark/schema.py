@@ -10,6 +10,13 @@ from __future__ import annotations
 import copy
 from typing import Any
 
+from tooling.codex.model_benchmark.enums import (
+    COMPARABILITY_VALUES,
+    CONTENT_CONTRACTS,
+    EVIDENCE_CLASSES,
+    OBSERVATION_STATUSES,
+    RELIABILITY_MODES,
+)
 
 NOT_AVAILABLE = "not_available"
 ALLOWED_REASONING = {"low", "medium", "high", "xhigh", NOT_AVAILABLE}
@@ -119,6 +126,81 @@ def normalize_telemetry_features(raw_features: Any) -> dict[str, Any]:
     return features
 
 
+def _require_enum(value: Any, allowed: frozenset[str], label: str) -> str:
+    normalized = require_string(value, label)
+    if normalized not in allowed:
+        raise ValueError(f"{label} must be one of {sorted(allowed)}")
+    return normalized
+
+
+def _normalize_rubric_value(value: Any, label: str) -> int | float | str:
+    if value == NOT_AVAILABLE:
+        return NOT_AVAILABLE
+    if isinstance(value, bool):
+        raise ValueError(f"{label} must be a number or {NOT_AVAILABLE}")
+    if isinstance(value, (int, float)):
+        return value
+    raise ValueError(f"{label} must be a number or {NOT_AVAILABLE}")
+
+
+def normalize_legacy_score(raw_score: Any) -> dict[str, Any] | None:
+    """Normalize legacy scalar score compatibility data without making it canonical."""
+
+    if raw_score is None:
+        return None
+    score = require_object(raw_score, "score")
+    if "overall" not in score:
+        return None
+    value = score["overall"]
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValueError("score.overall must be numeric for legacy compatibility")
+    return {
+        "overall": float(value),
+        "metric_id": "legacy.score.overall",
+        "compatibility": "compatibility_only",
+        "warning": "legacy scalar score is compatibility-only; canonical quality uses rubric_observations",
+    }
+
+
+def normalize_rubric_observation(raw_observation: Any, index: int = 1) -> dict[str, Any]:
+    observation = copy.deepcopy(require_object(raw_observation, f"rubric_observations[{index}]"))
+    label = f"rubric_observations[{index}]"
+
+    normalized = {
+        "rubric_id": require_string(observation.get("rubric_id"), f"{label}.rubric_id"),
+        "dimension_id": require_string(observation.get("dimension_id"), f"{label}.dimension_id"),
+        "evaluator_id": require_string(observation.get("evaluator_id"), f"{label}.evaluator_id"),
+        "rubric_version": require_string(observation.get("rubric_version"), f"{label}.rubric_version"),
+        "value": _normalize_rubric_value(observation.get("value"), f"{label}.value"),
+        "status": _require_enum(observation.get("status"), OBSERVATION_STATUSES, f"{label}.status"),
+        "evidence_class": _require_enum(
+            observation.get("evidence_class"), EVIDENCE_CLASSES, f"{label}.evidence_class"
+        ),
+        "reliability_mode": _require_enum(
+            observation.get("reliability_mode"), RELIABILITY_MODES, f"{label}.reliability_mode"
+        ),
+        "content_contract": _require_enum(
+            observation.get("content_contract"), CONTENT_CONTRACTS, f"{label}.content_contract"
+        ),
+        "provenance": require_object(observation.get("provenance"), f"{label}.provenance"),
+    }
+    comparability = observation.get("comparability")
+    if comparability is not None:
+        normalized["comparability"] = _require_enum(comparability, COMPARABILITY_VALUES, f"{label}.comparability")
+    return normalized
+
+
+def normalize_rubric_observations(raw_observations: Any) -> list[dict[str, Any]]:
+    if raw_observations is None:
+        return []
+    if not isinstance(raw_observations, list):
+        raise ValueError("rubric_observations must be a list")
+    return [
+        normalize_rubric_observation(observation, index)
+        for index, observation in enumerate(raw_observations, 1)
+    ]
+
+
 def validate_run_record(record: dict[str, Any], profile_registry: Any | None = None) -> dict[str, Any]:
     normalized = copy.deepcopy(require_object(record, "run_record"))
     missing = [field for field in REQUIRED_RUN_FIELDS if field not in normalized]
@@ -149,6 +231,8 @@ def validate_run_record(record: dict[str, Any], profile_registry: Any | None = N
 
     normalized["usage"] = normalize_usage_record(normalized["usage"])
     normalized["telemetry_features"] = normalize_telemetry_features(normalized.get("telemetry_features"))
+    normalized["legacy_score"] = normalize_legacy_score(normalized.get("score"))
+    normalized["rubric_observations"] = normalize_rubric_observations(normalized.get("rubric_observations"))
 
     effective_model = normalized.get("effective_model", NOT_AVAILABLE)
     effective_reasoning = normalized.get("effective_reasoning_effort", NOT_AVAILABLE)
