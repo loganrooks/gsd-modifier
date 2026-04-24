@@ -96,6 +96,27 @@ class ModelOpinionMiningTests(unittest.TestCase):
             self.assertEqual(rows[0]["fetch_url"], "https://www.reddit.com/r/codex/comments/abc/example/.json")
             self.assertTrue((root / "raw" / "reddit-codex-001.json").exists())
 
+    def test_fetch_pages_uses_hacker_news_and_github_api_endpoints(self) -> None:
+        hn_seed = self._seed_row(
+            source_id="hn-001",
+            platform="Hacker News",
+            url="https://news.ycombinator.com/item?id=12345",
+        )
+        github_seed = self._seed_row(
+            source_id="gh-001",
+            platform="github-issue",
+            url="https://github.com/openai/codex/issues/19215",
+        )
+
+        self.assertEqual(
+            fetch_pages.fetch_url_for_seed(hn_seed),
+            "https://hacker-news.firebaseio.com/v0/item/12345.json",
+        )
+        self.assertEqual(
+            fetch_pages.fetch_url_for_seed(github_seed),
+            "https://api.github.com/repos/openai/codex/issues/19215",
+        )
+
     def test_fetch_pages_records_failed_status_without_raw_file(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             root = pathlib.Path(tmpdir)
@@ -178,6 +199,22 @@ class ModelOpinionMiningTests(unittest.TestCase):
             text = pathlib.Path(rows[0]["text_path"]).read_text(encoding="utf-8")
             self.assertIn("GPT-5.5 usage thread", text)
             self.assertIn("It burns through limits faster.", text)
+
+    def test_extract_text_handles_hacker_news_and_github_json(self) -> None:
+        hn_text = extract_text.json_to_text(
+            json.dumps({"title": "GPT-5.5 on Codex", "text": "Useful HN comment."}),
+            "Hacker News",
+        )
+        github_text = extract_text.json_to_text(
+            json.dumps({"title": "Limit hit very early", "body": "Usage details here.", "state": "open"}),
+            "github-issue",
+        )
+
+        self.assertIn("title: GPT-5.5 on Codex", hn_text)
+        self.assertIn("text: Useful HN comment.", hn_text)
+        self.assertIn("title: Limit hit very early", github_text)
+        self.assertIn("body: Usage details here.", github_text)
+
 
     def test_build_inventory_uses_extracted_text_and_seed_metadata(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:

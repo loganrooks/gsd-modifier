@@ -85,6 +85,10 @@ def json_to_text(raw_json: str, platform: str) -> str:
         return ""
     if platform == "reddit":
         return reddit_json_to_text(payload)
+    if platform == "Hacker News":
+        return keyed_json_to_text(payload, ("title", "text", "url"))
+    if platform in {"github-issue", "github_issue"}:
+        return keyed_json_to_text(payload, ("title", "body", "state", "created_at", "updated_at"))
     return generic_json_to_text(payload)
 
 
@@ -131,6 +135,17 @@ def generic_json_to_text(payload: Any) -> str:
                 walk(child)
 
     walk(payload)
+    return common.normalize_text("\n\n".join(parts))
+
+
+def keyed_json_to_text(payload: Any, keys: tuple[str, ...]) -> str:
+    if not isinstance(payload, dict):
+        return generic_json_to_text(payload)
+    parts = []
+    for key in keys:
+        value = payload.get(key)
+        if isinstance(value, str) and value.strip():
+            parts.append(f"{key}: {value}")
     return common.normalize_text("\n\n".join(parts))
 
 

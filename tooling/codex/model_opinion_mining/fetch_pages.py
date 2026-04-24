@@ -5,9 +5,10 @@ from __future__ import annotations
 
 import argparse
 import pathlib
+import re
 import sys
 from typing import Any
-from urllib.parse import urlparse, urlunparse
+from urllib.parse import parse_qs, urlparse, urlunparse
 
 import requests
 
@@ -20,6 +21,7 @@ from tooling.codex.model_opinion_mining import common
 
 
 USER_AGENT = "gsd-modifier-model-opinion-mining/1.0"
+GITHUB_ISSUE_RE = re.compile(r"^/([^/]+)/([^/]+)/issues/([0-9]+)")
 
 
 def parse_args() -> argparse.Namespace:
@@ -36,9 +38,18 @@ def fetch_url_for_seed(seed: dict[str, Any]) -> str:
     if isinstance(explicit_fetch_url, str) and explicit_fetch_url.strip():
         return explicit_fetch_url
     url = str(seed["url"])
-    if seed.get("platform") != "reddit" or urlparse(url).path.endswith(".json"):
-        return url
     parsed = urlparse(url)
+    if parsed.netloc == "news.ycombinator.com":
+        item_ids = parse_qs(parsed.query).get("id", [])
+        if item_ids:
+            return f"https://hacker-news.firebaseio.com/v0/item/{item_ids[0]}.json"
+    if parsed.netloc == "github.com":
+        match = GITHUB_ISSUE_RE.match(parsed.path)
+        if match:
+            owner, repo, issue_number = match.groups()
+            return f"https://api.github.com/repos/{owner}/{repo}/issues/{issue_number}"
+    if seed.get("platform") != "reddit" or parsed.path.endswith(".json"):
+        return url
     path = parsed.path.rstrip("/") + "/.json"
     return urlunparse(parsed._replace(path=path))
 

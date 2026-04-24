@@ -1,0 +1,2001 @@
+[
+  {
+    "claim_tags": [
+      "usage",
+      "pricing",
+      "quota",
+      "capability"
+    ],
+    "collection_caveat": "Search-indexed Reddit sample; not representative.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/codex/comments/1strtsk/it_is_over/.json",
+    "fetched_at": "2026-04-24T01:09:29+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/codex \"It is over\" \"GPT-5.5\" \"usage\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/reddit-codex-2026-04-23-usage-it-is-over.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-codex-2026-04-23-usage-it-is-over",
+    "text_char_count": 17729,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/reddit-codex-2026-04-23-usage-it-is-over.txt",
+    "url": "https://www.reddit.com/r/codex/comments/1strtsk/it_is_over/"
+  },
+  {
+    "claim_tags": [
+      "capability",
+      "usage",
+      "frontend",
+      "large-codebase"
+    ],
+    "collection_caveat": "Single-user Reddit experience report; anecdotal.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/codex/comments/1stt056/my_thoughts_on_gpt5_after_more_than_an_hour_of_use/.json",
+    "fetched_at": "2026-04-24T01:09:29+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/codex \"GPT-5.5\" \"more than an hour\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/reddit-codex-2026-04-23-hour-use.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-codex-2026-04-23-hour-use",
+    "text_char_count": 8336,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/reddit-codex-2026-04-23-hour-use.txt",
+    "url": "https://www.reddit.com/r/codex/comments/1stt056/my_thoughts_on_gpt5_after_more_than_an_hour_of_use/"
+  },
+  {
+    "claim_tags": [
+      "capability",
+      "usage",
+      "launch"
+    ],
+    "collection_caveat": "Launch thread with mixed first reactions; anecdotal.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/codex/comments/1stqg9y/gpt55_is_here_lets_gooo/.json",
+    "fetched_at": "2026-04-24T01:09:30+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/codex \"GPT-5.5\" \"Codex\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/reddit-codex-2026-04-23-here-lets-go.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-codex-2026-04-23-here-lets-go",
+    "text_char_count": 15509,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/reddit-codex-2026-04-23-here-lets-go.txt",
+    "url": "https://www.reddit.com/r/codex/comments/1stqg9y/gpt55_is_here_lets_gooo/"
+  },
+  {
+    "claim_tags": [
+      "access",
+      "rollout",
+      "error"
+    ],
+    "collection_caveat": "Launch-window access thread; may reflect transient rollout behavior.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/codex/comments/1ssabg9/gpt55_now_on_codex/.json",
+    "fetched_at": "2026-04-24T01:09:30+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/codex \"GPT5.5 now on Codex\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/reddit-codex-2026-04-22-now-on-codex.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-codex-2026-04-22-now-on-codex",
+    "text_char_count": 11588,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/reddit-codex-2026-04-22-now-on-codex.txt",
+    "url": "https://www.reddit.com/r/codex/comments/1ssabg9/gpt55_now_on_codex/"
+  },
+  {
+    "claim_tags": [
+      "usage",
+      "fast-mode",
+      "pricing"
+    ],
+    "collection_caveat": "User interpretation of plan usage language; verify against official docs.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/codex/comments/1stub4j/openai_silently_increased_codex_fast_mode_plan/.json",
+    "fetched_at": "2026-04-24T01:09:31+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/codex \"GPT-5.5\" \"Fast mode\" \"usage\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/reddit-codex-2026-04-23-fast-mode-usage.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-codex-2026-04-23-fast-mode-usage",
+    "text_char_count": 808,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/reddit-codex-2026-04-23-fast-mode-usage.txt",
+    "url": "https://www.reddit.com/r/codex/comments/1stub4j/openai_silently_increased_codex_fast_mode_plan/"
+  },
+  {
+    "claim_tags": [
+      "pricing",
+      "usage",
+      "comparison"
+    ],
+    "collection_caveat": "Pricing complaint thread; claims require official-price cross-check.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/codex/comments/1sts42p/gpt_55_is_2x_more_expensive_in_comparison_to_54/.json",
+    "fetched_at": "2026-04-24T01:09:31+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/codex \"GPT 5.5\" \"2x more expensive\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/reddit-codex-2026-04-23-pricing-2x.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-codex-2026-04-23-pricing-2x",
+    "text_char_count": 13698,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/reddit-codex-2026-04-23-pricing-2x.txt",
+    "url": "https://www.reddit.com/r/codex/comments/1sts42p/gpt_55_is_2x_more_expensive_in_comparison_to_54/"
+  },
+  {
+    "claim_tags": [
+      "context-window",
+      "usage",
+      "codex"
+    ],
+    "collection_caveat": "Single-thread report about context availability; verify locally and officially.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/codex/comments/1stvd0t/just_found_out_they_turned_off_1m_context_gpt55/.json",
+    "fetched_at": "2026-04-24T01:09:32+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/codex \"GPT-5.5\" \"1M context\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/reddit-codex-2026-04-23-context-disabled.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-codex-2026-04-23-context-disabled",
+    "text_char_count": 3949,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/reddit-codex-2026-04-23-context-disabled.txt",
+    "url": "https://www.reddit.com/r/codex/comments/1stvd0t/just_found_out_they_turned_off_1m_context_gpt55/"
+  },
+  {
+    "claim_tags": [
+      "access",
+      "error",
+      "rollout"
+    ],
+    "collection_caveat": "Access-error report; likely launch-window sensitive.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/codex/comments/1sttyvr/gpt_55_error_in_the_latest_codex_anyone_else/.json",
+    "fetched_at": "2026-04-24T01:09:32+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/codex \"gpt 5.5 error in the latest codex\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/reddit-codex-2026-04-23-error-latest-codex.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-codex-2026-04-23-error-latest-codex",
+    "text_char_count": 270,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/reddit-codex-2026-04-23-error-latest-codex.txt",
+    "url": "https://www.reddit.com/r/codex/comments/1sttyvr/gpt_55_error_in_the_latest_codex_anyone_else/"
+  },
+  {
+    "claim_tags": [
+      "capability",
+      "frontend",
+      "role-execution"
+    ],
+    "collection_caveat": "Single-task capability anecdote; needs task artifact or reproduction.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/codex/comments/1stray7/gpt_55_is_way_better_than_gpt_54_for_uifrontend/.json",
+    "fetched_at": "2026-04-24T01:09:32+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/codex \"way better than GPT-5.4\" \"GPT-5.5\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/reddit-codex-2026-04-23-frontend-better.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-codex-2026-04-23-frontend-better",
+    "text_char_count": 2203,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/reddit-codex-2026-04-23-frontend-better.txt",
+    "url": "https://www.reddit.com/r/codex/comments/1stray7/gpt_55_is_way_better_than_gpt_54_for_uifrontend/"
+  },
+  {
+    "claim_tags": [
+      "launch",
+      "capability",
+      "pricing"
+    ],
+    "collection_caveat": "General OpenAI subreddit release discussion; not Codex-specific enough alone.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/OpenAI/comments/1stqe2n/openai_releases_spud_gpt55_model/.json",
+    "fetched_at": "2026-04-24T01:09:32+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/OpenAI \"GPT-5.5\" \"Codex\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/reddit-openai-2026-04-23-release-thread.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-openai-2026-04-23-release-thread",
+    "text_char_count": 3452,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/reddit-openai-2026-04-23-release-thread.txt",
+    "url": "https://www.reddit.com/r/OpenAI/comments/1stqe2n/openai_releases_spud_gpt55_model/"
+  },
+  {
+    "claim_tags": [
+      "access",
+      "rollout",
+      "leak"
+    ],
+    "collection_caveat": "Pre-release leak/access thread; use only for rollout-context hypotheses.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/OpenAI/comments/1ssb4jy/caught_the_massive_openai_codex_model_leak_on/.json",
+    "fetched_at": "2026-04-24T01:09:33+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/OpenAI \"gpt-5.5\" \"not supported\" \"ChatGPT account\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/reddit-openai-2026-04-22-leak-thread.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-openai-2026-04-22-leak-thread",
+    "text_char_count": 1817,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/reddit-openai-2026-04-22-leak-thread.txt",
+    "url": "https://www.reddit.com/r/OpenAI/comments/1ssb4jy/caught_the_massive_openai_codex_model_leak_on/"
+  },
+  {
+    "claim_tags": [
+      "comparison",
+      "capability",
+      "usage"
+    ],
+    "collection_caveat": "Cross-community comparison thread; likely partisan sampling.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/ClaudeCode/comments/1sszxc4/with_codex_55_dropping_today_anthropics_might_be/.json",
+    "fetched_at": "2026-04-24T01:09:33+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/ClaudeCode \"Codex 5.5\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/reddit-claudecode-2026-04-22-codex-55-comparison.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-claudecode-2026-04-22-codex-55-comparison",
+    "text_char_count": 48516,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/reddit-claudecode-2026-04-22-codex-55-comparison.txt",
+    "url": "https://www.reddit.com/r/ClaudeCode/comments/1sszxc4/with_codex_55_dropping_today_anthropics_might_be/"
+  },
+  {
+    "claim_tags": [
+      "capability",
+      "context-window",
+      "benchmark"
+    ],
+    "collection_caveat": "Public Reddit thread; user-reported comparison and may not generalize.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/codex/comments/1stsf76/gpt_55_is_noticably_better_at_long_context/.json",
+    "fetched_at": "2026-04-24T01:09:34+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/codex \"GPT-5.5\" \"long context\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/reddit-codex-2026-04-23-long-context-better.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-codex-2026-04-23-long-context-better",
+    "text_char_count": 2774,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/reddit-codex-2026-04-23-long-context-better.txt",
+    "url": "https://www.reddit.com/r/codex/comments/1stsf76/gpt_55_is_noticably_better_at_long_context/"
+  },
+  {
+    "claim_tags": [
+      "context-window",
+      "access",
+      "usage"
+    ],
+    "collection_caveat": "May reflect client/UI-specific behavior rather than official limits.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/codex/comments/1stxm09/why_does_gpt_55_in_codex_vs_code_ext_still_show_a/.json",
+    "fetched_at": "2026-04-24T01:09:35+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/codex \"GPT-5.5\" \"VS Code\" \"context\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/reddit-codex-2026-04-23-vscode-context-display.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-codex-2026-04-23-vscode-context-display",
+    "text_char_count": 329,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/reddit-codex-2026-04-23-vscode-context-display.txt",
+    "url": "https://www.reddit.com/r/codex/comments/1stxm09/why_does_gpt_55_in_codex_vs_code_ext_still_show_a/"
+  },
+  {
+    "claim_tags": [
+      "rollout",
+      "access",
+      "capability"
+    ],
+    "collection_caveat": "Stealth-launch framing is speculative and launch-window sensitive.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/codex/comments/1srpcs1/gpt55_stealth_launching_within_codex/.json",
+    "fetched_at": "2026-04-24T01:09:35+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/codex \"GPT5.5 stealth launching\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/reddit-codex-2026-04-22-stealth-launch.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-codex-2026-04-22-stealth-launch",
+    "text_char_count": 10184,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/reddit-codex-2026-04-22-stealth-launch.txt",
+    "url": "https://www.reddit.com/r/codex/comments/1srpcs1/gpt55_stealth_launching_within_codex/"
+  },
+  {
+    "claim_tags": [
+      "capability",
+      "frontend",
+      "planning"
+    ],
+    "collection_caveat": "GPT-5.4 baseline anecdote, not direct GPT-5.5 evidence.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/codex/comments/1rv9mpn/the_gpt54_codex_experience/.json",
+    "fetched_at": "2026-04-24T01:09:35+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/codex \"GPT-5.4 Codex experience\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/reddit-codex-2026-03-gpt54-experience.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-codex-2026-03-gpt54-experience",
+    "text_char_count": 796,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/reddit-codex-2026-03-gpt54-experience.txt",
+    "url": "https://www.reddit.com/r/codex/comments/1rv9mpn/the_gpt54_codex_experience/"
+  },
+  {
+    "claim_tags": [
+      "benchmark",
+      "capability",
+      "usage"
+    ],
+    "collection_caveat": "Early user test results; not controlled benchmark evidence.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/codex/comments/1rmke4z/early_gpt54_in_codex_results_as_strong_or/.json",
+    "fetched_at": "2026-04-24T01:09:35+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/codex \"early GPT-5.4 in Codex results\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/reddit-codex-2026-03-gpt54-early-results.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-codex-2026-03-gpt54-early-results",
+    "text_char_count": 6720,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/reddit-codex-2026-03-gpt54-early-results.txt",
+    "url": "https://www.reddit.com/r/codex/comments/1rmke4z/early_gpt54_in_codex_results_as_strong_or/"
+  },
+  {
+    "claim_tags": [
+      "benchmark",
+      "capability",
+      "rollout"
+    ],
+    "collection_caveat": "General OpenAI release thread; useful for reaction sampling, not Codex-specific alone.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/OpenAI/comments/1stqlnh/introducing_gpt55_openai/.json",
+    "fetched_at": "2026-04-24T01:09:36+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/OpenAI \"Introducing GPT-5.5\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/reddit-openai-2026-04-23-gpt55-official-discussion.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-openai-2026-04-23-gpt55-official-discussion",
+    "text_char_count": 24459,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/reddit-openai-2026-04-23-gpt55-official-discussion.txt",
+    "url": "https://www.reddit.com/r/OpenAI/comments/1stqlnh/introducing_gpt55_openai/"
+  },
+  {
+    "claim_tags": [
+      "access",
+      "error",
+      "usage"
+    ],
+    "collection_caveat": "CLI availability may differ by account, tier, or release stage.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://www.reddit.com/r/OpenAI/comments/1stu0px/codex_model_gpt55_not_updated_in_the_cli_yet/.json",
+    "fetched_at": "2026-04-24T01:09:37+00:00",
+    "http_status": 200,
+    "platform": "reddit",
+    "query": "site:reddit.com/r/OpenAI \"Codex model GPT-5.5 not updated in the CLI\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/reddit-openai-2026-04-23-cli-not-updated.json",
+    "safe_headers": {
+      "cache-control": "private, s-maxage=0, max-age=0, must-revalidate, no-store",
+      "content-type": "application/json; charset=UTF-8"
+    },
+    "source_id": "reddit-openai-2026-04-23-cli-not-updated",
+    "text_char_count": 361,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/reddit-openai-2026-04-23-cli-not-updated.txt",
+    "url": "https://www.reddit.com/r/OpenAI/comments/1stu0px/codex_model_gpt55_not_updated_in_the_cli_yet/"
+  },
+  {
+    "claim_tags": [
+      "usage",
+      "quota",
+      "access"
+    ],
+    "collection_caveat": "Relevant for Codex access/limits; does not explicitly compare GPT-5.5 to GPT-5.4.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://community.openai.com/t/usage-limits-of-codex-within-cursor/1356784",
+    "fetched_at": "2026-04-24T01:09:37+00:00",
+    "http_status": 200,
+    "platform": "OpenAI Community",
+    "query": "site:community.openai.com \"usage limits\" \"Codex\" \"Cursor\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/openai-community-2026-codex-usage-limits-cursor.html",
+    "safe_headers": {
+      "cache-control": "no-cache, no-store",
+      "content-type": "text/html; charset=utf-8",
+      "last-modified": "Fri, 23 Jan 2026 14:27:09 GMT"
+    },
+    "source_id": "openai-community-2026-codex-usage-limits-cursor",
+    "text_char_count": 12143,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/openai-community-2026-codex-usage-limits-cursor.txt",
+    "url": "https://community.openai.com/t/usage-limits-of-codex-within-cursor/1356784"
+  },
+  {
+    "claim_tags": [
+      "usage",
+      "quota",
+      "error",
+      "benchmark"
+    ],
+    "collection_caveat": "Observed consumption drift in Codex; model-version framing is indirect.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://community.openai.com/t/sudden-change-in-codex-usage-consumption-compared-to-previous-levels/1366148",
+    "fetched_at": "2026-04-24T01:09:37+00:00",
+    "http_status": 200,
+    "platform": "OpenAI Community",
+    "query": "site:community.openai.com \"Codex Usage Consumption\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/openai-community-2026-codex-usage-consumption-change.html",
+    "safe_headers": {
+      "cache-control": "no-cache, no-store",
+      "content-type": "text/html; charset=utf-8",
+      "last-modified": "Fri, 14 Nov 2025 21:11:11 GMT"
+    },
+    "source_id": "openai-community-2026-codex-usage-consumption-change",
+    "text_char_count": 2778,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/openai-community-2026-codex-usage-consumption-change.txt",
+    "url": "https://community.openai.com/t/sudden-change-in-codex-usage-consumption-compared-to-previous-levels/1366148"
+  },
+  {
+    "claim_tags": [
+      "capability",
+      "frontend",
+      "role-execution",
+      "planning"
+    ],
+    "collection_caveat": "Capability example; no explicit GPT-5.5 comparison.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://community.openai.com/t/codex-as-an-autonomous-engineer-refactoring-openstack-s-front-end-into-a-unified-streamlit-console/1365158",
+    "fetched_at": "2026-04-24T01:09:38+00:00",
+    "http_status": 200,
+    "platform": "OpenAI Community",
+    "query": "site:community.openai.com \"Codex as an Autonomous Engineer\" \"front end\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/openai-community-2026-codex-autonomous-openstack-frontend.html",
+    "safe_headers": {
+      "cache-control": "no-cache, no-store",
+      "content-type": "text/html; charset=utf-8",
+      "last-modified": "Wed, 05 Nov 2025 06:18:06 GMT"
+    },
+    "source_id": "openai-community-2026-codex-autonomous-openstack-frontend",
+    "text_char_count": 5659,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/openai-community-2026-codex-autonomous-openstack-frontend.txt",
+    "url": "https://community.openai.com/t/codex-as-an-autonomous-engineer-refactoring-openstack-s-front-end-into-a-unified-streamlit-console/1365158"
+  },
+  {
+    "claim_tags": [
+      "capability",
+      "error",
+      "access"
+    ],
+    "collection_caveat": "Tool-use bug report in GPT-5 Codex, adjacent rather than direct GPT-5.5 comparison.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://community.openai.com/t/gpt-5-codex-is-unable-to-use-file-search-tool-on-vector-stores/1363226",
+    "fetched_at": "2026-04-24T01:09:38+00:00",
+    "http_status": 200,
+    "platform": "OpenAI Community",
+    "query": "site:community.openai.com \"gpt-5-codex\" \"File Search\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/openai-community-2026-gpt5-codex-file-search-bug.html",
+    "safe_headers": {
+      "cache-control": "no-cache, no-store",
+      "content-type": "text/html; charset=utf-8",
+      "last-modified": "Mon, 20 Oct 2025 19:01:27 GMT"
+    },
+    "source_id": "openai-community-2026-gpt5-codex-file-search-bug",
+    "text_char_count": 1480,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/openai-community-2026-gpt5-codex-file-search-bug.txt",
+    "url": "https://community.openai.com/t/gpt-5-codex-is-unable-to-use-file-search-tool-on-vector-stores/1363226"
+  },
+  {
+    "claim_tags": [
+      "capability",
+      "planning",
+      "review",
+      "error"
+    ],
+    "collection_caveat": "Task-quality report; not direct model-version comparison.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://community.openai.com/t/codex-suggests-deprecated-api-assistants-responses-anyone-found-a-reliable-workaround/1361734",
+    "fetched_at": "2026-04-24T01:09:38+00:00",
+    "http_status": 200,
+    "platform": "OpenAI Community",
+    "query": "site:community.openai.com \"Codex suggests deprecated API\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/openai-community-2026-codex-deprecated-api-suggestions.html",
+    "safe_headers": {
+      "cache-control": "no-cache, no-store",
+      "content-type": "text/html; charset=utf-8",
+      "last-modified": "Thu, 09 Oct 2025 17:07:55 GMT"
+    },
+    "source_id": "openai-community-2026-codex-deprecated-api-suggestions",
+    "text_char_count": 1534,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/openai-community-2026-codex-deprecated-api-suggestions.txt",
+    "url": "https://community.openai.com/t/codex-suggests-deprecated-api-assistants-responses-anyone-found-a-reliable-workaround/1361734"
+  },
+  {
+    "claim_tags": [
+      "pricing",
+      "quota",
+      "context-window",
+      "capability",
+      "usage"
+    ],
+    "collection_caveat": "HN thread includes mixed speculation and impressions; treat as anecdotal.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://hacker-news.firebaseio.com/v0/item/47265045.json",
+    "fetched_at": "2026-04-24T01:09:39+00:00",
+    "http_status": 200,
+    "platform": "Hacker News",
+    "query": "site:news.ycombinator.com \"GPT-5.4\" \"Codex\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/hackernews-2026-gpt54-main-discussion.json",
+    "safe_headers": {
+      "cache-control": "no-cache",
+      "content-type": "application/json; charset=utf-8"
+    },
+    "source_id": "hackernews-2026-gpt54-main-discussion",
+    "text_char_count": 440,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/hackernews-2026-gpt54-main-discussion.txt",
+    "url": "https://news.ycombinator.com/item?id=47265045"
+  },
+  {
+    "claim_tags": [
+      "rollout",
+      "capability",
+      "benchmark"
+    ],
+    "collection_caveat": "Launch/index thread; useful public entry point, but may duplicate main discussion.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://hacker-news.firebaseio.com/v0/item/47265005.json",
+    "fetched_at": "2026-04-24T01:09:39+00:00",
+    "http_status": 200,
+    "platform": "Hacker News",
+    "query": "site:news.ycombinator.com \"GPT-5.4\" \"OpenAI\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/hackernews-2026-gpt54-launch-index.json",
+    "safe_headers": {
+      "cache-control": "no-cache",
+      "content-type": "application/json; charset=utf-8"
+    },
+    "source_id": "hackernews-2026-gpt54-launch-index",
+    "text_char_count": 67,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/hackernews-2026-gpt54-launch-index.txt",
+    "url": "https://news.ycombinator.com/item?id=47265005"
+  },
+  {
+    "claim_tags": [
+      "error",
+      "rollout",
+      "access"
+    ],
+    "collection_caveat": "Error-string thread may reflect rollout artifacts rather than stable product behavior.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://hacker-news.firebaseio.com/v0/item/47226767.json",
+    "fetched_at": "2026-04-24T01:09:39+00:00",
+    "http_status": 200,
+    "platform": "Hacker News",
+    "query": "site:news.ycombinator.com \"Codex CLI error\" \"GPT-5.4\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/hackernews-2026-codex-cli-error-string.json",
+    "safe_headers": {
+      "cache-control": "no-cache",
+      "content-type": "application/json; charset=utf-8"
+    },
+    "source_id": "hackernews-2026-codex-cli-error-string",
+    "text_char_count": 485,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/hackernews-2026-codex-cli-error-string.txt",
+    "url": "https://news.ycombinator.com/item?id=47226767"
+  },
+  {
+    "claim_tags": [
+      "capability",
+      "role-execution",
+      "benchmark",
+      "rollout"
+    ],
+    "collection_caveat": "Held for retry/API verification; previous direct probe hit rate limits.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://hacker-news.firebaseio.com/v0/item/47265491.json",
+    "fetched_at": "2026-04-24T01:09:39+00:00",
+    "http_status": 200,
+    "platform": "Hacker News",
+    "query": "site:news.ycombinator.com \"GPT-5.4\" \"Codex model\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/hackernews-2026-gpt54-codex-model-thread.json",
+    "safe_headers": {
+      "cache-control": "no-cache",
+      "content-type": "application/json; charset=utf-8"
+    },
+    "source_id": "hackernews-2026-gpt54-codex-model-thread",
+    "text_char_count": 45,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/hackernews-2026-gpt54-codex-model-thread.txt",
+    "url": "https://news.ycombinator.com/item?id=47265491"
+  },
+  {
+    "claim_tags": [
+      "pricing",
+      "quota"
+    ],
+    "collection_caveat": "Held for retry/API verification; pricing discussion is broad, not Codex-specific.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://hacker-news.firebaseio.com/v0/item/47265144.json",
+    "fetched_at": "2026-04-24T01:09:39+00:00",
+    "http_status": 200,
+    "platform": "Hacker News",
+    "query": "site:news.ycombinator.com \"GPT-5.4\" \"pricing\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/hackernews-2026-gpt54-pricing-thread.json",
+    "safe_headers": {
+      "cache-control": "no-cache",
+      "content-type": "application/json; charset=utf-8"
+    },
+    "source_id": "hackernews-2026-gpt54-pricing-thread",
+    "text_char_count": 370,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/hackernews-2026-gpt54-pricing-thread.txt",
+    "url": "https://news.ycombinator.com/item?id=47265144"
+  },
+  {
+    "claim_tags": [
+      "access",
+      "usage",
+      "capability",
+      "role-execution"
+    ],
+    "collection_caveat": "Held for retry/API verification; short thread but direct usage question.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://hacker-news.firebaseio.com/v0/item/47265568.json",
+    "fetched_at": "2026-04-24T01:09:39+00:00",
+    "http_status": 200,
+    "platform": "Hacker News",
+    "query": "site:news.ycombinator.com \"using Codex\" \"GPT-5.4\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/hackernews-2026-codex-vs-gpt54-question.json",
+    "safe_headers": {
+      "cache-control": "no-cache",
+      "content-type": "application/json; charset=utf-8"
+    },
+    "source_id": "hackernews-2026-codex-vs-gpt54-question",
+    "text_char_count": 60,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/hackernews-2026-codex-vs-gpt54-question.txt",
+    "url": "https://news.ycombinator.com/item?id=47265568"
+  },
+  {
+    "claim_tags": [
+      "usage",
+      "quota",
+      "pricing",
+      "capability",
+      "access"
+    ],
+    "collection_caveat": "Held for retry/API verification; availability/quota discussion.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://hacker-news.firebaseio.com/v0/item/47416058.json",
+    "fetched_at": "2026-04-24T01:09:39+00:00",
+    "http_status": 200,
+    "platform": "Hacker News",
+    "query": "site:news.ycombinator.com \"GPT-5.4 mini\" \"Codex\" \"quota\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/hackernews-2026-gpt54-mini-codex-quota.json",
+    "safe_headers": {
+      "cache-control": "no-cache",
+      "content-type": "application/json; charset=utf-8"
+    },
+    "source_id": "hackernews-2026-gpt54-mini-codex-quota",
+    "text_char_count": 347,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/hackernews-2026-gpt54-mini-codex-quota.txt",
+    "url": "https://news.ycombinator.com/item?id=47416058"
+  },
+  {
+    "claim_tags": [
+      "benchmark",
+      "capability",
+      "review"
+    ],
+    "collection_caveat": "Held for retry/API verification; adjacent benchmark discussion, not Codex-only.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://hacker-news.firebaseio.com/v0/item/47265931.json",
+    "fetched_at": "2026-04-24T01:09:39+00:00",
+    "http_status": 200,
+    "platform": "Hacker News",
+    "query": "site:news.ycombinator.com \"GPT-5.4\" \"SRE benchmark\"",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/hackernews-2026-gpt54-sre-benchmark.json",
+    "safe_headers": {
+      "cache-control": "no-cache",
+      "content-type": "application/json; charset=utf-8"
+    },
+    "source_id": "hackernews-2026-gpt54-sre-benchmark",
+    "text_char_count": 153,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/hackernews-2026-gpt54-sre-benchmark.txt",
+    "url": "https://news.ycombinator.com/item?id=47265931"
+  },
+  {
+    "claim_tags": [
+      "access",
+      "usage",
+      "role-execution",
+      "error"
+    ],
+    "collection_caveat": "Public GitHub issue; verify relevance and status before inclusion.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/14181",
+    "fetched_at": "2026-04-24T01:09:40+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "GitHub openai codex issue 14181 GPT-5.4 unsupported ChatGPT account",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-14181.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"36014bc1037e41497869debd1a5b4b4f449ef4cb0edb52deb0588f44b2512229\"",
+      "last-modified": "Tue, 10 Mar 2026 18:07:23 GMT"
+    },
+    "source_id": "github-openai-codex-issue-14181",
+    "text_char_count": 880,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-14181.txt",
+    "url": "https://github.com/openai/codex/issues/14181"
+  },
+  {
+    "claim_tags": [
+      "context-window",
+      "access",
+      "usage",
+      "error"
+    ],
+    "collection_caveat": "Public GitHub issue; verify relevance and status before inclusion.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/13738",
+    "fetched_at": "2026-04-24T01:09:40+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "GitHub openai codex issue 13738 GPT-5.4 context window shown as 258K",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-13738.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"81767c9bfc9dd8a67a4126c9eed1b8ec95e7450d4add1614f5db92c5b2d25942\"",
+      "last-modified": "Thu, 23 Apr 2026 13:47:46 GMT"
+    },
+    "source_id": "github-openai-codex-issue-13738",
+    "text_char_count": 1812,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-13738.txt",
+    "url": "https://github.com/openai/codex/issues/13738"
+  },
+  {
+    "claim_tags": [
+      "access",
+      "usage",
+      "role-execution",
+      "error"
+    ],
+    "collection_caveat": "Public GitHub issue; verify relevance and status before inclusion.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/16984",
+    "fetched_at": "2026-04-24T01:09:40+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "GitHub openai codex issue 16984 Codex Desktop ignores config model gpt-5.4",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-16984.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"cb16394f57fbbefee892e1bdd701537cd5f1f5b7752c68470b46b5afdf9271d8\"",
+      "last-modified": "Wed, 22 Apr 2026 03:31:48 GMT"
+    },
+    "source_id": "github-openai-codex-issue-16984",
+    "text_char_count": 2245,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-16984.txt",
+    "url": "https://github.com/openai/codex/issues/16984"
+  },
+  {
+    "claim_tags": [
+      "context-window",
+      "usage",
+      "access",
+      "error"
+    ],
+    "collection_caveat": "Public GitHub issue; verify relevance and status before inclusion.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/16139",
+    "fetched_at": "2026-04-24T01:09:40+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "GitHub openai codex issue 16139 context settings remain active after switching models",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-16139.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"f281b7ff5e15ef5960d1a5b47db8dd84d7c80b0c79a3fdbed450800aafc09c55\"",
+      "last-modified": "Sat, 28 Mar 2026 23:35:36 GMT"
+    },
+    "source_id": "github-openai-codex-issue-16139",
+    "text_char_count": 2485,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-16139.txt",
+    "url": "https://github.com/openai/codex/issues/16139"
+  },
+  {
+    "claim_tags": [
+      "usage",
+      "role-execution",
+      "error",
+      "review"
+    ],
+    "collection_caveat": "Public GitHub issue; verify relevance and status before inclusion.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/14341",
+    "fetched_at": "2026-04-24T01:09:41+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "GitHub openai codex issue 14341 GPT-5.4 false completion",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-14341.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"0ed277140ee42f7660bf517a0ff080efc6500b3a1b65c4b800746bcd7ee851a0\"",
+      "last-modified": "Sat, 18 Apr 2026 10:54:59 GMT"
+    },
+    "source_id": "github-openai-codex-issue-14341",
+    "text_char_count": 3458,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-14341.txt",
+    "url": "https://github.com/openai/codex/issues/14341"
+  },
+  {
+    "claim_tags": [
+      "usage",
+      "latency",
+      "error",
+      "role-execution"
+    ],
+    "collection_caveat": "Public GitHub issue; verify relevance and status before inclusion.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/14795",
+    "fetched_at": "2026-04-24T01:09:41+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "GitHub openai codex issue 14795 GPT-5.4 first turn slow",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-14795.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"46e33f1543d5e20127b2f4aab66c051ad1cb3d5ecf2256331ef5aa09f0f88cd4\"",
+      "last-modified": "Mon, 20 Apr 2026 11:50:59 GMT"
+    },
+    "source_id": "github-openai-codex-issue-14795",
+    "text_char_count": 3972,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-14795.txt",
+    "url": "https://github.com/openai/codex/issues/14795"
+  },
+  {
+    "claim_tags": [
+      "usage",
+      "context-window",
+      "role-execution",
+      "error"
+    ],
+    "collection_caveat": "Public GitHub issue; verify relevance and status before inclusion.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/13823",
+    "fetched_at": "2026-04-24T01:09:41+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "GitHub openai codex issue 13823 GPT-5.4 unrelated context patterns",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-13823.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"e83ce0d79564b4c4841e46458adab690ebb00a8d666c56c2897d15a717f6aa55\"",
+      "last-modified": "Sun, 29 Mar 2026 18:30:10 GMT"
+    },
+    "source_id": "github-openai-codex-issue-13823",
+    "text_char_count": 4230,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-13823.txt",
+    "url": "https://github.com/openai/codex/issues/13823"
+  },
+  {
+    "claim_tags": [
+      "usage",
+      "quota",
+      "gpt-5.5",
+      "access"
+    ],
+    "collection_caveat": "First-party Codex issue; single-user report about GPT-5.5 limit behavior.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/19215",
+    "fetched_at": "2026-04-24T01:09:41+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "repo:openai/codex GPT-5.5 limit hit very early",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-19215.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"c844adaf0e115a9f795d7bcee7d4f2256ce2be618f2abeaf98fba5a7c5bc4a6c\"",
+      "last-modified": "Thu, 23 Apr 2026 22:14:20 GMT"
+    },
+    "source_id": "github-openai-codex-issue-19215",
+    "text_char_count": 1408,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-19215.txt",
+    "url": "https://github.com/openai/codex/issues/19215"
+  },
+  {
+    "claim_tags": [
+      "access",
+      "error",
+      "gpt-5.5",
+      "rollout"
+    ],
+    "collection_caveat": "First-party Codex issue; likely launch-window metadata/access problem.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/19227",
+    "fetched_at": "2026-04-24T01:09:42+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "repo:openai/codex GPT-5.5 model metadata not found",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-19227.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"2093e7cf206a325d694c7464e90bcff95579cfd619e66ff2eae5d76ef12583e1\"",
+      "last-modified": "Thu, 23 Apr 2026 23:17:41 GMT"
+    },
+    "source_id": "github-openai-codex-issue-19227",
+    "text_char_count": 1021,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-19227.txt",
+    "url": "https://github.com/openai/codex/issues/19227"
+  },
+  {
+    "claim_tags": [
+      "access",
+      "error",
+      "gpt-5.5",
+      "desktop"
+    ],
+    "collection_caveat": "First-party Codex issue; UI-specific report rather than direct model-quality evidence.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/19213",
+    "fetched_at": "2026-04-24T01:09:42+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "repo:openai/codex GPT-5.5 Desktop clicking model has no effect",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-19213.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"bf9c8d032ba99cb51acbb02a235cabc9ce97b22025982191a7acfcf1d1b1f41e\"",
+      "last-modified": "Thu, 23 Apr 2026 23:17:56 GMT"
+    },
+    "source_id": "github-openai-codex-issue-19213",
+    "text_char_count": 1792,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-19213.txt",
+    "url": "https://github.com/openai/codex/issues/19213"
+  },
+  {
+    "claim_tags": [
+      "usage",
+      "quota",
+      "pricing",
+      "gpt-5.5",
+      "fast-mode"
+    ],
+    "collection_caveat": "First-party Codex issue; user report directly relevant to quota burn and perceived speed.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/19241",
+    "fetched_at": "2026-04-24T01:09:42+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "repo:openai/codex GPT-5.5 Fast mode usage increased plan usage",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-19241.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"2ddbdfae8813e88a918affbf7b38699b16862db46d04db29372f807fe8c8bf6b\"",
+      "last-modified": "Fri, 24 Apr 2026 00:30:09 GMT"
+    },
+    "source_id": "github-openai-codex-issue-19241",
+    "text_char_count": 2447,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-19241.txt",
+    "url": "https://github.com/openai/codex/issues/19241"
+  },
+  {
+    "claim_tags": [
+      "context-window",
+      "config",
+      "gpt-5.5",
+      "error"
+    ],
+    "collection_caveat": "First-party Codex issue; context/config behavior may be client-version specific.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/19185",
+    "fetched_at": "2026-04-24T01:09:43+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "repo:openai/codex context window settings not respected GPT-5.5",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-19185.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"3360429711d053c8f35eadfae2777abff503526817c862a448c72e95dc6fa17f\"",
+      "last-modified": "Thu, 23 Apr 2026 21:44:09 GMT"
+    },
+    "source_id": "github-openai-codex-issue-19185",
+    "text_char_count": 1459,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-19185.txt",
+    "url": "https://github.com/openai/codex/issues/19185"
+  },
+  {
+    "claim_tags": [
+      "gpt-5.5",
+      "desktop",
+      "error",
+      "workflow"
+    ],
+    "collection_caveat": "First-party Codex issue; broad regression report after GPT-5.5 update.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/19249",
+    "fetched_at": "2026-04-24T01:09:43+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "repo:openai/codex Desktop regression after GPT-5.5 update",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-19249.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"58d6574468d5ad6bdba9f023fd66108979c7189c5646e0c1293be59f04681291\"",
+      "last-modified": "Fri, 24 Apr 2026 01:03:14 GMT"
+    },
+    "source_id": "github-openai-codex-issue-19249",
+    "text_char_count": 3663,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-19249.txt",
+    "url": "https://github.com/openai/codex/issues/19249"
+  },
+  {
+    "claim_tags": [
+      "model-selection",
+      "gpt-5.4",
+      "subagent",
+      "runtime-visibility"
+    ],
+    "collection_caveat": "First-party Codex issue; relevant to requested-vs-effective model tracking.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/16548",
+    "fetched_at": "2026-04-24T01:09:43+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "repo:openai/codex spawn_agent ignores requested gpt-5.4-mini",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-16548.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"12908325f6c389b01fc5d15e9725508492648fa6decf703cebc9cfa860cdeb70\"",
+      "last-modified": "Sat, 11 Apr 2026 18:19:58 GMT"
+    },
+    "source_id": "github-openai-codex-issue-16548",
+    "text_char_count": 2498,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-16548.txt",
+    "url": "https://github.com/openai/codex/issues/16548"
+  },
+  {
+    "claim_tags": [
+      "model-selection",
+      "gpt-5.4",
+      "subagent",
+      "runtime-visibility"
+    ],
+    "collection_caveat": "First-party Codex issue; relevant to child-agent effective-model evidence.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/15177",
+    "fetched_at": "2026-04-24T01:09:43+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "repo:openai/codex spawn_agent model metadata gpt-5.4-mini gpt-5.4",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-15177.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"34643b97adc295228db2216115f8e61936edd14787f187d55ebc3504c0420e2c\"",
+      "last-modified": "Sat, 04 Apr 2026 12:22:15 GMT"
+    },
+    "source_id": "github-openai-codex-issue-15177",
+    "text_char_count": 3928,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-15177.txt",
+    "url": "https://github.com/openai/codex/issues/15177"
+  },
+  {
+    "claim_tags": [
+      "model-selection",
+      "gpt-5.4",
+      "desktop",
+      "access"
+    ],
+    "collection_caveat": "First-party Codex issue; model-selection behavior may be version-specific.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/17933",
+    "fetched_at": "2026-04-24T01:09:44+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "repo:openai/codex new conversation ignores selected model GPT-5.4",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-17933.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"9d884e474fad353d9f17bef139733b05f18599ff82b06f5f0654e5cd36f4f2bd\"",
+      "last-modified": "Wed, 15 Apr 2026 12:43:24 GMT"
+    },
+    "source_id": "github-openai-codex-issue-17933",
+    "text_char_count": 1461,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-17933.txt",
+    "url": "https://github.com/openai/codex/issues/17933"
+  },
+  {
+    "claim_tags": [
+      "access",
+      "error",
+      "gpt-5.4",
+      "rollout"
+    ],
+    "collection_caveat": "First-party Codex issue; access/runtime availability report.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/18793",
+    "fetched_at": "2026-04-24T01:09:44+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "repo:openai/codex Model not found gpt-5.4",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-18793.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"f9d2b88027a68df9637fb40c3c43dd087edda41f271a967cedcc1ac86b8b0217\"",
+      "last-modified": "Tue, 21 Apr 2026 02:20:16 GMT"
+    },
+    "source_id": "github-openai-codex-issue-18793",
+    "text_char_count": 1010,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-18793.txt",
+    "url": "https://github.com/openai/codex/issues/18793"
+  },
+  {
+    "claim_tags": [
+      "usage",
+      "quota",
+      "ui"
+    ],
+    "collection_caveat": "First-party Codex issue; UI/usage-limit visibility, not model-specific.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/15883",
+    "fetched_at": "2026-04-24T01:09:44+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "repo:openai/codex usage limits always visible",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-15883.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"55bb8daf58cdf9a5c2e8c67be73f21f89896e87b2e460bae0a941848c6c27649\"",
+      "last-modified": "Sat, 18 Apr 2026 14:05:51 GMT"
+    },
+    "source_id": "github-openai-codex-issue-15883",
+    "text_char_count": 439,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-15883.txt",
+    "url": "https://github.com/openai/codex/issues/15883"
+  },
+  {
+    "claim_tags": [
+      "usage",
+      "quota",
+      "context-window",
+      "ui"
+    ],
+    "collection_caveat": "First-party Codex issue; usage visibility and limits information.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/18201",
+    "fetched_at": "2026-04-24T01:09:45+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "repo:openai/codex improve context usage visibility limits information",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-18201.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"040b90f166f2676c84403e0a97dcaa6c12638c33e06ef352b7cbd97a49559628\"",
+      "last-modified": "Sat, 18 Apr 2026 15:18:33 GMT"
+    },
+    "source_id": "github-openai-codex-issue-18201",
+    "text_char_count": 1181,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-18201.txt",
+    "url": "https://github.com/openai/codex/issues/18201"
+  },
+  {
+    "claim_tags": [
+      "usage",
+      "quota",
+      "dashboard",
+      "access"
+    ],
+    "collection_caveat": "First-party Codex issue; mismatch between client and dashboard limit signals.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/16909",
+    "fetched_at": "2026-04-24T01:09:45+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "repo:openai/codex usage limit reached dashboard no rate limits",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-16909.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"8e3472ff1f230ca765c29f667fb68a2524ba2cbf4e55ee212af1ba9cf2eafabf\"",
+      "last-modified": "Thu, 09 Apr 2026 18:05:39 GMT"
+    },
+    "source_id": "github-openai-codex-issue-16909",
+    "text_char_count": 2010,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-16909.txt",
+    "url": "https://github.com/openai/codex/issues/16909"
+  },
+  {
+    "claim_tags": [
+      "usage",
+      "quota",
+      "compaction",
+      "status"
+    ],
+    "collection_caveat": "First-party Codex issue; usage-limit/status inconsistency.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/16847",
+    "fetched_at": "2026-04-24T01:09:45+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "repo:openai/codex compaction hit usage limit status showing available",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-16847.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"9713e11644216d13df340d1d2c58766e9cd2144d5b257cd44658a00453f8422f\"",
+      "last-modified": "Sat, 18 Apr 2026 19:07:14 GMT"
+    },
+    "source_id": "github-openai-codex-issue-16847",
+    "text_char_count": 1693,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-16847.txt",
+    "url": "https://github.com/openai/codex/issues/16847"
+  },
+  {
+    "claim_tags": [
+      "usage",
+      "quota",
+      "status",
+      "error"
+    ],
+    "collection_caveat": "First-party Codex issue; older usage-limit mismatch report.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/12299",
+    "fetched_at": "2026-04-24T01:09:45+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "repo:openai/codex You've hit your usage limit despite remaining",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-12299.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"8879546345bfe7183526dadba30b4ff795f268d2b7520c4ce0f2cb1c01000ed3\"",
+      "last-modified": "Thu, 16 Apr 2026 18:58:00 GMT"
+    },
+    "source_id": "github-openai-codex-issue-12299",
+    "text_char_count": 1191,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-12299.txt",
+    "url": "https://github.com/openai/codex/issues/12299"
+  },
+  {
+    "claim_tags": [
+      "context-window",
+      "model-selection",
+      "compaction",
+      "gpt-5.4"
+    ],
+    "collection_caveat": "First-party Codex issue; relevant to model-aware context settings.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/16140",
+    "fetched_at": "2026-04-24T01:09:46+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "repo:openai/codex context window auto-compaction settings model-aware",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-16140.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"d06ba951b7acc2878a08966958906f6d981fe806b57f0a5523eeaa8c6642648a\"",
+      "last-modified": "Sat, 11 Apr 2026 18:21:24 GMT"
+    },
+    "source_id": "github-openai-codex-issue-16140",
+    "text_char_count": 1949,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-16140.txt",
+    "url": "https://github.com/openai/codex/issues/16140"
+  },
+  {
+    "claim_tags": [
+      "context-window",
+      "model-selection",
+      "config"
+    ],
+    "collection_caveat": "First-party Codex issue; context tier selection and model metadata.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://api.github.com/repos/openai/codex/issues/13653",
+    "fetched_at": "2026-04-24T01:09:46+00:00",
+    "http_status": 200,
+    "platform": "github-issue",
+    "query": "repo:openai/codex explicit context-length selection models multiple context tiers",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/github-openai-codex-issue-13653.json",
+    "safe_headers": {
+      "cache-control": "public, max-age=60, s-maxage=60",
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"8f0e61fa7fbb2ba402d2808eadd723b3ef1b3ca290227ef9d25e04b48ca1fe5e\"",
+      "last-modified": "Sat, 11 Apr 2026 18:21:38 GMT"
+    },
+    "source_id": "github-openai-codex-issue-13653",
+    "text_char_count": 1560,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/github-openai-codex-issue-13653.txt",
+    "url": "https://github.com/openai/codex/issues/13653"
+  },
+  {
+    "claim_tags": [
+      "announcement",
+      "codex-ide-extension",
+      "chatgpt-subscription",
+      "approval-modes",
+      "api-key"
+    ],
+    "collection_caveat": "Announcement thread with staff framing plus user replies; product positioning, not model-quality proof.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://community.openai.com/t/introducing-the-codex-ide-extension/1354930",
+    "fetched_at": "2026-04-24T01:09:46+00:00",
+    "http_status": 200,
+    "platform": "OpenAI Community",
+    "query": "site:community.openai.com/t introducing Codex IDE extension",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/openai-community-2026-codex-ide-extension.html",
+    "safe_headers": {
+      "cache-control": "no-cache, no-store",
+      "content-type": "text/html; charset=utf-8",
+      "last-modified": "Sat, 06 Sep 2025 02:50:30 GMT"
+    },
+    "source_id": "openai-community-2026-codex-ide-extension",
+    "text_char_count": 7645,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/openai-community-2026-codex-ide-extension.txt",
+    "url": "https://community.openai.com/t/introducing-the-codex-ide-extension/1354930"
+  },
+  {
+    "claim_tags": [
+      "chat-mode-behavior",
+      "unexpected-file-edits",
+      "agent-vs-chat",
+      "bug-report"
+    ],
+    "collection_caveat": "Anecdotal behavior report; useful for workflow failure modes.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://community.openai.com/t/codex-edits-files-even-chat-mode/1368649",
+    "fetched_at": "2026-04-24T01:09:47+00:00",
+    "http_status": 200,
+    "platform": "OpenAI Community",
+    "query": "site:community.openai.com/t Codex edits files even chat mode",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/openai-community-2026-codex-edits-files-chat-mode.html",
+    "safe_headers": {
+      "cache-control": "no-cache, no-store",
+      "content-type": "text/html; charset=utf-8",
+      "last-modified": "Tue, 16 Dec 2025 07:35:48 GMT"
+    },
+    "source_id": "openai-community-2026-codex-edits-files-chat-mode",
+    "text_char_count": 6791,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/openai-community-2026-codex-edits-files-chat-mode.txt",
+    "url": "https://community.openai.com/t/codex-edits-files-even-chat-mode/1368649"
+  },
+  {
+    "claim_tags": [
+      "approval-prompts",
+      "full-access-mode",
+      "windows-behavior",
+      "cli-vs-ide",
+      "bug-report"
+    ],
+    "collection_caveat": "Support thread about approval/edit friction; environment-specific.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://community.openai.com/t/codex-cli-and-ide-prompting-for-approval-to-edit-files/1354993",
+    "fetched_at": "2026-04-24T01:09:47+00:00",
+    "http_status": 200,
+    "platform": "OpenAI Community",
+    "query": "site:community.openai.com/t Codex CLI IDE approval edit files",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/openai-community-2026-codex-approval-edit-files.html",
+    "safe_headers": {
+      "cache-control": "no-cache, no-store",
+      "content-type": "text/html; charset=utf-8",
+      "last-modified": "Wed, 17 Sep 2025 11:03:08 GMT"
+    },
+    "source_id": "openai-community-2026-codex-approval-edit-files",
+    "text_char_count": 3031,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/openai-community-2026-codex-approval-edit-files.txt",
+    "url": "https://community.openai.com/t/codex-cli-and-ide-prompting-for-approval-to-edit-files/1354993"
+  },
+  {
+    "claim_tags": [
+      "announcement",
+      "gpt-5.1-codex-max",
+      "long-horizon-workflows",
+      "compaction",
+      "token-efficiency"
+    ],
+    "collection_caveat": "Nearby model variant, not GPT-5.4/5.5 directly; useful for role/long-horizon context.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://community.openai.com/t/introducing-gpt-5-1-codex-max-enhanced-reasoning-and-long-horizon-workflows/1366846",
+    "fetched_at": "2026-04-24T01:09:47+00:00",
+    "http_status": 200,
+    "platform": "OpenAI Community",
+    "query": "site:community.openai.com/t GPT-5.1 Codex Max enhanced reasoning long horizon",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/openai-community-2026-gpt51-codex-max.html",
+    "safe_headers": {
+      "cache-control": "no-cache, no-store",
+      "content-type": "text/html; charset=utf-8",
+      "last-modified": "Thu, 27 Nov 2025 00:16:14 GMT"
+    },
+    "source_id": "openai-community-2026-gpt51-codex-max",
+    "text_char_count": 7749,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/openai-community-2026-gpt51-codex-max.txt",
+    "url": "https://community.openai.com/t/introducing-gpt-5-1-codex-max-enhanced-reasoning-and-long-horizon-workflows/1366846"
+  },
+  {
+    "claim_tags": [
+      "quality-regression",
+      "gpt-5-codex",
+      "gpt-5.1-codex",
+      "feedback",
+      "stream-disconnect"
+    ],
+    "collection_caveat": "Complaint thread; perceived regression, not controlled benchmark.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://community.openai.com/t/gpt-5-5-1-codex-quality-degrading-over-last-month-or-so/1366694",
+    "fetched_at": "2026-04-24T01:09:48+00:00",
+    "http_status": 200,
+    "platform": "OpenAI Community",
+    "query": "site:community.openai.com/t gpt 5 codex quality degrading",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/openai-community-2026-codex-quality-degrading.html",
+    "safe_headers": {
+      "cache-control": "no-cache, no-store",
+      "content-type": "text/html; charset=utf-8",
+      "last-modified": "Mon, 02 Feb 2026 15:38:33 GMT"
+    },
+    "source_id": "openai-community-2026-codex-quality-degrading",
+    "text_char_count": 18144,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/openai-community-2026-codex-quality-degrading.txt",
+    "url": "https://community.openai.com/t/gpt-5-5-1-codex-quality-degrading-over-last-month-or-so/1366694"
+  },
+  {
+    "claim_tags": [
+      "github-integration",
+      "pr-review",
+      "workflow-gap",
+      "support-thread"
+    ],
+    "collection_caveat": "Focused on GitHub PR review behavior rather than core model quality.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://community.openai.com/t/codex-in-github-not-reviewing-prs/1358847",
+    "fetched_at": "2026-04-24T01:09:48+00:00",
+    "http_status": 200,
+    "platform": "OpenAI Community",
+    "query": "site:community.openai.com/t Codex in GitHub not reviewing PRs",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/openai-community-2026-codex-github-pr-review.html",
+    "safe_headers": {
+      "cache-control": "no-cache, no-store",
+      "content-type": "text/html; charset=utf-8",
+      "last-modified": "Thu, 22 Jan 2026 19:05:14 GMT"
+    },
+    "source_id": "openai-community-2026-codex-github-pr-review",
+    "text_char_count": 6626,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/openai-community-2026-codex-github-pr-review.txt",
+    "url": "https://community.openai.com/t/codex-in-github-not-reviewing-prs/1358847"
+  },
+  {
+    "claim_tags": [
+      "pull-request-creation",
+      "failure-mode",
+      "github-workflow",
+      "bug-report"
+    ],
+    "collection_caveat": "Older thread; useful historical workflow failure signal.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://community.openai.com/t/codex-started-failing-to-create-new-pr/1264529",
+    "fetched_at": "2026-04-24T01:09:49+00:00",
+    "http_status": 200,
+    "platform": "OpenAI Community",
+    "query": "site:community.openai.com/t Codex failing to create new PR",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/openai-community-2026-codex-pr-create-fail.html",
+    "safe_headers": {
+      "cache-control": "no-cache, no-store",
+      "content-type": "text/html; charset=utf-8",
+      "last-modified": "Wed, 11 Jun 2025 11:11:27 GMT"
+    },
+    "source_id": "openai-community-2026-codex-pr-create-fail",
+    "text_char_count": 6272,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/openai-community-2026-codex-pr-create-fail.txt",
+    "url": "https://community.openai.com/t/codex-started-failing-to-create-new-pr/1264529"
+  },
+  {
+    "claim_tags": [
+      "model-comparison",
+      "gpt-5-codex",
+      "gpt-5.1-codex",
+      "quality-feedback",
+      "preference-shift"
+    ],
+    "collection_caveat": "Short preference thread; thin but relevant comparison signal.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://community.openai.com/t/gpt-5-1-codex-is-not-good-enough-as-gpt-5-codex-was-bring-it-back/1367239",
+    "fetched_at": "2026-04-24T01:09:49+00:00",
+    "http_status": 200,
+    "platform": "OpenAI Community",
+    "query": "site:community.openai.com/t GPT-5.1 Codex not good enough bring back GPT-5 Codex",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/openai-community-2026-gpt51-vs-gpt5-codex-preference.html",
+    "safe_headers": {
+      "cache-control": "no-cache, no-store",
+      "content-type": "text/html; charset=utf-8",
+      "last-modified": "Sun, 23 Nov 2025 01:11:32 GMT"
+    },
+    "source_id": "openai-community-2026-gpt51-vs-gpt5-codex-preference",
+    "text_char_count": 1884,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/openai-community-2026-gpt51-vs-gpt5-codex-preference.txt",
+    "url": "https://community.openai.com/t/gpt-5-1-codex-is-not-good-enough-as-gpt-5-codex-was-bring-it-back/1367239"
+  },
+  {
+    "claim_tags": [
+      "gpt-5-codex",
+      "launch-thread",
+      "coding-model",
+      "user-impressions"
+    ],
+    "collection_caveat": "HN discussion; may overlap with other GPT-5-Codex launch threads.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://hacker-news.firebaseio.com/v0/item/45252301.json",
+    "fetched_at": "2026-04-24T01:09:50+00:00",
+    "http_status": 200,
+    "platform": "Hacker News",
+    "query": "HN Codex CLI OpenAI launch discussion",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/hackernews-2026-codex-cli-launch-thread.json",
+    "safe_headers": {
+      "cache-control": "no-cache",
+      "content-type": "application/json; charset=utf-8"
+    },
+    "source_id": "hackernews-2026-codex-cli-launch-thread",
+    "text_char_count": 81,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/hackernews-2026-codex-cli-launch-thread.txt",
+    "url": "https://news.ycombinator.com/item?id=45252301"
+  },
+  {
+    "claim_tags": [
+      "gpt-5-codex",
+      "codex-upgrades",
+      "feature-discussion",
+      "usage-experience"
+    ],
+    "collection_caveat": "Adjacent model discussion, not GPT-5.4/5.5 directly.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://hacker-news.firebaseio.com/v0/item/45253807.json",
+    "fetched_at": "2026-04-24T01:09:50+00:00",
+    "http_status": 200,
+    "platform": "Hacker News",
+    "query": "HN GPT-5.1 Codex discussion",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/hackernews-2026-gpt51-codex-thread.json",
+    "safe_headers": {
+      "cache-control": "no-cache",
+      "content-type": "application/json; charset=utf-8"
+    },
+    "source_id": "hackernews-2026-gpt51-codex-thread",
+    "text_char_count": 98,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/hackernews-2026-gpt51-codex-thread.txt",
+    "url": "https://news.ycombinator.com/item?id=45253807"
+  },
+  {
+    "claim_tags": [
+      "system-card",
+      "gpt-5-codex",
+      "safety-doc",
+      "availability-discussion",
+      "tooling"
+    ],
+    "collection_caveat": "System-card reaction thread with product availability chatter.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://hacker-news.firebaseio.com/v0/item/45253458.json",
+    "fetched_at": "2026-04-24T01:09:50+00:00",
+    "http_status": 200,
+    "platform": "Hacker News",
+    "query": "HN Addendum to GPT-5 system card GPT-5-Codex",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/hackernews-2026-gpt5-codex-system-card.json",
+    "safe_headers": {
+      "cache-control": "no-cache",
+      "content-type": "application/json; charset=utf-8"
+    },
+    "source_id": "hackernews-2026-gpt5-codex-system-card",
+    "text_char_count": 121,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/hackernews-2026-gpt5-codex-system-card.txt",
+    "url": "https://news.ycombinator.com/item?id=45253458"
+  },
+  {
+    "claim_tags": [
+      "gpt-5.1-codex-max",
+      "long-horizon-coding",
+      "persistence",
+      "user-experience"
+    ],
+    "collection_caveat": "Adjacent model thread; useful long-horizon role context.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://hacker-news.firebaseio.com/v0/item/45982649.json",
+    "fetched_at": "2026-04-24T01:09:50+00:00",
+    "http_status": 200,
+    "platform": "Hacker News",
+    "query": "HN GPT-5.1-Codex-Max long horizon coding",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/hackernews-2026-gpt51-codex-max-thread.json",
+    "safe_headers": {
+      "cache-control": "no-cache",
+      "content-type": "application/json; charset=utf-8"
+    },
+    "source_id": "hackernews-2026-gpt51-codex-max-thread",
+    "text_char_count": 94,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/hackernews-2026-gpt51-codex-max-thread.txt",
+    "url": "https://news.ycombinator.com/item?id=45982649"
+  },
+  {
+    "claim_tags": [
+      "gpt-5.1",
+      "codex-usage",
+      "developer-workflow",
+      "comparative-performance"
+    ],
+    "collection_caveat": "Broader GPT-5.1 developer thread with Codex discussion embedded.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://hacker-news.firebaseio.com/v0/item/45918802.json",
+    "fetched_at": "2026-04-24T01:09:50+00:00",
+    "http_status": 200,
+    "platform": "Hacker News",
+    "query": "HN GPT-5.1 developer workflow Codex",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/hackernews-2026-gpt51-dev-workflow.json",
+    "safe_headers": {
+      "cache-control": "no-cache",
+      "content-type": "application/json; charset=utf-8"
+    },
+    "source_id": "hackernews-2026-gpt51-dev-workflow",
+    "text_char_count": 85,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/hackernews-2026-gpt51-dev-workflow.txt",
+    "url": "https://news.ycombinator.com/item?id=45918802"
+  },
+  {
+    "claim_tags": [
+      "codex-skills",
+      "workflow-configuration",
+      "evaluation-discussion",
+      "prompt-structure"
+    ],
+    "collection_caveat": "Product/workflow thread, not direct model-release discussion.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://hacker-news.firebaseio.com/v0/item/46334424.json",
+    "fetched_at": "2026-04-24T01:09:51+00:00",
+    "http_status": 200,
+    "platform": "Hacker News",
+    "query": "HN Skills officially comes to Codex",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/hackernews-2026-codex-skills-thread.json",
+    "safe_headers": {
+      "cache-control": "no-cache",
+      "content-type": "application/json; charset=utf-8"
+    },
+    "source_id": "hackernews-2026-codex-skills-thread",
+    "text_char_count": 90,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/hackernews-2026-codex-skills-thread.txt",
+    "url": "https://news.ycombinator.com/item?id=46334424"
+  },
+  {
+    "claim_tags": [
+      "agent-loop",
+      "codex-cli",
+      "open-source-implementation",
+      "reasoning-loop"
+    ],
+    "collection_caveat": "Agent loop internals, useful for harness/workflow context.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://hacker-news.firebaseio.com/v0/item/46737630.json",
+    "fetched_at": "2026-04-24T01:09:51+00:00",
+    "http_status": 200,
+    "platform": "Hacker News",
+    "query": "HN Codex CLI agent loop OpenAI",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/hackernews-2026-codex-agent-loop.json",
+    "safe_headers": {
+      "cache-control": "no-cache",
+      "content-type": "application/json; charset=utf-8"
+    },
+    "source_id": "hackernews-2026-codex-agent-loop",
+    "text_char_count": 101,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/hackernews-2026-codex-agent-loop.txt",
+    "url": "https://news.ycombinator.com/item?id=46737630"
+  },
+  {
+    "claim_tags": [
+      "gpt-5.3-codex",
+      "model-release",
+      "computer-use",
+      "developer-impressions"
+    ],
+    "collection_caveat": "Nearby Codex lineage context, not GPT-5.4/5.5 directly.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://hacker-news.firebaseio.com/v0/item/46902638.json",
+    "fetched_at": "2026-04-24T01:09:51+00:00",
+    "http_status": 200,
+    "platform": "Hacker News",
+    "query": "HN GPT-5.3-Codex model release discussion",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/hackernews-2026-gpt53-codex-lineage.json",
+    "safe_headers": {
+      "cache-control": "no-cache",
+      "content-type": "application/json; charset=utf-8"
+    },
+    "source_id": "hackernews-2026-gpt53-codex-lineage",
+    "text_char_count": 79,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/hackernews-2026-gpt53-codex-lineage.txt",
+    "url": "https://news.ycombinator.com/item?id=46902638"
+  },
+  {
+    "claim_tags": [
+      "codex",
+      "pricing",
+      "credits",
+      "fast-mode",
+      "usage-dashboard"
+    ],
+    "collection_caveat": "Official developer pricing page; JS-heavy and may require browser rendering.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://developers.openai.com/codex/pricing",
+    "fetched_at": "2026-04-24T01:09:51+00:00",
+    "http_status": 200,
+    "platform": "official",
+    "query": "official developers Codex pricing credits fast mode current",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/openai-developers-codex-pricing-current.html",
+    "safe_headers": {
+      "cache-control": "public, max-age=0, must-revalidate",
+      "content-type": "text/html; charset=utf-8",
+      "etag": "W/\"16b42d3c52044f3822873916a00edb10\"",
+      "last-modified": "Thu, 23 Apr 2026 18:46:58 GMT"
+    },
+    "source_id": "openai-developers-codex-pricing-current",
+    "text_char_count": 20617,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/openai-developers-codex-pricing-current.txt",
+    "url": "https://developers.openai.com/codex/pricing"
+  },
+  {
+    "claim_tags": [
+      "gpt-5.4",
+      "model-doc",
+      "api",
+      "context-window",
+      "pricing"
+    ],
+    "collection_caveat": "Official model doc; JS-heavy developer page.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://developers.openai.com/api/docs/models/gpt-5.4",
+    "fetched_at": "2026-04-24T01:09:51+00:00",
+    "http_status": 200,
+    "platform": "official",
+    "query": "official GPT-5.4 model doc context pricing",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/openai-developers-gpt54-model-current.html",
+    "safe_headers": {
+      "cache-control": "public, max-age=0, must-revalidate",
+      "content-type": "text/html"
+    },
+    "source_id": "openai-developers-gpt54-model-current",
+    "text_char_count": 11499,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/openai-developers-gpt54-model-current.txt",
+    "url": "https://developers.openai.com/api/docs/models/gpt-5.4"
+  },
+  {
+    "claim_tags": [
+      "gpt-5-codex",
+      "model-doc",
+      "responses-api",
+      "context-window",
+      "pricing"
+    ],
+    "collection_caveat": "Official model doc; Codex-family baseline, not GPT-5.5.",
+    "error": "not_available",
+    "extract_status": "extracted",
+    "fetch_status": "fetched",
+    "fetch_url": "https://developers.openai.com/api/docs/models/gpt-5-codex",
+    "fetched_at": "2026-04-24T01:09:51+00:00",
+    "http_status": 200,
+    "platform": "official",
+    "query": "official GPT-5-Codex model doc context pricing",
+    "raw_path": ".planning/measurement/model-role-benchmark/raw-pages/20260424T010929Z/openai-developers-gpt5-codex-model-current.html",
+    "safe_headers": {
+      "cache-control": "public, max-age=0, must-revalidate",
+      "content-type": "text/html"
+    },
+    "source_id": "openai-developers-gpt5-codex-model-current",
+    "text_char_count": 10990,
+    "text_path": ".planning/measurement/model-role-benchmark/extracted-text/20260424T010929Z/openai-developers-gpt5-codex-model-current.txt",
+    "url": "https://developers.openai.com/api/docs/models/gpt-5-codex"
+  }
+]
