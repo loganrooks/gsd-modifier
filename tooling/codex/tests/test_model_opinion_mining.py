@@ -5,6 +5,7 @@ import unittest
 from unittest import mock
 
 from tooling.codex.model_opinion_mining import build_inventory
+from tooling.codex.model_opinion_mining import build_evidence_packets
 from tooling.codex.model_opinion_mining import common
 from tooling.codex.model_opinion_mining import extract_text
 from tooling.codex.model_opinion_mining import fetch_pages
@@ -397,6 +398,56 @@ class ModelOpinionMiningTests(unittest.TestCase):
 
         self.assertEqual(community_row["verification_status"], "accept")
         self.assertEqual(github_row["verification_status"], "accept")
+
+    def test_build_evidence_packets_caps_keyword_snippets(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = pathlib.Path(tmpdir)
+            text_path = root / "source.txt"
+            text_path.write_text(
+                "GPT-5.5 usage limits matter. Pricing claims need care. Context window claims need verification. "
+                "Frontend anecdotes are useful. Benchmark claims need methodology. Extra token claim.",
+                encoding="utf-8",
+            )
+            inventory_path = root / "inventory.jsonl"
+            common.write_jsonl(
+                inventory_path,
+                [
+                    {
+                        "source_id": "source-001",
+                        "platform": "reddit",
+                        "url": "https://example.test/source",
+                        "claim_tags": ["usage"],
+                        "source_type": "anecdote",
+                        "collection_caveat": "Anecdotal.",
+                        "fetch_status": "fetched",
+                        "extract_status": "extracted",
+                        "text_char_count": text_path.stat().st_size,
+                        "summary": "GPT-5.5 usage limits matter.",
+                    }
+                ],
+            )
+            metadata_path = root / "metadata.json"
+            common.write_json(
+                metadata_path,
+                [
+                    {
+                        "source_id": "source-001",
+                        "text_path": str(text_path),
+                    }
+                ],
+            )
+
+            packets = build_evidence_packets.build_packets(
+                inventory_path,
+                metadata_path,
+                root / "packets.jsonl",
+                max_snippets=2,
+                snippet_chars=40,
+            )
+
+            self.assertEqual(packets[0]["snippet_count"], 2)
+            self.assertLessEqual(len(packets[0]["snippets"][0]["text"]), 40)
+            self.assertIn("usage", packets[0]["snippets"][0]["matched_keywords"])
 
 
 if __name__ == "__main__":
