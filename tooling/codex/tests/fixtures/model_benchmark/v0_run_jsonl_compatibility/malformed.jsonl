@@ -1,0 +1,2 @@
+{"run_id":"v0-run-good","task_id":"TASK-OK","candidate_profile":"55-medium","model":"gpt-5.5","reasoning_effort":"medium","runtime_provider":"codex_cli","status":"completed","usage":{"input_tokens":1,"usage_metric_status":"measured"}}
+{"run_id":"broken","task_id":"TASK-BAD","candidate_profile":"55-medium"

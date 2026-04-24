@@ -386,6 +386,40 @@ def insert_runtime_response_item(conn: sqlite3.Connection, row: dict[str, Any], 
     return int(cursor.lastrowid)
 
 
+def insert_run(conn: sqlite3.Connection, row: dict[str, Any]) -> int:
+    for field in ("run_id", "run_json", "provenance_json"):
+        _require(row, field)
+    cursor = conn.execute(
+        """
+        INSERT INTO runs(
+            run_id,
+            task_instance_id,
+            candidate_profile,
+            model,
+            reasoning_effort,
+            status,
+            run_json,
+            source_artifact_id,
+            provenance_json
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            row["run_id"],
+            row.get("task_instance_id"),
+            row.get("candidate_profile"),
+            row.get("model"),
+            row.get("reasoning_effort"),
+            row.get("status"),
+            _require_json(row.get("run_json"), "run_json"),
+            row.get("source_artifact_id"),
+            _require_json(row.get("provenance_json"), "provenance_json"),
+        ),
+    )
+    conn.commit()
+    return int(cursor.lastrowid)
+
+
 def _validate_observation_enums(row: dict[str, Any], strict: bool) -> None:
     _check_enum(str(row["status"]), OBSERVATION_STATUSES, "status", strict)
     _check_enum(str(row["evidence_class"]), EVIDENCE_CLASSES, "evidence_class", strict)
@@ -429,6 +463,59 @@ def insert_observation(conn: sqlite3.Connection, row: dict[str, Any], strict: bo
             row["entity_type"],
             row["entity_id"],
             row.get("metric_id"),
+            row["status"],
+            row["evidence_class"],
+            row["reliability_mode"],
+            row["content_contract"],
+            row.get("comparability"),
+            row["source_artifact_id"],
+            _require_json(row.get("value_json"), "value_json"),
+            _require_json(row.get("provenance_json"), "provenance_json"),
+        ),
+    )
+    conn.commit()
+    return int(cursor.lastrowid)
+
+
+def insert_rubric_observation(conn: sqlite3.Connection, row: dict[str, Any], strict: bool = True) -> int:
+    for field in (
+        "entity_type",
+        "entity_id",
+        "rubric_id",
+        "dimension_id",
+        "status",
+        "evidence_class",
+        "reliability_mode",
+        "content_contract",
+        "source_artifact_id",
+        "value_json",
+        "provenance_json",
+    ):
+        _require(row, field)
+    _validate_observation_enums(row, strict)
+    cursor = conn.execute(
+        """
+        INSERT INTO rubric_observations(
+            entity_type,
+            entity_id,
+            rubric_id,
+            dimension_id,
+            status,
+            evidence_class,
+            reliability_mode,
+            content_contract,
+            comparability,
+            source_artifact_id,
+            value_json,
+            provenance_json
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            row["entity_type"],
+            row["entity_id"],
+            row["rubric_id"],
+            row["dimension_id"],
             row["status"],
             row["evidence_class"],
             row["reliability_mode"],
