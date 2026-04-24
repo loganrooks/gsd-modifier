@@ -17,6 +17,16 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_POLICY_PATH = REPO_ROOT / ".planning" / "refmap" / "audit-refmap-policy.json"
+POLICY_SCHEMA_VERSION = 1
+ALLOWED_POLICY_CLASSIFICATIONS = frozenset(
+    {
+        "historical_external_origin",
+        "intentionally_unimported_origin_artifact",
+        "materialized_runtime_reference",
+        "deferred_archive_gap",
+    }
+)
 MARKDOWN_LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
 REPO_ROOT_ESCAPED = re.escape(str(REPO_ROOT))
 LOCAL_PATH_RE = re.compile(
@@ -50,6 +60,17 @@ class LinkOccurrence:
 
 
 @dataclass(frozen=True)
+class PolicyEntry:
+    source: str
+    line: int
+    raw_target: str
+    resolved: str | None
+    classification: str
+    rationale: str
+    reviewed_by: str
+
+
+@dataclass(frozen=True)
 class MoveIndex:
     by_old_abs: dict[str, Move]
     by_old_rel: dict[str, Move]
@@ -69,6 +90,7 @@ def parse_args() -> argparse.Namespace:
     map_parser = subparsers.add_parser("map", help="Summarize local markdown links.")
     map_parser.add_argument("root", help="Directory to scan.")
     map_parser.add_argument("--output", help="Write the markdown report here.")
+    map_parser.add_argument("--policy", help="Policy JSON for classified missing links.")
 
     snapshot_parser = subparsers.add_parser(
         "snapshot",
@@ -76,6 +98,7 @@ def parse_args() -> argparse.Namespace:
     )
     snapshot_parser.add_argument("root", help="Directory to scan.")
     snapshot_parser.add_argument("--output", help="Write the JSON snapshot here.")
+    snapshot_parser.add_argument("--policy", help="Policy JSON for classified missing links.")
 
     verify_parser = subparsers.add_parser(
         "verify",
@@ -83,6 +106,7 @@ def parse_args() -> argparse.Namespace:
     )
     verify_parser.add_argument("root", help="Directory to scan.")
     verify_parser.add_argument("--output", help="Write the markdown report here.")
+    verify_parser.add_argument("--policy", help="Policy JSON for classified missing links.")
 
     rewrite_parser = subparsers.add_parser(
         "rewrite",
@@ -153,6 +177,15 @@ def repo_relative(path: Path) -> str:
         return resolved.relative_to(REPO_ROOT).as_posix()
     except ValueError:
         return resolved.as_posix()
+
+
+def is_inside_repo(path: Path) -> bool:
+    resolved = path.resolve()
+    try:
+        resolved.relative_to(REPO_ROOT)
+        return True
+    except ValueError:
+        return False
 
 
 def resolve_input_path(raw: str) -> Path:
@@ -229,14 +262,15 @@ def collect_links(root: Path) -> list[LinkOccurrence]:
             status = "external"
             resolved_rel: str | None = None
             if resolved_path is not None:
-                try:
+                if is_inside_repo(resolved_path):
                     resolved_rel = repo_relative(resolved_path)
-                except ValueError:
-                    resolved_rel = resolved_path.as_posix()
-                if resolved_path.exists():
-                    status = "local-existing"
+                    if resolved_path.exists():
+                        status = "local-existing"
+                    else:
+                        status = "local-missing"
                 else:
-                    status = "local-missing"
+                    resolved_rel = resolved_path.as_posix()
+                    status = "external-absolute"
             links.append(
                 LinkOccurrence(
                     source=repo_relative(source_file),
@@ -249,20 +283,115 @@ def collect_links(root: Path) -> list[LinkOccurrence]:
     return links
 
 
-def render_map_report(root: Path, links: list[LinkOccurrence]) -> str:
+def policy_key(link: LinkOccurrence) -> tuple[str, int, str, str | None]:
+    return (link.source, link.line, link.target_text, link.resolved)
+
+
+def entry_key(entry: PolicyEntry) -> tuple[str, int, str, str | None]:
+    return (entry.source, entry.line, entry.raw_target, entry.resolved)
+
+
+def load_policy(path: Path) -> dict[tuple[str, int, str, str | None], PolicyEntry]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("refmap policy must be a JSON object")
+    if payload.get("schema_version") != POLICY_SCHEMA_VERSION:
+        raise ValueError(f"refmap policy schema_version must be {POLICY_SCHEMA_VERSION}")
+    raw_entries = payload.get("entries")
+    if not isinstance(raw_entries, list):
+        raise ValueError("refmap policy entries must be an array")
+    raw_counts = payload.get("classification_counts", {})
+    if raw_counts is not None and not isinstance(raw_counts, dict):
+        raise ValueError("refmap policy classification_counts must be an object when present")
+
+    entries: dict[tuple[str, int, str, str | None], PolicyEntry] = {}
+    classification_counts: Counter[str] = Counter()
+    for index, raw_entry in enumerate(raw_entries):
+        if not isinstance(raw_entry, dict):
+            raise ValueError(f"refmap policy entry {index} must be an object")
+        entry = PolicyEntry(
+            source=str(raw_entry["source"]),
+            line=int(raw_entry["line"]),
+            raw_target=str(raw_entry["raw_target"]),
+            resolved=None if raw_entry.get("resolved") is None else str(raw_entry["resolved"]),
+            classification=str(raw_entry["classification"]),
+            rationale=str(raw_entry["rationale"]),
+            reviewed_by=str(raw_entry["reviewed_by"]),
+        )
+        if entry.classification not in ALLOWED_POLICY_CLASSIFICATIONS:
+            raise ValueError(
+                f"refmap policy entry {index} has unsupported classification: {entry.classification}"
+            )
+        key = entry_key(entry)
+        if key in entries:
+            raise ValueError(f"duplicate refmap policy entry for {entry.source}:{entry.line}")
+        entries[key] = entry
+        classification_counts[entry.classification] += 1
+    if raw_counts:
+        declared_counts = {str(key): int(value) for key, value in raw_counts.items()}
+        actual_counts = dict(sorted(classification_counts.items()))
+        if declared_counts != actual_counts:
+            raise ValueError(
+                "refmap policy classification_counts do not match entries: "
+                f"declared={declared_counts} actual={actual_counts}"
+            )
+    return entries
+
+
+def default_policy_for(root: Path) -> dict[tuple[str, int, str, str | None], PolicyEntry] | None:
+    if root.resolve() == REPO_ROOT and DEFAULT_POLICY_PATH.exists():
+        return load_policy(DEFAULT_POLICY_PATH)
+    return None
+
+
+def load_cli_policy(root: Path, raw_policy: str | None) -> dict[tuple[str, int, str, str | None], PolicyEntry] | None:
+    if raw_policy:
+        return load_policy(resolve_input_path(raw_policy))
+    return default_policy_for(root)
+
+
+def split_missing_links(
+    links: list[LinkOccurrence],
+    policy: dict[tuple[str, int, str, str | None], PolicyEntry] | None = None,
+) -> tuple[list[LinkOccurrence], list[tuple[LinkOccurrence, PolicyEntry]]]:
+    policy = policy or {}
+    unclassified: list[LinkOccurrence] = []
+    classified: list[tuple[LinkOccurrence, PolicyEntry]] = []
+    for link in links:
+        if link.status != "local-missing":
+            continue
+        entry = policy.get(policy_key(link))
+        if entry is None:
+            unclassified.append(link)
+        else:
+            classified.append((link, entry))
+    return unclassified, classified
+
+
+def render_map_report(
+    root: Path,
+    links: list[LinkOccurrence],
+    policy: dict[tuple[str, int, str, str | None], PolicyEntry] | None = None,
+) -> str:
     local_links = [link for link in links if link.status.startswith("local-")]
     local_existing = [link for link in local_links if link.status == "local-existing"]
     local_missing = [link for link in local_links if link.status == "local-missing"]
+    unclassified_missing, classified_missing = split_missing_links(links, policy)
     inbound_counter: Counter[str] = Counter()
     outbound_counter: Counter[str] = Counter()
     source_to_missing: dict[str, list[LinkOccurrence]] = defaultdict(list)
+    source_to_classified: dict[str, list[tuple[LinkOccurrence, PolicyEntry]]] = defaultdict(list)
+    classified_counter: Counter[str] = Counter()
 
     for link in local_existing:
         assert link.resolved is not None
         inbound_counter[link.resolved] += 1
         outbound_counter[link.source] += 1
-    for link in local_missing:
+    for link in unclassified_missing:
         source_to_missing[link.source].append(link)
+    for link, entry in classified_missing:
+        source_to_classified[link.source].append((link, entry))
+        classified_counter[entry.classification] += 1
 
     lines = [
         "# Audit Reference Map",
@@ -272,6 +401,8 @@ def render_map_report(root: Path, links: list[LinkOccurrence]) -> str:
         f"- Markdown links scanned: `{len(links)}`",
         f"- Local existing links: `{len(local_existing)}`",
         f"- Local missing links: `{len(local_missing)}`",
+        f"- Classified missing links: `{len(classified_missing)}`",
+        f"- Unclassified missing links: `{len(unclassified_missing)}`",
         "",
         "## Top Inbound Targets",
         "",
@@ -287,7 +418,7 @@ def render_map_report(root: Path, links: list[LinkOccurrence]) -> str:
     if not outbound_counter:
         lines.append("- none")
 
-    lines.extend(["", "## Missing Local Targets", ""])
+    lines.extend(["", "## Unclassified Missing Local Targets", ""])
     if not source_to_missing:
         lines.append("- none")
     else:
@@ -297,20 +428,44 @@ def render_map_report(root: Path, links: list[LinkOccurrence]) -> str:
                 lines.append(
                     f"  - line `{link.line}` -> `{link.target_text}`"
                 )
+    lines.extend(["", "## Classified Missing Local Targets", ""])
+    if not source_to_classified:
+        lines.append("- none")
+    else:
+        for classification, count in sorted(classified_counter.items()):
+            lines.append(f"- `{classification}`: `{count}`")
+        lines.append("")
+        for source, classified_links in sorted(source_to_classified.items()):
+            lines.append(f"- `{source}`")
+            for link, entry in classified_links:
+                lines.append(
+                    f"  - line `{link.line}` -> `{link.target_text}` "
+                    f"(`{entry.classification}`)"
+                )
     return "\n".join(lines) + "\n"
 
 
-def missing_local_links(links: list[LinkOccurrence]) -> list[LinkOccurrence]:
-    return [link for link in links if link.status == "local-missing"]
+def missing_local_links(
+    links: list[LinkOccurrence],
+    policy: dict[tuple[str, int, str, str | None], PolicyEntry] | None = None,
+) -> list[LinkOccurrence]:
+    return split_missing_links(links, policy)[0]
 
 
-def build_snapshot(root: Path, links: list[LinkOccurrence]) -> dict[str, object]:
+def build_snapshot(
+    root: Path,
+    links: list[LinkOccurrence],
+    policy: dict[tuple[str, int, str, str | None], PolicyEntry] | None = None,
+) -> dict[str, object]:
     markdown_files = iter_markdown_files(root)
     inbound_counter: Counter[str] = Counter()
     outbound_counter: Counter[str] = Counter()
     local_edges: list[dict[str, object]] = []
     external_links: list[dict[str, object]] = []
     missing_links: list[dict[str, object]] = []
+    classified_missing_links: list[dict[str, object]] = []
+    unclassified_missing_links: list[dict[str, object]] = []
+    policy = policy or {}
 
     for link in links:
         if link.status == "local-existing":
@@ -326,22 +481,32 @@ def build_snapshot(root: Path, links: list[LinkOccurrence]) -> dict[str, object]
                 }
             )
         elif link.status == "local-missing":
-            missing_links.append(
-                {
-                    "source": link.source,
-                    "line": link.line,
-                    "raw_target": link.target_text,
-                    "resolved": link.resolved,
-                }
-            )
+            row = {
+                "source": link.source,
+                "line": link.line,
+                "raw_target": link.target_text,
+                "resolved": link.resolved,
+            }
+            entry = policy.get(policy_key(link))
+            if entry is None:
+                unclassified_missing_links.append(row)
+            else:
+                classified_row = dict(row)
+                classified_row["classification"] = entry.classification
+                classified_row["rationale"] = entry.rationale
+                classified_row["reviewed_by"] = entry.reviewed_by
+                classified_missing_links.append(classified_row)
+            missing_links.append(row)
         else:
-            external_links.append(
-                {
-                    "source": link.source,
-                    "line": link.line,
-                    "raw_target": link.target_text,
-                }
-            )
+            row = {
+                "source": link.source,
+                "line": link.line,
+                "raw_target": link.target_text,
+                "status": link.status,
+            }
+            if link.resolved is not None:
+                row["resolved"] = link.resolved
+            external_links.append(row)
 
     return {
         "root": repo_relative(root),
@@ -351,6 +516,8 @@ def build_snapshot(root: Path, links: list[LinkOccurrence]) -> dict[str, object]
             "links_scanned": len(links),
             "local_existing_links": len(local_edges),
             "local_missing_links": len(missing_links),
+            "classified_missing_links": len(classified_missing_links),
+            "unclassified_missing_links": len(unclassified_missing_links),
             "external_links": len(external_links),
         },
         "inbound_counts": dict(sorted(inbound_counter.items())),
@@ -358,6 +525,8 @@ def build_snapshot(root: Path, links: list[LinkOccurrence]) -> dict[str, object]
         "local_edges": local_edges,
         "external_links": external_links,
         "missing_links": missing_links,
+        "classified_missing_links": classified_missing_links,
+        "unclassified_missing_links": unclassified_missing_links,
     }
 
 
@@ -686,20 +855,23 @@ def main() -> int:
         raise SystemExit(f"Root not found: {root}")
 
     if args.command == "map":
-        report = render_map_report(root, collect_links(root))
+        policy = load_cli_policy(root, args.policy)
+        report = render_map_report(root, collect_links(root), policy)
         write_output(report, args.output)
         return 0
 
     if args.command == "snapshot":
-        snapshot = build_snapshot(root, collect_links(root))
+        policy = load_cli_policy(root, args.policy)
+        snapshot = build_snapshot(root, collect_links(root), policy)
         write_output(json.dumps(snapshot, indent=2, sort_keys=True) + "\n", args.output)
         return 0
 
     if args.command == "verify":
+        policy = load_cli_policy(root, args.policy)
         links = collect_links(root)
-        report = render_map_report(root, links)
+        report = render_map_report(root, links, policy)
         write_output(report, args.output)
-        return 1 if missing_local_links(links) else 0
+        return 1 if missing_local_links(links, policy) else 0
 
     if args.command == "retire":
         report = execute_retire(root, args.target, args.replacement, args.reason)

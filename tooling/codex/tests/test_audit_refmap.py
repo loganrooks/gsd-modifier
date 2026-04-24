@@ -1,3 +1,4 @@
+import json
 import pathlib
 import tempfile
 import unittest
@@ -79,6 +80,20 @@ class AuditRefmapTests(unittest.TestCase):
 
             self.assertEqual(resolved, (audit_refmap.REPO_ROOT / ".planning/STATE.md").resolve())
             self.assertEqual(line_suffix, "")
+
+    def test_collect_links_treats_absolute_outside_repo_as_external(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = pathlib.Path(tmpdir)
+            external_target = root / "external-origin.md"
+            external_target.write_text("# External\n", encoding="utf-8")
+            source = root / "notes.md"
+            source.write_text(f"[External]({external_target})\n", encoding="utf-8")
+
+            links = audit_refmap.collect_links(root)
+
+            self.assertEqual(len(links), 1)
+            self.assertEqual(links[0].status, "external-absolute")
+            self.assertEqual(links[0].resolved, external_target.resolve().as_posix())
 
     def test_load_moves_accepts_absolute_old_path(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -198,6 +213,175 @@ class AuditRefmapTests(unittest.TestCase):
             audit_refmap.rewrite_workspace(root, moves, apply=True)
 
             self.assertEqual(moved_source.read_text(encoding="utf-8"), "[Artifact](../artifact.md:12-18)\n")
+
+    def test_policy_classified_missing_link_does_not_fail_missing_filter(self) -> None:
+        link = audit_refmap.LinkOccurrence(
+            source=".planning/archive/note.md",
+            target_text="../../old/CLAUDE.md",
+            line=12,
+            resolved="CLAUDE.md",
+            status="local-missing",
+        )
+        entry = audit_refmap.PolicyEntry(
+            source=link.source,
+            line=link.line,
+            raw_target=link.target_text,
+            resolved=link.resolved,
+            classification="historical_external_origin",
+            rationale="Preserved imported archive reference.",
+            reviewed_by="test",
+        )
+
+        missing = audit_refmap.missing_local_links([link], {audit_refmap.entry_key(entry): entry})
+
+        self.assertEqual(missing, [])
+
+    def test_policy_requires_exact_source_line_target_and_resolved_match(self) -> None:
+        link = audit_refmap.LinkOccurrence(
+            source=".planning/archive/note.md",
+            target_text="../../old/CLAUDE.md",
+            line=12,
+            resolved="CLAUDE.md",
+            status="local-missing",
+        )
+        entry = audit_refmap.PolicyEntry(
+            source=link.source,
+            line=13,
+            raw_target=link.target_text,
+            resolved=link.resolved,
+            classification="historical_external_origin",
+            rationale="Preserved imported archive reference.",
+            reviewed_by="test",
+        )
+
+        missing = audit_refmap.missing_local_links([link], {audit_refmap.entry_key(entry): entry})
+
+        self.assertEqual(missing, [link])
+
+    def test_snapshot_separates_classified_and_unclassified_missing_links(self) -> None:
+        classified = audit_refmap.LinkOccurrence(
+            source=".planning/archive/a.md",
+            target_text="../../old/CLAUDE.md",
+            line=4,
+            resolved="CLAUDE.md",
+            status="local-missing",
+        )
+        unclassified = audit_refmap.LinkOccurrence(
+            source="docs/current.md",
+            target_text="missing.md",
+            line=8,
+            resolved="docs/missing.md",
+            status="local-missing",
+        )
+        entry = audit_refmap.PolicyEntry(
+            source=classified.source,
+            line=classified.line,
+            raw_target=classified.target_text,
+            resolved=classified.resolved,
+            classification="historical_external_origin",
+            rationale="Preserved imported archive reference.",
+            reviewed_by="test",
+        )
+
+        snapshot = audit_refmap.build_snapshot(
+            audit_refmap.REPO_ROOT,
+            [classified, unclassified],
+            {audit_refmap.entry_key(entry): entry},
+        )
+
+        self.assertEqual(snapshot["stats"]["classified_missing_links"], 1)
+        self.assertEqual(snapshot["stats"]["unclassified_missing_links"], 1)
+        self.assertEqual(snapshot["classified_missing_links"][0]["classification"], "historical_external_origin")
+        self.assertEqual(snapshot["unclassified_missing_links"][0]["source"], "docs/current.md")
+
+    def test_render_report_separates_classified_and_unclassified_missing_links(self) -> None:
+        classified = audit_refmap.LinkOccurrence(
+            source=".planning/archive/a.md",
+            target_text="../../old/CLAUDE.md",
+            line=4,
+            resolved="CLAUDE.md",
+            status="local-missing",
+        )
+        unclassified = audit_refmap.LinkOccurrence(
+            source="docs/current.md",
+            target_text="missing.md",
+            line=8,
+            resolved="docs/missing.md",
+            status="local-missing",
+        )
+        entry = audit_refmap.PolicyEntry(
+            source=classified.source,
+            line=classified.line,
+            raw_target=classified.target_text,
+            resolved=classified.resolved,
+            classification="historical_external_origin",
+            rationale="Preserved imported archive reference.",
+            reviewed_by="test",
+        )
+
+        report = audit_refmap.render_map_report(
+            audit_refmap.REPO_ROOT,
+            [classified, unclassified],
+            {audit_refmap.entry_key(entry): entry},
+        )
+
+        self.assertIn("Classified missing links: `1`", report)
+        self.assertIn("Unclassified missing links: `1`", report)
+        self.assertIn("## Unclassified Missing Local Targets", report)
+        self.assertIn("## Classified Missing Local Targets", report)
+
+    def test_load_policy_rejects_unsupported_classification(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            policy_path = pathlib.Path(tmpdir) / "policy.json"
+            policy_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": 1,
+                        "entries": [
+                            {
+                                "source": "docs/current.md",
+                                "line": 1,
+                                "raw_target": "missing.md",
+                                "resolved": "docs/missing.md",
+                                "classification": "ignored",
+                                "rationale": "bad",
+                                "reviewed_by": "test",
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(ValueError, "unsupported classification"):
+                audit_refmap.load_policy(policy_path)
+
+    def test_load_policy_rejects_mismatched_classification_counts(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            policy_path = pathlib.Path(tmpdir) / "policy.json"
+            policy_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": 1,
+                        "classification_counts": {"historical_external_origin": 2},
+                        "entries": [
+                            {
+                                "source": "docs/current.md",
+                                "line": 1,
+                                "raw_target": "missing.md",
+                                "resolved": "docs/missing.md",
+                                "classification": "historical_external_origin",
+                                "rationale": "preserved",
+                                "reviewed_by": "test",
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(ValueError, "classification_counts do not match"):
+                audit_refmap.load_policy(policy_path)
 
 
 if __name__ == "__main__":

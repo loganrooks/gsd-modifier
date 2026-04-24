@@ -1,0 +1,561 @@
+{
+  "classification_counts": {
+    "deferred_archive_gap": 14,
+    "intentionally_unimported_origin_artifact": 47
+  },
+  "entries": [
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 20,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../../.planning/UPLIFT-MANIFEST.json",
+      "resolved": ".planning/UPLIFT-MANIFEST.json",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/entry-uplift-audit/outputs/13-uplift-cross-runtime-compatibility-widening-shape-proposal-reread-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 92,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../../CLAUDE.md",
+      "resolved": "CLAUDE.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/entry-uplift-audit/outputs/13-uplift-cross-runtime-compatibility-widening-shape-proposal-reread-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 92,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../../.planning/CLAUDE.md",
+      "resolved": ".planning/CLAUDE.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/entry-uplift-audit/outputs/13-uplift-cross-runtime-compatibility-widening-shape-proposal-reread-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 107,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../../.planning/UPLIFT-REPORT.md",
+      "resolved": ".planning/UPLIFT-REPORT.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/entry-uplift-audit/outputs/13-uplift-cross-runtime-compatibility-widening-shape-proposal-reread-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 107,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../../.planning/STATE.md",
+      "resolved": ".planning/STATE.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/entry-uplift-audit/outputs/13-uplift-cross-runtime-compatibility-widening-shape-proposal-reread-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 19,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../../.planning/AGENTS.md",
+      "resolved": ".planning/AGENTS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/entry-uplift-audit/packets/01-entry-surface-and-project-uplift-field-mapping-packet.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 158,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../HARNESS-IMPROVEMENT-REGISTER.md",
+      "resolved": ".planning/HARNESS-IMPROVEMENT-REGISTER.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/outputs/02-harness-modifier-overlay-carrier-rehome-reread-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 30,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../HARNESS-IMPROVEMENT-REGISTER.md",
+      "resolved": ".planning/HARNESS-IMPROVEMENT-REGISTER.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/packets/01-harness-extraction-field-map-audit-packet.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 40,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../HARNESS-IMPROVEMENT-REGISTER.md",
+      "resolved": ".planning/HARNESS-IMPROVEMENT-REGISTER.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/packets/02-harness-modifier-overlay-carrier-rehome-reread-packet.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 50,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../HARNESS-IMPROVEMENT-REGISTER.md",
+      "resolved": ".planning/HARNESS-IMPROVEMENT-REGISTER.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/packets/03-harness-modifier-first-overlay-filesystem-rehome-reread-packet.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 54,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../HARNESS-IMPROVEMENT-REGISTER.md",
+      "resolved": ".planning/HARNESS-IMPROVEMENT-REGISTER.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/packets/04-harness-modifier-helper-payload-authority-map-reread-packet.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 41,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../HARNESS-IMPROVEMENT-REGISTER.md",
+      "resolved": ".planning/HARNESS-IMPROVEMENT-REGISTER.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/packets/05-harness-modifier-project-uplift-neutralization-proposal-reread-packet.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 44,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../HARNESS-IMPROVEMENT-REGISTER.md",
+      "resolved": ".planning/HARNESS-IMPROVEMENT-REGISTER.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/packets/06-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-packet.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 74,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../../.planning/AGENTS.md:108",
+      "resolved": ".planning/AGENTS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/self-overcoming-audit/outputs/02-strengthening-benchmark-reference-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 74,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../../CLAUDE.md:15",
+      "resolved": "CLAUDE.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/self-overcoming-audit/outputs/02-strengthening-benchmark-reference-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 20,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../../AI-GUARDRAILS.md",
+      "resolved": "AI-GUARDRAILS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-1/outputs/04-operator-orchestration-pressure-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 58,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../../AI-GUARDRAILS.md",
+      "resolved": "AI-GUARDRAILS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-1/outputs/04-operator-orchestration-pressure-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 87,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../2026-04-17-gsd-upstream-docs-readiness-comparative-audit/SYNTHESIS.md",
+      "resolved": ".planning/audits/2026-04-17-gsd-upstream-docs-readiness-comparative-audit/SYNTHESIS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-1/outputs/04-operator-orchestration-pressure-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 119,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../2026-04-17-gsd-upstream-docs-readiness-comparative-audit/SYNTHESIS.md",
+      "resolved": ".planning/audits/2026-04-17-gsd-upstream-docs-readiness-comparative-audit/SYNTHESIS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-1/outputs/04-operator-orchestration-pressure-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 162,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../../AI-GUARDRAILS.md",
+      "resolved": "AI-GUARDRAILS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-1/outputs/04-operator-orchestration-pressure-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 178,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../../AI-GUARDRAILS.md",
+      "resolved": "AI-GUARDRAILS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-1/outputs/04-operator-orchestration-pressure-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 186,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../../.planning/AGENTS.md",
+      "resolved": ".planning/AGENTS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-1/outputs/04-operator-orchestration-pressure-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 206,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../../AI-GUARDRAILS.md",
+      "resolved": "AI-GUARDRAILS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-1/outputs/04-operator-orchestration-pressure-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 261,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../2026-04-17-gsd-upstream-docs-readiness-comparative-audit/SYNTHESIS.md",
+      "resolved": ".planning/audits/2026-04-17-gsd-upstream-docs-readiness-comparative-audit/SYNTHESIS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-1/outputs/04-operator-orchestration-pressure-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 261,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../../AI-GUARDRAILS.md",
+      "resolved": "AI-GUARDRAILS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-1/outputs/04-operator-orchestration-pressure-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 268,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../../AI-GUARDRAILS.md",
+      "resolved": "AI-GUARDRAILS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-1/outputs/04-operator-orchestration-pressure-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 300,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../../.planning/AGENTS.md",
+      "resolved": ".planning/AGENTS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-1/outputs/04-operator-orchestration-pressure-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 21,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../../AI-GUARDRAILS.md",
+      "resolved": "AI-GUARDRAILS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 13,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../HARNESS-IMPROVEMENT-REGISTER.md",
+      "resolved": ".planning/HARNESS-IMPROVEMENT-REGISTER.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/workspace-state-audit/outputs/01-where-are-we-now-horizon-inheritance-and-parallelization-audit-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 23,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../STATE.md:7",
+      "resolved": ".planning/STATE.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/workspace-state-audit/outputs/01-where-are-we-now-horizon-inheritance-and-parallelization-audit-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 32,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../HARNESS-IMPROVEMENT-REGISTER.md",
+      "resolved": ".planning/HARNESS-IMPROVEMENT-REGISTER.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/workspace-state-audit/outputs/01-where-are-we-now-horizon-inheritance-and-parallelization-audit-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 38,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../LONG-ARC.md",
+      "resolved": ".planning/LONG-ARC.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/workspace-state-audit/outputs/01-where-are-we-now-horizon-inheritance-and-parallelization-audit-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 39,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../AGENTS.md",
+      "resolved": ".planning/AGENTS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/workspace-state-audit/outputs/01-where-are-we-now-horizon-inheritance-and-parallelization-audit-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 40,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../../CLAUDE.md",
+      "resolved": "CLAUDE.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/workspace-state-audit/outputs/01-where-are-we-now-horizon-inheritance-and-parallelization-audit-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 40,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../CLAUDE.md",
+      "resolved": ".planning/CLAUDE.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/workspace-state-audit/outputs/01-where-are-we-now-horizon-inheritance-and-parallelization-audit-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 42,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../STATE.md:91",
+      "resolved": ".planning/STATE.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/workspace-state-audit/outputs/01-where-are-we-now-horizon-inheritance-and-parallelization-audit-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 54,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../HARNESS-IMPROVEMENT-REGISTER.md:97",
+      "resolved": ".planning/HARNESS-IMPROVEMENT-REGISTER.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/workspace-state-audit/outputs/01-where-are-we-now-horizon-inheritance-and-parallelization-audit-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 115,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../HARNESS-IMPROVEMENT-REGISTER.md",
+      "resolved": ".planning/HARNESS-IMPROVEMENT-REGISTER.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/workspace-state-audit/outputs/01-where-are-we-now-horizon-inheritance-and-parallelization-audit-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 126,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../HARNESS-IMPROVEMENT-REGISTER.md:97",
+      "resolved": ".planning/HARNESS-IMPROVEMENT-REGISTER.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/workspace-state-audit/outputs/01-where-are-we-now-horizon-inheritance-and-parallelization-audit-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 131,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../HARNESS-IMPROVEMENT-REGISTER.md:122",
+      "resolved": ".planning/HARNESS-IMPROVEMENT-REGISTER.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/workspace-state-audit/outputs/01-where-are-we-now-horizon-inheritance-and-parallelization-audit-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 137,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../HARNESS-IMPROVEMENT-REGISTER.md",
+      "resolved": ".planning/HARNESS-IMPROVEMENT-REGISTER.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/workspace-state-audit/outputs/01-where-are-we-now-horizon-inheritance-and-parallelization-audit-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 138,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../AGENTS.md",
+      "resolved": ".planning/AGENTS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/workspace-state-audit/outputs/01-where-are-we-now-horizon-inheritance-and-parallelization-audit-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 174,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../LONG-ARC.md",
+      "resolved": ".planning/LONG-ARC.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/workspace-state-audit/outputs/01-where-are-we-now-horizon-inheritance-and-parallelization-audit-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 175,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../AGENTS.md",
+      "resolved": ".planning/AGENTS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/workspace-state-audit/outputs/01-where-are-we-now-horizon-inheritance-and-parallelization-audit-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 175,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../../CLAUDE.md",
+      "resolved": "CLAUDE.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/workspace-state-audit/outputs/01-where-are-we-now-horizon-inheritance-and-parallelization-audit-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 175,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../CLAUDE.md",
+      "resolved": ".planning/CLAUDE.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/workspace-state-audit/outputs/01-where-are-we-now-horizon-inheritance-and-parallelization-audit-opus47-max-r1.md"
+    },
+    {
+      "classification": "intentionally_unimported_origin_artifact",
+      "line": 187,
+      "rationale": "Carried archive references an old-host governance artifact that was not imported as an active gsd-modifier authority surface.",
+      "raw_target": "../../../../HARNESS-IMPROVEMENT-REGISTER.md",
+      "resolved": ".planning/HARNESS-IMPROVEMENT-REGISTER.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/workspace-state-audit/outputs/01-where-are-we-now-horizon-inheritance-and-parallelization-audit-opus47-max-r1.md"
+    },
+    {
+      "classification": "deferred_archive_gap",
+      "line": 44,
+      "rationale": "Carried readiness archive has a relative-depth reference to a sibling/generated archive artifact outside the imported provenance set.",
+      "raw_target": "../../.planning/CLAIM-TYPES.md:17",
+      "resolved": ".planning/readiness/.planning/CLAIM-TYPES.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/readiness/phase-01-rerun/REVIEWS/checkpoint-2-cross-vendor-review-sonnet-r1.md"
+    },
+    {
+      "classification": "deferred_archive_gap",
+      "line": 44,
+      "rationale": "Carried readiness archive has a relative-depth reference to a sibling/generated archive artifact outside the imported provenance set.",
+      "raw_target": "../../AGENTS.md:70",
+      "resolved": ".planning/readiness/AGENTS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/readiness/phase-01-rerun/REVIEWS/checkpoint-2-cross-vendor-review-sonnet-r1.md"
+    },
+    {
+      "classification": "deferred_archive_gap",
+      "line": 44,
+      "rationale": "Carried readiness archive has a relative-depth reference to a sibling/generated archive artifact outside the imported provenance set.",
+      "raw_target": "../../.planning/AGENTS.md:72",
+      "resolved": ".planning/readiness/.planning/AGENTS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/readiness/phase-01-rerun/REVIEWS/checkpoint-2-cross-vendor-review-sonnet-r1.md"
+    },
+    {
+      "classification": "deferred_archive_gap",
+      "line": 50,
+      "rationale": "Carried readiness archive has a relative-depth reference to a sibling/generated archive artifact outside the imported provenance set.",
+      "raw_target": "../../WORKFLOW.md:49",
+      "resolved": ".planning/readiness/WORKFLOW.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/readiness/phase-01-rerun/REVIEWS/checkpoint-2-cross-vendor-review-sonnet-r1.md"
+    },
+    {
+      "classification": "deferred_archive_gap",
+      "line": 50,
+      "rationale": "Carried readiness archive has a relative-depth reference to a sibling/generated archive artifact outside the imported provenance set.",
+      "raw_target": "../../WORKFLOW.md:56",
+      "resolved": ".planning/readiness/WORKFLOW.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/readiness/phase-01-rerun/REVIEWS/checkpoint-2-cross-vendor-review-sonnet-r1.md"
+    },
+    {
+      "classification": "deferred_archive_gap",
+      "line": 52,
+      "rationale": "Carried readiness archive has a relative-depth reference to a sibling/generated archive artifact outside the imported provenance set.",
+      "raw_target": "../../AGENTS.md:111",
+      "resolved": ".planning/readiness/AGENTS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/readiness/phase-01-rerun/REVIEWS/checkpoint-2-cross-vendor-review-sonnet-r1.md"
+    },
+    {
+      "classification": "deferred_archive_gap",
+      "line": 60,
+      "rationale": "Carried readiness archive has a relative-depth reference to a sibling/generated archive artifact outside the imported provenance set.",
+      "raw_target": "../../AGENTS.md:91",
+      "resolved": ".planning/readiness/AGENTS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/readiness/phase-01-rerun/REVIEWS/checkpoint-2-cross-vendor-review-sonnet-r1.md"
+    },
+    {
+      "classification": "deferred_archive_gap",
+      "line": 64,
+      "rationale": "Carried readiness archive has a relative-depth reference to a sibling/generated archive artifact outside the imported provenance set.",
+      "raw_target": "../../WORKFLOW.md:140",
+      "resolved": ".planning/readiness/WORKFLOW.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/readiness/phase-01-rerun/REVIEWS/checkpoint-2-cross-vendor-review-sonnet-r1.md"
+    },
+    {
+      "classification": "deferred_archive_gap",
+      "line": 66,
+      "rationale": "Carried readiness archive has a relative-depth reference to a sibling/generated archive artifact outside the imported provenance set.",
+      "raw_target": "../../WORKFLOW.md:148",
+      "resolved": ".planning/readiness/WORKFLOW.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/readiness/phase-01-rerun/REVIEWS/checkpoint-2-cross-vendor-review-sonnet-r1.md"
+    },
+    {
+      "classification": "deferred_archive_gap",
+      "line": 66,
+      "rationale": "Carried readiness archive has a relative-depth reference to a sibling/generated archive artifact outside the imported provenance set.",
+      "raw_target": "../../WORKFLOW.md:147",
+      "resolved": ".planning/readiness/WORKFLOW.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/readiness/phase-01-rerun/REVIEWS/checkpoint-2-cross-vendor-review-sonnet-r1.md"
+    },
+    {
+      "classification": "deferred_archive_gap",
+      "line": 70,
+      "rationale": "Carried readiness archive has a relative-depth reference to a sibling/generated archive artifact outside the imported provenance set.",
+      "raw_target": "../../AGENTS.md:49",
+      "resolved": ".planning/readiness/AGENTS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/readiness/phase-01-rerun/REVIEWS/checkpoint-2-cross-vendor-review-sonnet-r1.md"
+    },
+    {
+      "classification": "deferred_archive_gap",
+      "line": 70,
+      "rationale": "Carried readiness archive has a relative-depth reference to a sibling/generated archive artifact outside the imported provenance set.",
+      "raw_target": "../../AGENTS.md:89",
+      "resolved": ".planning/readiness/AGENTS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/readiness/phase-01-rerun/REVIEWS/checkpoint-2-cross-vendor-review-sonnet-r1.md"
+    },
+    {
+      "classification": "deferred_archive_gap",
+      "line": 70,
+      "rationale": "Carried readiness archive has a relative-depth reference to a sibling/generated archive artifact outside the imported provenance set.",
+      "raw_target": "../../.planning/AGENTS.md:84",
+      "resolved": ".planning/readiness/.planning/AGENTS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/readiness/phase-01-rerun/REVIEWS/checkpoint-2-cross-vendor-review-sonnet-r1.md"
+    },
+    {
+      "classification": "deferred_archive_gap",
+      "line": 70,
+      "rationale": "Carried readiness archive has a relative-depth reference to a sibling/generated archive artifact outside the imported provenance set.",
+      "raw_target": "../../.planning/AGENTS.md:98",
+      "resolved": ".planning/readiness/.planning/AGENTS.md",
+      "reviewed_by": "codex-refmap-repair-2026-04-24",
+      "source": ".planning/readiness/phase-01-rerun/REVIEWS/checkpoint-2-cross-vendor-review-sonnet-r1.md"
+    }
+  ],
+  "generated_at": "2026-04-24",
+  "generated_from": "python3 tooling/codex/audit_refmap.py snapshot . after outside-repo absolute links were classified as external-absolute",
+  "policy": "Exact missing-link entries are allowed only for carried archive/provenance references. Active unclassified missing links still fail audit_refmap verification.",
+  "schema_version": 1
+}
