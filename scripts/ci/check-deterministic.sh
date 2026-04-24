@@ -20,7 +20,7 @@ python3 -m unittest \
   tooling.codex.tests.test_runtime_adapter_parity \
   tooling.codex.tests.test_harness_canary
 
-python3 harness_modifier/contract/portable_gsd_contract.py validate-manifest . --strict
+python3 harness_modifier/contract/portable_gsd_contract.py validate-manifest . --source-only --strict
 
 (cd docs/origin-audit/archive && sha256sum -c SHA256SUMS)
 

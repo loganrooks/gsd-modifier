@@ -61,6 +61,31 @@ class PortableGsdContractTests(unittest.TestCase):
             self.assertIn("config.toml", report["add_present_in_backup"])
             self.assertTrue(report["hard_failures"])
 
+    def test_validate_manifest_source_only_does_not_require_live_backup_meta(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            self._write(repo_root, "tooling/portable-gsd/overlay/get-shit-done/workflows/plan-phase.md", "overlay\n")
+            self._write(
+                repo_root,
+                "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
+                json.dumps(
+                    {
+                        "schema_version": 2,
+                        "entries": {"get-shit-done/workflows/plan-phase.md": "overwrite"},
+                    }
+                )
+                + "\n",
+            )
+
+            runtime_report = pgc.build_manifest_validation_report(repo_root)
+            source_report = pgc.build_manifest_validation_report(repo_root, require_backup_meta=False)
+
+            self.assertIn("get-shit-done/workflows/plan-phase.md", runtime_report["overwrite_missing_in_backup"])
+            self.assertTrue(runtime_report["hard_failures"])
+            self.assertEqual(source_report["overwrite_missing_in_backup"], [])
+            self.assertEqual(source_report["hard_failures"], [])
+            self.assertFalse(source_report["summary"]["requires_backup_meta"])
+
     def test_materialization_report_accepts_reasoning_default_mutations(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             repo_root = pathlib.Path(tmpdir)

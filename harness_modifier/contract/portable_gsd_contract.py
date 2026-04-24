@@ -63,6 +63,11 @@ def parse_args() -> argparse.Namespace:
     validate.add_argument("--output")
     validate.add_argument("--pretty", action="store_true")
     validate.add_argument("--strict", action="store_true")
+    validate.add_argument(
+        "--source-only",
+        action="store_true",
+        help="Validate tracked manifest and overlay source without requiring materialized runtime backup metadata.",
+    )
 
     apply_overlay_parser = subparsers.add_parser("apply-overlay", help="Apply tracked overlay into .codex.")
     apply_overlay_parser.add_argument("repo_root", nargs="?", default=".")
@@ -471,6 +476,7 @@ def build_manifest_validation_report_for_roots(
     modifier_repo_root: pathlib.Path,
     live_repo_root: pathlib.Path,
     runtime: str = "codex",
+    require_backup_meta: bool = True,
 ) -> dict[str, Any]:
     overlay_root = modifier_repo_root / OVERLAY_REL_PATH
     manifest_path = modifier_repo_root / OVERLAY_MANIFEST_REL_PATH
@@ -521,9 +527,9 @@ def build_manifest_validation_report_for_roots(
             if spec["source_rel_path"] != f"{OVERLAY_REL_PATH}/{spec['target_path']}"
         }.items()
     )
-    overwrite_missing_in_backup = sorted(overwrite_paths - backup_paths)
-    add_present_in_backup = sorted(add_paths & backup_paths)
-    backup_overlay_not_overwrite = sorted((backup_paths & overlay_paths) - overwrite_paths)
+    overwrite_missing_in_backup = sorted(overwrite_paths - backup_paths) if require_backup_meta else []
+    add_present_in_backup = sorted(add_paths & backup_paths) if require_backup_meta else []
+    backup_overlay_not_overwrite = sorted((backup_paths & overlay_paths) - overwrite_paths) if require_backup_meta else []
 
     if manifest_schema_version == 3:
         manifest_entries = manifest_payload.get("entries", {})
@@ -578,6 +584,7 @@ def build_manifest_validation_report_for_roots(
             "overwrite_count": len(overwrite_paths),
             "add_count": len(add_paths),
             "backup_meta_count": len(backup_paths),
+            "requires_backup_meta": require_backup_meta,
         },
         "invalid_modes": invalid_modes,
         "missing_from_manifest": missing_from_manifest,
@@ -594,8 +601,17 @@ def build_manifest_validation_report_for_roots(
     }
 
 
-def build_manifest_validation_report(repo_root: pathlib.Path, runtime: str = "codex") -> dict[str, Any]:
-    return build_manifest_validation_report_for_roots(repo_root, repo_root, runtime=runtime)
+def build_manifest_validation_report(
+    repo_root: pathlib.Path,
+    runtime: str = "codex",
+    require_backup_meta: bool = True,
+) -> dict[str, Any]:
+    return build_manifest_validation_report_for_roots(
+        repo_root,
+        repo_root,
+        runtime=runtime,
+        require_backup_meta=require_backup_meta,
+    )
 
 
 def capture_pristine_overwrites(repo_root: pathlib.Path, runtime: str = "codex") -> dict[str, Any]:
@@ -842,10 +858,21 @@ def main() -> int:
     if args.command == "validate-manifest":
         runtimes = selected_runtimes(args)
         if len(runtimes) == 1:
-            report = build_manifest_validation_report(repo_root, runtime=runtimes[0])
+            report = build_manifest_validation_report(
+                repo_root,
+                runtime=runtimes[0],
+                require_backup_meta=not args.source_only,
+            )
         else:
             report = aggregate_runtime_reports(
-                {runtime: build_manifest_validation_report(repo_root, runtime=runtime) for runtime in runtimes}
+                {
+                    runtime: build_manifest_validation_report(
+                        repo_root,
+                        runtime=runtime,
+                        require_backup_meta=not args.source_only,
+                    )
+                    for runtime in runtimes
+                }
             )
         write_json(report, pathlib.Path(args.output) if args.output else None, pretty=args.pretty or not args.output)
         return 1 if args.strict and report["hard_failures"] else 0
