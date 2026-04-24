@@ -327,6 +327,40 @@ class ModelOpinionMiningTests(unittest.TestCase):
         self.assertEqual(row["source_kind"], "discussion_thread")
         self.assertEqual(row["verification_status"], "accept")
 
+    def test_verify_sources_accepts_lowercase_platform_variants(self) -> None:
+        community_seed = self._seed_row(
+            source_id="community-002",
+            platform="openai_community",
+            url="https://community.openai.com/t/codex-edits-files-even-chat-mode/1368649",
+        )
+        github_seed = self._seed_row(
+            source_id="github-002",
+            platform="github_issue",
+            url="https://github.com/openai/codex/issues/19215",
+        )
+
+        with mock.patch.object(
+            verify_sources.requests,
+            "get",
+            side_effect=[
+                FakeResponse(
+                    status_code=200,
+                    text="<html><title>Codex edits files even chat mode - OpenAI Developer Community</title></html>",
+                    headers={"Content-Type": "text/html"},
+                ),
+                FakeResponse(
+                    status_code=200,
+                    text=json.dumps({"title": "Limit hit very early in GPT 5.5"}),
+                    headers={"Content-Type": "application/json"},
+                ),
+            ],
+        ):
+            community_row = verify_sources.verify_one(community_seed, timeout=1.0)
+            github_row = verify_sources.verify_one(github_seed, timeout=1.0)
+
+        self.assertEqual(community_row["verification_status"], "accept")
+        self.assertEqual(github_row["verification_status"], "accept")
+
 
 if __name__ == "__main__":
     unittest.main()

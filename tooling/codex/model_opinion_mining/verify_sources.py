@@ -111,7 +111,7 @@ def extract_reddit_title(payload: Any) -> str:
 
 
 def classify_source_kind(seed: dict[str, Any], title: str) -> str:
-    platform = str(seed["platform"])
+    platform = str(seed["platform"]).lower().replace("_", "-")
     url = str(seed["url"])
     parsed = urlparse(url)
     if "reddit.com" in parsed.netloc and "/comments/" in parsed.path:
@@ -120,7 +120,12 @@ def classify_source_kind(seed: dict[str, Any], title: str) -> str:
         if "/tag/" in parsed.path:
             return "discovery_hub"
         return "discussion_thread"
-    if platform == "official" or parsed.netloc in {"openai.com", "platform.openai.com"}:
+    if platform in {"official", "openai", "openai-developers", "openai-help"} or parsed.netloc in {
+        "openai.com",
+        "platform.openai.com",
+        "developers.openai.com",
+        "help.openai.com",
+    }:
         return "official"
     if parsed.netloc == "news.ycombinator.com":
         return "discussion_thread"
@@ -128,7 +133,7 @@ def classify_source_kind(seed: dict[str, Any], title: str) -> str:
         return "issue"
     if "techmeme.com" in parsed.netloc:
         return "aggregator"
-    if platform in {"X/Twitter", "Bluesky"}:
+    if platform in {"x/twitter", "bluesky"}:
         return "social_permalink"
     if title:
         return "article"
@@ -161,7 +166,7 @@ def source_mentions_topic(seed: dict[str, Any], title: str) -> bool:
 
 def disposition(seed: dict[str, Any], http_status: int | str, title: str, source_kind: str) -> tuple[str, str]:
     caveat = str(seed.get("collection_caveat", "")).lower()
-    platform = str(seed["platform"])
+    platform = str(seed["platform"]).lower().replace("_", "-")
     if source_kind == "social_permalink" and "inferred" in caveat:
         return "reject", "inferred_social_permalink"
     if source_kind == "discovery_hub":
@@ -176,7 +181,7 @@ def disposition(seed: dict[str, Any], http_status: int | str, title: str, source
         return "reject", "aggregator_title_off_topic"
     if source_kind == "aggregator":
         return "hold", "aggregator_discovery_context"
-    if platform in {"official", "OpenAI Community", "Hacker News", "reddit", "github-issue"}:
+    if source_kind in {"discussion_thread", "issue"} or platform in {"official", "openai", "openai-developers", "openai-help"}:
         return "accept", "reachable_relevant_source"
     if source_mentions_topic(seed, title):
         return "hold", "reachable_secondary_or_uncertain_source"
