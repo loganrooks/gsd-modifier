@@ -49,7 +49,8 @@ Current concrete plan:
 
 - [001 Audit Import Refmap Stabilization](concrete-plans/001-audit-import-refmap-stabilization/PLAN.md) - completed
 - [002 Runtime Intervention Surface Inventory](concrete-plans/002-runtime-intervention-surface-inventory/PLAN.md) - completed
-- [003 Instruction Surface Generation Parity](concrete-plans/003-instruction-surface-generation-parity/PLAN.md) - current executable draft
+- [003 Instruction Surface Generation Parity](concrete-plans/003-instruction-surface-generation-parity/PLAN.md) - completed with defer-behavior decision
+- [004 Generator Owner And Command Contract](concrete-plans/004-generator-owner-and-command-contract/PLAN.md) - current executable draft
 
 ## Short-Term Horizon
 

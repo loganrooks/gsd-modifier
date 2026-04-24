@@ -218,8 +218,9 @@ Optional but release-relevant:
 | Plan | Parent workstream | Status | Notes |
 | --- | --- | --- | --- |
 | [001 Audit Import Refmap Stabilization](concrete-plans/001-audit-import-refmap-stabilization/PLAN.md) | prerequisite stabilization before Workstream 1 | completed | Cleared the audit/reference-map blocker before new bridge-harness behavior. |
-| [002 Runtime Intervention Surface Inventory](concrete-plans/002-runtime-intervention-surface-inventory/PLAN.md) | Workstream 1 | completed | Inventoried carriers, producers, consumers, materialization paths, verification hooks, and parity posture before runtime behavior changes. |
-| [003 Instruction Surface Generation Parity](concrete-plans/003-instruction-surface-generation-parity/PLAN.md) | Workstream 2 | executable draft | Traces and decides the `AGENTS.md` / `CLAUDE.md` generation posture before bridge-harness behavior changes. |
+| [002 Runtime Intervention Surface Inventory](concrete-plans/002-runtime-intervention-surface-inventory/PLAN.md) | Workstream 1 | completed | Inventoried runtime intervention carriers and verification hooks before behavior changes. |
+| [003 Instruction Surface Generation Parity](concrete-plans/003-instruction-surface-generation-parity/PLAN.md) | Workstream 2 | completed with defer decision | Found the all-`AGENTS.md` modifier posture and the installed `generate-claude-md` SDK/CJS command mismatch; deferred behavior changes. |
+| [004 Generator Owner And Command Contract](concrete-plans/004-generator-owner-and-command-contract/PLAN.md) | Workstream 2 | next | Resolve generator ownership and command semantics before compact-prompt work. |
 
 Future concrete plans should be added here when they become ready to execute.
 

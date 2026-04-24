@@ -15,7 +15,8 @@ It exists because one short horizon may contain multiple concrete plans, and som
 - [SHORT-HORIZON.md](SHORT-HORIZON.md) - short-horizon program plan for a deployable bridge harness.
 - [concrete-plans/001-audit-import-refmap-stabilization/PLAN.md](concrete-plans/001-audit-import-refmap-stabilization/PLAN.md) - completed implementation plan for stabilizing the audit import and reference-map state.
 - [concrete-plans/002-runtime-intervention-surface-inventory/PLAN.md](concrete-plans/002-runtime-intervention-surface-inventory/PLAN.md) - completed implementation plan for the runtime intervention surface inventory.
-- [concrete-plans/003-instruction-surface-generation-parity/PLAN.md](concrete-plans/003-instruction-surface-generation-parity/PLAN.md) - executable draft for instruction-surface generation and parity.
+- [concrete-plans/003-instruction-surface-generation-parity/PLAN.md](concrete-plans/003-instruction-surface-generation-parity/PLAN.md) - completed evidence and decision slice for instruction-surface generation posture.
+- [concrete-plans/004-generator-owner-and-command-contract/PLAN.md](concrete-plans/004-generator-owner-and-command-contract/PLAN.md) - executable draft for resolving the generator owner and command contract before behavior changes.
 
 ## Traceability Model
 
@@ -33,6 +34,6 @@ Concrete plans should cite their parent horizon/workstream and record when execu
 
 The current blocking concern is still not adding new bridge-harness behavior yet.
 
-The audit/reference-map blocker has been stabilized, and the runtime intervention surface inventory is committed. The next release slice is instruction-surface generation parity: deciding whether `AGENTS.md` remains the single generated project instruction surface or whether Claude needs a generated companion, then locking that posture with evidence and tests.
+The audit/reference-map blocker has been stabilized, the runtime intervention surface inventory is committed, and the instruction-surface parity pass has recorded a defer-behavior decision. The next release slice is the generator owner and command contract: deciding whether this repo owns a runtime-neutral generator wrapper, fixes/routes the SDK mismatch upstream, or safely switches initialization to a file-writing command.
 
-The current concrete plan for that blocker is [concrete-plans/003-instruction-surface-generation-parity/PLAN.md](concrete-plans/003-instruction-surface-generation-parity/PLAN.md).
+The current concrete plan for that blocker is [concrete-plans/004-generator-owner-and-command-contract/PLAN.md](concrete-plans/004-generator-owner-and-command-contract/PLAN.md).
