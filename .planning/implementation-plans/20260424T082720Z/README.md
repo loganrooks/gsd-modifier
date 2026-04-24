@@ -14,7 +14,8 @@ It exists because one short horizon may contain multiple concrete plans, and som
 - [HORIZONS.md](HORIZONS.md) - strategic immediate, short, medium, and long horizon framing.
 - [SHORT-HORIZON.md](SHORT-HORIZON.md) - short-horizon program plan for a deployable bridge harness.
 - [concrete-plans/001-audit-import-refmap-stabilization/PLAN.md](concrete-plans/001-audit-import-refmap-stabilization/PLAN.md) - completed implementation plan for stabilizing the audit import and reference-map state.
-- [concrete-plans/002-runtime-intervention-surface-inventory/PLAN.md](concrete-plans/002-runtime-intervention-surface-inventory/PLAN.md) - executable draft for the runtime intervention surface inventory.
+- [concrete-plans/002-runtime-intervention-surface-inventory/PLAN.md](concrete-plans/002-runtime-intervention-surface-inventory/PLAN.md) - completed implementation plan for the runtime intervention surface inventory.
+- [concrete-plans/003-instruction-surface-generation-parity/PLAN.md](concrete-plans/003-instruction-surface-generation-parity/PLAN.md) - executable draft for instruction-surface generation and parity.
 
 ## Traceability Model
 
@@ -32,6 +33,6 @@ Concrete plans should cite their parent horizon/workstream and record when execu
 
 The current blocking concern is still not adding new bridge-harness behavior yet.
 
-The audit/reference-map blocker has been stabilized. The next release slice is the runtime intervention surface inventory, which should expose carriers, producers, consumers, materialization paths, and verification hooks before behavior changes are planned.
+The audit/reference-map blocker has been stabilized, and the runtime intervention surface inventory is committed. The next release slice is instruction-surface generation parity: deciding whether `AGENTS.md` remains the single generated project instruction surface or whether Claude needs a generated companion, then locking that posture with evidence and tests.
 
-The current concrete plan for that blocker is [concrete-plans/002-runtime-intervention-surface-inventory/PLAN.md](concrete-plans/002-runtime-intervention-surface-inventory/PLAN.md).
+The current concrete plan for that blocker is [concrete-plans/003-instruction-surface-generation-parity/PLAN.md](concrete-plans/003-instruction-surface-generation-parity/PLAN.md).

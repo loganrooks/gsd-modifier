@@ -7,7 +7,7 @@ Status: short-horizon program draft
 
 - Package index: [README.md](README.md)
 - Strategic horizon frame: [HORIZONS.md](HORIZONS.md)
-- Current blocking concrete plan: [concrete-plans/002-runtime-intervention-surface-inventory/PLAN.md](concrete-plans/002-runtime-intervention-surface-inventory/PLAN.md)
+- Current blocking concrete plan: [concrete-plans/003-instruction-surface-generation-parity/PLAN.md](concrete-plans/003-instruction-surface-generation-parity/PLAN.md)
 
 ## Goal
 
@@ -218,13 +218,13 @@ Optional but release-relevant:
 | Plan | Parent workstream | Status | Notes |
 | --- | --- | --- | --- |
 | [001 Audit Import Refmap Stabilization](concrete-plans/001-audit-import-refmap-stabilization/PLAN.md) | prerequisite stabilization before Workstream 1 | completed | Cleared the audit/reference-map blocker before new bridge-harness behavior. |
-| [002 Runtime Intervention Surface Inventory](concrete-plans/002-runtime-intervention-surface-inventory/PLAN.md) | Workstream 1 | executable draft | Inventories carriers, producers, consumers, materialization paths, verification hooks, and parity posture before runtime behavior changes. |
+| [002 Runtime Intervention Surface Inventory](concrete-plans/002-runtime-intervention-surface-inventory/PLAN.md) | Workstream 1 | completed | Inventoried carriers, producers, consumers, materialization paths, verification hooks, and parity posture before runtime behavior changes. |
+| [003 Instruction Surface Generation Parity](concrete-plans/003-instruction-surface-generation-parity/PLAN.md) | Workstream 2 | executable draft | Traces and decides the `AGENTS.md` / `CLAUDE.md` generation posture before bridge-harness behavior changes. |
 
 Future concrete plans should be added here when they become ready to execute.
 
 Potential next plans:
 
-- `003-instruction-surface-generation-parity`
 - `004-compact-prompt-runtime-capability-contract`
 - `005-governance-artifact-seeding-proposal`
 - `006-prix-bridge-harness-contract`

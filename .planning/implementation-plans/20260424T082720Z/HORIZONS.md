@@ -7,7 +7,7 @@ Status: draft strategic frame
 
 - Package index: [README.md](README.md)
 - Short-horizon program plan: [SHORT-HORIZON.md](SHORT-HORIZON.md)
-- Current immediate concrete plan: [concrete-plans/002-runtime-intervention-surface-inventory/PLAN.md](concrete-plans/002-runtime-intervention-surface-inventory/PLAN.md)
+- Current immediate concrete plan: [concrete-plans/003-instruction-surface-generation-parity/PLAN.md](concrete-plans/003-instruction-surface-generation-parity/PLAN.md)
 
 ## Context
 
@@ -48,7 +48,8 @@ Exit criteria:
 Current concrete plan:
 
 - [001 Audit Import Refmap Stabilization](concrete-plans/001-audit-import-refmap-stabilization/PLAN.md) - completed
-- [002 Runtime Intervention Surface Inventory](concrete-plans/002-runtime-intervention-surface-inventory/PLAN.md) - current executable draft
+- [002 Runtime Intervention Surface Inventory](concrete-plans/002-runtime-intervention-surface-inventory/PLAN.md) - completed
+- [003 Instruction Surface Generation Parity](concrete-plans/003-instruction-surface-generation-parity/PLAN.md) - current executable draft
 
 ## Short-Term Horizon
 
