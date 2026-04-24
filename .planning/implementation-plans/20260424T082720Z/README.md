@@ -13,7 +13,8 @@ It exists because one short horizon may contain multiple concrete plans, and som
 
 - [HORIZONS.md](HORIZONS.md) - strategic immediate, short, medium, and long horizon framing.
 - [SHORT-HORIZON.md](SHORT-HORIZON.md) - short-horizon program plan for a deployable bridge harness.
-- [concrete-plans/001-audit-import-refmap-stabilization/PLAN.md](concrete-plans/001-audit-import-refmap-stabilization/PLAN.md) - immediate executable implementation plan for stabilizing the current audit import and reference-map state.
+- [concrete-plans/001-audit-import-refmap-stabilization/PLAN.md](concrete-plans/001-audit-import-refmap-stabilization/PLAN.md) - completed implementation plan for stabilizing the audit import and reference-map state.
+- [concrete-plans/002-runtime-intervention-surface-inventory/PLAN.md](concrete-plans/002-runtime-intervention-surface-inventory/PLAN.md) - executable draft for the runtime intervention surface inventory.
 
 ## Traceability Model
 
@@ -29,8 +30,8 @@ Concrete plans should cite their parent horizon/workstream and record when execu
 
 ## Current Boundary
 
-The current blocking concern is not adding new bridge-harness behavior yet.
+The current blocking concern is still not adding new bridge-harness behavior yet.
 
-The immediate blocker is stabilizing the imported audit/reference-map state and restoring a clean, reviewable `gsd-modifier` worktree. After that, the next release slice can address exposed intervention surfaces and bridge-harness governance.
+The audit/reference-map blocker has been stabilized. The next release slice is the runtime intervention surface inventory, which should expose carriers, producers, consumers, materialization paths, and verification hooks before behavior changes are planned.
 
-The current concrete plan for that blocker is [concrete-plans/001-audit-import-refmap-stabilization/PLAN.md](concrete-plans/001-audit-import-refmap-stabilization/PLAN.md).
+The current concrete plan for that blocker is [concrete-plans/002-runtime-intervention-surface-inventory/PLAN.md](concrete-plans/002-runtime-intervention-surface-inventory/PLAN.md).

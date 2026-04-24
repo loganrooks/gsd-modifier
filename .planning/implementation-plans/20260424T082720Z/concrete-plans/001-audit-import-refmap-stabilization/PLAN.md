@@ -9,8 +9,8 @@ Plan ID: `001-audit-import-refmap-stabilization`
 - Package index: [../../README.md](../../README.md)
 - Strategic horizon frame: [../../HORIZONS.md](../../HORIZONS.md)
 - Short-horizon program plan: [../../SHORT-HORIZON.md](../../SHORT-HORIZON.md)
-- Governing handoff: [../../../../docs/handoff/current.md](../../../../docs/handoff/current.md)
-- Repo instructions: [../../../../AGENTS.md](../../../../AGENTS.md)
+- Governing handoff: [../../../../../docs/handoff/current.md](../../../../../docs/handoff/current.md)
+- Repo instructions: [../../../../../AGENTS.md](../../../../../AGENTS.md)
 
 ## Objective
 
