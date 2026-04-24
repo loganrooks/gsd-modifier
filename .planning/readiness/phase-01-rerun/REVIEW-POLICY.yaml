@@ -1,0 +1,139 @@
+version: 1
+
+principles:
+  major_checkpoint_closure_requires_independent_reviewer: true
+  cross_vendor_is_selective_not_universal: true
+  same_lane_author_and_closer_not_sufficient_for_major_checkpoint: true
+  if_cross_vendor_unavailable_record_explicitly: true
+  reviews_should_be_high_expectation: true
+  reviews_should_seriously_challenge_closure_and_completeness_claims: true
+  preferred_review_posture: gap_exposure_and_completeness_challenge
+  criticism_must_be_justified_by_higher_standard: true
+  do_not_confuse_politeness_with_rigor: true
+  do_not_confuse_harshness_with_quality: true
+  reusable_audit_specs_must_check_read_set_adequacy: true
+  adjudication_specs_should_include_direct_spot_check_surfaces: true
+  reread_specs_should_test_evidence_base_adequacy: true
+  spec_reviews_should_treat_structural_parallelism_as_potential_bias: true
+  current_cross_vendor_family: anthropic_claude
+  cross_vendor_policy_uses_aliases_not_version_pins: true
+  routine_cross_vendor_model: sonnet
+  high_stakes_cross_vendor_model: opus
+
+model_defaults:
+  internal_verification_agent:
+    model: gpt-5.4
+    reasoning: high
+  cross_vendor_routine:
+    vendor: anthropic
+    model: sonnet
+    thinking: adaptive_or_high
+  cross_vendor_high_stakes:
+    vendor: anthropic
+    model: opus
+    thinking: adaptive_or_high_max
+
+disposition_ladder:
+  - accept
+  - revise-current
+  - reopen-current
+  - reactivate-earlier
+  - escalate-cross-vendor
+  - strategic-opportunity
+  - user-consult
+  - defer-nonblocking
+
+checkpoints:
+  "0":
+    major: true
+    closure_requires_independent_reviewer: true
+    default_review_modes:
+      - local-reread
+      - internal-verification-agent
+    cross_vendor_default: not_required
+    cross_vendor_preferred_when:
+      - doctrine_sensitive_ambiguity_remains
+      - issue_no_longer_primarily_mechanical
+    cross_vendor_required_when: []
+    preferred_cross_vendor_model: sonnet
+    escalated_cross_vendor_model: opus
+  "1":
+    major: true
+    closure_requires_independent_reviewer: true
+    default_review_modes:
+      - internal-verification-agent
+    cross_vendor_default: strongly_preferred
+    cross_vendor_preferred_when:
+      - governance_or_harness_doctrine_materially_changes
+    cross_vendor_required_when: []
+    preferred_cross_vendor_model: sonnet
+    escalated_cross_vendor_model: opus
+  "2":
+    major: true
+    closure_requires_independent_reviewer: true
+    default_review_modes:
+      - internal-verification-agent
+    cross_vendor_default: conditional
+    cross_vendor_preferred_when:
+      - patch_materially_changes_doctrine
+      - patch_touches_load_bearing_05_gap_closure_distinctions
+    cross_vendor_required_when: []
+    preferred_cross_vendor_model: sonnet
+    escalated_cross_vendor_model: opus
+  "3":
+    major: true
+    closure_requires_independent_reviewer: true
+    default_review_modes:
+      - internal-verification-agent
+    cross_vendor_default: conditional
+    cross_vendor_preferred_when:
+      - scope_judgment_is_narrowing_or_expanding_load_bearing_audit_surface
+      - machinery_ownership_may_already_be_reallocated
+    cross_vendor_required_when: []
+    preferred_cross_vendor_model: sonnet
+    escalated_cross_vendor_model: opus
+  "4":
+    major: true
+    closure_requires_independent_reviewer: true
+    default_review_modes:
+      - internal-verification-agent
+    cross_vendor_default: strongly_preferred
+    cross_vendor_preferred_when:
+      - workflow_or_harness_doctrine_is_being_reshaped
+      - machinery_ownership_may_be_reallocated
+    cross_vendor_required_when: []
+    preferred_cross_vendor_model: opus
+  "5":
+    major: true
+    closure_requires_independent_reviewer: true
+    default_review_modes:
+      - internal-verification-agent
+    cross_vendor_default: strongly_preferred
+    cross_vendor_preferred_when:
+      - harness_ownership_is_being_reallocated
+    cross_vendor_required_when: []
+    preferred_cross_vendor_model: opus
+  "6":
+    major: true
+    closure_requires_independent_reviewer: true
+    default_review_modes:
+      - internal-verification-agent
+    cross_vendor_default: conditional
+    cross_vendor_preferred_when:
+      - rerun_readiness_verdict_has_high_interpretive_load
+    cross_vendor_required_when:
+      - readiness_verdict_depends_on_doctrine_sensitive_judgment
+    preferred_cross_vendor_model: sonnet
+    escalated_cross_vendor_model: opus
+  "7":
+    major: true
+    closure_requires_independent_reviewer: true
+    default_review_modes:
+      - internal-verification-agent
+    cross_vendor_default: conditional
+    cross_vendor_preferred_when:
+      - fresh_plan_is_doctrine_sensitive_or_contested
+      - rerun_appears_to_recreate_old_asymmetries
+    cross_vendor_required_when: []
+    preferred_cross_vendor_model: sonnet
+    escalated_cross_vendor_model: opus

@@ -1,0 +1,726 @@
+{
+  "version": 2,
+  "basis_commit": "16cfb8a",
+  "evidence_entries": [
+    {
+      "id": "overlay_contract_validation",
+      "evidence_lane": "contract_validation",
+      "path": "harness_modifier/contract/portable_gsd_contract.py",
+      "note": "validator and post-materialization contract checks for tracked overlay ownership"
+    },
+    {
+      "id": "portable_contract_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_portable_gsd_contract.py",
+      "note": "focused contract coverage for verify-materialized baseline parity-reference classification and the contextual-reread route for unreviewed runtime-specific hits"
+    },
+    {
+      "id": "portable_materialization_check",
+      "evidence_lane": "materialization",
+      "path": "scripts/setup-portable-gsd.sh",
+      "note": "install entry plus repo-local runtime verification, fresh-install pristine capture, and overlay/materialization bridge"
+    },
+    {
+      "id": "uplift_manifest_current",
+      "evidence_lane": "producer_scoped_report",
+      "path": ".planning/UPLIFT-MANIFEST.json",
+      "note": "current producer-scoped uplift memory with observed inputs, compatibility anchor, seed-corpus posture, and held-later carry"
+    },
+    {
+      "id": "runtime_manifest_current",
+      "evidence_lane": "observed_runtime",
+      "path": ".codex/gsd-file-manifest.json",
+      "note": "materialized runtime manifest carrying the current observed version anchor for uplift compatibility"
+    },
+    {
+      "id": "runtime_version_current",
+      "evidence_lane": "observed_runtime",
+      "path": ".codex/get-shit-done/VERSION",
+      "note": "materialized runtime version file carrying the current observed version anchor for uplift compatibility"
+    },
+    {
+      "id": "held_runtime_version_current",
+      "evidence_lane": "observed_runtime",
+      "path": ".claude/get-shit-done/VERSION",
+      "note": "held runtime annotation source for the current cross-runtime uplift compatibility slice"
+    },
+    {
+      "id": "runtime_visibility_snapshot",
+      "evidence_lane": "observed_runtime",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/tranche-audit/artifacts/01-runtime-visibility-report.json",
+      "note": "frozen runtime-visibility report for selected high-leverage carriers"
+    },
+    {
+      "id": "manifest_install_coherence_report",
+      "evidence_lane": "coherence",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/artifacts/02-manifest-install-coherence-report.json",
+      "note": "selected-scope manifest/install coherence report"
+    },
+    {
+      "id": "launch_capture_lane_03",
+      "evidence_lane": "capture",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/launch-truth/03-propagation-registry-system-cross-vendor-launch-truth.md",
+      "note": "lane-03 requested-versus-effective launch record"
+    },
+    {
+      "id": "launch_capture_threshold_05",
+      "evidence_lane": "capture",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/threshold-audit/launch-truth/05-historical-scanner-influenced-reread-launch-truth.md",
+      "note": "threshold-audit lane-05 requested-versus-effective launch record"
+    },
+    {
+      "id": "historical_scanner_reread_output_05",
+      "evidence_lane": "lane_output",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/threshold-audit/outputs/05-historical-scanner-influenced-reread-gpt54-xhigh-r1.md",
+      "note": "bounded historical reread output over the scanner-influenced commit family"
+    },
+    {
+      "id": "threshold_scanner_helper_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_scan_threshold_language.py",
+      "note": "direct unit coverage for explicit anti-pattern prohibition lines in the scanner helper"
+    },
+    {
+      "id": "verifier_lifecycle_carry_impl_54",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/54-verifier-lifecycle-carry-first-slice-implementation.md",
+      "note": "landed verifier-side lifecycle carry slice covering workflow, template, registry, reference, helper follow-through, and the held setup-script fragility"
+    },
+    {
+      "id": "setup_runtime_helper_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_ensure_gsd_sdk_runtime.py",
+      "note": "direct unit coverage for healthy runtime verification, non-executable shebang-target repair, and unresolved no-candidate cases in the gsd-sdk runtime helper"
+    },
+    {
+      "id": "setup_portable_gsd_impl_56",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/56-setup-portable-gsd-robustness-and-reinstall-truth-implementation.md",
+      "note": "landed setup/materialization robustness slice covering bounded gsd-sdk runtime repair, fresh-install pristine overwrite capture, direct local helper proof, and isolated-worktree full setup proof"
+    },
+    {
+      "id": "transition_lifecycle_carry_impl_58",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/58-transition-lifecycle-carry-first-slice-implementation.md",
+      "note": "landed transition-side lifecycle carry slice covering workflow/template overlay ownership, future-preservation close-boundary review, compact state-digest upkeep, and strict post-materialization proof"
+    },
+    {
+      "id": "milestone_boundary_lifecycle_carry_impl_60",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/60-milestone-boundary-lifecycle-carry-first-slice-implementation.md",
+      "note": "landed milestone-boundary lifecycle carry slice covering tracked overlay ownership for new-milestone and complete-milestone, explicit LONG-ARC plus Future Carry Forward reread at milestone open/close, and strict post-materialization proof"
+    },
+    {
+      "id": "state_progress_resume_future_carry_impl_62",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/62-state-progress-and-resume-future-carry-consumer-implementation.md",
+      "note": "landed first-read consumer slice covering tracked overlay ownership for the state helper plus progress/resume workflows, structured accumulated-context and future-carry parsing, and strict post-materialization proof"
+    },
+    {
+      "id": "state_snapshot_future_carry_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_state_snapshot_future_carry.py",
+      "note": "focused helper coverage for current-template decisions, blockers, future-carry buckets, session continuity, and workflow-consumer contract presence"
+    },
+    {
+      "id": "spec_lifecycle_carry_impl_64",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/64-spec-lifecycle-carry-first-slice-implementation.md",
+      "note": "landed spec lifecycle slice covering tracked overlay ownership for spec-phase and spec template, bounded Future-Aware Notes, discuss-phase spec reread, and strict post-materialization proof"
+    },
+    {
+      "id": "spec_future_carry_contract_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_spec_future_carry_contract.py",
+      "note": "focused contract coverage for spec-phase long-arc reread, spec template Future-Aware Notes buckets, and discuss-phase upstream spec carry"
+    },
+    {
+      "id": "read_packet_relevance_control_impl_66",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/66-read-packet-and-relevance-control-first-slice-implementation.md",
+      "note": "landed read-packet and relevance-control slice covering overlay ownership for the mandatory-read reference, explicit required/supporting/deeper packet tiers, layered reading control in progress/resume-project/uplift-project, and strict post-materialization proof"
+    },
+    {
+      "id": "read_packet_tier_contract_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_read_packet_tiers_contract.py",
+      "note": "focused contract coverage for mandatory-read tier doctrine, overlay ownership for the shared reference, and layered packet carry in progress, resume-project, and uplift-project"
+    },
+    {
+      "id": "initialization_ingest_read_packet_impl_68",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/68-initialization-and-ingest-read-packet-first-slice-implementation.md",
+      "note": "landed initialization and ingest read-packet slice covering tracked overlay ownership for new-project, new-milestone, and ingest-docs, explicit required/supporting/deeper packet tiers, and sharper progress-then-uplift versus merge-then-later-uplift route separation"
+    },
+    {
+      "id": "initialization_read_packet_contract_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_initialization_read_packet_contract.py",
+      "note": "focused contract coverage for overlay ownership of new-project, new-milestone, and ingest-docs, layered packet doctrine presence, and explicit uplift-route visibility where this slice makes that route real"
+    },
+    {
+      "id": "health_migration_follow_through_impl_70",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/70-health-and-migration-follow-through-first-slice-implementation.md",
+      "note": "landed health and migration follow-through slice covering tracked overlay ownership for health and the two wrappers, layered read-packet carry in health, route separation between structural repair and later uplift, and post-migration structural validation plus later uplift separation"
+    },
+    {
+      "id": "health_migration_follow_through_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_health_and_migration_follow_through_contract.py",
+      "note": "focused contract coverage for overlay ownership of health plus the two wrappers, layered packet doctrine presence in health, and explicit structural-validation plus later-uplift follow-through in repair and migration wrappers"
+    },
+    {
+      "id": "update_follow_through_impl_72",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/72-update-follow-through-first-slice-implementation.md",
+      "note": "landed update follow-through slice covering tracked overlay ownership for update and gsd-update, layered read-packet carry in update, and explicit runtime/package versus structural-health versus later-uplift route separation"
+    },
+    {
+      "id": "update_follow_through_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_update_follow_through_contract.py",
+      "note": "focused contract coverage for overlay ownership of update and gsd-update, layered packet doctrine presence in update, explicit runtime/package versus structural-health versus later-uplift route separation in the workflow and wrapper, and the later provider-gated entry/runtime continuity pointer plus wrapper boundary follow-through"
+    },
+    {
+      "id": "update_entry_runtime_continuity_impl_133",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/133-update-entry-runtime-continuity-follow-through-implementation.md",
+      "note": "landed update consumer follow-through slice covering the shared entry/runtime continuity pointer, provider-horizon gate, pre-wipe read-only review beat, wrapper-side objective boundary, and the explicit reader/rewriter asymmetry at update"
+    },
+    {
+      "id": "codex_claude_parity_impl_135",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/135-codex-claude-parity-classification-carrier-implementation.md",
+      "note": "landed parity classification carrier slice covering typed runtime-specific reference disclosure inside verify-materialized, stable known-baseline classification, and contextual-reread routing for unreviewed hits"
+    },
+    {
+      "id": "codex_claude_parity_refresh_50",
+      "evidence_lane": "refresh_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/50-codex-claude-parity-classification-carrier-change-triggered-refresh.md",
+      "note": "change-triggered refresh capturing parity-reference disclosure as a live portable-materialization contract consequence instead of lane-only prose"
+    },
+    {
+      "id": "seed_consumer_carry_impl_74",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/74-seed-consumer-carry-first-slice-implementation.md",
+      "note": "landed seed producer/consumer follow-through slice covering explicit Strengthening Carry in plant-seed, richer Why This Matters plus Strengthening Carry extraction in new-milestone, and tracked overlay ownership for the plant-seed wrapper"
+    },
+    {
+      "id": "seed_consumer_carry_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_seed_consumer_follow_through_contract.py",
+      "note": "focused contract coverage for plant-seed producer carry, gsd-plant-seed wrapper ownership, and new-milestone consumer extraction of Why This Matters plus Strengthening Carry"
+    },
+    {
+      "id": "seed_vintage_consumer_sidecar_04",
+      "evidence_lane": "mapping_memo",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/outputs/04-seed-vintage-and-consumer-field-sidecar-gpt54-xhigh-r1.md",
+      "note": "bounded local sidecar showing no live repo-local seed corpus and identifying the stale explore producer path as the sharper live drift before doctrine-vintage widening"
+    },
+    {
+      "id": "explore_seed_convergence_impl_76",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/76-explore-seed-producer-convergence-first-slice-implementation.md",
+      "note": "landed explore-seed producer convergence slice covering overlay ownership for explore and gsd-explore, explicit $gsd-plant-seed plus SEED-NNN-slug routing, and removal of the stale legacy inline seed description"
+    },
+    {
+      "id": "explore_seed_convergence_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_explore_seed_follow_through_contract.py",
+      "note": "focused contract coverage for overlay ownership of explore and gsd-explore, explicit current seed-route language, and absence of legacy inline-seed vocabulary"
+    },
+    {
+      "id": "seed_doctrine_vintage_impl_78",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/78-seed-doctrine-vintage-anchor-first-slice-implementation.md",
+      "note": "landed seed doctrine vintage anchor slice covering seed_contract_version: 2 in plant-seed, explicit legacy_unversioned tolerance in new-milestone, and current version-anchor carry in gsd-plant-seed"
+    },
+    {
+      "id": "seed_doctrine_vintage_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_seed_consumer_follow_through_contract.py",
+      "note": "focused contract coverage for seed_contract_version: 2 in plant-seed, explicit legacy_unversioned tolerance in new-milestone, and current version-anchor language in gsd-plant-seed"
+    },
+    {
+      "id": "uplift_seed_corpus_impl_80",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/80-uplift-side-seed-corpus-posture-first-slice-implementation.md",
+      "note": "landed uplift-side seed corpus posture slice covering helper-side classification, durable uplift-memory carry, wrapper/workflow visibility, and later migration separation"
+    },
+    {
+      "id": "seed_operator_consumer_impl_82",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/82-seed-operator-consumer-widening-first-slice-implementation.md",
+      "note": "landed operator-facing seed consumer slice covering project_uplift progress-note fields plus progress/resume visibility through the existing uplift bridge"
+    },
+    {
+      "id": "project_uplift_contract_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_project_uplift.py",
+      "note": "focused helper and consumer coverage for uplift classification, declaration-driven compatibility drift routing, typed runtime observation consumption, typed uplift output-policy consumption, typed seed-contract consumption, seed-corpus posture movement, operator-facing seed posture visibility, bounded specialist packet disclosure, and current-version seed shape-gap discovery"
+    },
+    {
+      "id": "seed_operator_consumer_contract_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_seed_operator_consumer_follow_through_contract.py",
+      "note": "focused contract coverage for progress/resume seed posture display plus specialist packet candidate-count and pointer disclosure through the uplift-note bridge"
+    },
+    {
+      "id": "uplift_compatibility_annotation_impl_116",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/116-uplift-compatibility-annotation-first-slice-implementation.md",
+      "note": "landed compatibility-annotation slice keeping .codex as observed basis, recording .claude as held annotation, and widening read-only current-runtime consumers plus durable uplift memory"
+    },
+    {
+      "id": "transition_state_uplift_impl_121",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/121-transition-state-uplift-continuity-first-slice-implementation.md",
+      "note": "landed transition/state uplift continuity slice covering the top-level Project Uplift template slot, helper fill-in-place behavior, bounded preserve-versus-refresh handling at phase close, direct phase-complete preservation proof, and post-materialization runtime carry"
+    },
+    {
+      "id": "transition_state_uplift_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_transition_uplift_continuity.py",
+      "note": "focused contract coverage for the transition uplift continuity step, top-level Project Uplift slot placement, helper insertion preference, and direct proof that phase complete preserves the compact uplift block"
+    },
+    {
+      "id": "transition_state_uplift_refresh_44",
+      "evidence_lane": "change_triggered_refresh",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/44-transition-state-uplift-continuity-change-triggered-refresh.md",
+      "note": "typed v2 refresh that keeps the transition/state Project Uplift continuity bridge explicit on top of the earlier compatibility-family anchor, consumer-chain, and held-annotation refreshes"
+    },
+    {
+      "id": "milestone_boundary_uplift_impl_123",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/123-milestone-boundary-uplift-shared-reference-first-slice-implementation.md",
+      "note": "landed milestone-boundary uplift continuity slice covering the dedicated shared reference, overlay add ownership, milestone-open plus milestone-close read-only surfacing steps, and relation to the existing transition/state continuity route"
+    },
+    {
+      "id": "milestone_boundary_uplift_contract_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_milestone_boundary_uplift_shared_reference_contract.py",
+      "note": "focused contract coverage for overlay add ownership of the shared reference, minimum read-only reference shape, and explicit milestone-open plus milestone-close consumer carry"
+    },
+    {
+      "id": "milestone_boundary_uplift_refresh_45",
+      "evidence_lane": "change_triggered_refresh",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/45-milestone-boundary-uplift-shared-reference-change-triggered-refresh.md",
+      "note": "typed v2 refresh that keeps the milestone-boundary shared uplift reference explicit on top of the earlier compatibility-family anchor, consumer-chain, held-annotation, and transition/state continuity refreshes"
+    },
+    {
+      "id": "health_uplift_deepen_impl_125",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/125-health-uplift-deepen-in-place-first-slice-implementation.md",
+      "note": "landed health-side uplift continuity slice covering the in-place post-validation read-only step, compact-to-narrative-to-typed widening grammar, explicit three-way ownership split, and the kept boundary between structural-health authority and later write-side uplift refresh"
+    },
+    {
+      "id": "health_uplift_deepen_contract_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_health_uplift_deepen_in_place_contract.py",
+      "note": "focused contract coverage for the post-validation health uplift step, five-part local grammar, ordered widening from state to report to manifest, read-only discipline, and wrapper-side ownership split"
+    },
+    {
+      "id": "health_uplift_deepen_refresh_46",
+      "evidence_lane": "change_triggered_refresh",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/46-health-uplift-deepen-in-place-change-triggered-refresh.md",
+      "note": "typed v2 refresh that keeps repair-facing health uplift continuity explicit on top of the earlier compatibility-family anchor, consumer-chain, held-annotation, transition/state, and milestone-boundary continuity refreshes"
+    },
+    {
+      "id": "health_uplift_deepen_harden_impl_127",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/127-health-uplift-deepen-in-place-harden-follow-through-implementation.md",
+      "note": "landed same-carrier harden slice tightening the health-side trigger, literal silent-case carry, step/footer coexistence, and authoritative split placement without widening into new repair-family carriers"
+    },
+    {
+      "id": "health_uplift_deepen_harden_contract_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_health_uplift_deepen_in_place_contract.py",
+      "note": "widened focused contract coverage for post-validation meaning, literal silent-case carry, footer/step coexistence, and the kept read-only ownership split at the repair-facing health route"
+    },
+    {
+      "id": "health_uplift_deepen_harden_refresh_47",
+      "evidence_lane": "change_triggered_refresh",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/47-health-uplift-deepen-in-place-harden-change-triggered-refresh.md",
+      "note": "typed v2 refresh that keeps the health-side trigger, silence, and step/footer relation sharper on top of the earlier repair-facing health uplift continuity refresh"
+    },
+    {
+      "id": "seed_audit_gate_impl_84",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/84-seed-audit-gate-widening-first-slice-implementation.md",
+      "note": "landed audit-side seed slice covering overlay-owned audit.cjs, richer seed rows in structured and human audit output, milestone-close consumer reminder, and explicit non-movement for verify-work"
+    },
+    {
+      "id": "seed_audit_gate_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_seed_audit_gate_follow_through_contract.py",
+      "note": "focused contract coverage for overlay ownership of audit.cjs, richer seed audit JSON/report output, and milestone-close consumer wording that preserves surfaced seed detail"
+    },
+    {
+      "id": "seed_migration_inventory_impl_86",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/86-legacy-seed-corpus-migration-detect-only-first-slice-implementation.md",
+      "note": "landed specialist detect-only seed migration slice covering per-seed vintage and contract-shape inventory, dedicated workflow/wrapper carry, and explicit uplift handoff into the migration packet while keeping rewrites separate"
+    },
+    {
+      "id": "seed_migration_inventory_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_seed_migration_inventory.py",
+      "note": "focused specialist helper coverage for detect-only seed inventory posture, migration move classification, route-state distinctions, and shared typed seed-contract consumption"
+    },
+    {
+      "id": "seed_migration_inventory_follow_through_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_seed_migration_inventory_follow_through_contract.py",
+      "note": "focused contract coverage for overlay ownership of the specialist workflow/wrapper, uplift-route handoff into the seed-migration packet, producer-follow-through against the tracked plant-seed template, and rewrite staying separate from detect-only"
+    },
+    {
+      "id": "seed_migration_reread_output_04",
+      "evidence_lane": "external_reread_output",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/outputs/04-seed-migration-detect-only-first-slice-reread-opus47-max-r1.md",
+      "note": "bounded Opus reread over the landed detect-only migration slice, widening the inheritance toward post-write state, producer-follow-through, route-state disambiguation, uplift-side shape-gap discovery, and narrower disclosure/write guidance"
+    },
+    {
+      "id": "seed_migration_harden_impl_88",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/88-seed-migration-detect-only-harden-follow-through-implementation.md",
+      "note": "landed harden follow-through over the detect-only migration packet, covering route-state split, post-write durable-output wording, shared plant-seed shape constants, uplift-side current-version shape-gap discovery, and narrower workflow/wrapper disclosure"
+    },
+    {
+      "id": "seed_migration_harden_refresh_36",
+      "evidence_lane": "change_triggered_refresh",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/36-seed-migration-detect-only-harden-change-triggered-refresh.md",
+      "note": "typed v2 refresh that keeps the reread-earned harden semantics explicit at the helper/workflow/wrapper/uplift cluster instead of leaving them ambient after the first detect-only landing"
+    },
+    {
+      "id": "seed_migration_pointer_bridge_impl_90",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/90-seed-migration-operator-facing-pointer-bridge-implementation.md",
+      "note": "landed first operator-facing specialist packet bridge covering project_uplift progress-note candidate counts plus bounded command disclosure at progress and resume-project when migration candidates are present"
+    },
+    {
+      "id": "seed_migration_pointer_refresh_37",
+      "evidence_lane": "change_triggered_refresh",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/37-seed-migration-operator-facing-pointer-change-triggered-refresh.md",
+      "note": "typed v2 refresh that keeps specialist packet candidate counts plus bounded operator-facing packet disclosure explicit at the project_uplift -> progress/resume-project bridge"
+    },
+    {
+      "id": "seed_migration_bridge_harden_impl_92",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/92-seed-migration-pointer-bridge-harden-follow-through-implementation.md",
+      "note": "landed bridge-hardening follow-through covering inspect/write command split, candidate breakdown disclosure, durable uplift-memory count preservation, held-later breadcrumb widening, and end-to-end chain proof"
+    },
+    {
+      "id": "seed_migration_manifest_shape_fixture",
+      "evidence_lane": "shape_fixture",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/artifacts/07-seed-migration-manifest-shape-fixture.json",
+      "note": "representative synthetic SEED-MIGRATION-MANIFEST shape fixture used to anchor rereads and end-to-end chain proof for the specialist packet"
+    },
+    {
+      "id": "seed_migration_pointer_harden_refresh_38",
+      "evidence_lane": "change_triggered_refresh",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/38-seed-migration-pointer-bridge-harden-change-triggered-refresh.md",
+      "note": "typed v2 refresh that keeps breakdown disclosure, inspect/write split, fixture-backed packet shape, and stronger consumer gating proof explicit at the project_uplift -> progress/resume -> specialist-packet bridge"
+    },
+    {
+      "id": "propagation_review_route_impl_98",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/98-propagation-review-route-first-slice-implementation.md",
+      "note": "landed operator-facing propagation review route covering the new workflow and wrapper, baseline/delta-first packet discipline, partial-tool sovereignty limits, and explicit verification expectations for later multi-family slices"
+    },
+    {
+      "id": "propagation_review_route_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_propagation_review_route_contract.py",
+      "note": "focused contract coverage for overlay ownership of the propagation-review workflow and wrapper, baseline/delta packet presence, bounded runtime/install gate tooling references, read-only plus specialist-handoff wrapper language, output-shape carry, and durable-note placement guidance"
+    },
+    {
+      "id": "propagation_review_route_refresh_39",
+      "evidence_lane": "change_triggered_refresh",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/39-propagation-review-route-change-triggered-refresh.md",
+      "note": "typed v2 refresh that keeps the new baseline/delta-guided propagation-review route explicit instead of leaving later multi-family reread on chat memory or local diff intuition"
+    },
+    {
+      "id": "propagation_review_route_reread_07",
+      "evidence_lane": "route_reread",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/outputs/07-propagation-review-route-reread-opus47-max-r1.md",
+      "note": "bounded reread output over the landed propagation-review route; preserves the completed Opus widening plus the bounded local completion after stalled continuation attempts"
+    },
+    {
+      "id": "propagation_review_route_harden_impl_100",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/100-propagation-review-route-harden-follow-through-implementation.md",
+      "note": "landed route-hardening follow-through covering durable-note placement, claim-type carry, explicit tool-result-to-disposition guidance, and slightly wider focused contract-test coverage"
+    },
+    {
+      "id": "propagation_review_route_harden_refresh_40",
+      "evidence_lane": "change_triggered_refresh",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/40-propagation-review-route-harden-change-triggered-refresh.md",
+      "note": "typed v2 refresh that keeps the route-hardening follow-through explicit instead of leaving note-placement and disposition semantics ambient in the workflow diff alone"
+    },
+    {
+      "id": "uplift_docs_governance_runtime_proof_109",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/109-uplift-docs-governance-runtime-proof-and-refresh.md",
+      "note": "landed live-trigger docs-governance runtime-proof plus the parent-thread durable uplift refresh it classified"
+    },
+    {
+      "id": "uplift_docs_governance_runtime_proof_refresh_42",
+      "evidence_lane": "change_triggered_refresh",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/42-uplift-docs-governance-runtime-proof-change-triggered-refresh.md",
+      "note": "change-triggered propagation refresh that keeps the live-trigger docs-governance runtime-proof plus the resulting durable uplift refresh explicit"
+    },
+    {
+      "id": "entry_runtime_continuity_impl_130",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/130-entry-runtime-continuity-shared-reference-first-slice-implementation.md",
+      "note": "landed entry/runtime shared-reference slice covering the dedicated reference, overlay add ownership, direct new-project plus ingest-docs pointers, route-state trigger grammar, and bounded read-only continuity carry at the earliest entry pair"
+    },
+    {
+      "id": "entry_runtime_continuity_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_entry_runtime_continuity_shared_reference_contract.py",
+      "note": "focused contract coverage for overlay add ownership, five-section reference shape, mandatory-initial-read remaining grammar-only, and new-project plus ingest-docs direct-pointer read-only continuity carry"
+    },
+    {
+      "id": "entry_runtime_continuity_refresh_48",
+      "evidence_lane": "change_triggered_refresh",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/48-entry-runtime-continuity-shared-reference-change-triggered-refresh.md",
+      "note": "typed v2 refresh that keeps the entry/runtime shared uplift reference explicit on top of the earlier compatibility-family anchor, consumer-chain, held-annotation, transition/state, milestone-boundary, and repair-facing continuity refreshes"
+    },
+    {
+      "id": "update_entry_runtime_continuity_refresh_49",
+      "evidence_lane": "change_triggered_refresh",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/49-update-entry-runtime-continuity-follow-through-change-triggered-refresh.md",
+      "note": "typed v2 refresh that keeps the first workflow-plus-wrapper update consumer of the shared entry/runtime continuity reference explicit, including the provider-horizon gate, read-only review beat, and clean-install reader/rewriter asymmetry"
+    },
+    {
+      "id": "compatibility_declaration_file",
+      "evidence_lane": "declared_contract",
+      "path": "harness_modifier/compatibility/declaration.json",
+      "note": "typed portable compatibility declaration carrying observed-basis posture, held-runtime annotation semantics, parity baseline, and the currently held wider-window claims"
+    },
+    {
+      "id": "compatibility_declaration_impl_141",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/141-harness-modifier-compatibility-declaration-carrier-implementation.md",
+      "note": "landed extraction step-2 slice carrying the portable compatibility declaration into project_uplift, portable_gsd_contract, durable uplift memory, and later standalone-project travel"
+    },
+    {
+      "id": "overlay_roster_doc_current",
+      "evidence_lane": "declared_roster",
+      "path": "harness_modifier/overlay/ROSTER.md",
+      "note": "frozen per-entry overlay classification across generic, shared-boundary, and host-local entries derived from the tracked overlay manifest frontier"
+    },
+    {
+      "id": "overlay_roster_impl_146",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/146-harness-modifier-overlay-roster-and-embedded-host-path-scan-implementation.md",
+      "note": "landed extraction freeze that turns the overlay roster plus contextualized blocker scan into durable extraction authority before the first filesystem-rehome slice"
+    },
+    {
+      "id": "overlay_host_path_scan_146",
+      "evidence_lane": "audit_artifact",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/artifacts/03-overlay-embedded-host-path-scan.md",
+      "note": "contextualized blocker scan over host audit-workspace embeds, helper-home drift, host-local compact-prompt bodies, and non-blocking generic planning-canon mentions inside the overlay frontier"
+    },
+    {
+      "id": "overlay_first_rehome_impl_148",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/148-harness-modifier-first-overlay-filesystem-rehome-implementation.md",
+      "note": "landed first specialist overlay source split carrying authoritative source files under harness_modifier/overlay, explicit overlay-manifest source-path indirection, and package-owned helper shims for the moved workflow shells"
+    },
+    {
+      "id": "overlay_first_rehome_refresh_55",
+      "evidence_lane": "change_triggered_refresh",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/55-harness-modifier-first-overlay-filesystem-rehome-change-triggered-refresh.md",
+      "note": "change-triggered refresh that keeps the first specialist source split explicit across overlay roster, install-target contract, materialization helper, moved workflow/wrapper sources, and package-owned helper shims"
+    },
+    {
+      "id": "overlay_residue_classification_impl_150",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/150-harness-modifier-first-overlay-residue-classification-pass-implementation.md",
+      "note": "landed residue-classification slice covering source-side __PROJECT_ROOT__ token abstraction for the moved skill adapters plus explicit later-bound classification for helper-payload promotion, default-source-root migration, and overwrite-family source indirection"
+    },
+    {
+      "id": "overlay_residue_classification_contract_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_portable_gsd_contract.py",
+      "note": "focused contract coverage proving explicit manifest source entries still render __PROJECT_ROOT__ correctly through apply-overlay and materialization"
+    },
+    {
+      "id": "overlay_residue_classification_refresh_56",
+      "evidence_lane": "refresh_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/56-harness-modifier-first-overlay-residue-classification-change-triggered-refresh.md",
+      "note": "change-triggered refresh capturing the resolved skill-adapter source-path residue and the three remaining later-bound extraction pressures after the first specialist source split"
+    },
+    {
+      "id": "runtime_observation_policy_file",
+      "evidence_lane": "declared_contract",
+      "path": "harness_modifier/compatibility/observation.json",
+      "note": "typed runtime-observation carrier separating observed runtime directories from candidate runtime directories for project_uplift runtime discovery"
+    },
+    {
+      "id": "seed_contract_shape_file",
+      "evidence_lane": "declared_contract",
+      "path": "harness_modifier/compatibility/seed_contract.json",
+      "note": "typed seed-contract carrier declaring seed root, current version, required frontmatter keys, and required section headings for shared uplift plus specialist inventory use"
+    },
+    {
+      "id": "uplift_output_policy_file",
+      "evidence_lane": "declared_contract",
+      "path": "harness_modifier/uplift/output_policy.json",
+      "note": "typed uplift output-policy carrier declaring the Project Uplift state heading plus report, manifest, and held-later paths for shared helper and canary use"
+    },
+    {
+      "id": "uplift_carrier_catalog_file",
+      "evidence_lane": "declared_contract",
+      "path": "harness_modifier/uplift/carrier_catalog.json",
+      "note": "typed uplift host-doctrine catalog declaring file carriers, the runtime-agent registry sibling object, marker carriers, and stable ordering for project_uplift"
+    },
+    {
+      "id": "uplift_vocabulary_file",
+      "evidence_lane": "declared_contract",
+      "path": "harness_modifier/uplift/vocabulary.json",
+      "note": "typed host-facing uplift vocabulary declaring rerun-boundary patterns, phase-boundary notes, command tokens, and recommendation sentences for project_uplift outputs"
+    },
+    {
+      "id": "harness_quality_canary_impl_49",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/49-harness-quality-canary-first-slice-implementation.md",
+      "note": "landed first canary slice covering bounded harness-quality assertion and the initial helper/report route"
+    },
+    {
+      "id": "harness_canary_contract_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_harness_canary.py",
+      "note": "focused contract coverage for the bounded harness-quality canary helper, including uplift output-policy alignment after the neutralization slice"
+    },
+    {
+      "id": "project_uplift_neutralization_impl_154",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/154-harness-modifier-project-uplift-neutralization-implementation.md",
+      "note": "landed neutralization slice moving runtime observation, uplift output topology, and seed-contract shape into typed carriers and thinning project_uplift, seed_migration_inventory, and harness_canary around them"
+    },
+    {
+      "id": "project_uplift_neutralization_refresh_57",
+      "evidence_lane": "change_triggered_refresh",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/57-harness-modifier-project-uplift-neutralization-change-triggered-refresh.md",
+      "note": "typed v2 refresh that keeps the neutralized observation, output-policy, and seed-contract carriers explicit together with the thinned helper/downstream consumers they now govern"
+    },
+    {
+      "id": "project_uplift_host_doctrine_neutralization_impl_157",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/157-harness-modifier-project-uplift-host-doctrine-catalog-neutralization-implementation.md",
+      "note": "landed second neutralization tranche moving file-carrier doctrine, runtime-agent registry shape, marker-carrier doctrine, and host-facing uplift vocabulary into typed carriers while thinning project_uplift around them"
+    },
+    {
+      "id": "project_uplift_host_doctrine_neutralization_refresh_58",
+      "evidence_lane": "change_triggered_refresh",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/58-harness-modifier-project-uplift-host-doctrine-catalog-neutralization-change-triggered-refresh.md",
+      "note": "typed v2 refresh that keeps the new host-doctrine catalog and vocabulary carriers explicit together with the thinned helper, runtime-agent registry discovery, and operator-facing uplift language they now govern"
+    },
+    {
+      "id": "project_uplift_host_planning_shape_refresh_59",
+      "evidence_lane": "change_triggered_refresh",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/59-harness-modifier-project-uplift-host-planning-shape-neutralization-change-triggered-refresh.md",
+      "note": "typed v2 refresh that keeps the neutralized host-planning-shape carriers explicit together with the state-section, phase-layout, and state-writer split they now govern"
+    },
+    {
+      "id": "development_protocol_refresh_61",
+      "evidence_lane": "change_triggered_refresh",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/61-development-protocol-first-slice-change-triggered-refresh.md",
+      "note": "change-triggered refresh capturing the first development-side protocol slice across the pattern library, planning AGENTS doctrine, readiness compaction prompt, and propagation-review companion carry"
+    },
+    {
+      "id": "responsible_closure_observation_impl_175",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/175-harness-modifier-observation-carrier-writer-first-slice-implementation.md",
+      "note": "landed responsible-closure observation carrier slice covering the JSON-only observation record, validated writer, five-family signal partition, and deterministic output discipline"
+    },
+    {
+      "id": "responsible_closure_observation_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_closure_observation_writer.py",
+      "note": "focused contract coverage for the responsible-closure observation writer, including shared packet vocabulary consumption and bounded signal-family validation"
+    },
+    {
+      "id": "responsible_closure_observation_refresh_62",
+      "evidence_lane": "change_triggered_refresh",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/62-responsible-closure-observation-carrier-writer-first-slice-change-triggered-refresh.md",
+      "note": "change-triggered refresh capturing the first observation carrier/writer as a live responsible-closure package family rather than prose-only preparation"
+    },
+    {
+      "id": "responsible_closure_packet_impl_176",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/176-harness-modifier-host-exercise-packet-contract-first-slice-implementation.md",
+      "note": "landed responsible-closure packet-contract slice covering the first host-class declaration, packet-side vocabulary ownership, and validated writer for bounded observe-only host exercises"
+    },
+    {
+      "id": "responsible_closure_packet_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_closure_host_exercise_packet_writer.py",
+      "note": "focused contract coverage for the responsible-closure host-exercise packet writer, including disjoint-host rules, preflight reads, abort conditions, and shared exercise vocabulary"
+    },
+    {
+      "id": "responsible_closure_packet_refresh_63",
+      "evidence_lane": "change_triggered_refresh",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/63-responsible-closure-host-exercise-packet-contract-first-slice-change-triggered-refresh.md",
+      "note": "change-triggered refresh capturing packet-side exercise vocabulary and responsible-closure contract ownership as a live carried surface"
+    },
+    {
+      "id": "responsible_closure_host_runner_file",
+      "evidence_lane": "runtime_support",
+      "path": "harness_modifier/closure/host_exercise_runner.py",
+      "note": "package-owned runner for bounded observe-only host exercises, including declaration-side compatibility evaluation and conditional verify-materialized deferral when modifier-side pristine/materialization markers are absent"
+    },
+    {
+      "id": "responsible_closure_host_runner_tests",
+      "evidence_lane": "tested_behavior",
+      "path": "tooling/codex/tests/test_closure_host_exercise_runner.py",
+      "note": "focused contract coverage for the host exercise runner, including inside-window compatibility acceptance, context-deferred verify-materialized semantics, and read-side shift-mode carry"
+    },
+    {
+      "id": "responsible_closure_first_host_impl_178",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/178-harness-modifier-first-observe-only-host-exercise-implementation.md",
+      "note": "landed first actual observe-only host-evidence slice covering one disjoint codex-only regular-GSD host, inside-window compatibility, deferred modifier-side verify-materialized, and accepted read-side shift-mode semantics"
+    },
+    {
+      "id": "responsible_closure_first_host_observation_001",
+      "evidence_lane": "frozen_artifact",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/responsible-closure-audit/artifacts/01-host-exercise-gsd-modifier-host-fixture-01/first-host-exercise-001-observation.json",
+      "note": "first frozen responsible-closure observation record for a real disjoint codex-only host exercise"
+    },
+    {
+      "id": "responsible_closure_first_host_runtime_snapshot_001",
+      "evidence_lane": "frozen_artifact",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/responsible-closure-audit/artifacts/01-host-exercise-gsd-modifier-host-fixture-01/first-host-exercise-001-runtime-visibility-snapshot.json",
+      "note": "first frozen runtime-visibility snapshot bundled with a real responsible-closure host exercise"
+    },
+    {
+      "id": "responsible_closure_first_host_refresh_64",
+      "evidence_lane": "change_triggered_refresh",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/64-responsible-closure-first-observe-only-host-exercise-change-triggered-refresh.md",
+      "note": "change-triggered refresh capturing the first real responsible-closure host-evidence slice and its sharpening of the next move toward shipped/install-contract classification"
+    },
+    {
+      "id": "responsible_closure_shipped_install_classification_impl_180",
+      "evidence_lane": "implementation_note",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/180-harness-modifier-shipped-install-contract-classification-first-slice-implementation.md",
+      "note": "landed first durable shipped/install-contract classification slice covering runtime-core, runtime-support, transitional shipped/install support, pre-run experimental, and development-program-only rows together with the extracted-project consequence that package plus overlay/install contract must later travel as one project"
+    },
+    {
+      "id": "responsible_closure_shipped_install_classification_artifact_02",
+      "evidence_lane": "frozen_artifact",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/responsible-closure-audit/artifacts/02-shipped-install-contract-classification-v1.json",
+      "note": "first durable responsible-closure ledger for the live shipped/install contract surface across tiers, audiences, install-profile pressure, current runtime/install relations, and typed shim-authority classes"
+    },
+    {
+      "id": "responsible_closure_shipped_install_classification_refresh_65",
+      "evidence_lane": "change_triggered_refresh",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/65-responsible-closure-shipped-install-contract-classification-first-slice-change-triggered-refresh.md",
+      "note": "change-triggered refresh capturing the durable shipped/install classification baseline, its extracted-project consequence, and its handoff to CI/install-profile/extraction sequencing"
+    }
+  ]
+}

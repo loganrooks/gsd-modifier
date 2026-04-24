@@ -1,0 +1,40 @@
+label=extraction-audit-05
+exit_code=0
+elapsed_seconds=436.198
+stream=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/logs/05/extraction-audit-05-20260422-183143.tzaaoc6p.stream.jsonl
+stderr=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/logs/05/extraction-audit-05-20260422-183143.x417238w.stderr.log
+debug=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/logs/05/extraction-audit-05-20260422-183143.gqqb325g.debug.log
+stream_bytes=2446908
+stderr_bytes=0
+debug_bytes=56006
+event_counts={"assistant": 29, "rate_limit_event": 1, "result": 1, "stream_event": 6971, "system": 40, "user": 24}
+system_subtypes={"hook_response": 7, "hook_started": 7, "init": 1, "status": 25}
+text_chunks=3
+last_text_begin
+The file has already been successfully written. The audit output is at:
+
+`.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/outputs/05-harness-modifier-project-uplift-neutralization-proposal-reread-opus47-max-r1.md`
+
+The return carries all eight required sections and holds the judgment centered on the bounded neutralization object `153` opened:
+
+- **Runtime discovery** — typed observation carrier with explicit `observed_runtime_directories` (declaration-derived) versus `candidate_observed_runtime_directories` split, preserving `.codex` observed basis and `.claude` held annotation without widening provider policy.
+- **Uplift output/path** — four-way split of the eleven constants into uplift-output topology, runtime-observation duplication (delete, read from declaration), install-target hold (named accessor, not this slice), and seed-contract shape (separate carrier shared with downstream). Two typed carriers, not one config bucket.
+- **Compatibility routing** — thin the nine module-level globals and the import-time `load_declaration()`; pass declaration through function signatures; seed-shape references in `seed_migration_inventory.py` migrate off `pu.X` onto the new carrier while plain parsing helpers stay imported from `pu`.
+
+Held explicitly later: relocation, second overlay tranche, overwrite-family split, standalone repo, npm/`npx`, second-host, `STATIC_FILE_CARRIERS` / `MARKER_CARRIERS` typing, and speculative-runtime pruning.
+last_text_end
+last_error_like_begin
+{"type":"result","subtype":"success","is_error":false,"api_error_status":null,"duration_ms":434046,"duration_api_ms":431071,"num_turns":25,"result":"The file has already been successfully written. The audit output is at:\n\n`.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/outputs/05-harness-modifier-project-uplift-neutralization-proposal-reread-opus47-max-r1.md`\n\nThe return carries all eight required sections and holds the judgment centered on the bounded neutralization object `153` opened:\n\n- **Runtime discovery** — typed observation carrier with explicit `observed_runtime_directories` (declaration-derived) versus `candidate_observed_runtime_directories` split, preserving `.codex` observed basis and `.claude` held annotation without widening provider policy.\n- **Uplift output/path** — four-way split of the eleven constants into uplift-output topology, runtime-observation duplication (delete, read from declaration), install-target hold (named accessor, not this slice), and seed-contract shape (separate carrier shared with downstream). Two typed carriers, not one config bucket.\n- **Compatibility routing** — thin the nine module-level globals and the import-time `load_declaration()`; pass declaration through function signatures; seed-shape references in `seed_migration_inventory.py` migrate off `pu.X` onto the new carrier while plain parsing helpers stay imported from `pu`.\n\nHeld explicitly later: relocation, second overlay tranche, overwrite-family split, standalone repo, npm/`npx`, second-host, `STATIC_FILE_CARRIERS` / `MARKER_CARRIERS` typing, and speculative-runtime pruning.","stop_reason":"end_turn","session_id":"94513606-99b5-4cf6-9930-7ae9387837cd","total_cost_usd":2.7205682499999995,"usage":{"input_tokens":34,"cache_creation_input_tokens":148705,"cache_read_input_tokens":2267384,"output_tokens":26292,"server_tool_use":{"web_search_requests":0,"web_fetch_requests":0},"service_tier":"standard","cache_creation":{"ephemeral_1h_input_tokens":148705,"ephemeral_5m_input_tokens":0},"inference_geo":"","iterations":[{"input_tokens":6,"output_tokens":530,"cache_read_input_tokens":148417,"cache_creation_input_tokens":8721,"cache_creation":{"ephemeral_5m_input_tokens":0,"ephemeral_1h_input_tokens":8721},"type":"message"}],"speed":"standard"},"modelUsage":{"claude-opus-4-7[1m]":{"inputTokens":34,"outputTokens":26292,"cacheReadInputTokens":2267384,"cacheCreationInputTokens":148705,"webSearchRequests":0,"costUSD":2.7205682499999995,"contextWindow":1000000,"maxOutputTokens":64000}},"permission_denials":[],"terminal_reason":"completed","fast_mode_state":"off","uuid":"30079d2f-56a1-4677-bc98-38da3c1e2c95"}
+last_error_like_end
+debug_tail_begin
+2026-04-22T22:38:59.233Z [DEBUG] Successfully parsed and validated hook JSON output
+2026-04-22T22:38:59.233Z [DEBUG] "Hook Stop (Stop) success:\n{}"
+2026-04-22T22:38:59.235Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-22T22:38:59.240Z [DEBUG] MCP server "sequential-thinking": Sending SIGINT to MCP server process
+2026-04-22T22:38:59.340Z [DEBUG] MCP server "sequential-thinking": SIGINT failed, sending SIGTERM to MCP server process
+2026-04-22T22:38:59.371Z [DEBUG] MCP server "sequential-thinking": STDIO connection closed after 434s (cleanly)
+2026-04-22T22:38:59.371Z [DEBUG] MCP server "sequential-thinking": Cleared connection cache for reconnection
+2026-04-22T22:38:59.401Z [DEBUG] MCP server "sequential-thinking": MCP server process exited cleanly
+2026-04-22T22:38:59.411Z [DEBUG] LSP server manager shut down successfully
+2026-04-22T22:38:59.414Z [DEBUG] Cleaned up session snapshot: /home/rookslog/.claude/shell-snapshots/snapshot-bash-1776897388755-ki6bgx.sh
+debug_tail_end

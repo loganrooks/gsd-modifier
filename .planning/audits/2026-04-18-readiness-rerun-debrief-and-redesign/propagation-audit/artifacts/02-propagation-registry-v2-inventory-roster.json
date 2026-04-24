@@ -1,0 +1,136 @@
+{
+  "version": 2,
+  "basis_commit": "25aee9f",
+  "scope": "typed first refresh of the propagation registry family",
+  "roster_sources": [
+    {
+      "id": "upstream_inventory",
+      "path": "/home/rookslog/workspace/projects/get-shit-done-upstream/docs/INVENTORY.md",
+      "owner_shape": "authoritative upstream shipped-surface roster",
+      "coverage_role": "upstream roster frontier"
+    },
+    {
+      "id": "local_tooling_inventory",
+      "path": "tooling/codex/README.md",
+      "owner_shape": "repo-local helper and tooling roster",
+      "coverage_role": "local helper frontier"
+    },
+    {
+      "id": "root_doctrine",
+      "path": "AGENTS.md",
+      "owner_shape": "repo doctrine frontier",
+      "coverage_role": "local doctrine frontier"
+    },
+    {
+      "id": "planning_doctrine",
+      "path": ".planning/AGENTS.md",
+      "owner_shape": "planning doctrine frontier",
+      "coverage_role": "planning doctrine frontier"
+    },
+    {
+      "id": "workspace_governance",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/CURRENT-STATE.md",
+      "owner_shape": "workspace governance frontier",
+      "coverage_role": "workspace and lane-control frontier"
+    },
+    {
+      "id": "launch_history",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/LAUNCH-LEDGER.md",
+      "owner_shape": "durable launch-history frontier",
+      "coverage_role": "launch-truth carrier frontier"
+    },
+    {
+      "id": "overlay_manifest_roster",
+      "path": "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
+      "owner_shape": "tracked overlay roster and ownership typing",
+      "coverage_role": "overlay contract frontier"
+    }
+  ],
+  "family_roster_map": [
+    {
+      "family": "doctrine",
+      "roster_source": "root_doctrine",
+      "notes": "repo-root doctrine surfaces that carry propagation policy"
+    },
+    {
+      "family": "install_pristine",
+      "roster_source": "upstream_inventory",
+      "notes": "upstream shipped surfaces that materialize before local overlay carry"
+    },
+    {
+      "family": "install_overlay",
+      "roster_source": "overlay_manifest_roster",
+      "notes": "tracked local overlay frontier and ownership typing"
+    },
+    {
+      "family": "registry",
+      "roster_source": "upstream_inventory",
+      "notes": "runtime config and agent registry surfaces begin at upstream roster and local materialization"
+    },
+    {
+      "family": "launch_truth",
+      "roster_source": "launch_history",
+      "notes": "launch-truth carriers remain local and audit-owned"
+    },
+    {
+      "family": "workflow_output",
+      "roster_source": "upstream_inventory",
+      "notes": "workflow carriers start at upstream roster and are narrowed locally by overlay ownership"
+    },
+    {
+      "family": "template_shape",
+      "roster_source": "upstream_inventory",
+      "notes": "template carriers remain shipped-surface roster entries"
+    },
+    {
+      "family": "reference_behavior",
+      "roster_source": "upstream_inventory",
+      "notes": "reference carriers remain shipped-surface roster entries"
+    },
+    {
+      "family": "lib_runtime",
+      "roster_source": "upstream_inventory",
+      "notes": "runtime lib carriers begin at upstream shipped code"
+    },
+    {
+      "family": "wrapper",
+      "roster_source": "upstream_inventory",
+      "notes": "wrapper skills begin at upstream skill roster"
+    },
+    {
+      "family": "reference_owner_skill",
+      "roster_source": "upstream_inventory",
+      "notes": "reference-owner skills begin at upstream skill roster and local overlay ownership"
+    },
+    {
+      "family": "helper",
+      "roster_source": "local_tooling_inventory",
+      "notes": "repo-local helper cohort is owned by tooling inventory"
+    },
+    {
+      "family": "state_continuity",
+      "roster_source": "workspace_governance",
+      "notes": "state continuity remains local planning/governance carry"
+    },
+    {
+      "family": "compact_prompt",
+      "roster_source": "workspace_governance",
+      "notes": "compact-prompt carry remains local governance-owned"
+    },
+    {
+      "family": "governance_repo",
+      "roster_source": "root_doctrine",
+      "notes": "repo doctrine scope"
+    },
+    {
+      "family": "governance_workspace",
+      "roster_source": "workspace_governance",
+      "notes": "workspace governance scope"
+    },
+    {
+      "family": "governance_lane",
+      "roster_source": "workspace_governance",
+      "notes": "lane-local audit carry"
+    }
+  ]
+}

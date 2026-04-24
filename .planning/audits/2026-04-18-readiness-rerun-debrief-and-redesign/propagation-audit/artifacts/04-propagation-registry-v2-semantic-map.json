@@ -1,0 +1,2557 @@
+{
+  "version": 2,
+  "basis_commit": "16cfb8a",
+  "inherits_from": "artifacts/01-propagation-field-registry-v1.json",
+  "families": [
+    {
+      "id": "doctrine",
+      "label": "Governing doctrine",
+      "roster_source": "root_doctrine",
+      "notes": "repo and planning doctrine surfaces that exert propagation pressure"
+    },
+    {
+      "id": "install_pristine",
+      "label": "Upstream-pristine install frontier",
+      "roster_source": "upstream_inventory",
+      "notes": "upstream roster frontier before local overlay carry"
+    },
+    {
+      "id": "install_overlay",
+      "label": "Local-overlay frontier",
+      "roster_source": "overlay_manifest_roster",
+      "notes": "tracked local overlay ownership and materialization frontier"
+    },
+    {
+      "id": "registry",
+      "label": "Runtime registry / launch authority",
+      "roster_source": "upstream_inventory",
+      "notes": "runtime config and agent registry surfaces"
+    },
+    {
+      "id": "launch_truth",
+      "label": "Launch-truth / orchestration capture",
+      "roster_source": "launch_history",
+      "notes": "requested-vs-effective launch carriers"
+    },
+    {
+      "id": "workflow_output",
+      "label": "Workflow -> durable output",
+      "roster_source": "upstream_inventory",
+      "notes": "operator-facing workflows with durable-output or helper-consumer consequences"
+    },
+    {
+      "id": "template_shape",
+      "label": "Template -> output shape",
+      "roster_source": "upstream_inventory",
+      "notes": "template carriers that shape downstream outputs"
+    },
+    {
+      "id": "reference_behavior",
+      "label": "Reference -> agent behavior",
+      "roster_source": "upstream_inventory",
+      "notes": "reference carriers that route downstream behavior"
+    },
+    {
+      "id": "lib_runtime",
+      "label": "Lib -> runtime implementation",
+      "roster_source": "upstream_inventory",
+      "notes": "runtime library/code implementation surfaces"
+    },
+    {
+      "id": "wrapper",
+      "label": "Invocation-binding wrapper",
+      "roster_source": "upstream_inventory",
+      "notes": "entry wrappers routing into deeper workflow contracts"
+    },
+    {
+      "id": "reference_owner_skill",
+      "label": "Reference-owner skill",
+      "roster_source": "upstream_inventory",
+      "notes": "skills that own deeper reference bundles"
+    },
+    {
+      "id": "helper",
+      "label": "Named helper cohorts",
+      "roster_source": "local_tooling_inventory",
+      "notes": "repo-local helper cohort and durable-output producers"
+    },
+    {
+      "id": "state_continuity",
+      "label": "State-continuity surface",
+      "roster_source": "workspace_governance",
+      "notes": "multi-owner continuity and memory surfaces"
+    },
+    {
+      "id": "compact_prompt",
+      "label": "Compact-prompt carry",
+      "roster_source": "workspace_governance",
+      "notes": "local compact-prompt carry surfaces"
+    },
+    {
+      "id": "governance_repo",
+      "label": "Repo-root doctrine scope",
+      "roster_source": "root_doctrine",
+      "notes": "repo-root governance carriers"
+    },
+    {
+      "id": "governance_workspace",
+      "label": "Workspace governance scope",
+      "roster_source": "workspace_governance",
+      "notes": "workspace-governance carriers"
+    },
+    {
+      "id": "governance_lane",
+      "label": "Audit-lane artifact scope",
+      "roster_source": "workspace_governance",
+      "notes": "lane-specific audit carriers"
+    }
+  ],
+  "carriers": [
+    {
+      "id": "root_agents",
+      "family": "doctrine",
+      "path": "AGENTS.md",
+      "role": "repo doctrine and propagation policy",
+      "support_mode": "roster_plus_semantic_carry",
+      "evidence_refs": []
+    },
+    {
+      "id": "planning_agents",
+      "family": "doctrine",
+      "path": ".planning/AGENTS.md",
+      "role": "planning-local doctrine and propagation hygiene",
+      "support_mode": "roster_plus_semantic_carry",
+      "evidence_refs": []
+    },
+    {
+      "id": "portable_contract",
+      "family": "install_overlay",
+      "path": "harness_modifier/contract/portable_gsd_contract.py",
+      "role": "fresh-install pristine capture, overlay validation/application, reasoning defaults, materialization verification, typed runtime-specific parity-reference reporting for live .codex materialization, and compatibility-declaration echo with overlay-schema alignment",
+      "support_mode": "declared_contract_plus_validation",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "portable_contract_tests",
+        "codex_claude_parity_impl_135"
+      ]
+    },
+    {
+      "id": "overlay_manifest",
+      "family": "install_overlay",
+      "path": "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
+      "role": "tracked overlay ownership, add/overwrite typing, and explicit source-path indirection for modifier-owned source files that no longer live inside the install-target mirror",
+      "support_mode": "declared_contract",
+      "evidence_refs": [
+        "overlay_contract_validation"
+      ]
+    },
+    {
+      "id": "setup_script",
+      "family": "install_pristine",
+      "path": "scripts/setup-portable-gsd.sh",
+      "role": "upstream install entry, repo-local runtime verification, pristine capture, and overlay/materialization bridge",
+      "support_mode": "roster_plus_materialization_evidence",
+      "evidence_refs": [
+        "portable_materialization_check"
+      ]
+    },
+    {
+      "id": "runtime_manifest_file",
+      "family": "install_pristine",
+      "path": ".codex/gsd-file-manifest.json",
+      "role": "materialized runtime manifest version anchor sampled by uplift compatibility",
+      "support_mode": "roster_plus_observed_runtime",
+      "evidence_refs": [
+        "runtime_manifest_current"
+      ]
+    },
+    {
+      "id": "runtime_version_file",
+      "family": "install_pristine",
+      "path": ".codex/get-shit-done/VERSION",
+      "role": "materialized runtime version anchor sampled by uplift compatibility",
+      "support_mode": "roster_plus_observed_runtime",
+      "evidence_refs": [
+        "runtime_version_current"
+      ]
+    },
+    {
+      "id": "held_runtime_version_file",
+      "family": "install_pristine",
+      "path": ".claude/get-shit-done/VERSION",
+      "role": "held runtime annotation source for cross-runtime uplift compatibility without changing the observed-basis label",
+      "support_mode": "roster_plus_observed_runtime",
+      "evidence_refs": [
+        "held_runtime_version_current"
+      ]
+    },
+    {
+      "id": "quality_reasoning",
+      "family": "registry",
+      "path": "harness_modifier/contract/portable_gsd_contract.py",
+      "role": "installer-side reasoning defaults map",
+      "support_mode": "semantic_plus_materialization_evidence",
+      "evidence_refs": [
+        "portable_materialization_check"
+      ]
+    },
+    {
+      "id": "agent_tomls",
+      "family": "registry",
+      "path": ".codex/agents/*.toml",
+      "role": "materialized runtime registry contracts",
+      "support_mode": "roster_plus_observed_runtime",
+      "evidence_refs": [
+        "runtime_visibility_snapshot",
+        "launch_capture_lane_03"
+      ]
+    },
+    {
+      "id": "launch_truth_tool",
+      "family": "launch_truth",
+      "path": "harness_modifier/capture/capture_launch_truth.py",
+      "role": "requested-vs-effective launch capture",
+      "support_mode": "semantic_plus_capture_evidence",
+      "evidence_refs": [
+        "launch_capture_lane_03"
+      ]
+    },
+    {
+      "id": "launch_ledger",
+      "family": "launch_truth",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/LAUNCH-LEDGER.md",
+      "role": "durable launch history",
+      "support_mode": "roster_plus_capture_evidence",
+      "evidence_refs": [
+        "launch_capture_lane_03"
+      ]
+    },
+    {
+      "id": "project_uplift",
+      "family": "helper",
+      "path": "tooling/codex/project_uplift.py",
+      "role": "authoritative uplift producer, portable compatibility-declaration consumer, typed runtime-observation consumer, typed uplift-output-policy consumer, typed seed-contract-shape consumer, typed host-doctrine carrier-catalog consumer, typed host-facing vocabulary consumer, observed-basis compatibility anchor owner, held runtime annotation owner, compatibility-drift router, top-level Project Uplift slot writer, seed-corpus posture scanner, current-version shape-gap detector, runtime-agent registry scanner, and progress-note source for operator-facing seed visibility plus bounded specialist-packet disclosure with candidate breakdown and inspect/write command split when migration candidates are present",
+      "support_mode": "roster_plus_producer_report",
+      "evidence_refs": [
+        "uplift_manifest_current",
+        "uplift_compatibility_annotation_impl_116",
+        "uplift_seed_corpus_impl_80",
+        "seed_operator_consumer_impl_82",
+        "seed_operator_consumer_contract_tests",
+        "project_uplift_contract_tests",
+        "seed_migration_harden_impl_88",
+        "seed_migration_pointer_bridge_impl_90",
+        "seed_migration_bridge_harden_impl_92",
+        "transition_state_uplift_impl_121",
+        "transition_state_uplift_tests",
+        "runtime_observation_policy_file",
+        "uplift_output_policy_file",
+        "seed_contract_shape_file",
+        "uplift_carrier_catalog_file",
+        "uplift_vocabulary_file",
+        "project_uplift_neutralization_impl_154",
+        "project_uplift_host_doctrine_neutralization_impl_157"
+      ]
+    },
+    {
+      "id": "uplift_progress_consumer",
+      "family": "workflow_output",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/progress.md",
+      "role": "read-only current-runtime consumer surfacing held runtime annotation from the uplift note when present",
+      "support_mode": "semantic_plus_consumer_route",
+      "evidence_refs": [
+        "uplift_compatibility_annotation_impl_116",
+        "uplift_manifest_current"
+      ]
+    },
+    {
+      "id": "uplift_resume_consumer",
+      "family": "workflow_output",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/resume-project.md",
+      "role": "read-only current-runtime consumer surfacing held runtime annotation from the uplift note when present",
+      "support_mode": "semantic_plus_consumer_route",
+      "evidence_refs": [
+        "uplift_compatibility_annotation_impl_116",
+        "uplift_manifest_current"
+      ]
+    },
+    {
+      "id": "runtime_visibility",
+      "family": "helper",
+      "path": "harness_modifier/contract/runtime_visibility.py",
+      "role": "runtime classification producer",
+      "support_mode": "roster_plus_observed_runtime",
+      "evidence_refs": [
+        "runtime_visibility_snapshot"
+      ]
+    },
+    {
+      "id": "manifest_coherence",
+      "family": "helper",
+      "path": "harness_modifier/contract/manifest_install_coherence.py",
+      "role": "multi-surface coherence producer",
+      "support_mode": "roster_plus_coherence_evidence",
+      "evidence_refs": [
+        "manifest_install_coherence_report"
+      ]
+    },
+    {
+      "id": "audit_refmap",
+      "family": "helper",
+      "path": "tooling/codex/audit_refmap.py",
+      "role": "markdown reference graph producer",
+      "support_mode": "roster_plus_validation_evidence",
+      "evidence_refs": []
+    },
+    {
+      "id": "threshold_scanner_helper",
+      "family": "helper",
+      "path": "tooling/codex/scan_threshold_language.py",
+      "role": "heuristic widening intake for threshold-framing reread",
+      "support_mode": "roster_plus_tested_behavior",
+      "evidence_refs": [
+        "threshold_scanner_helper_tests",
+        "historical_scanner_reread_output_05"
+      ]
+    },
+    {
+      "id": "audit_open_helper",
+      "family": "lib_runtime",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/bin/lib/audit.cjs",
+      "role": "open-artifact audit helper that keeps canonical seed id, contract vintage, Why This Matters, and Strengthening Carry visible for milestone-close audit judgment",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "seed_audit_gate_impl_84",
+        "seed_audit_gate_tests"
+      ]
+    },
+    {
+      "id": "state_snapshot_helper",
+      "family": "lib_runtime",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/bin/lib/state.cjs",
+      "role": "repo-local state snapshot helper carrying accumulated-context, future-carry, and session-continuity consumer digest",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "state_progress_resume_future_carry_impl_62",
+        "state_snapshot_future_carry_tests"
+      ]
+    },
+    {
+      "id": "verifier_agent_overlay",
+      "family": "registry",
+      "path": "tooling/portable-gsd/overlay/agents/gsd-verifier.toml",
+      "role": "verifier runtime contract including future-preservation review semantics",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "verifier_lifecycle_carry_impl_54"
+      ]
+    },
+    {
+      "id": "uplift_workflow",
+      "family": "workflow_output",
+      "path": "harness_modifier/overlay/get-shit-done/workflows/uplift-project.md",
+      "role": "operator-facing uplift workflow with layered read-packet control over helper output, current uplift outputs, seed corpus posture, and the specialist detect-only migration handoff for legacy, noncurrent, or current-version shape-gap posture, while separating deeper packet disclosure from durable write side effects and now living as modifier-owned source outside the install-target mirror",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "uplift_manifest_current",
+        "uplift_seed_corpus_impl_80",
+        "project_uplift_contract_tests",
+        "read_packet_relevance_control_impl_66",
+        "read_packet_tier_contract_tests",
+        "seed_migration_inventory_impl_86",
+        "seed_migration_harden_impl_88"
+      ]
+    },
+    {
+      "id": "progress_workflow",
+      "family": "workflow_output",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/progress.md",
+      "role": "read-only uplift, future-carry, and seed-posture consumer for first-read progress summaries, now carrying explicit seed corpus posture plus specialist packet candidate counts, compact breakdown, and split inspect/write command disclosure through the progress-note bridge",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "uplift_manifest_current",
+        "uplift_seed_corpus_impl_80",
+        "seed_operator_consumer_impl_82",
+        "seed_operator_consumer_contract_tests",
+        "project_uplift_contract_tests",
+        "state_progress_resume_future_carry_impl_62",
+        "read_packet_relevance_control_impl_66",
+        "read_packet_tier_contract_tests",
+        "seed_migration_pointer_bridge_impl_90",
+        "seed_migration_bridge_harden_impl_92"
+      ]
+    },
+    {
+      "id": "resume_workflow",
+      "family": "workflow_output",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/resume-project.md",
+      "role": "read-only uplift, future-carry, and seed-posture consumer for first-read re-entry, now carrying explicit seed corpus posture plus specialist packet candidate counts, compact breakdown, and split inspect/write command disclosure through the progress-note bridge",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "uplift_manifest_current",
+        "uplift_seed_corpus_impl_80",
+        "seed_operator_consumer_impl_82",
+        "seed_operator_consumer_contract_tests",
+        "project_uplift_contract_tests",
+        "state_progress_resume_future_carry_impl_62",
+        "read_packet_relevance_control_impl_66",
+        "read_packet_tier_contract_tests",
+        "seed_migration_pointer_bridge_impl_90",
+        "seed_migration_bridge_harden_impl_92"
+      ]
+    },
+    {
+      "id": "verify_phase_workflow",
+      "family": "workflow_output",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/verify-phase.md",
+      "role": "operator-facing verifier workflow carrying future-preservation review",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "verifier_lifecycle_carry_impl_54"
+      ]
+    },
+    {
+      "id": "transition_workflow",
+      "family": "workflow_output",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/transition.md",
+      "role": "operator-facing transition workflow carrying future-preservation close-boundary review, state-digest upkeep, and bounded project-uplift preserve/refresh continuity at phase close",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "transition_lifecycle_carry_impl_58",
+        "transition_state_uplift_impl_121",
+        "transition_state_uplift_tests"
+      ]
+    },
+    {
+      "id": "uplift_report_output",
+      "family": "workflow_output",
+      "path": ".planning/UPLIFT-REPORT.md",
+      "role": "operator-facing uplift narrative carrying compatibility plus seed-corpus posture summary",
+      "support_mode": "producer_report_narrative_mirror",
+      "evidence_refs": [
+        "uplift_manifest_current",
+        "uplift_seed_corpus_impl_80"
+      ]
+    },
+    {
+      "id": "uplift_manifest_output",
+      "family": "workflow_output",
+      "path": ".planning/UPLIFT-MANIFEST.json",
+      "role": "structured uplift memory carrying observed-basis compatibility plus seed-corpus posture",
+      "support_mode": "producer_report_with_observed_basis",
+      "evidence_refs": [
+        "uplift_manifest_current",
+        "uplift_seed_corpus_impl_80",
+        "runtime_manifest_current",
+        "runtime_version_current"
+      ]
+    },
+    {
+      "id": "uplift_skill_wrapper",
+      "family": "wrapper",
+      "path": "harness_modifier/overlay/skills/gsd-uplift-project/SKILL.md",
+      "role": "invocation-binding wrapper that keeps detect-only uplift posture, seed-corpus visibility, and later migration separation explicit while naming the specialist seed-migration packet for legacy, noncurrent, or current-version shape-gap posture and keeping deeper packet disclosure distinct from durable write side effects",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "uplift_seed_corpus_impl_80",
+        "project_uplift_contract_tests",
+        "seed_migration_inventory_follow_through_tests",
+        "seed_migration_harden_impl_88"
+      ]
+    },
+    {
+      "id": "research_output_template",
+      "family": "reference_owner_skill",
+      "path": "tooling/portable-gsd/overlay/skills/gsd-rigorous-research/references/output-template.md",
+      "role": "reference-owner skill carrier sampled by uplift",
+      "support_mode": "declared_contract_plus_producer_report",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "uplift_manifest_current"
+      ]
+    },
+    {
+      "id": "verification_report_template",
+      "family": "template_shape",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/templates/verification-report.md",
+      "role": "verification output shape carrying future-preservation review structure",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "verifier_lifecycle_carry_impl_54"
+      ]
+    },
+    {
+      "id": "state_template_overlay",
+      "family": "template_shape",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/templates/state.md",
+      "role": "state continuity template carrying the compact Future Carry Forward digest shape plus the top-level Project Uplift continuity slot",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "transition_lifecycle_carry_impl_58",
+        "transition_state_uplift_impl_121",
+        "transition_state_uplift_tests"
+      ]
+    },
+    {
+      "id": "verifier_agent_contracts_reference",
+      "family": "reference_behavior",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/references/agent-contracts.md",
+      "role": "reference contract routing verifier-side future-preservation review semantics",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "verifier_lifecycle_carry_impl_54"
+      ]
+    },
+    {
+      "id": "mandatory_initial_read_reference",
+      "family": "reference_behavior",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/references/mandatory-initial-read.md",
+      "role": "shared read-packet doctrine defining required, supporting, and deeper reading tiers for current operator-facing entry, re-entry, initialization, milestone-open, doc-ingest, health, and update workflows",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "read_packet_relevance_control_impl_66",
+        "read_packet_tier_contract_tests",
+        "initialization_ingest_read_packet_impl_68",
+        "initialization_read_packet_contract_tests",
+        "health_migration_follow_through_impl_70",
+        "health_migration_follow_through_tests",
+        "update_follow_through_impl_72",
+        "update_follow_through_tests"
+      ]
+    },
+    {
+      "id": "milestone_boundary_uplift_reference",
+      "family": "reference_behavior",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/references/milestone-boundary-uplift-continuity.md",
+      "role": "shared read-only uplift continuity reference guiding milestone-open and milestone-close widening from the compact Project Uplift digest toward narrative and typed uplift carriers",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "milestone_boundary_uplift_impl_123",
+        "milestone_boundary_uplift_contract_tests"
+      ]
+    },
+    {
+      "id": "state_md",
+      "family": "state_continuity",
+      "path": ".planning/STATE.md",
+      "role": "multi-owner continuity surface carrying accumulated context, future-carry digest, top-level Project Uplift continuity, and session continuity",
+      "support_mode": "semantic_plus_producer_report",
+      "evidence_refs": [
+        "uplift_manifest_current",
+        "transition_lifecycle_carry_impl_58",
+        "state_progress_resume_future_carry_impl_62",
+        "transition_state_uplift_impl_121"
+      ]
+    },
+    {
+      "id": "compact_prompt_project",
+      "family": "compact_prompt",
+      "path": "tooling/compact-prompts/project.md",
+      "role": "default repo-local compact prompt",
+      "support_mode": "semantic_only_local",
+      "evidence_refs": []
+    },
+    {
+      "id": "workspace_current_state",
+      "family": "governance_workspace",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/CURRENT-STATE.md",
+      "role": "short governing synthesis",
+      "support_mode": "roster_plus_semantic_carry",
+      "evidence_refs": []
+    },
+    {
+      "id": "workspace_status",
+      "family": "governance_workspace",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/STATUS.md",
+      "role": "mutable queue and checkpoint ledger",
+      "support_mode": "roster_plus_semantic_carry",
+      "evidence_refs": []
+    },
+    {
+      "id": "lane_02_inheritance",
+      "family": "governance_lane",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/dispositions/02-broader-network-propagation-field-mapping-inheritance.md",
+      "role": "widened propagation inheritance",
+      "support_mode": "semantic_only_local",
+      "evidence_refs": []
+    },
+    {
+      "id": "threshold_audit_output_05",
+      "family": "governance_lane",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/threshold-audit/outputs/05-historical-scanner-influenced-reread-gpt54-xhigh-r1.md",
+      "role": "bounded historical reread over the scanner-influenced commit family",
+      "support_mode": "semantic_plus_capture_evidence",
+      "evidence_refs": [
+        "historical_scanner_reread_output_05",
+        "launch_capture_threshold_05"
+      ]
+    },
+    {
+      "id": "threshold_audit_inheritance_05",
+      "family": "governance_lane",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/threshold-audit/dispositions/05-historical-scanner-influenced-reread-inheritance.md",
+      "role": "accepted historical reread and caveat layer for the threshold family",
+      "support_mode": "semantic_plus_capture_evidence",
+      "evidence_refs": [
+        "historical_scanner_reread_output_05",
+        "launch_capture_threshold_05"
+      ]
+    },
+    {
+      "id": "propagation_baseline_95",
+      "family": "governance_lane",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/95-upstream-pristine-propagation-baseline-first-slice.md",
+      "role": "operator-facing upstream-pristine baseline packet for later propagation review",
+      "support_mode": "semantic_only_local",
+      "evidence_refs": []
+    },
+    {
+      "id": "propagation_delta_96",
+      "family": "governance_lane",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/96-repo-local-propagation-delta-first-slice.md",
+      "role": "operator-facing repo-local delta packet for later propagation review",
+      "support_mode": "semantic_only_local",
+      "evidence_refs": []
+    },
+    {
+      "id": "gsd_sdk_runtime_helper",
+      "family": "helper",
+      "path": "harness_modifier/contract/ensure_gsd_sdk_runtime.py",
+      "role": "repo-local gsd-sdk runtime verification and bounded executable-bit repair",
+      "support_mode": "roster_plus_tested_behavior",
+      "evidence_refs": [
+        "setup_runtime_helper_tests",
+        "setup_portable_gsd_impl_56"
+      ]
+    },
+    {
+      "id": "milestone_open_workflow",
+      "family": "workflow_output",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/new-milestone.md",
+      "role": "operator-facing milestone-opening workflow carrying LONG-ARC reread, Future Carry Forward milestone-open routing, layered read-packet control over primary milestone context, shared milestone-boundary uplift continuity reference consumption, seed widening, explicit Why This Matters plus Strengthening Carry consumption from matched seeds, and current-versus-legacy-unversioned seed vintage tolerance",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "milestone_boundary_lifecycle_carry_impl_60",
+        "milestone_boundary_uplift_impl_123",
+        "milestone_boundary_uplift_contract_tests",
+        "initialization_ingest_read_packet_impl_68",
+        "initialization_read_packet_contract_tests",
+        "seed_consumer_carry_impl_74",
+        "seed_consumer_carry_tests",
+        "seed_doctrine_vintage_impl_78",
+        "seed_doctrine_vintage_tests"
+      ]
+    },
+    {
+      "id": "new_project_workflow",
+      "family": "workflow_output",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/new-project.md",
+      "role": "operator-facing project initialization workflow carrying layered read-packet control over init plus idea context, route-local brownfield widening, a sibling entry/runtime continuity reference for read-only observed-basis and held-annotation surfacing when the route state calls for it, and explicit existing-project refresh toward progress then later uplift",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "initialization_ingest_read_packet_impl_68",
+        "initialization_read_packet_contract_tests",
+        "entry_runtime_continuity_impl_130",
+        "entry_runtime_continuity_tests"
+      ]
+    },
+    {
+      "id": "ingest_docs_workflow",
+      "family": "workflow_output",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/ingest-docs.md",
+      "role": "operator-facing doc-ingest workflow carrying layered read-packet control over parse or init context, staged discovery and merge widening, a sibling entry/runtime continuity reference for read-only observed-basis and held-annotation surfacing when the route state calls for it, and a later repo-local uplift route kept distinct from planning-doc merge",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "initialization_ingest_read_packet_impl_68",
+        "initialization_read_packet_contract_tests",
+        "entry_runtime_continuity_impl_130",
+        "entry_runtime_continuity_tests"
+      ]
+    },
+    {
+      "id": "health_workflow",
+      "family": "workflow_output",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/health.md",
+      "role": "structural-health workflow with layered read-packet control, explicit missing-planning routing, a post-validation read-only uplift continuity reread that starts from the compact Project Uplift digest, keeps trigger and silent-case semantics more explicit, widens toward narrative and typed carriers only when ambiguity remains, and keeps the later write-side uplift route separate from repair",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "health_migration_follow_through_impl_70",
+        "health_migration_follow_through_tests",
+        "health_uplift_deepen_impl_125",
+        "health_uplift_deepen_contract_tests",
+        "health_uplift_deepen_harden_impl_127",
+        "health_uplift_deepen_harden_contract_tests"
+      ]
+    },
+    {
+      "id": "milestone_close_workflow",
+      "family": "workflow_output",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/complete-milestone.md",
+      "role": "operator-facing milestone-close workflow carrying LONG-ARC reread, Future Carry Forward milestone-close continuity review, shared milestone-boundary uplift continuity reference consumption, and richer audit-open seed judgment visibility during acknowledgment or deferment",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "milestone_boundary_lifecycle_carry_impl_60",
+        "milestone_boundary_uplift_impl_123",
+        "milestone_boundary_uplift_contract_tests",
+        "seed_audit_gate_impl_84",
+        "seed_audit_gate_tests"
+      ]
+    },
+    {
+      "id": "spec_phase_workflow",
+      "family": "workflow_output",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/spec-phase.md",
+      "role": "upstream spec producer carrying bounded Future-Aware Notes when doctrine materially constrains the phase",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "spec_lifecycle_carry_impl_64",
+        "spec_future_carry_contract_tests"
+      ]
+    },
+    {
+      "id": "discuss_workflow",
+      "family": "workflow_output",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/discuss-phase.md",
+      "role": "first downstream discuss consumer of the upstream spec contract and bounded Future-Aware Notes",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "spec_lifecycle_carry_impl_64",
+        "spec_future_carry_contract_tests"
+      ]
+    },
+    {
+      "id": "spec_template_overlay",
+      "family": "template_shape",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/templates/spec.md",
+      "role": "spec output shape carrying optional Future-Aware Notes buckets alongside locked requirements and boundaries",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "spec_lifecycle_carry_impl_64",
+        "spec_future_carry_contract_tests"
+      ]
+    },
+    {
+      "id": "health_skill_wrapper",
+      "family": "wrapper",
+      "path": "tooling/portable-gsd/overlay/skills/gsd-health/SKILL.md",
+      "role": "invocation-binding wrapper that routes structural planning health through the health workflow, allows read-only uplift continuity reread after validation when route-local posture pressure stays live, and keeps later write-side uplift refresh separate",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "health_migration_follow_through_impl_70",
+        "health_migration_follow_through_tests",
+        "health_uplift_deepen_impl_125",
+        "health_uplift_deepen_contract_tests",
+        "health_uplift_deepen_harden_impl_127",
+        "health_uplift_deepen_harden_contract_tests"
+      ]
+    },
+    {
+      "id": "from_gsd2_skill_wrapper",
+      "family": "wrapper",
+      "path": "tooling/portable-gsd/overlay/skills/gsd-from-gsd2/SKILL.md",
+      "role": "invocation-binding wrapper that routes format migration through structural validation and later uplift handoff instead of ending at conversion alone",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "health_migration_follow_through_impl_70",
+        "health_migration_follow_through_tests"
+      ]
+    },
+    {
+      "id": "update_workflow",
+      "family": "workflow_output",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/update.md",
+      "role": "runtime/package update workflow with layered read-packet control, a provider-gated shared entry/runtime continuity review beat before clean-install rematerialization, and explicit separation between installer movement, structural health routing, and later repo-local uplift",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "update_follow_through_impl_72",
+        "update_entry_runtime_continuity_impl_133",
+        "update_follow_through_tests"
+      ]
+    },
+    {
+      "id": "update_skill_wrapper",
+      "family": "wrapper",
+      "path": "tooling/portable-gsd/overlay/skills/gsd-update/SKILL.md",
+      "role": "invocation-binding wrapper that keeps runtime/package update ownership explicit while carrying the same codex-or-claude continuity boundary and routing structural planning repair and later repo-local uplift separately",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "update_follow_through_impl_72",
+        "update_entry_runtime_continuity_impl_133",
+        "update_follow_through_tests"
+      ]
+    },
+    {
+      "id": "plant_seed_workflow",
+      "family": "workflow_output",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/plant-seed.md",
+      "role": "seed producer workflow that preserves trigger timing, Why This Matters, breadcrumbs, explicit Strengthening Carry, and seed_contract_version: 2 for later milestone-open consumers",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "seed_consumer_carry_impl_74",
+        "seed_consumer_carry_tests",
+        "seed_doctrine_vintage_impl_78",
+        "seed_doctrine_vintage_tests"
+      ]
+    },
+    {
+      "id": "plant_seed_skill_wrapper",
+      "family": "wrapper",
+      "path": "tooling/portable-gsd/overlay/skills/gsd-plant-seed/SKILL.md",
+      "role": "invocation-binding wrapper that keeps seed producer carry explicit, including strengthening carry and the current seed contract version anchor intended for later milestone-open consumption",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "seed_consumer_carry_impl_74",
+        "seed_consumer_carry_tests",
+        "seed_doctrine_vintage_impl_78",
+        "seed_doctrine_vintage_tests"
+      ]
+    },
+    {
+      "id": "explore_workflow",
+      "family": "workflow_output",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/explore.md",
+      "role": "ideation workflow that routes selected seed outputs through the live plant-seed contract instead of describing legacy inline seed minting",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "explore_seed_convergence_impl_76",
+        "explore_seed_convergence_tests"
+      ]
+    },
+    {
+      "id": "explore_skill_wrapper",
+      "family": "wrapper",
+      "path": "tooling/portable-gsd/overlay/skills/gsd-explore/SKILL.md",
+      "role": "invocation-binding wrapper that keeps ideation-side seed routing on the live plant-seed contract rather than a legacy inline seed shape",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "explore_seed_convergence_impl_76",
+        "explore_seed_convergence_tests"
+      ]
+    },
+    {
+      "id": "seed_migration_inventory_helper",
+      "family": "helper",
+      "path": "tooling/codex/seed_migration_inventory.py",
+      "role": "specialist detect-only helper that inventories per-seed legacy or drifted seed posture, contract-shape gaps, route-state distinctions, post-write durable packet state, and bounded migration moves without rewriting seed files, now reading the shared seed-contract carrier instead of mirroring seed-shape policy through project_uplift constants and still carrying a committed fixture-backed packet shape anchor",
+      "support_mode": "roster_plus_tested_behavior",
+      "evidence_refs": [
+        "seed_migration_inventory_impl_86",
+        "seed_migration_inventory_tests",
+        "seed_migration_reread_output_04",
+        "seed_migration_harden_impl_88",
+        "seed_migration_harden_refresh_36",
+        "seed_migration_bridge_harden_impl_92",
+        "seed_migration_manifest_shape_fixture",
+        "seed_contract_shape_file",
+        "project_uplift_neutralization_impl_154"
+      ]
+    },
+    {
+      "id": "seed_migration_inventory_workflow",
+      "family": "workflow_output",
+      "path": "harness_modifier/overlay/get-shit-done/workflows/seed-migration-inventory.md",
+      "role": "operator-facing specialist workflow that turns older or shape-gapped seed posture into a detect-only migration packet, narrows supporting reading toward flagged candidates, keeps direct rewrites plus durable write side effects separate from deeper packet disclosure, and now stays explicitly aligned with the bridge's inspect/write command split",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "seed_migration_inventory_impl_86",
+        "seed_migration_inventory_follow_through_tests",
+        "seed_migration_reread_output_04",
+        "seed_migration_harden_impl_88",
+        "seed_migration_harden_refresh_36",
+        "seed_migration_bridge_harden_impl_92",
+        "seed_migration_manifest_shape_fixture"
+      ]
+    },
+    {
+      "id": "seed_migration_inventory_skill_wrapper",
+      "family": "wrapper",
+      "path": "harness_modifier/overlay/skills/gsd-seed-migration-inventory/SKILL.md",
+      "role": "invocation-binding wrapper that keeps the seed-migration route detect-only and specialist-owned, while separating deeper packet disclosure from durable write side effects instead of widening it into generic uplift or progress routing",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "seed_migration_inventory_impl_86",
+        "seed_migration_inventory_follow_through_tests",
+        "seed_migration_reread_output_04",
+        "seed_migration_harden_impl_88",
+        "seed_migration_harden_refresh_36"
+      ]
+    },
+    {
+      "id": "propagation_review_workflow",
+      "family": "workflow_output",
+      "path": "harness_modifier/overlay/get-shit-done/workflows/propagation-review.md",
+      "role": "operator-facing propagation review workflow that reads the upstream-pristine baseline plus repo-local delta pair first, widens through the typed propagation family second, and keeps tooling partial while explicit hold/update disposition remains sovereign",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "propagation_review_route_impl_98",
+        "propagation_review_route_tests",
+        "propagation_review_route_refresh_39"
+      ]
+    },
+    {
+      "id": "propagation_review_skill_wrapper",
+      "family": "wrapper",
+      "path": "harness_modifier/overlay/skills/gsd-propagation-review/SKILL.md",
+      "role": "invocation-binding wrapper that keeps the propagation review route read-only by default, preserves contextual reread sovereignty over helper output, and hands off specialist uplift or seed-migration routes separately when the review surfaces them",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "propagation_review_route_impl_98",
+        "propagation_review_route_tests",
+        "propagation_review_route_refresh_39"
+      ]
+    },
+    {
+      "id": "entry_runtime_uplift_reference",
+      "family": "reference_behavior",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/references/entry-runtime-uplift-continuity.md",
+      "role": "shared read-only entry/runtime continuity reference guiding new-project, ingest-docs, and the provider-gated update consumer widening from route-state and optional Project Uplift digest toward narrative and typed uplift carriers without widening mandatory-initial-read or turning entry/update routes into write-side uplift dispatch",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "entry_runtime_continuity_impl_130",
+        "entry_runtime_continuity_tests",
+        "update_entry_runtime_continuity_impl_133"
+      ]
+    },
+    {
+      "id": "compatibility_declaration",
+      "family": "registry",
+      "path": "harness_modifier/compatibility/declaration.json",
+      "role": "portable compatibility posture, held-runtime annotation semantics, parity baseline, and observed-basis window declaration intended to travel unchanged into later standalone modifier installs",
+      "support_mode": "declared_contract_plus_runtime_echo",
+      "evidence_refs": [
+        "compatibility_declaration_file",
+        "compatibility_declaration_impl_141",
+        "portable_contract_tests",
+        "project_uplift_contract_tests"
+      ]
+    },
+    {
+      "id": "overlay_roster_document",
+      "family": "install_overlay",
+      "path": "harness_modifier/overlay/ROSTER.md",
+      "role": "frozen per-entry classification of the tracked overlay frontier across generic, shared-boundary, and host-local entries for later extraction sequencing",
+      "support_mode": "roster_plus_extraction_classification",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "overlay_roster_impl_146",
+        "overlay_host_path_scan_146"
+      ]
+    },
+    {
+      "id": "overlay_host_path_scan",
+      "family": "governance_lane",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/artifacts/03-overlay-embedded-host-path-scan.md",
+      "role": "contextual blocker scan over overlay workflows, skills, and compact prompts that keeps host audit-workspace embeds, helper-home drift, host-local prompt bodies, and non-blocking canon references distinct",
+      "support_mode": "audit_artifact_plus_extraction_classification",
+      "evidence_refs": [
+        "overlay_roster_impl_146",
+        "overlay_host_path_scan_146"
+      ]
+    },
+    {
+      "id": "runtime_observation_policy",
+      "family": "registry",
+      "path": "harness_modifier/compatibility/observation.json",
+      "role": "portable runtime observation declaration separating observed runtime directories from candidate runtime directories so project_uplift runtime discovery no longer depends on helper-local directory lists",
+      "support_mode": "declared_contract_plus_helper_read",
+      "evidence_refs": [
+        "runtime_observation_policy_file",
+        "project_uplift_contract_tests",
+        "project_uplift_neutralization_impl_154"
+      ]
+    },
+    {
+      "id": "uplift_output_policy",
+      "family": "registry",
+      "path": "harness_modifier/uplift/output_policy.json",
+      "role": "portable uplift output topology declaration for the Project Uplift state heading plus report, manifest, and held-later paths used by project_uplift and harness_canary",
+      "support_mode": "declared_contract_plus_shared_consumer_read",
+      "evidence_refs": [
+        "uplift_output_policy_file",
+        "project_uplift_contract_tests",
+        "harness_canary_contract_tests",
+        "project_uplift_neutralization_impl_154"
+      ]
+    },
+    {
+      "id": "seed_contract_shape",
+      "family": "registry",
+      "path": "harness_modifier/compatibility/seed_contract.json",
+      "role": "portable seed contract declaration for the seed root, current version, required frontmatter keys, and required section headings shared by project_uplift and the specialist seed migration inventory",
+      "support_mode": "declared_contract_plus_shared_consumer_read",
+      "evidence_refs": [
+        "seed_contract_shape_file",
+        "project_uplift_contract_tests",
+        "seed_migration_inventory_tests",
+        "seed_migration_inventory_follow_through_tests",
+        "project_uplift_neutralization_impl_154"
+      ]
+    },
+    {
+      "id": "uplift_carrier_catalog",
+      "family": "registry",
+      "path": "harness_modifier/uplift/carrier_catalog.json",
+      "role": "typed uplift host-doctrine catalog declaring the file-carrier roster, runtime-agent registry sibling object, marker-carrier roster, and stable ordering rule now consumed by project_uplift",
+      "support_mode": "declared_contract_plus_helper_read",
+      "evidence_refs": [
+        "uplift_carrier_catalog_file",
+        "project_uplift_contract_tests",
+        "project_uplift_host_doctrine_neutralization_impl_157"
+      ]
+    },
+    {
+      "id": "uplift_vocabulary",
+      "family": "registry",
+      "path": "harness_modifier/uplift/vocabulary.json",
+      "role": "typed host-facing uplift vocabulary declaring rerun-boundary patterns, phase-boundary notes, command tokens, and recommendation sentences for project_uplift report, state, and progress-note carry",
+      "support_mode": "declared_contract_plus_helper_read",
+      "evidence_refs": [
+        "uplift_vocabulary_file",
+        "project_uplift_contract_tests",
+        "project_uplift_host_doctrine_neutralization_impl_157"
+      ]
+    },
+    {
+      "id": "harness_canary_helper",
+      "family": "helper",
+      "path": "harness_modifier/contract/harness_canary.py",
+      "role": "bounded harness-quality report helper that now reads the shared uplift output-policy carrier when checking uplift manifest/output alignment",
+      "support_mode": "roster_plus_tested_behavior",
+      "evidence_refs": [
+        "harness_quality_canary_impl_49",
+        "harness_canary_contract_tests",
+        "project_uplift_neutralization_impl_154"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "install_outputs_to_helper_inputs",
+      "from": "portable_contract",
+      "to": "project_uplift",
+      "kind": "materialized_runtime_sampled_by_helper",
+      "support_mode": "semantic_plus_materialization_evidence",
+      "evidence_refs": [
+        "portable_materialization_check",
+        "uplift_manifest_current"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "runtime_manifest_to_helper",
+      "from": "runtime_manifest_file",
+      "to": "project_uplift",
+      "kind": "observed_runtime_basis_sampled_by_helper",
+      "support_mode": "semantic_plus_observed_runtime",
+      "evidence_refs": [
+        "runtime_manifest_current",
+        "uplift_manifest_current"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "runtime_version_to_helper",
+      "from": "runtime_version_file",
+      "to": "project_uplift",
+      "kind": "observed_runtime_basis_sampled_by_helper",
+      "support_mode": "semantic_plus_observed_runtime",
+      "evidence_refs": [
+        "runtime_version_current",
+        "uplift_manifest_current"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_workflow_to_helper",
+      "from": "overlay_manifest",
+      "to": "uplift_workflow",
+      "kind": "overlay_owns_workflow_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "workflow_to_helper",
+      "from": "uplift_workflow",
+      "to": "project_uplift",
+      "kind": "workflow_invokes_helper",
+      "support_mode": "semantic_plus_producer_report",
+      "evidence_refs": [
+        "uplift_manifest_current"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "helper_to_progress",
+      "from": "project_uplift",
+      "to": "progress_workflow",
+      "kind": "read_only_json_bridge_with_seed_posture_visibility_candidate_breakdown_and_split_specialist_packet_disclosure",
+      "support_mode": "semantic_plus_producer_report",
+      "evidence_refs": [
+        "uplift_manifest_current",
+        "seed_operator_consumer_impl_82",
+        "seed_operator_consumer_contract_tests",
+        "runtime_manifest_current",
+        "runtime_version_current",
+        "seed_migration_pointer_bridge_impl_90",
+        "seed_migration_bridge_harden_impl_92"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "helper_to_resume",
+      "from": "project_uplift",
+      "to": "resume_workflow",
+      "kind": "read_only_json_bridge_with_seed_posture_visibility_candidate_breakdown_and_split_specialist_packet_disclosure",
+      "support_mode": "semantic_plus_producer_report",
+      "evidence_refs": [
+        "uplift_manifest_current",
+        "seed_operator_consumer_impl_82",
+        "seed_operator_consumer_contract_tests",
+        "runtime_manifest_current",
+        "runtime_version_current",
+        "seed_migration_pointer_bridge_impl_90",
+        "seed_migration_bridge_harden_impl_92"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_state_snapshot_helper",
+      "from": "overlay_manifest",
+      "to": "state_snapshot_helper",
+      "kind": "overlay_owns_runtime_helper_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "state_progress_resume_future_carry_impl_62"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "state_snapshot_helper_to_progress",
+      "from": "state_snapshot_helper",
+      "to": "progress_workflow",
+      "kind": "helper_supplies_structured_state_digest",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "state_progress_resume_future_carry_impl_62",
+        "state_snapshot_future_carry_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "state_snapshot_helper_to_resume",
+      "from": "state_snapshot_helper",
+      "to": "resume_workflow",
+      "kind": "helper_supplies_structured_state_digest",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "state_progress_resume_future_carry_impl_62",
+        "state_snapshot_future_carry_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_verify_workflow",
+      "from": "overlay_manifest",
+      "to": "verify_phase_workflow",
+      "kind": "overlay_owns_workflow_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "verifier_lifecycle_carry_impl_54"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_transition_workflow",
+      "from": "overlay_manifest",
+      "to": "transition_workflow",
+      "kind": "overlay_owns_workflow_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "transition_lifecycle_carry_impl_58",
+        "transition_state_uplift_impl_121"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_verification_template",
+      "from": "overlay_manifest",
+      "to": "verification_report_template",
+      "kind": "overlay_owns_template_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "verifier_lifecycle_carry_impl_54"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_state_template",
+      "from": "overlay_manifest",
+      "to": "state_template_overlay",
+      "kind": "overlay_owns_template_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "transition_lifecycle_carry_impl_58",
+        "transition_state_uplift_impl_121"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "verifier_reference_to_agent",
+      "from": "verifier_agent_contracts_reference",
+      "to": "verifier_agent_overlay",
+      "kind": "reference_routes_agent_behavior",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "verifier_lifecycle_carry_impl_54"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "verify_workflow_to_verifier_agent",
+      "from": "verify_phase_workflow",
+      "to": "verifier_agent_overlay",
+      "kind": "workflow_routes_agent_behavior",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "verifier_lifecycle_carry_impl_54"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "verifier_agent_to_verification_template",
+      "from": "verifier_agent_overlay",
+      "to": "verification_report_template",
+      "kind": "agent_writes_template_shape",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "verifier_lifecycle_carry_impl_54"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "transition_workflow_to_state_template",
+      "from": "transition_workflow",
+      "to": "state_template_overlay",
+      "kind": "workflow_routes_state_digest_shape_and_project_uplift_continuity_slot",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "transition_lifecycle_carry_impl_58",
+        "transition_state_uplift_impl_121",
+        "transition_state_uplift_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "transition_workflow_to_state",
+      "from": "transition_workflow",
+      "to": "state_md",
+      "kind": "workflow_updates_state_continuity_and_project_uplift_digest",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "transition_lifecycle_carry_impl_58",
+        "transition_state_uplift_impl_121",
+        "transition_state_uplift_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "transition_workflow_to_uplift_helper",
+      "from": "transition_workflow",
+      "to": "project_uplift",
+      "kind": "bounded_refresh_path_invokes_helper_when_uplift_basis_moves",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "transition_state_uplift_impl_121",
+        "transition_state_uplift_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "verifier_contract_to_uplift_helper",
+      "from": "verifier_agent_contracts_reference",
+      "to": "project_uplift",
+      "kind": "helper_samples_doctrine_surface",
+      "support_mode": "semantic_plus_producer_report",
+      "evidence_refs": [
+        "verifier_lifecycle_carry_impl_54",
+        "uplift_manifest_current"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "verify_workflow_to_uplift_helper",
+      "from": "verify_phase_workflow",
+      "to": "project_uplift",
+      "kind": "helper_samples_doctrine_surface",
+      "support_mode": "semantic_plus_producer_report",
+      "evidence_refs": [
+        "verifier_lifecycle_carry_impl_54",
+        "uplift_manifest_current"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "verification_template_to_uplift_helper",
+      "from": "verification_report_template",
+      "to": "project_uplift",
+      "kind": "helper_samples_doctrine_surface",
+      "support_mode": "semantic_plus_producer_report",
+      "evidence_refs": [
+        "verifier_lifecycle_carry_impl_54",
+        "uplift_manifest_current"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "helper_to_state",
+      "from": "project_uplift",
+      "to": "state_md",
+      "kind": "durable_state_section_write_with_declared_project_uplift_slot",
+      "support_mode": "semantic_plus_producer_report",
+      "evidence_refs": [
+        "uplift_manifest_current",
+        "transition_state_uplift_impl_121",
+        "transition_state_uplift_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "helper_to_uplift_report",
+      "from": "project_uplift",
+      "to": "uplift_report_output",
+      "kind": "durable_report_write",
+      "support_mode": "semantic_plus_producer_report",
+      "evidence_refs": [
+        "uplift_manifest_current"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "helper_to_uplift_manifest",
+      "from": "project_uplift",
+      "to": "uplift_manifest_output",
+      "kind": "durable_structured_output_write",
+      "support_mode": "semantic_plus_producer_report",
+      "evidence_refs": [
+        "uplift_manifest_current",
+        "runtime_manifest_current",
+        "runtime_version_current"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "registry_to_launch_truth",
+      "from": "agent_tomls",
+      "to": "launch_truth_tool",
+      "kind": "declared_registry_vs_observed_launch",
+      "support_mode": "semantic_plus_capture_evidence",
+      "evidence_refs": [
+        "launch_capture_lane_03"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "repo_doctrine_to_workspace_governance",
+      "from": "root_agents",
+      "to": "workspace_current_state",
+      "kind": "repo_doctrine_pressure",
+      "support_mode": "semantic_only_local",
+      "evidence_refs": [],
+      "status": "mapped"
+    },
+    {
+      "id": "workspace_governance_to_lane_inheritance",
+      "from": "workspace_status",
+      "to": "lane_02_inheritance",
+      "kind": "workspace_queue_records_lane_force",
+      "support_mode": "semantic_only_local",
+      "evidence_refs": [],
+      "status": "mapped"
+    },
+    {
+      "id": "helper_to_coherence_gate",
+      "from": "project_uplift",
+      "to": "manifest_coherence",
+      "kind": "multi_surface_coherence_check",
+      "support_mode": "semantic_plus_coherence_evidence",
+      "evidence_refs": [
+        "manifest_install_coherence_report"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "reference_owner_skill_to_helper",
+      "from": "research_output_template",
+      "to": "project_uplift",
+      "kind": "doctrine_sensitive_marker_sampling",
+      "support_mode": "semantic_plus_producer_report",
+      "evidence_refs": [
+        "uplift_manifest_current"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "planning_doctrine_to_threshold_scanner",
+      "from": "planning_agents",
+      "to": "threshold_scanner_helper",
+      "kind": "doctrine_bounds_helper_role",
+      "support_mode": "semantic_plus_tested_behavior",
+      "evidence_refs": [
+        "threshold_scanner_helper_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "threshold_scanner_to_historical_reread",
+      "from": "threshold_scanner_helper",
+      "to": "threshold_audit_output_05",
+      "kind": "heuristic_intake_reinterpreted_by_contextual_reread",
+      "support_mode": "semantic_plus_capture_evidence",
+      "evidence_refs": [
+        "historical_scanner_reread_output_05",
+        "launch_capture_threshold_05"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "threshold_reread_to_inheritance",
+      "from": "threshold_audit_output_05",
+      "to": "threshold_audit_inheritance_05",
+      "kind": "lane_output_to_inheritance",
+      "support_mode": "semantic_plus_capture_evidence",
+      "evidence_refs": [
+        "historical_scanner_reread_output_05",
+        "launch_capture_threshold_05"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "threshold_inheritance_to_workspace_current_state",
+      "from": "threshold_audit_inheritance_05",
+      "to": "workspace_current_state",
+      "kind": "lane_inheritance_updates_workspace_governance",
+      "support_mode": "semantic_only_local",
+      "evidence_refs": [],
+      "status": "mapped"
+    },
+    {
+      "id": "threshold_inheritance_to_workspace_status",
+      "from": "threshold_audit_inheritance_05",
+      "to": "workspace_status",
+      "kind": "lane_inheritance_updates_workspace_queue",
+      "support_mode": "semantic_only_local",
+      "evidence_refs": [],
+      "status": "mapped"
+    },
+    {
+      "id": "setup_script_to_sdk_runtime_helper",
+      "from": "setup_script",
+      "to": "gsd_sdk_runtime_helper",
+      "kind": "wrapper_invokes_runtime_verification",
+      "support_mode": "semantic_plus_materialization_evidence",
+      "evidence_refs": [
+        "portable_materialization_check",
+        "setup_portable_gsd_impl_56"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "setup_script_to_portable_contract",
+      "from": "setup_script",
+      "to": "portable_contract",
+      "kind": "wrapper_invokes_pristine_capture_and_overlay_contract",
+      "support_mode": "semantic_plus_materialization_evidence",
+      "evidence_refs": [
+        "portable_materialization_check",
+        "setup_portable_gsd_impl_56"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_milestone_open_workflow",
+      "from": "overlay_manifest",
+      "to": "milestone_open_workflow",
+      "kind": "overlay_owns_workflow_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "milestone_boundary_lifecycle_carry_impl_60",
+        "initialization_ingest_read_packet_impl_68"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_new_project_workflow",
+      "from": "overlay_manifest",
+      "to": "new_project_workflow",
+      "kind": "overlay_owns_workflow_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "initialization_ingest_read_packet_impl_68"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_ingest_docs_workflow",
+      "from": "overlay_manifest",
+      "to": "ingest_docs_workflow",
+      "kind": "overlay_owns_workflow_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "initialization_ingest_read_packet_impl_68"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_health_workflow",
+      "from": "overlay_manifest",
+      "to": "health_workflow",
+      "kind": "overlay_owns_workflow_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "health_migration_follow_through_impl_70"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_health_skill_wrapper",
+      "from": "overlay_manifest",
+      "to": "health_skill_wrapper",
+      "kind": "overlay_owns_wrapper_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "health_migration_follow_through_impl_70"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_from_gsd2_skill_wrapper",
+      "from": "overlay_manifest",
+      "to": "from_gsd2_skill_wrapper",
+      "kind": "overlay_owns_wrapper_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "health_migration_follow_through_impl_70"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_milestone_close_workflow",
+      "from": "overlay_manifest",
+      "to": "milestone_close_workflow",
+      "kind": "overlay_owns_workflow_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "milestone_boundary_lifecycle_carry_impl_60"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_audit_open_helper",
+      "from": "overlay_manifest",
+      "to": "audit_open_helper",
+      "kind": "overlay_owns_runtime_helper_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "seed_audit_gate_impl_84"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "milestone_open_workflow_to_state",
+      "from": "milestone_open_workflow",
+      "to": "state_md",
+      "kind": "workflow_rereads_and_updates_state_continuity",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "milestone_boundary_lifecycle_carry_impl_60"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "milestone_close_workflow_to_state",
+      "from": "milestone_close_workflow",
+      "to": "state_md",
+      "kind": "workflow_reviews_and_updates_state_continuity",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "milestone_boundary_lifecycle_carry_impl_60"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_spec_phase_workflow",
+      "from": "overlay_manifest",
+      "to": "spec_phase_workflow",
+      "kind": "overlay_owns_workflow_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "spec_lifecycle_carry_impl_64"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_discuss_workflow",
+      "from": "overlay_manifest",
+      "to": "discuss_workflow",
+      "kind": "overlay_owns_workflow_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "spec_lifecycle_carry_impl_64"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_spec_template",
+      "from": "overlay_manifest",
+      "to": "spec_template_overlay",
+      "kind": "overlay_owns_template_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "spec_lifecycle_carry_impl_64"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "spec_phase_to_spec_template",
+      "from": "spec_phase_workflow",
+      "to": "spec_template_overlay",
+      "kind": "workflow_writes_template_shape",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "spec_lifecycle_carry_impl_64",
+        "spec_future_carry_contract_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "spec_phase_to_discuss_workflow",
+      "from": "spec_phase_workflow",
+      "to": "discuss_workflow",
+      "kind": "upstream_spec_contract_consumed_by_downstream_workflow",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "spec_lifecycle_carry_impl_64",
+        "spec_future_carry_contract_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_mandatory_initial_read_reference",
+      "from": "overlay_manifest",
+      "to": "mandatory_initial_read_reference",
+      "kind": "overlay_owns_reference_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "read_packet_relevance_control_impl_66"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_milestone_boundary_uplift_reference",
+      "from": "overlay_manifest",
+      "to": "milestone_boundary_uplift_reference",
+      "kind": "overlay_owns_reference_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "milestone_boundary_uplift_impl_123"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "mandatory_initial_read_to_progress_workflow",
+      "from": "mandatory_initial_read_reference",
+      "to": "progress_workflow",
+      "kind": "shared_reference_guides_workflow_reading_control",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "read_packet_relevance_control_impl_66",
+        "read_packet_tier_contract_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "milestone_boundary_uplift_reference_to_milestone_open_workflow",
+      "from": "milestone_boundary_uplift_reference",
+      "to": "milestone_open_workflow",
+      "kind": "shared_reference_guides_workflow_reading_control",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "milestone_boundary_uplift_impl_123",
+        "milestone_boundary_uplift_contract_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "milestone_boundary_uplift_reference_to_milestone_close_workflow",
+      "from": "milestone_boundary_uplift_reference",
+      "to": "milestone_close_workflow",
+      "kind": "shared_reference_guides_workflow_reading_control",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "milestone_boundary_uplift_impl_123",
+        "milestone_boundary_uplift_contract_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "milestone_boundary_uplift_reference_to_state",
+      "from": "milestone_boundary_uplift_reference",
+      "to": "state_md",
+      "kind": "shared_reference_points_first_to_compact_state_digest",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "milestone_boundary_uplift_impl_123",
+        "transition_state_uplift_impl_121"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "milestone_boundary_uplift_reference_to_uplift_report",
+      "from": "milestone_boundary_uplift_reference",
+      "to": "uplift_report_output",
+      "kind": "shared_reference_widens_to_narrative_uplift_carrier",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "milestone_boundary_uplift_impl_123"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "milestone_boundary_uplift_reference_to_uplift_manifest",
+      "from": "milestone_boundary_uplift_reference",
+      "to": "uplift_manifest_output",
+      "kind": "shared_reference_widens_to_typed_uplift_carrier",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "milestone_boundary_uplift_impl_123"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "mandatory_initial_read_to_new_project_workflow",
+      "from": "mandatory_initial_read_reference",
+      "to": "new_project_workflow",
+      "kind": "shared_reference_guides_workflow_reading_control",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "initialization_ingest_read_packet_impl_68",
+        "initialization_read_packet_contract_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "mandatory_initial_read_to_milestone_open_workflow",
+      "from": "mandatory_initial_read_reference",
+      "to": "milestone_open_workflow",
+      "kind": "shared_reference_guides_workflow_reading_control",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "initialization_ingest_read_packet_impl_68",
+        "initialization_read_packet_contract_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "mandatory_initial_read_to_ingest_docs_workflow",
+      "from": "mandatory_initial_read_reference",
+      "to": "ingest_docs_workflow",
+      "kind": "shared_reference_guides_workflow_reading_control",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "initialization_ingest_read_packet_impl_68",
+        "initialization_read_packet_contract_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "mandatory_initial_read_to_health_workflow",
+      "from": "mandatory_initial_read_reference",
+      "to": "health_workflow",
+      "kind": "shared_reference_guides_workflow_reading_control",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "health_migration_follow_through_impl_70",
+        "health_migration_follow_through_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "mandatory_initial_read_to_resume_workflow",
+      "from": "mandatory_initial_read_reference",
+      "to": "resume_workflow",
+      "kind": "shared_reference_guides_workflow_reading_control",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "read_packet_relevance_control_impl_66",
+        "read_packet_tier_contract_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "mandatory_initial_read_to_uplift_workflow",
+      "from": "mandatory_initial_read_reference",
+      "to": "uplift_workflow",
+      "kind": "shared_reference_guides_workflow_reading_control",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "read_packet_relevance_control_impl_66",
+        "read_packet_tier_contract_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "uplift_skill_wrapper_to_uplift_workflow",
+      "from": "uplift_skill_wrapper",
+      "to": "uplift_workflow",
+      "kind": "wrapper_keeps_seed_posture_visible_while_preserving_detect_only_and_later_migration_separation",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "uplift_seed_corpus_impl_80",
+        "project_uplift_contract_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "health_skill_wrapper_to_health_workflow",
+      "from": "health_skill_wrapper",
+      "to": "health_workflow",
+      "kind": "wrapper_binds_skill_to_workflow",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "health_migration_follow_through_impl_70",
+        "health_migration_follow_through_tests",
+        "health_uplift_deepen_impl_125",
+        "health_uplift_deepen_contract_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "health_workflow_to_state",
+      "from": "health_workflow",
+      "to": "state_md",
+      "kind": "post_validation_read_only_step_starts_from_compact_project_uplift_digest",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "health_uplift_deepen_impl_125",
+        "health_uplift_deepen_contract_tests",
+        "transition_state_uplift_impl_121"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "health_workflow_to_uplift_report",
+      "from": "health_workflow",
+      "to": "uplift_report_output",
+      "kind": "post_validation_read_only_step_widens_to_narrative_uplift_carrier_only_when_needed",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "health_uplift_deepen_impl_125",
+        "health_uplift_deepen_contract_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "health_workflow_to_uplift_manifest",
+      "from": "health_workflow",
+      "to": "uplift_manifest_output",
+      "kind": "post_validation_read_only_step_widens_to_typed_uplift_carrier_only_when_needed",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "health_uplift_deepen_impl_125",
+        "health_uplift_deepen_contract_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "health_workflow_to_uplift_workflow",
+      "from": "health_workflow",
+      "to": "uplift_workflow",
+      "kind": "post_validation_read_only_uplift_continuity_kept_distinct_from_later_write_side_refresh",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "health_migration_follow_through_impl_70",
+        "health_migration_follow_through_tests",
+        "health_uplift_deepen_impl_125",
+        "health_uplift_deepen_contract_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "new_project_workflow_to_progress_workflow",
+      "from": "new_project_workflow",
+      "to": "progress_workflow",
+      "kind": "existing_project_refresh_routes_through_progress",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "initialization_ingest_read_packet_impl_68",
+        "initialization_read_packet_contract_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "from_gsd2_skill_wrapper_to_health_workflow",
+      "from": "from_gsd2_skill_wrapper",
+      "to": "health_workflow",
+      "kind": "migration_routes_into_structural_validation",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "health_migration_follow_through_impl_70",
+        "health_migration_follow_through_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "from_gsd2_skill_wrapper_to_uplift_workflow",
+      "from": "from_gsd2_skill_wrapper",
+      "to": "uplift_workflow",
+      "kind": "migration_kept_distinct_from_later_repo_local_uplift",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "health_migration_follow_through_impl_70",
+        "health_migration_follow_through_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "ingest_docs_workflow_to_uplift_workflow",
+      "from": "ingest_docs_workflow",
+      "to": "uplift_workflow",
+      "kind": "doc_merge_kept_distinct_from_later_repo_local_uplift",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "initialization_ingest_read_packet_impl_68",
+        "initialization_read_packet_contract_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_update_workflow",
+      "from": "overlay_manifest",
+      "to": "update_workflow",
+      "kind": "overlay_owns_workflow_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "update_follow_through_impl_72"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_update_skill_wrapper",
+      "from": "overlay_manifest",
+      "to": "update_skill_wrapper",
+      "kind": "overlay_owns_wrapper_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "update_follow_through_impl_72"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "mandatory_initial_read_to_update_workflow",
+      "from": "mandatory_initial_read_reference",
+      "to": "update_workflow",
+      "kind": "shared_reference_guides_workflow_reading_control",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "update_follow_through_impl_72",
+        "update_follow_through_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "entry_runtime_uplift_reference_to_update_workflow",
+      "from": "entry_runtime_uplift_reference",
+      "to": "update_workflow",
+      "kind": "shared_reference_guides_provider_gated_workflow_reading_control",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "update_entry_runtime_continuity_impl_133",
+        "update_follow_through_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "entry_runtime_uplift_reference_to_update_skill_wrapper",
+      "from": "entry_runtime_uplift_reference",
+      "to": "update_skill_wrapper",
+      "kind": "shared_reference_guides_wrapper_scope_boundary",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "update_entry_runtime_continuity_impl_133",
+        "update_follow_through_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "update_skill_wrapper_to_update_workflow",
+      "from": "update_skill_wrapper",
+      "to": "update_workflow",
+      "kind": "wrapper_binds_skill_to_workflow",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "update_follow_through_impl_72",
+        "update_follow_through_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "update_workflow_to_health_workflow",
+      "from": "update_workflow",
+      "to": "health_workflow",
+      "kind": "runtime_package_update_kept_distinct_from_structural_health",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "update_follow_through_impl_72",
+        "update_follow_through_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "update_workflow_to_uplift_workflow",
+      "from": "update_workflow",
+      "to": "uplift_workflow",
+      "kind": "runtime_package_update_kept_distinct_from_later_repo_local_uplift",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "update_follow_through_impl_72",
+        "update_follow_through_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_plant_seed_workflow",
+      "from": "overlay_manifest",
+      "to": "plant_seed_workflow",
+      "kind": "overlay_owns_workflow_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "seed_consumer_carry_impl_74"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_plant_seed_skill_wrapper",
+      "from": "overlay_manifest",
+      "to": "plant_seed_skill_wrapper",
+      "kind": "overlay_owns_wrapper_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "seed_consumer_carry_impl_74"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "plant_seed_skill_wrapper_to_plant_seed_workflow",
+      "from": "plant_seed_skill_wrapper",
+      "to": "plant_seed_workflow",
+      "kind": "wrapper_binds_skill_to_workflow",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "seed_consumer_carry_impl_74",
+        "seed_consumer_carry_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "plant_seed_workflow_to_milestone_open_workflow",
+      "from": "plant_seed_workflow",
+      "to": "milestone_open_workflow",
+      "kind": "seed_producer_routes_vintage_why_and_strengthening_carry_into_milestone_open_consumer",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "seed_consumer_carry_impl_74",
+        "seed_consumer_carry_tests",
+        "seed_doctrine_vintage_impl_78",
+        "seed_doctrine_vintage_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "plant_seed_workflow_to_audit_open_helper",
+      "from": "plant_seed_workflow",
+      "to": "audit_open_helper",
+      "kind": "seed_producer_routes_vintage_why_and_strengthening_carry_into_audit_reader",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "seed_consumer_carry_impl_74",
+        "seed_consumer_carry_tests",
+        "seed_doctrine_vintage_impl_78",
+        "seed_doctrine_vintage_tests",
+        "seed_audit_gate_impl_84",
+        "seed_audit_gate_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "audit_open_helper_to_milestone_close_workflow",
+      "from": "audit_open_helper",
+      "to": "milestone_close_workflow",
+      "kind": "helper_keeps_seed_vintage_and_strengthening_judgment_visible_at_milestone_close",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "seed_audit_gate_impl_84",
+        "seed_audit_gate_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_explore_workflow",
+      "from": "overlay_manifest",
+      "to": "explore_workflow",
+      "kind": "overlay_owns_workflow_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "explore_seed_convergence_impl_76"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_explore_skill_wrapper",
+      "from": "overlay_manifest",
+      "to": "explore_skill_wrapper",
+      "kind": "overlay_owns_wrapper_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "explore_seed_convergence_impl_76"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "explore_skill_wrapper_to_explore_workflow",
+      "from": "explore_skill_wrapper",
+      "to": "explore_workflow",
+      "kind": "wrapper_binds_skill_to_workflow",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "explore_seed_convergence_impl_76",
+        "explore_seed_convergence_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "explore_workflow_to_plant_seed_workflow",
+      "from": "explore_workflow",
+      "to": "plant_seed_workflow",
+      "kind": "ideation_seed_output_routes_through_current_seed_producer_contract",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "explore_seed_convergence_impl_76",
+        "explore_seed_convergence_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_seed_migration_inventory_workflow",
+      "from": "overlay_manifest",
+      "to": "seed_migration_inventory_workflow",
+      "kind": "overlay_owns_workflow_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "seed_migration_inventory_impl_86",
+        "seed_migration_inventory_follow_through_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_seed_migration_inventory_skill_wrapper",
+      "from": "overlay_manifest",
+      "to": "seed_migration_inventory_skill_wrapper",
+      "kind": "overlay_owns_wrapper_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "seed_migration_inventory_impl_86",
+        "seed_migration_inventory_follow_through_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "seed_migration_inventory_skill_wrapper_to_workflow",
+      "from": "seed_migration_inventory_skill_wrapper",
+      "to": "seed_migration_inventory_workflow",
+      "kind": "wrapper_binds_skill_to_workflow",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "seed_migration_inventory_impl_86",
+        "seed_migration_inventory_follow_through_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "seed_migration_inventory_workflow_to_helper",
+      "from": "seed_migration_inventory_workflow",
+      "to": "seed_migration_inventory_helper",
+      "kind": "workflow_invokes_helper_with_route_state_disambiguation_and_post_write_packet_state",
+      "support_mode": "semantic_plus_tested_behavior",
+      "evidence_refs": [
+        "seed_migration_inventory_impl_86",
+        "seed_migration_inventory_tests",
+        "seed_migration_reread_output_04",
+        "seed_migration_harden_impl_88"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "plant_seed_workflow_to_seed_migration_inventory_helper",
+      "from": "plant_seed_workflow",
+      "to": "seed_migration_inventory_helper",
+      "kind": "migration_helper_samples_current_seed_producer_contract_shape_from_plant_seed",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "seed_migration_harden_impl_88",
+        "seed_migration_inventory_follow_through_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "uplift_workflow_to_seed_migration_inventory_workflow",
+      "from": "uplift_workflow",
+      "to": "seed_migration_inventory_workflow",
+      "kind": "uplift_route_hands_legacy_noncurrent_or_current_version_shape_gap_posture_into_specialist_detect_only_migration_packet",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "seed_migration_inventory_impl_86",
+        "seed_migration_inventory_follow_through_tests",
+        "seed_migration_harden_impl_88"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "progress_workflow_to_seed_migration_inventory_workflow",
+      "from": "progress_workflow",
+      "to": "seed_migration_inventory_workflow",
+      "kind": "surfaces_bounded_specialist_packet_disclosure_with_candidate_breakdown_and_inspect_write_split_when_seed_migration_candidates_are_present",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "seed_migration_pointer_bridge_impl_90",
+        "seed_operator_consumer_contract_tests",
+        "project_uplift_contract_tests",
+        "seed_migration_bridge_harden_impl_92"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "resume_workflow_to_seed_migration_inventory_workflow",
+      "from": "resume_workflow",
+      "to": "seed_migration_inventory_workflow",
+      "kind": "surfaces_bounded_specialist_packet_disclosure_with_candidate_breakdown_and_inspect_write_split_when_seed_migration_candidates_are_present",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "seed_migration_pointer_bridge_impl_90",
+        "seed_operator_consumer_contract_tests",
+        "project_uplift_contract_tests",
+        "seed_migration_bridge_harden_impl_92"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "propagation_baseline_to_review_workflow",
+      "from": "propagation_baseline_95",
+      "to": "propagation_review_workflow",
+      "kind": "baseline_packet_guides_later_multi_family_review",
+      "support_mode": "semantic_plus_change_triggered_refresh",
+      "evidence_refs": [
+        "propagation_review_route_impl_98",
+        "propagation_review_route_refresh_39"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "propagation_delta_to_review_workflow",
+      "from": "propagation_delta_96",
+      "to": "propagation_review_workflow",
+      "kind": "delta_packet_guides_later_multi_family_review",
+      "support_mode": "semantic_plus_change_triggered_refresh",
+      "evidence_refs": [
+        "propagation_review_route_impl_98",
+        "propagation_review_route_refresh_39"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "mandatory_initial_read_to_propagation_review_workflow",
+      "from": "mandatory_initial_read",
+      "to": "propagation_review_workflow",
+      "kind": "shared_required_reading_bootstraps_review_route_before_baseline_and_delta_widening",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "propagation_review_route_impl_98",
+        "propagation_review_route_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_propagation_review_workflow",
+      "from": "overlay_manifest",
+      "to": "propagation_review_workflow",
+      "kind": "overlay_owns_workflow_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "propagation_review_route_impl_98",
+        "propagation_review_route_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_propagation_review_skill_wrapper",
+      "from": "overlay_manifest",
+      "to": "propagation_review_skill_wrapper",
+      "kind": "overlay_owns_wrapper_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "propagation_review_route_impl_98",
+        "propagation_review_route_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "propagation_review_skill_wrapper_to_workflow",
+      "from": "propagation_review_skill_wrapper",
+      "to": "propagation_review_workflow",
+      "kind": "wrapper_binds_skill_to_workflow",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "propagation_review_route_impl_98",
+        "propagation_review_route_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_to_entry_runtime_uplift_reference",
+      "from": "overlay_manifest",
+      "to": "entry_runtime_uplift_reference",
+      "kind": "overlay_owns_reference_surface",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "entry_runtime_continuity_impl_130"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "entry_runtime_uplift_reference_to_new_project_workflow",
+      "from": "entry_runtime_uplift_reference",
+      "to": "new_project_workflow",
+      "kind": "shared_reference_guides_workflow_reading_control",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "entry_runtime_continuity_impl_130",
+        "entry_runtime_continuity_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "entry_runtime_uplift_reference_to_ingest_docs_workflow",
+      "from": "entry_runtime_uplift_reference",
+      "to": "ingest_docs_workflow",
+      "kind": "shared_reference_guides_workflow_reading_control",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "entry_runtime_continuity_impl_130",
+        "entry_runtime_continuity_tests"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "entry_runtime_uplift_reference_to_state",
+      "from": "entry_runtime_uplift_reference",
+      "to": "state_md",
+      "kind": "shared_reference_points_first_to_compact_state_digest_when_present",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "entry_runtime_continuity_impl_130",
+        "transition_state_uplift_impl_121"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "entry_runtime_uplift_reference_to_uplift_report",
+      "from": "entry_runtime_uplift_reference",
+      "to": "uplift_report_output",
+      "kind": "shared_reference_widens_to_narrative_uplift_carrier",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "entry_runtime_continuity_impl_130"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "entry_runtime_uplift_reference_to_uplift_manifest",
+      "from": "entry_runtime_uplift_reference",
+      "to": "uplift_manifest_output",
+      "kind": "shared_reference_widens_to_typed_uplift_carrier",
+      "support_mode": "declared_contract_plus_semantic_carry",
+      "evidence_refs": [
+        "entry_runtime_continuity_impl_130"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "overlay_manifest_to_overlay_roster_document",
+      "from": "overlay_manifest",
+      "to": "overlay_roster_document",
+      "kind": "manifest_frontier_frozen_into_extraction_roster",
+      "support_mode": "declared_contract_plus_extraction_classification",
+      "evidence_refs": [
+        "overlay_contract_validation",
+        "overlay_roster_impl_146"
+      ],
+      "status": "mapped"
+    },
+    {
+      "id": "runtime_observation_policy_to_project_uplift",
+      "from": "runtime_observation_policy",
+      "to": "project_uplift",
+      "kind": "declared_runtime_observation_policy_drives_helper_runtime_scan",
+      "status": "mapped",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "runtime_observation_policy_file",
+        "project_uplift_contract_tests",
+        "project_uplift_neutralization_impl_154"
+      ]
+    },
+    {
+      "id": "uplift_output_policy_to_project_uplift",
+      "from": "uplift_output_policy",
+      "to": "project_uplift",
+      "kind": "declared_output_topology_drives_uplift_outputs_and_state_slot",
+      "status": "mapped",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "uplift_output_policy_file",
+        "project_uplift_contract_tests",
+        "project_uplift_neutralization_impl_154"
+      ]
+    },
+    {
+      "id": "uplift_output_policy_to_harness_canary",
+      "from": "uplift_output_policy",
+      "to": "harness_canary_helper",
+      "kind": "declared_output_topology_drives_canary_uplift_alignment_check",
+      "status": "mapped",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "uplift_output_policy_file",
+        "harness_canary_contract_tests",
+        "project_uplift_neutralization_impl_154"
+      ]
+    },
+    {
+      "id": "seed_contract_shape_to_project_uplift",
+      "from": "seed_contract_shape",
+      "to": "project_uplift",
+      "kind": "declared_seed_contract_shape_drives_uplift_seed_posture_scan",
+      "status": "mapped",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "seed_contract_shape_file",
+        "project_uplift_contract_tests",
+        "project_uplift_neutralization_impl_154"
+      ]
+    },
+    {
+      "id": "seed_contract_shape_to_seed_migration_inventory",
+      "from": "seed_contract_shape",
+      "to": "seed_migration_inventory_helper",
+      "kind": "declared_seed_contract_shape_drives_specialist_inventory_shape_rules",
+      "status": "mapped",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "seed_contract_shape_file",
+        "seed_migration_inventory_tests",
+        "seed_migration_inventory_follow_through_tests",
+        "project_uplift_neutralization_impl_154"
+      ]
+    },
+    {
+      "id": "uplift_carrier_catalog_to_project_uplift",
+      "from": "uplift_carrier_catalog",
+      "to": "project_uplift",
+      "kind": "declared_host_doctrine_catalog_drives_uplift_runtime_registry_and_marker_scan",
+      "status": "mapped",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "uplift_carrier_catalog_file",
+        "project_uplift_contract_tests",
+        "project_uplift_host_doctrine_neutralization_impl_157"
+      ]
+    },
+    {
+      "id": "uplift_vocabulary_to_project_uplift",
+      "from": "uplift_vocabulary",
+      "to": "project_uplift",
+      "kind": "declared_uplift_vocabulary_drives_report_state_and_progress_note_language",
+      "status": "mapped",
+      "support_mode": "declared_contract_plus_tested_behavior",
+      "evidence_refs": [
+        "uplift_vocabulary_file",
+        "project_uplift_contract_tests",
+        "project_uplift_host_doctrine_neutralization_impl_157"
+      ]
+    }
+  ]
+}

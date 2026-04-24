@@ -1,0 +1,63 @@
+# Checkpoint 5 R5.18d Integration And Review Prep Launch Internal R1
+
+## Outcome
+
+- [d:c+r:i] The coherent `R5.18` patch bundle now exists as one bounded review surface rather than four disconnected sub-results. `R5.18a1` fixed the current-wave boundary and contradiction ledger, `R5.18a2` named broader out-of-wave owners without reopening current-wave keep-outs, `R5.18b` landed only the authorized review/planning trunk plus the promoted `gsd-do` router pair, and `R5.18c` landed only the authorized completion/routing trunk plus the promoted live executor/verifier agent pair. Sources: `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-18a1-current-wave-boundary-and-ledger-decision-internal-r1.md:26-27,199-215`; `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-18a2-later-lane-and-quiet-drop-adjudication-internal-r1.md:24-39,96-110`; `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-18b-review-planning-chain-launch-internal-r1.md:5-7,21-28`; `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-18c-completion-routing-chain-launch-internal-r1.md:5-7,25-32`.
+- [d:c+r:i] Package truth now matches that implemented frontier. `TASKS.md` records `R5.18` as done and names `R8.1` through `R8.4` as explicit post-rerun owners, `STATUS.md` now describes the executed bundle plus the remaining review burden, `STATE.yaml` points to checkpoint review rather than pending `18a1/a2/b/c/d` execution, and `GATES/checkpoint-5.md` now treats review of the executed bundle as the live closure step. Sources: `.planning/readiness/phase-01-rerun/TASKS.md:46-61`; `.planning/readiness/phase-01-rerun/STATUS.md:63-110,150-201`; `.planning/readiness/phase-01-rerun/STATE.yaml:5-25,56-58`; `.planning/readiness/phase-01-rerun/GATES/checkpoint-5.md:25-55,97-138`.
+- [d:c+r:i] No live boundary item is still governing by silence. What stayed out of first-wave patching is now either carried by explicit active-frontier contradiction-ledger rows or by explicit broader later-lane ownership under `R8.1` through `R8.4`. Sources: `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-18a1-current-wave-boundary-and-ledger-decision-internal-r1.md:29-215`; `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-18a2-later-lane-and-quiet-drop-adjudication-internal-r1.md:24-110`.
+
+## Accepted Upstream Inputs
+
+- [d:c+r:i] Accepted `R5.18a1` as the governing current-wave boundary record: `Bucket 1` stayed unchanged, the `gsd-do` / `workflows/do.md` router pair was the only `R5.18b` promotion, the live executor/verifier `.codex/agents` pair was the only `R5.18c` conditional addition, the `gsd-audit-uat` pair stayed explicitly parked, `R5.7` was split between active slice and broader parked remainder, `R5.8` remained conditional pending concrete mismatch evidence, and the new exclusion heuristics were barred from standing doctrine. Sources: `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-18a1-current-wave-boundary-and-ledger-decision-internal-r1.md:27,91-113,163-197,201-215`.
+- [d:c+r:i] Accepted `R5.18a2` as the governing broader-remainder record: no `R5.18a1` keep-out changed, and the honest default owners for the out-of-wave remainder are now `R8.1` orchestration operating-model hardening, `R8.2` lifecycle carry-forward beyond `progress` / `transition`, `R8.3` repo-ops and verification materialization follow-through, and `R8.4` remote review-routing and linked artifact machinery. Sources: `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-18a2-later-lane-and-quiet-drop-adjudication-internal-r1.md:24-39,96-110`.
+- [d:c:i] Accepted `R5.18b` as landed within scope: the review consumer chain now preserves lone high-signal criticism and later-audit risk, the planner contract makes must-address versus rebuttal-required handling explicit, and the admitted `gsd-do` router pair is now treated symmetrically rather than collapsing review, replan, and existing-work verification into one route. Sources: `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-18b-review-planning-chain-launch-internal-r1.md:5-7,19-28,30-33`.
+- [d:c:i] Accepted `R5.18c` as landed within scope: the runtime now carries debt-aware completion classification, the promoted live `.codex/agents` executor/verifier pair matches the overlay-side contract, and `progress.md` / `transition.md` now route debt-bearing completion explicitly instead of falling through to clean-complete narration. Sources: `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-18c-completion-routing-chain-launch-internal-r1.md:5-7,23-32,34-38`.
+
+## Package Truth Updates
+
+- [d:c:i] `TASKS.md` moved `R5.18` into `Done` and added a `Later / Post-Rerun Ownership` section so `R8.1` through `R8.4` are visible as named owners without being misread as rerun-critical sequence items. Sources: `.planning/readiness/phase-01-rerun/TASKS.md:46-61`.
+- [d:c:i] `STATUS.md` now states that the split `R5.18` execution bundle exists, summarizes the implemented frontier truth, narrows the blocking findings to checkpoint review plus explicit remainder handling, and points the next action at internal plus cross-vendor review. Sources: `.planning/readiness/phase-01-rerun/STATUS.md:67-110,150-201`.
+- [d:c:i] `STATE.yaml` now records `checkpoint_5_r5_18_patch_bundle_review_prep_complete` as the current task and `run_internal_and_cross_vendor_review_on_executed_r5_18_patch_bundle` as the next action, with blockers and open findings rewritten around review, explicit contradictions, later-lane ownership, and bounded-risk carry-forward. Sources: `.planning/readiness/phase-01-rerun/STATE.yaml:5-25`.
+- [d:c:i] `GATES/checkpoint-5.md` now treats `R5.18a1/a2/b/c/d` as executed and sets the live closure burden at review: validate that the contradiction ledger actually governed scope, that `R8.1` through `R8.4` remain explicit out-of-wave ownership, that router asymmetries are honestly handled, and that the exclusion heuristics did not slip back into standing doctrine. Sources: `.planning/readiness/phase-01-rerun/GATES/checkpoint-5.md:37-55,97-138`.
+
+## Remaining Live Contradictions
+
+- [o:c+r:i] The active-frontier contradictions remain live exactly where `R5.18a1` said they would: `gsd-research-phase`, `ship.md`, `autonomous.md`, non-TDD `checkpoints.md`, `summary.md`, the parked `gsd-audit-uat` / `audit-uat.md` router pair, `gates.md`, `revision-loop.md`, `gate-prompts.md`, the live researcher/planner/checker pairing, and `.codex/agents/gsd-code-reviewer.toml`. `R5.18d` found no basis to silently promote or silently drop any of them. Sources: `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-18a1-current-wave-boundary-and-ledger-decision-internal-r1.md:31-161,203-215`; `.planning/readiness/phase-01-rerun/STATUS.md:155-165`.
+- [o:c+r:i] The broader out-of-wave remainder also stays live, but now under explicit later-lane ownership rather than ambient `later` language: `R8.1` for orchestration operating-model hardening, `R8.2` for lifecycle carry-forward beyond `progress` / `transition`, `R8.3` for repo-ops and verification materialization follow-through, and `R8.4` for remote review-routing and linked artifact machinery. Sources: `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-18a2-later-lane-and-quiet-drop-adjudication-internal-r1.md:26-38,96-110`; `.planning/readiness/phase-01-rerun/TASKS.md:46-55`.
+- [o:c+r:i] Some chain-tail and lifecycle consumers remain intentionally outside this wave even after `R5.18c`: `commands.cjs`, `init.cjs`, milestone-boundary consumers, and template-level `summary.md` hardening. Review must treat those as explicit non-promoted remainder, not as invisible closure debt. Sources: `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-18c-completion-routing-chain-launch-internal-r1.md:28-32`; `.planning/readiness/phase-01-rerun/STATUS.md:164-165`.
+- [o:c+r:i] The branch/worktree seam is no longer only hypothetical. The original `R5.18d` frame preserved the trigger; later verification has now fired it, so current carry should treat `R5.8` as an active bounded fix surface until materialization parity and package-truth repair are re-proved. Sources: `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-18a1-current-wave-boundary-and-ledger-decision-internal-r1.md:175-185`; `.planning/readiness/phase-01-rerun/STATUS.md:27`; `.planning/readiness/phase-01-rerun/TASKS.md:15`.
+
+## Review Surface
+
+- [d:c+r:i] Internal and cross-vendor review should review `R5.18` as one bounded bundle, not as isolated `18b` and `18c` file clusters. The right entrypoint is this `R5.18d` artifact plus the four upstream execution artifacts and the updated package-truth docs. Sources: `.planning/readiness/phase-01-rerun/GATES/checkpoint-5.md:37-55,123-138`; `.planning/readiness/phase-01-rerun/STATUS.md:195-201`.
+- [d:c+r:i] Review should specifically test five questions:
+  1. Did the `R5.18a1` contradiction ledger actually govern `R5.18b/c` scope?
+  2. Do `R8.1` through `R8.4` remain explicit later-lane ownership instead of implied closure?
+  3. Is router-pair asymmetry honestly handled (`gsd-do` paired now, `gsd-audit-uat` paired non-promotion)?
+  4. Did authority-shelter stay barred from suppressing downstream semantic-uptake obligations?
+  5. Did the exclusion heuristics remain blocked from standing-doctrine use?
+  Sources: `.planning/readiness/phase-01-rerun/AUDITS/checkpoint-5-r5-18d-integration-and-review-prep-launch-spec.md:5-16`; `.planning/readiness/phase-01-rerun/GATES/checkpoint-5.md:107-110`; `.planning/readiness/phase-01-rerun/STATUS.md:152-165`.
+- [d:c+r:i] Review must account for the repo-local runtime surface honestly: much of `.codex/*` is repo-ignored or otherwise not available as a conventional tracked diff here, so review must rely on direct file-content inspection and the verification commands below rather than tracked-path expectations alone. Sources: `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-18b-review-planning-chain-launch-internal-r1.md:27-28`; `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-18c-completion-routing-chain-launch-internal-r1.md:25-26`; `.planning/readiness/phase-01-rerun/GATES/checkpoint-5.md:138`.
+
+## Verification
+
+- `rg -n "Review Consumer Contract|Must Address In Replan|Review Feedback Addressed|lone high-signal|gsd-plan-phase --reviews|replan-from-review-feedback|already-implemented work" .codex/skills/gsd-review/SKILL.md .codex/get-shit-done/workflows/review.md .codex/get-shit-done/references/planner-reviews.md .codex/skills/gsd-plan-phase/SKILL.md .codex/get-shit-done/workflows/plan-phase.md .codex/skills/gsd-do/SKILL.md .codex/get-shit-done/workflows/do.md`
+  - confirmed the live review/planning and router markers described by `R5.18b` are present on disk now
+- `rg -n "completion_mode|debt_bearing|verification_pending|complete_with_debt|clean_completion|checkbox_conflicts_with_disk" .codex/get-shit-done/references/agent-contracts.md .codex/get-shit-done/references/verification-overrides.md .codex/get-shit-done/bin/lib/phase.cjs .codex/get-shit-done/bin/lib/roadmap.cjs .codex/get-shit-done/workflows/progress.md .codex/get-shit-done/workflows/transition.md .codex/agents/gsd-executor.toml .codex/agents/gsd-verifier.toml tooling/portable-gsd/overlay/agents/gsd-executor.toml tooling/portable-gsd/overlay/agents/gsd-verifier.toml`
+  - confirmed the live chain-tail and promoted agent-pair markers described by `R5.18c` are present on disk now
+- `node -e "require('./.codex/get-shit-done/bin/lib/phase.cjs'); require('./.codex/get-shit-done/bin/lib/roadmap.cjs'); console.log('module-load-ok')"`
+  - returned `module-load-ok`
+- `node ./.codex/get-shit-done/bin/gsd-tools.cjs roadmap analyze --raw`
+  - succeeded and returned the new phase metadata fields `completion_mode`, `clean_completion`, `debt_bearing`, `completion_warnings`, and `checkbox_conflicts_with_disk`
+
+## Sources
+
+- `.planning/readiness/phase-01-rerun/AUDITS/checkpoint-5-r5-18d-integration-and-review-prep-launch-spec.md`
+- `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-18a1-current-wave-boundary-and-ledger-decision-internal-r1.md`
+- `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-18a2-later-lane-and-quiet-drop-adjudication-internal-r1.md`
+- `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-18b-review-planning-chain-launch-internal-r1.md`
+- `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-18c-completion-routing-chain-launch-internal-r1.md`
+- `.planning/readiness/phase-01-rerun/TASKS.md`
+- `.planning/readiness/phase-01-rerun/STATUS.md`
+- `.planning/readiness/phase-01-rerun/STATE.yaml`
+- `.planning/readiness/phase-01-rerun/GATES/checkpoint-5.md`

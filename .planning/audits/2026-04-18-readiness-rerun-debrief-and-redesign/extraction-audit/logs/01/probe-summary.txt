@@ -1,0 +1,42 @@
+label=extraction-audit-01
+exit_code=0
+elapsed_seconds=410.115
+stream=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/logs/01/extraction-audit-01-20260422-150133.tf9fstrc.stream.jsonl
+stderr=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/logs/01/extraction-audit-01-20260422-150133.zex3wpon.stderr.log
+debug=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/logs/01/extraction-audit-01-20260422-150133.4xbvmstp.debug.log
+stream_bytes=2445583
+stderr_bytes=0
+debug_bytes=56755
+event_counts={"assistant": 29, "rate_limit_event": 1, "result": 1, "stream_event": 7470, "system": 39, "user": 23}
+system_subtypes={"hook_response": 7, "hook_started": 7, "init": 1, "status": 24}
+text_chunks=3
+last_text_begin
+The audit is written to `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/outputs/01-harness-extraction-field-map-audit-opus47-max-r1.md`.
+
+Key returns:
+
+- **Carrier split disclosed three ways, plus three blur zones** (audit-subtree doctrine, propagation-review, uplift-project) where a clean extraction must settle the generic/shared boundary before splitting.
+- **Three-layer installer ownership** made explicit: upstream GSD runtime (layer 1, not absorbed), modifier overlay + contract (layer 2, extracted), host-project materialization (layer 3, stays host). The current `setup-portable-gsd.sh` already enacts the flow but does not name the layers.
+- **Compatibility declaration** shape: promote `observed_basis_only` from a string constant into a typed file with `runtime_basis`, `runtime_held_annotations`, `overlay_schema_version`, `parity_scan_baseline`, `upstream_compatibility_window`, plus `refuse` / `warn` / `annotate-and-proceed` / `proceed` semantics. `.claude` stays `held_annotation`; no broader support-window claim.
+- **Distribution sequence**: separate repo first, no package yet. npm/`npx` and dual-layer held until a second real host has exercised the split.
+- **Migration sequence** in six steps, step 0 being a hold, step 1 being an in-place `harness-modifier/` directory move inside this repo (no extraction yet) to force the carrier split into the filesystem.
+- **Held later**: npm packaging, `.claude` full materialization, shared cross-repo registers, broader support window, provider widening beyond `.codex`/`.claude`, and any host-project planning doctrine travel.
+- **Exact next move**: land step 1 only — move generic carriers into `harness-modifier/`, update `scripts/setup-portable-gsd.sh` and `tooling/codex/*.py` imports, matching propagation refresh. Do not pre-commit to later steps from this lane's authority.
+
+Host-project doctrine (`LONG-ARC.md`, `ROADMAP.md`, `STATE.md`, readiness/rerun canon, room/game concepts) does not travel with the extracted project at any step.
+last_text_end
+last_error_like_begin
+{"type":"result","subtype":"success","is_error":false,"api_error_status":null,"duration_ms":407925,"duration_api_ms":405025,"num_turns":24,"result":"The audit is written to `.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/outputs/01-harness-extraction-field-map-audit-opus47-max-r1.md`.\n\nKey returns:\n\n- **Carrier split disclosed three ways, plus three blur zones** (audit-subtree doctrine, propagation-review, uplift-project) where a clean extraction must settle the generic/shared boundary before splitting.\n- **Three-layer installer ownership** made explicit: upstream GSD runtime (layer 1, not absorbed), modifier overlay + contract (layer 2, extracted), host-project materialization (layer 3, stays host). The current `setup-portable-gsd.sh` already enacts the flow but does not name the layers.\n- **Compatibility declaration** shape: promote `observed_basis_only` from a string constant into a typed file with `runtime_basis`, `runtime_held_annotations`, `overlay_schema_version`, `parity_scan_baseline`, `upstream_compatibility_window`, plus `refuse` / `warn` / `annotate-and-proceed` / `proceed` semantics. `.claude` stays `held_annotation`; no broader support-window claim.\n- **Distribution sequence**: separate repo first, no package yet. npm/`npx` and dual-layer held until a second real host has exercised the split.\n- **Migration sequence** in six steps, step 0 being a hold, step 1 being an in-place `harness-modifier/` directory move inside this repo (no extraction yet) to force the carrier split into the filesystem.\n- **Held later**: npm packaging, `.claude` full materialization, shared cross-repo registers, broader support window, provider widening beyond `.codex`/`.claude`, and any host-project planning doctrine travel.\n- **Exact next move**: land step 1 only — move generic carriers into `harness-modifier/`, update `scripts/setup-portable-gsd.sh` and `tooling/codex/*.py` imports, matching propagation refresh. Do not pre-commit to later steps from this lane's authority.\n\nHost-project doctrine (`LONG-ARC.md`, `ROADMAP.md`, `STATE.md`, readiness/rerun canon, room/game concepts) does not travel with the extracted project at any step.","stop_reason":"end_turn","session_id":"79650535-0a1a-4d0c-bbba-765e1e8803c5","total_cost_usd":2.4960592499999996,"usage":{"input_tokens":33,"cache_creation_input_tokens":139935,"cache_read_input_tokens":2032651,"output_tokens":24199,"server_tool_use":{"web_search_requests":0,"web_fetch_requests":0},"service_tier":"standard","cache_creation":{"ephemeral_1h_input_tokens":139935,"ephemeral_5m_input_tokens":0},"inference_geo":"","iterations":[{"input_tokens":6,"output_tokens":781,"cache_read_input_tokens":123793,"cache_creation_input_tokens":9852,"cache_creation":{"ephemeral_5m_input_tokens":0,"ephemeral_1h_input_tokens":9852},"type":"message"}],"speed":"standard"},"modelUsage":{"claude-opus-4-7[1m]":{"inputTokens":33,"outputTokens":24199,"cacheReadInputTokens":2032651,"cacheCreationInputTokens":139935,"webSearchRequests":0,"costUSD":2.4960592499999996,"contextWindow":1000000,"maxOutputTokens":64000}},"permission_denials":[],"terminal_reason":"completed","fast_mode_state":"off","uuid":"fc02fe04-41fe-4a43-9c91-e89441e6acfc"}
+last_error_like_end
+debug_tail_begin
+2026-04-22T19:08:22.830Z [DEBUG] Successfully parsed and validated hook JSON output
+2026-04-22T19:08:22.830Z [DEBUG] "Hook Stop (Stop) success:\n{}"
+2026-04-22T19:08:22.831Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-22T19:08:22.835Z [DEBUG] MCP server "sequential-thinking": Sending SIGINT to MCP server process
+2026-04-22T19:08:22.937Z [DEBUG] MCP server "sequential-thinking": SIGINT failed, sending SIGTERM to MCP server process
+2026-04-22T19:08:22.973Z [DEBUG] MCP server "sequential-thinking": STDIO connection closed after 408s (cleanly)
+2026-04-22T19:08:22.974Z [DEBUG] MCP server "sequential-thinking": Cleared connection cache for reconnection
+2026-04-22T19:08:23.000Z [DEBUG] MCP server "sequential-thinking": MCP server process exited cleanly
+2026-04-22T19:08:23.009Z [DEBUG] LSP server manager shut down successfully
+2026-04-22T19:08:23.011Z [DEBUG] Cleaned up session snapshot: /home/rookslog/.claude/shell-snapshots/snapshot-bash-1776884559641-w78x3a.sh
+debug_tail_end

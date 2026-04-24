@@ -1,0 +1,43 @@
+label=extraction-audit-08
+exit_code=0
+elapsed_seconds=248.774
+stream=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/logs/08/extraction-audit-08-20260422-205316.jvs20zhz.stream.jsonl
+stderr=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/logs/08/extraction-audit-08-20260422-205316.366agkx6.stderr.log
+debug=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/logs/08/extraction-audit-08-20260422-205316.p_q1whdk.debug.log
+stream_bytes=1420610
+stderr_bytes=0
+debug_bytes=50954
+event_counts={"assistant": 33, "rate_limit_event": 1, "result": 1, "stream_event": 3468, "system": 27, "user": 24}
+system_subtypes={"hook_response": 7, "hook_started": 7, "init": 1, "status": 12}
+text_chunks=4
+last_text_begin
+The lane return was written successfully on the first call. The two later system reminders are hooks firing after the write already completed — the file already exists with the new content.
+
+Note on the injection-pattern flag: the false-positive trigger is the phrase "labels act as a state-section schema" under `Remaining Host Or Shared-Boundary Coupling`. It is plain technical prose describing the role of the label set, not an embedded instruction. No redaction needed.
+
+Output written to:
+`.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/outputs/08-harness-modifier-project-uplift-post-second-neutralization-payload-home-judgment-reread-opus47-max-r1.md`
+
+Summary of the judgment:
+
+- The two landed tranches (`154` policy-data carriers; `157` host-doctrine catalog + vocabulary) moved two of lane `06`'s three named host-coupling surfaces out of helper-local constants and into typed carriers under `harness_modifier/uplift/` + `harness_modifier/compatibility/`, consumed at analysis entry.
+- The third lane-`06` surface — `.planning/STATE.md` writer reach, `.planning/phases/*/*-CONTEXT.md` scanner reach, phase-directory shape assumption, and the `state_section_text` label schema — is still embedded in the helper.
+- Relocation now would carry that planning-shape writer into whatever new home it got, re-hosting the blur one move outward.
+- Cleaner next adjacent route: a third bounded neutralization tranche on the host-planning-shape surface (typed carrier + narrow writer module), before any later relocation reopening. Install-contract pointer (`OVERLAY_MANIFEST_REL_PATH`) stays its own later slice after that.
+- Held later kept intact: relocation, seed-migration-inventory / audit-refmap movement, second overlay tranche, overwrite-family widening, standalone repo, packaging, broader parity redesign, observation-carrier candidate-runtime widening.
+last_text_end
+last_error_like_begin
+{"type":"result","subtype":"success","is_error":false,"api_error_status":null,"duration_ms":246450,"duration_api_ms":244055,"num_turns":25,"result":"The lane return was written successfully on the first call. The two later system reminders are hooks firing after the write already completed — the file already exists with the new content.\n\nNote on the injection-pattern flag: the false-positive trigger is the phrase \"labels act as a state-section schema\" under `Remaining Host Or Shared-Boundary Coupling`. It is plain technical prose describing the role of the label set, not an embedded instruction. No redaction needed.\n\nOutput written to:\n`.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/outputs/08-harness-modifier-project-uplift-post-second-neutralization-payload-home-judgment-reread-opus47-max-r1.md`\n\nSummary of the judgment:\n\n- The two landed tranches (`154` policy-data carriers; `157` host-doctrine catalog + vocabulary) moved two of lane `06`'s three named host-coupling surfaces out of helper-local constants and into typed carriers under `harness_modifier/uplift/` + `harness_modifier/compatibility/`, consumed at analysis entry.\n- The third lane-`06` surface — `.planning/STATE.md` writer reach, `.planning/phases/*/*-CONTEXT.md` scanner reach, phase-directory shape assumption, and the `state_section_text` label schema — is still embedded in the helper.\n- Relocation now would carry that planning-shape writer into whatever new home it got, re-hosting the blur one move outward.\n- Cleaner next adjacent route: a third bounded neutralization tranche on the host-planning-shape surface (typed carrier + narrow writer module), before any later relocation reopening. Install-contract pointer (`OVERLAY_MANIFEST_REL_PATH`) stays its own later slice after that.\n- Held later kept intact: relocation, seed-migration-inventory / audit-refmap movement, second overlay tranche, overwrite-family widening, standalone repo, packaging, broader parity redesign, observation-carrier candidate-runtime widening.","stop_reason":"end_turn","session_id":"47dedbe6-b3c9-42c5-8c4b-0d34cea7c959","total_cost_usd":1.6594189999999998,"usage":{"input_tokens":21,"cache_creation_input_tokens":130588,"cache_read_input_tokens":960228,"output_tokens":14521,"server_tool_use":{"web_search_requests":0,"web_fetch_requests":0},"service_tier":"standard","cache_creation":{"ephemeral_1h_input_tokens":130588,"ephemeral_5m_input_tokens":0},"inference_geo":"","iterations":[{"input_tokens":6,"output_tokens":1513,"cache_read_input_tokens":119735,"cache_creation_input_tokens":10853,"cache_creation":{"ephemeral_5m_input_tokens":0,"ephemeral_1h_input_tokens":10853},"type":"message"}],"speed":"standard"},"modelUsage":{"claude-opus-4-7[1m]":{"inputTokens":21,"outputTokens":14521,"cacheReadInputTokens":960228,"cacheCreationInputTokens":130588,"webSearchRequests":0,"costUSD":1.6594189999999998,"contextWindow":1000000,"maxOutputTokens":64000}},"permission_denials":[],"terminal_reason":"completed","fast_mode_state":"off","uuid":"12523e1d-53b6-4f67-8591-471437aa8651"}
+last_error_like_end
+debug_tail_begin
+2026-04-23T00:57:25.076Z [DEBUG] "Hook Stop (Stop) success:\n{}"
+2026-04-23T00:57:25.078Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T00:57:25.082Z [DEBUG] MCP server "sequential-thinking": Sending SIGINT to MCP server process
+2026-04-23T00:57:25.182Z [DEBUG] MCP server "sequential-thinking": SIGINT failed, sending SIGTERM to MCP server process
+2026-04-23T00:57:25.216Z [DEBUG] MCP server "sequential-thinking": STDIO connection closed after 247s (cleanly)
+2026-04-23T00:57:25.216Z [DEBUG] MCP server "sequential-thinking": Cleared connection cache for reconnection
+2026-04-23T00:57:25.246Z [DEBUG] MCP server "sequential-thinking": MCP server process exited cleanly
+2026-04-23T00:57:25.256Z [DEBUG] LSP server manager shut down successfully
+2026-04-23T00:57:25.258Z [DEBUG] Cleaned up session snapshot: /home/rookslog/.claude/shell-snapshots/snapshot-bash-1776905650978-x1qo3t.sh
+2026-04-23T00:57:25.387Z [DEBUG] Released PID lock for 2.1.118
+debug_tail_end

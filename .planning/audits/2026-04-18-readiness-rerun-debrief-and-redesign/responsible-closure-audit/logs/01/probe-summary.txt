@@ -1,0 +1,30 @@
+label=responsible-closure-audit-01
+exit_code=0
+elapsed_seconds=588.357
+stream=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/responsible-closure-audit/logs/01/responsible-closure-audit-01-20260422-224435.gw57qc_r.stream.jsonl
+stderr=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/responsible-closure-audit/logs/01/responsible-closure-audit-01-20260422-224435.apaoj85u.stderr.log
+debug=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/responsible-closure-audit/logs/01/responsible-closure-audit-01-20260422-224435.9g9vgvyu.debug.log
+stream_bytes=3201240
+stderr_bytes=0
+debug_bytes=59187
+event_counts={"assistant": 25, "rate_limit_event": 1, "result": 1, "stream_event": 10363, "system": 36, "user": 20}
+system_subtypes={"hook_response": 7, "hook_started": 7, "init": 1, "status": 21}
+text_chunks=3
+last_text_begin
+The audit has been written to the requested output path. The file now carries the full responsible-closure field map across all twelve required sections (Domain Split, Deployability And Host-Context Testing, Adaptive Feedback/Measurement/Telemetry, Discrepancy/Positive-Gain/Semantic Signal Capture, Harness-Agential Closure Quality, Parallelization As A Closure Multiplier, What Must Land Before Broader Deployment Pressure, What Should Remain Explicitly Later, Short/Medium/Long Horizon, and Exact Next Moves), inheriting the parallelization field map rather than re-diagnosing it, keeping GSD Reflect as a reference field rather than ceiling, and holding the anti-threshold posture throughout.
+last_text_end
+last_error_like_begin
+{"type":"result","subtype":"success","is_error":false,"api_error_status":null,"duration_ms":585840,"duration_api_ms":583112,"num_turns":21,"result":"The audit has been written to the requested output path. The file now carries the full responsible-closure field map across all twelve required sections (Domain Split, Deployability And Host-Context Testing, Adaptive Feedback/Measurement/Telemetry, Discrepancy/Positive-Gain/Semantic Signal Capture, Harness-Agential Closure Quality, Parallelization As A Closure Multiplier, What Must Land Before Broader Deployment Pressure, What Should Remain Explicitly Later, Short/Medium/Long Horizon, and Exact Next Moves), inheriting the parallelization field map rather than re-diagnosing it, keeping GSD Reflect as a reference field rather than ceiling, and holding the anti-threshold posture throughout.","stop_reason":"end_turn","session_id":"b16aeb61-5923-4937-89b8-22440f394c99","total_cost_usd":2.3847994999999997,"usage":{"input_tokens":30,"cache_creation_input_tokens":119656,"cache_read_input_tokens":1521449,"output_tokens":35043,"server_tool_use":{"web_search_requests":0,"web_fetch_requests":0},"service_tier":"standard","cache_creation":{"ephemeral_1h_input_tokens":119656,"ephemeral_5m_input_tokens":0},"inference_geo":"","iterations":[{"input_tokens":6,"output_tokens":257,"cache_read_input_tokens":118850,"cache_creation_input_tokens":13382,"cache_creation":{"ephemeral_5m_input_tokens":0,"ephemeral_1h_input_tokens":13382},"type":"message"}],"speed":"standard"},"modelUsage":{"claude-opus-4-7[1m]":{"inputTokens":30,"outputTokens":35043,"cacheReadInputTokens":1521449,"cacheCreationInputTokens":119656,"webSearchRequests":0,"costUSD":2.3847994999999997,"contextWindow":1000000,"maxOutputTokens":64000}},"permission_denials":[],"terminal_reason":"completed","fast_mode_state":"off","uuid":"ba0f8093-2016-4df3-84bd-d869aa16a878"}
+last_error_like_end
+debug_tail_begin
+2026-04-23T02:54:23.095Z [DEBUG] "Hook Stop (Stop) success:\n{}"
+2026-04-23T02:54:23.097Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T02:54:23.101Z [DEBUG] MCP server "sequential-thinking": Sending SIGINT to MCP server process
+2026-04-23T02:54:23.201Z [DEBUG] MCP server "sequential-thinking": SIGINT failed, sending SIGTERM to MCP server process
+2026-04-23T02:54:23.235Z [DEBUG] MCP server "sequential-thinking": STDIO connection closed after 586s (cleanly)
+2026-04-23T02:54:23.236Z [DEBUG] MCP server "sequential-thinking": Cleared connection cache for reconnection
+2026-04-23T02:54:23.268Z [DEBUG] MCP server "sequential-thinking": MCP server process exited cleanly
+2026-04-23T02:54:23.277Z [DEBUG] LSP server manager shut down successfully
+2026-04-23T02:54:23.278Z [DEBUG] Cleaned up session snapshot: /home/rookslog/.claude/shell-snapshots/snapshot-bash-1776912644816-jsmm0m.sh
+2026-04-23T02:54:23.509Z [DEBUG] Released PID lock for 2.1.118
+debug_tail_end

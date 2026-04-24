@@ -1,0 +1,376 @@
+{
+  "version": 2,
+  "basis_commit": "16cfb8a",
+  "contracts": [
+    {
+      "id": "overlay_ownership_contract",
+      "path": "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
+      "validator": "harness_modifier/contract/portable_gsd_contract.py",
+      "contract_kind": "tracked overlay ownership and add/overwrite typing",
+      "families_touched": [
+        "install_overlay",
+        "workflow_output",
+        "template_shape",
+        "reference_behavior",
+        "reference_owner_skill",
+        "registry"
+      ],
+      "claim_boundary": "declares which carried files are added versus overwritten, which local overlay surfaces belong to the tracked frontier, and when authoritative source files are allowed to live outside the install-target mirror through explicit source-path indirection"
+    },
+    {
+      "id": "portable_materialization_contract",
+      "path": "harness_modifier/contract/portable_gsd_contract.py",
+      "validator": "harness_modifier/contract/portable_gsd_contract.py",
+      "contract_kind": "fresh-install pristine capture, overlay application, post-materialization verification semantics, and typed parity-reference disclosure for runtime-specific .claude hits inside live .codex materialization",
+      "families_touched": [
+        "install_pristine",
+        "install_overlay",
+        "registry"
+      ],
+      "claim_boundary": "declares how the fresh live install becomes the repo-local pristine overwrite baseline, how the tracked overlay is applied, which post-materialization checks are part of the local contract, how the current known .claude-hit baseline is classified contextually inside live .codex materialization, and how unreviewed runtime-specific hits widen attention through contextual reread rather than through automatic defect claims"
+    },
+    {
+      "id": "verifier_future_preservation_contract",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/references/agent-contracts.md",
+      "validator": "tooling/portable-gsd/overlay/agents/gsd-verifier.toml",
+      "contract_kind": "verifier-side future-preservation review semantics",
+      "families_touched": [
+        "workflow_output",
+        "template_shape",
+        "reference_behavior",
+        "registry",
+        "helper"
+      ],
+      "claim_boundary": "declares how planning-side future_preservation becomes verifier review obligations, report shape, and helper-visible doctrine carriers when present"
+    },
+    {
+      "id": "gsd_sdk_runtime_contract",
+      "path": "harness_modifier/contract/ensure_gsd_sdk_runtime.py",
+      "validator": "harness_modifier/contract/ensure_gsd_sdk_runtime.py",
+      "contract_kind": "repo-local gsd-sdk runtime verification and bounded executable repair",
+      "families_touched": [
+        "install_pristine",
+        "helper"
+      ],
+      "claim_boundary": "declares the bounded repo-local recovery path for the gsd-sdk launcher when the discovered shebang target loses readable/executable mode without muting real off-PATH or broader install failures"
+    },
+    {
+      "id": "transition_future_preservation_contract",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/transition.md",
+      "validator": "tooling/codex/tests/test_transition_uplift_continuity.py",
+      "contract_kind": "transition-side future-preservation carry plus project-uplift continuity preserve/refresh semantics",
+      "families_touched": [
+        "install_overlay",
+        "workflow_output",
+        "template_shape",
+        "state_continuity"
+      ],
+      "claim_boundary": "declares how plan-side future_preservation is reread at phase close, how the four carry buckets are dispositioned, how the compact Future Carry Forward digest remains explicit in project state, and how the top-level Project Uplift digest is preserved or refreshed without widening STATE.md into a structural compatibility carrier"
+    },
+    {
+      "id": "milestone_boundary_future_carry_contract",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/new-milestone.md",
+      "validator": "harness_modifier/contract/portable_gsd_contract.py",
+      "contract_kind": "milestone-boundary long-arc and future-carry reread semantics",
+      "families_touched": [
+        "install_overlay",
+        "workflow_output",
+        "state_continuity"
+      ],
+      "claim_boundary": "declares how milestone opening and milestone close reread LONG-ARC and Future Carry Forward, and how still-live carry remains explicit across milestone boundaries instead of thinning into operator memory"
+    },
+    {
+      "id": "state_consumer_future_carry_contract",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/bin/lib/state.cjs",
+      "validator": "tooling/codex/tests/test_state_snapshot_future_carry.py",
+      "contract_kind": "first-read state consumer semantics for accumulated context, future carry, and session continuity",
+      "families_touched": [
+        "install_overlay",
+        "lib_runtime",
+        "workflow_output",
+        "state_continuity"
+      ],
+      "claim_boundary": "declares how the repo-local state snapshot helper keeps decisions, blockers, future-carry buckets, and session continuity explicit for current first-read consumers, and how progress plus resume inherit that carry without relying on reader memory"
+    },
+    {
+      "id": "spec_future_carry_contract",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/spec-phase.md",
+      "validator": "tooling/codex/tests/test_spec_future_carry_contract.py",
+      "contract_kind": "upstream spec future-aware notes and first downstream discuss-consumer semantics",
+      "families_touched": [
+        "install_overlay",
+        "workflow_output",
+        "template_shape"
+      ],
+      "claim_boundary": "declares how spec-phase reads long-arc doctrine, writes bounded Future-Aware Notes when materially present, and how discuss-phase inherits that upstream spec contract instead of leaving the spec boundary narrower than the later lifecycle chain"
+    },
+    {
+      "id": "read_packet_tier_contract",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/references/mandatory-initial-read.md",
+      "validator": "tooling/codex/tests/test_read_packet_tiers_contract.py",
+      "contract_kind": "shared read-packet tier semantics for operator-facing entry and re-entry surfaces",
+      "families_touched": [
+        "install_overlay",
+        "reference_behavior",
+        "workflow_output"
+      ],
+      "claim_boundary": "declares how required, supporting, and deeper reading tiers keep startup context, route-local widening, and later bounded reread explicit across current operator-facing entry and re-entry workflows without replacing contextual judgment"
+    },
+    {
+      "id": "initialization_ingest_read_packet_contract",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/new-project.md",
+      "validator": "tooling/codex/tests/test_initialization_read_packet_contract.py",
+      "contract_kind": "shared read-packet tier semantics for initialization, milestone-open, and doc-ingest surfaces with explicit uplift-route separation",
+      "families_touched": [
+        "install_overlay",
+        "workflow_output",
+        "reference_behavior"
+      ],
+      "claim_boundary": "declares how new-project, new-milestone, and ingest-docs inherit required/supporting/deeper reading tiers, and how existing-project refresh or later repo-local uplift remain explicit route splits instead of being flattened into one blended startup space"
+    },
+    {
+      "id": "milestone_boundary_uplift_continuity_contract",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/references/milestone-boundary-uplift-continuity.md",
+      "validator": "tooling/codex/tests/test_milestone_boundary_uplift_shared_reference_contract.py",
+      "contract_kind": "milestone-boundary uplift continuity shared-reference semantics",
+      "families_touched": [
+        "install_overlay",
+        "workflow_output",
+        "reference_behavior",
+        "state_continuity"
+      ],
+      "claim_boundary": "declares how milestone open and milestone close share one read-only uplift continuity reference, how that reference widens from the compact Project Uplift digest into the narrative report and typed manifest only when needed, and how milestone boundaries keep observed_basis_only plus held-annotation posture visible without widening into write-side dispatch or cross-runtime parity claims"
+    },
+    {
+      "id": "health_migration_follow_through_contract",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/health.md",
+      "validator": "tooling/codex/tests/test_health_and_migration_follow_through_contract.py",
+      "contract_kind": "repair and migration follow-through semantics for structural health, format conversion, and later uplift separation",
+      "families_touched": [
+        "install_overlay",
+        "workflow_output",
+        "wrapper",
+        "reference_behavior"
+      ],
+      "claim_boundary": "declares how health inherits layered read-packet control, keeps structural repair separate from missing-planning routing and later uplift, and how from-gsd2 adds structural validation plus later uplift handoff instead of ending at format conversion alone"
+    },
+    {
+      "id": "health_uplift_deepen_in_place_contract",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/health.md",
+      "validator": "tooling/codex/tests/test_health_uplift_deepen_in_place_contract.py",
+      "contract_kind": "post-validation health-side read-only uplift continuity semantics with explicit compact-to-narrative-to-typed widening and separate later write-side refresh",
+      "families_touched": [
+        "install_overlay",
+        "workflow_output",
+        "wrapper",
+        "state_continuity",
+        "reference_behavior"
+      ],
+      "claim_boundary": "declares how health now carries one explicit post-validation read-only uplift continuity step, how that step reads STATE.md Project Uplift first then widens to UPLIFT-REPORT.md and UPLIFT-MANIFEST.json only when ambiguity remains, how the compact trigger and silent case stay literal enough for focused contract coverage, how the footer remains a write-side route pointer rather than a second uplift workflow, and how the wrapper keeps structural-health authority separate from later write-side uplift refresh"
+    },
+    {
+      "id": "update_follow_through_contract",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/update.md",
+      "validator": "tooling/codex/tests/test_update_follow_through_contract.py",
+      "contract_kind": "runtime and package update follow-through semantics with shared entry/runtime continuity carry, layered read-packet control, and separate structural-repair versus later-uplift routing",
+      "families_touched": [
+        "install_overlay",
+        "workflow_output",
+        "wrapper",
+        "reference_behavior",
+        "state_continuity"
+      ],
+      "claim_boundary": "declares how update inherits layered read-packet control, reads the shared entry/runtime continuity reference only under an evaluable codex-or-claude provider gate, keeps that review read-only before the clean-install rematerialization rewrites the runtime copy, preserves runtime/package movement as distinct from structural planning repair and later repo-local uplift, and how gsd-update keeps the same continuity boundary at the wrapper scope instead of widening it into parity, matrix, or version-window claims"
+    },
+    {
+      "id": "seed_consumer_follow_through_contract",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/plant-seed.md",
+      "validator": "tooling/codex/tests/test_seed_consumer_follow_through_contract.py",
+      "contract_kind": "seed producer and milestone-open consumer follow-through semantics with explicit strengthening-carry preservation and consumption",
+      "families_touched": [
+        "install_overlay",
+        "workflow_output",
+        "wrapper"
+      ],
+      "claim_boundary": "declares how plant-seed preserves strengthening carry in an explicit section, how new-milestone consumes Why This Matters plus Strengthening Carry from matching seeds, and how the gsd-plant-seed wrapper keeps that producer role explicit instead of leaving seed meaning ambient"
+    },
+    {
+      "id": "explore_seed_producer_convergence_contract",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/explore.md",
+      "validator": "tooling/codex/tests/test_explore_seed_follow_through_contract.py",
+      "contract_kind": "ideation-side seed producer convergence semantics with explicit routing into the live plant-seed contract",
+      "families_touched": [
+        "install_overlay",
+        "workflow_output",
+        "wrapper"
+      ],
+      "claim_boundary": "declares how explore routes selected seed outputs through $gsd-plant-seed and the live SEED-NNN-slug contract, and how gsd-explore keeps that current route explicit instead of leaving a legacy inline seed shape live beside the current producer"
+    },
+    {
+      "id": "seed_doctrine_vintage_anchor_contract",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/plant-seed.md",
+      "validator": "tooling/codex/tests/test_seed_consumer_follow_through_contract.py",
+      "contract_kind": "seed current-versus-legacy vintage anchor semantics at the main producer and milestone-open consumer",
+      "families_touched": [
+        "install_overlay",
+        "workflow_output",
+        "wrapper"
+      ],
+      "claim_boundary": "declares how plant-seed writes seed_contract_version: 2, how new-milestone treats missing markers as legacy_unversioned rather than invalid, and how gsd-plant-seed keeps the current version anchor explicit at the wrapper boundary"
+    },
+    {
+      "id": "uplift_seed_corpus_posture_contract",
+      "path": "tooling/codex/project_uplift.py",
+      "validator": "tooling/codex/tests/test_project_uplift.py",
+      "contract_kind": "project uplift seed-corpus posture, current-version shape-gap, and bounded operator-facing specialist packet disclosure through the progress-note bridge",
+      "families_touched": [
+        "helper",
+        "workflow_output",
+        "wrapper",
+        "state_continuity"
+      ],
+      "claim_boundary": "declares how project uplift scans current versus legacy seed corpus posture plus current-version shape gaps, how uplift-project plus gsd-uplift-project keep that posture visible while separating deeper packet disclosure from durable write side effects, how progress and resume consume it through the progress-note bridge with specialist packet candidate counts, compact breakdown disclosure, and inspect/write command split when migration candidates are present, how durable uplift memory preserves the aggregated migration count plus breakdown, and how later legacy-seed migration stays separate from detect-only uplift"
+    },
+    {
+      "id": "uplift_compatibility_annotation_contract",
+      "path": "tooling/codex/project_uplift.py",
+      "validator": "tooling/codex/tests/test_project_uplift.py",
+      "contract_kind": "observed-basis compatibility anchor plus held runtime annotation semantics through durable uplift outputs and read-only current-runtime consumers",
+      "families_touched": [
+        "helper",
+        "workflow_output",
+        "wrapper",
+        "state_continuity",
+        "install_pristine"
+      ],
+      "claim_boundary": "declares how project_uplift keeps .codex as the observed runtime basis, records .claude as a held runtime annotation rather than a relabeled top-level basis, preserves that distinction in uplift report/manifest/state output, fills the declared top-level Project Uplift slot in place, and routes held-runtime annotation movement into the read-only progress/resume plus transition continuity path without widening into matrix or translation claims"
+    },
+    {
+      "id": "seed_audit_gate_contract",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/bin/lib/audit.cjs",
+      "validator": "tooling/codex/tests/test_seed_audit_gate_follow_through_contract.py",
+      "contract_kind": "seed audit-helper and milestone-close judgment semantics with visible vintage, Why This Matters, and Strengthening Carry",
+      "families_touched": [
+        "install_overlay",
+        "lib_runtime",
+        "workflow_output"
+      ],
+      "claim_boundary": "declares how audit-open keeps canonical seed id, contract vintage, Why This Matters, and Strengthening Carry visible in JSON and human report output, and how milestone-close keeps those richer seed lines visible during acknowledgment or deferment judgment instead of flattening them back to bare seed ids"
+    },
+    {
+      "id": "seed_migration_inventory_contract",
+      "path": "tooling/codex/seed_migration_inventory.py",
+      "validator": "tooling/codex/tests/test_seed_migration_inventory.py",
+      "contract_kind": "detect-only seed migration inventory semantics with route-state disambiguation, post-write durable-output state, explicit producer-follow-through, uplift handoff, and rewrite separation",
+      "families_touched": [
+        "helper",
+        "workflow_output",
+        "wrapper"
+      ],
+      "claim_boundary": "declares how seed_migration_inventory inventories per-seed vintage and contract-shape gaps, distinguishes no_corpus from current_only from surfaced, writes post-write durable packet state, reuses the current plant-seed contract shape rather than a helper-local mirror, and stays detect-only while uplift routes legacy, noncurrent, or current-version shape-gap posture into that specialist packet instead of treating counts/examples as the whole migration story"
+    },
+    {
+      "id": "propagation_review_route_contract",
+      "path": "harness_modifier/overlay/get-shit-done/workflows/propagation-review.md",
+      "validator": "tooling/codex/tests/test_propagation_review_route_contract.py",
+      "contract_kind": "operator-facing propagation review semantics for concrete multi-family contract movement across baseline, delta, typed carrier layers, bounded runtime/install gate tooling, explicit durable-note placement, and explicit tool-result-to-disposition carry",
+      "families_touched": [
+        "install_overlay",
+        "workflow_output",
+        "wrapper",
+        "governance_lane",
+        "helper"
+      ],
+      "claim_boundary": "declares how later contract-changing slices reread the upstream-pristine baseline plus repo-local delta pair before widening into the typed propagation family, how local tooling remains partial visibility instead of whole-network proof, how explicit held boundaries stay visible when adjacent carriers do not move in the same slice, how route-local durable notes prefer existing lane homes, and how helper results sharpen Updated In This Slice versus Held With Explicit Boundary rather than silently closing the route"
+    },
+    {
+      "id": "entry_runtime_uplift_continuity_contract",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/references/entry-runtime-uplift-continuity.md",
+      "validator": "tooling/codex/tests/test_entry_runtime_continuity_shared_reference_contract.py",
+      "contract_kind": "entry-route runtime uplift continuity shared-reference semantics",
+      "families_touched": [
+        "install_overlay",
+        "workflow_output",
+        "reference_behavior",
+        "state_continuity"
+      ],
+      "claim_boundary": "declares how new-project and ingest-docs share one read-only entry/runtime continuity reference, how that reference widens from route-state and optional Project Uplift digest into narrative and typed uplift carriers only when needed, and how entry routes keep observed_basis_only plus held annotation visible without widening mandatory-initial-read or becoming write-side uplift dispatch"
+    },
+    {
+      "id": "harness_modifier_compatibility_declaration_contract",
+      "path": "harness_modifier/compatibility/declaration.json",
+      "validator": "harness_modifier/contract/portable_gsd_contract.py",
+      "contract_kind": "portable compatibility posture, held-runtime annotation semantics, parity baseline, and observed-basis compatibility-window declaration",
+      "families_touched": [
+        "install_overlay",
+        "registry",
+        "helper",
+        "state_continuity"
+      ],
+      "claim_boundary": "declares the portable compatibility semantics that later standalone extraction can carry unchanged, while current host-boundary consumers observe runtime-specific values against that declaration rather than re-declaring the posture locally"
+    },
+    {
+      "id": "harness_modifier_runtime_observation_contract",
+      "path": "harness_modifier/compatibility/observation.json",
+      "validator": "tooling/codex/tests/test_project_uplift.py",
+      "contract_kind": "portable runtime observation declaration for observed and candidate runtime directories used by project_uplift runtime discovery",
+      "families_touched": [
+        "registry",
+        "helper",
+        "state_continuity"
+      ],
+      "claim_boundary": "declares which runtime directories count as observed basis and which remain candidate runtime directories so project_uplift can disclose runtime presence without re-declaring that policy as helper-local constants"
+    },
+    {
+      "id": "harness_modifier_uplift_output_policy_contract",
+      "path": "harness_modifier/uplift/output_policy.json",
+      "validator": "tooling/codex/tests/test_project_uplift.py",
+      "contract_kind": "portable uplift output topology declaration for state heading plus report, manifest, and held-later paths",
+      "families_touched": [
+        "registry",
+        "helper",
+        "workflow_output",
+        "state_continuity"
+      ],
+      "claim_boundary": "declares the Project Uplift state heading plus report, manifest, and held-later output paths so project_uplift and harness_canary read one shared topology instead of duplicating helper-local path constants"
+    },
+    {
+      "id": "harness_modifier_seed_contract_shape_contract",
+      "path": "harness_modifier/compatibility/seed_contract.json",
+      "validator": "tooling/codex/tests/test_seed_migration_inventory_follow_through_contract.py",
+      "contract_kind": "portable seed contract shape declaration for uplift posture scanning and seed migration inventory",
+      "families_touched": [
+        "registry",
+        "helper",
+        "workflow_output",
+        "wrapper"
+      ],
+      "claim_boundary": "declares the seed root, current seed contract version, required frontmatter keys, and required section headings so project_uplift and seed_migration_inventory share one typed seed-shape surface instead of mirroring it through helper-local constants"
+    },
+    {
+      "id": "harness_modifier_uplift_host_doctrine_contract",
+      "path": "harness_modifier/uplift/carrier_catalog.json",
+      "validator": "tooling/codex/tests/test_project_uplift.py",
+      "contract_kind": "portable uplift host-doctrine carrier catalog and typed host-facing vocabulary declaration for project_uplift runtime registry discovery plus operator-facing uplift language",
+      "families_touched": [
+        "registry",
+        "helper",
+        "workflow_output",
+        "state_continuity"
+      ],
+      "claim_boundary": "declares the typed file-carrier roster, runtime-agent registry sibling object, marker-carrier roster, rerun-boundary patterns, phase-boundary notes, command tokens, and recommendation sentences so project_uplift no longer keeps those host-doctrine and vocabulary payloads as helper-local declaration blobs"
+    },
+    {
+      "id": "harness_quality_canary_contract",
+      "path": "harness_modifier/contract/harness_canary.py",
+      "validator": "tooling/codex/tests/test_harness_canary.py",
+      "contract_kind": "bounded harness-quality canary report with shared uplift output-policy alignment checks",
+      "families_touched": [
+        "helper",
+        "registry",
+        "install_overlay"
+      ],
+      "claim_boundary": "declares the bounded harness-quality canary checks, including the check that now reads shared uplift output topology rather than helper-local manifest-path constants"
+    }
+  ]
+}

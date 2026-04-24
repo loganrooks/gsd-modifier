@@ -1,0 +1,41 @@
+{
+  "abort_conditions": [
+    "outside_compatibility_window",
+    "dirty_worktree",
+    "unknown_basis_commit",
+    "requires_write_side_install_mutation",
+    "single_writer_host_governance_touch",
+    "reflect_artifact_presence"
+  ],
+  "bundle_family": "responsible-closure",
+  "declaration_capture": {
+    "basis_commit": "43bd1f4e11bbdd5741cd209d32827d1241ff8e11",
+    "compatibility_window_state": "inside-window",
+    "declaration_posture": "observed_basis_only",
+    "dirty_worktree": false,
+    "held_annotation_runtime": ".claude",
+    "observed_basis_runtime": ".codex"
+  },
+  "exercise_mode": "observe-only",
+  "host_age_posture": "pristine",
+  "host_has_reflect_artifacts": false,
+  "host_has_reflect_artifacts_rationale": "No Reflect-specific artifacts or tokens detected.",
+  "host_has_regular_gsd": true,
+  "host_reference": "gsd-modifier-host-fixture-01",
+  "host_repo_path": "/home/rookslog/workspace/projects/gsd-modifier-host-fixture-01",
+  "host_shape": "disjoint-codex-only",
+  "output_targets": {
+    "observation_record_path": "/home/rookslog/workspace/projects/prix-guesser/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/responsible-closure-audit/artifacts/01-host-exercise-gsd-modifier-host-fixture-01/first-host-exercise-001-observation.json",
+    "runtime_visibility_snapshot_path": "/home/rookslog/workspace/projects/prix-guesser/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/responsible-closure-audit/artifacts/01-host-exercise-gsd-modifier-host-fixture-01/first-host-exercise-001-runtime-visibility-snapshot.json",
+    "verify_materialized_summary": "/home/rookslog/workspace/projects/prix-guesser/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/responsible-closure-audit/artifacts/01-host-exercise-gsd-modifier-host-fixture-01/first-host-exercise-001-verify-materialized-summary.md"
+  },
+  "packet_id": "first-host-exercise-001",
+  "packet_version": 1,
+  "preflight_reads": [
+    "compatibility_declaration",
+    "overlay_install_contract",
+    "runtime_visibility"
+  ],
+  "runtime_class": "codex-only",
+  "target_host_class": "codex-disjoint-gsd-installed-no-reflect"
+}

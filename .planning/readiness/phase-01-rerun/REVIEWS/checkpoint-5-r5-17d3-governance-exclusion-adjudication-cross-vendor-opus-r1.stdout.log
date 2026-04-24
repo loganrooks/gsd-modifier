@@ -1,0 +1,16 @@
+Adjudication written to `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-17d3-governance-exclusion-adjudication-cross-vendor-opus-r1.md`.
+
+**Headline verdict:** Both lanes converge on a narrower-than-maximal failure set. R5.18 scope should be the *intersection* of convergent failures plus the cross-vendor Mandatory Disposition Targets that the internal lane does not contradict — not the union of both lanes' demands.
+
+**Five shared failures (convergent, governing):**
+1. `plan-phase.md` `<required_reading>` + plan-checker `<files_to_read>` omit `planner-reviews.md` / `{reviews_path}` — highest severity.
+2. `planner-reviews.md` excluded as "shared reference" when it is the doctrine-bearing consumer contract.
+3. `review.md:117-141` reviewer prompt + `:266-283` `Consensus concerns` recentering treated as "just prompt language."
+4. `PROTOCOL.md` + `AUDIT-SPEC-TEMPLATE.md` excluded as meta-governance; eight-verdict ladder has no runtime counterpart.
+5. B5 reviewer-prompt tightening cannot be silently folded into B1.
+
+**Four contested items** — preserved as contested rather than promoted: literal doctrine-label propagation (narrowed to carrier-vocabulary), edit-vs-propagate framing of the readiness doctrine files (internal's distinction wins), breadth of propagation target set (ten vs. four), wrapper-family sweep (route to R5.17a).
+
+**Six defensible exclusions preserved,** including the internal lane's durable "governing authority vs. must-edit-now" distinction — R5.17d should codify this as a standing adjudication rule.
+
+**Evidence-base caveat:** did not re-run the cross-vendor `.codex/`-wide grep; that claim carries cross-vendor lane standing, not independent re-verification. R5.18 should re-confirm before concrete edits.

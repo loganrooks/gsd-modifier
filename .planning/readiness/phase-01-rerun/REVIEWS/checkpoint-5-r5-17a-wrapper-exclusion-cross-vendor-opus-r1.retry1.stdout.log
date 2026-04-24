@@ -1,0 +1,19 @@
+Wrote `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-17a-wrapper-exclusion-cross-vendor-opus-r1.md`.
+
+Verdict: `revise-prior-exclusion-boundary`. Key findings ordered by severity:
+
+**Invalid exclusions (HIGH)**
+1. `gsd-plan-phase` — wrapper-inherits-workflow-doctrine warrant fails structurally: `planner-reviews.md` is absent from the wrapper's `<execution_context>` AND from `plan-phase.md:5-13` required_reading AND from the checker's `files_to_read` at 823-834. No transitive carrier exists.
+2. `gsd-autonomous` — wrapper line 49 makes a positive false claim (`Pauses only for user decisions...`) contradicted by `autonomous.md:411-472` auto-approval paths. Missing from audit spec's candidate list.
+3. `gsd-review` — objective still encodes generic `Detect → Invoke → Collect` flow; none of the stronger synthesis/consumer doctrine surfaces.
+
+**Under-justified (HIGH→MEDIUM)**
+4. `gsd-verify-work` — two-state objective hides the acknowledge-and-continue third path at `verify-work.md:461-483`.
+5. `gsd-execute-phase` — `Preserve all workflow gates` too generic; conditional on Track C debt-carrier landing.
+6. `gsd-plan-phase --reviews` flag doc bare.
+
+**Defensible**: `gsd-research-phase`, `gsd-discuss-phase`.
+
+**Mandatory disposition targets** include three wrappers missing from the audit spec's candidate list (`gsd-autonomous`, `gsd-ship`, `gsd-progress`) — flagged via the spec's own read-set-adequacy question.
+
+Contested items kept explicit (scope boundary for the three added wrappers; strict vs loose reading of `directly contradicted`; conditional classification of `gsd-execute-phase`).

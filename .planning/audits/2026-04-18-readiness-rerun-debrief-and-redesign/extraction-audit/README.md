@@ -1,0 +1,184 @@
+Date: 2026-04-22
+Status: active opening audit family
+
+# Extraction Audit
+
+## Purpose
+
+- [g:r:i] This subtree exists to audit whether the repo-local harness modifier should become its own standalone project and, if so, what that project would need to own cleanly.
+- [d:r:i] Its focus is:
+  - host-project versus harness carrier separation
+  - installer/materialization ownership
+  - `.codex` / `.claude` compatibility declaration shape
+  - distribution and migration shape for later standalone install
+
+## Opening Lane
+
+- [d:r:i] Lane `01` will challenge the first local extraction field map rather than jumping straight to repo split or npm packaging.
+- [d:r:i] Lane `01` current tuple:
+  - [packets/01-harness-extraction-field-map-audit-packet.md](packets/01-harness-extraction-field-map-audit-packet.md)
+  - [specs/01-harness-extraction-field-map-audit-spec.md](specs/01-harness-extraction-field-map-audit-spec.md)
+  - [prompts/01-harness-extraction-field-map-audit-opus47-max-r1-launch-prompt.md](prompts/01-harness-extraction-field-map-audit-opus47-max-r1-launch-prompt.md)
+  - [launch-truth/01-harness-extraction-field-map-audit-launch-truth.md](launch-truth/01-harness-extraction-field-map-audit-launch-truth.md)
+  - [outputs/01-harness-extraction-field-map-audit-opus47-max-r1.md](outputs/01-harness-extraction-field-map-audit-opus47-max-r1.md)
+  - [dispositions/01-harness-extraction-field-map-audit-inheritance.md](dispositions/01-harness-extraction-field-map-audit-inheritance.md)
+
+## Current Next Step
+
+- [d:r:i] The first two bounded extraction follow-through slices are now landed:
+  - [intervention-proposals/139-harness-modifier-in-place-rehome-step-1-implementation.md](../intervention-proposals/139-harness-modifier-in-place-rehome-step-1-implementation.md)
+  - [../propagation-audit/51-harness-modifier-in-place-rehome-step-1-change-triggered-refresh.md](../propagation-audit/51-harness-modifier-in-place-rehome-step-1-change-triggered-refresh.md)
+  - [intervention-proposals/141-harness-modifier-compatibility-declaration-carrier-implementation.md](../intervention-proposals/141-harness-modifier-compatibility-declaration-carrier-implementation.md)
+  - [../propagation-audit/52-harness-modifier-compatibility-declaration-carrier-change-triggered-refresh.md](../propagation-audit/52-harness-modifier-compatibility-declaration-carrier-change-triggered-refresh.md)
+- [d:r:i] The next adjacent extraction question is no longer whether the compatibility carrier should exist. It is which later step should inherit after the helper rehome plus portable declaration:
+  - [intervention-proposals/142-harness-modifier-overlay-carrier-rehome-next-proposal.md](../intervention-proposals/142-harness-modifier-overlay-carrier-rehome-next-proposal.md)
+  - standalone repo boundary design
+  - second-host exercise
+- [d:r:i] Lane `02` is now the active challenge on that boundary:
+  - [packets/02-harness-modifier-overlay-carrier-rehome-reread-packet.md](packets/02-harness-modifier-overlay-carrier-rehome-reread-packet.md)
+  - [specs/02-harness-modifier-overlay-carrier-rehome-reread-spec.md](specs/02-harness-modifier-overlay-carrier-rehome-reread-spec.md)
+  - [prompts/02-harness-modifier-overlay-carrier-rehome-reread-opus47-max-r1-launch-prompt.md](prompts/02-harness-modifier-overlay-carrier-rehome-reread-opus47-max-r1-launch-prompt.md)
+  - [launch-truth/02-harness-modifier-overlay-carrier-rehome-reread-launch-truth.md](launch-truth/02-harness-modifier-overlay-carrier-rehome-reread-launch-truth.md)
+  - [outputs/02-harness-modifier-overlay-carrier-rehome-reread-opus47-max-r1.md](outputs/02-harness-modifier-overlay-carrier-rehome-reread-opus47-max-r1.md)
+  - [dispositions/02-harness-modifier-overlay-carrier-rehome-reread-inheritance.md](dispositions/02-harness-modifier-overlay-carrier-rehome-reread-inheritance.md)
+- [d:r:i] Lane `02` is now completed and the narrowing it called for is now landed:
+  - [../intervention-proposals/144-harness-modifier-overlay-roster-and-embedded-host-path-scan-proposal.md](../intervention-proposals/144-harness-modifier-overlay-roster-and-embedded-host-path-scan-proposal.md)
+  - [harness_modifier/overlay/ROSTER.md](/home/rookslog/workspace/projects/prix-guesser/harness_modifier/overlay/ROSTER.md)
+  - [artifacts/03-overlay-embedded-host-path-scan.md](artifacts/03-overlay-embedded-host-path-scan.md)
+  - [../intervention-proposals/146-harness-modifier-overlay-roster-and-embedded-host-path-scan-implementation.md](../intervention-proposals/146-harness-modifier-overlay-roster-and-embedded-host-path-scan-implementation.md)
+- [d:r:i] That proposal is now landed too through:
+  - [../intervention-proposals/147-harness-modifier-first-overlay-filesystem-rehome-proposal.md](../intervention-proposals/147-harness-modifier-first-overlay-filesystem-rehome-proposal.md)
+  - [../intervention-proposals/148-harness-modifier-first-overlay-filesystem-rehome-implementation.md](../intervention-proposals/148-harness-modifier-first-overlay-filesystem-rehome-implementation.md)
+  - [../propagation-audit/55-harness-modifier-first-overlay-filesystem-rehome-change-triggered-refresh.md](../propagation-audit/55-harness-modifier-first-overlay-filesystem-rehome-change-triggered-refresh.md)
+- [d:r:i] The first specialist overlay tranche now uses:
+  - modifier-owned source files under `harness_modifier/overlay/`
+  - stable install targets still declared at `tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json`
+  - explicit source-path indirection instead of duplicated overlay ownership
+- [d:r:i] The next extraction move is now active as lane `03`:
+  - [packets/03-harness-modifier-first-overlay-filesystem-rehome-reread-packet.md](packets/03-harness-modifier-first-overlay-filesystem-rehome-reread-packet.md)
+  - [specs/03-harness-modifier-first-overlay-filesystem-rehome-reread-spec.md](specs/03-harness-modifier-first-overlay-filesystem-rehome-reread-spec.md)
+  - [prompts/03-harness-modifier-first-overlay-filesystem-rehome-reread-opus47-max-r1-launch-prompt.md](prompts/03-harness-modifier-first-overlay-filesystem-rehome-reread-opus47-max-r1-launch-prompt.md)
+  - [launch-truth/03-harness-modifier-first-overlay-filesystem-rehome-reread-launch-truth.md](launch-truth/03-harness-modifier-first-overlay-filesystem-rehome-reread-launch-truth.md)
+  - [outputs/03-harness-modifier-first-overlay-filesystem-rehome-reread-opus47-max-r1.md](outputs/03-harness-modifier-first-overlay-filesystem-rehome-reread-opus47-max-r1.md)
+- [d:r:i] Lane `03` keeps the question bounded to the landed specialist source split before any second overlay tranche is chosen.
+- [d:r:i] Lane `03` is now completed and inherited:
+  - [outputs/03-harness-modifier-first-overlay-filesystem-rehome-reread-opus47-max-r1.md](outputs/03-harness-modifier-first-overlay-filesystem-rehome-reread-opus47-max-r1.md)
+  - [dispositions/03-harness-modifier-first-overlay-filesystem-rehome-reread-inheritance.md](dispositions/03-harness-modifier-first-overlay-filesystem-rehome-reread-inheritance.md)
+- [d:r:i] The next extraction move was then narrowed again:
+  - [../intervention-proposals/149-harness-modifier-first-overlay-residue-classification-pass-proposal.md](../intervention-proposals/149-harness-modifier-first-overlay-residue-classification-pass-proposal.md)
+- [d:r:i] `149` kept the next move on the first slice's residues instead of widening directly into a second filesystem tranche.
+- [d:r:i] That residue-classification pass is now landed too:
+  - [../intervention-proposals/150-harness-modifier-first-overlay-residue-classification-pass-implementation.md](../intervention-proposals/150-harness-modifier-first-overlay-residue-classification-pass-implementation.md)
+  - [../propagation-audit/56-harness-modifier-first-overlay-residue-classification-change-triggered-refresh.md](../propagation-audit/56-harness-modifier-first-overlay-residue-classification-change-triggered-refresh.md)
+- [d:r:i] The carried result is now explicit:
+  - source-side token abstraction is now settled for the moved skill adapters
+  - helper-payload promotion, default-source-root migration, and overwrite-family source indirection remain later bounded questions
+- [d:r:i] The next extraction move is now narrowed again:
+  - [../intervention-proposals/151-harness-modifier-helper-payload-authority-map-proposal.md](../intervention-proposals/151-harness-modifier-helper-payload-authority-map-proposal.md)
+- [d:r:i] `151` keeps the family on the next live authority question exposed by `150`: which helper payloads are modifier-facing enough to count as later movement candidates, which remain shared-boundary, and whether the current helper shims are temporary bridges or stable long-lived boundaries.
+- [d:r:i] Lane `04` is now the active challenge on that boundary:
+  - [packets/04-harness-modifier-helper-payload-authority-map-reread-packet.md](packets/04-harness-modifier-helper-payload-authority-map-reread-packet.md)
+  - [specs/04-harness-modifier-helper-payload-authority-map-reread-spec.md](specs/04-harness-modifier-helper-payload-authority-map-reread-spec.md)
+  - [prompts/04-harness-modifier-helper-payload-authority-map-reread-opus47-max-r1-launch-prompt.md](prompts/04-harness-modifier-helper-payload-authority-map-reread-opus47-max-r1-launch-prompt.md)
+  - [launch-truth/04-harness-modifier-helper-payload-authority-map-reread-launch-truth.md](launch-truth/04-harness-modifier-helper-payload-authority-map-reread-launch-truth.md)
+  - [outputs/04-harness-modifier-helper-payload-authority-map-reread-opus47-max-r1.md](outputs/04-harness-modifier-helper-payload-authority-map-reread-opus47-max-r1.md)
+- [d:r:i] Lane `04` is now completed and inherited:
+  - [outputs/04-harness-modifier-helper-payload-authority-map-reread-opus47-max-r1.md](outputs/04-harness-modifier-helper-payload-authority-map-reread-opus47-max-r1.md)
+  - [dispositions/04-harness-modifier-helper-payload-authority-map-reread-inheritance.md](dispositions/04-harness-modifier-helper-payload-authority-map-reread-inheritance.md)
+- [d:r:i] The next carried artifact is now landed too:
+  - [../../../../harness_modifier/overlay/helpers/AUTHORITY-MAP.md](../../../../harness_modifier/overlay/helpers/AUTHORITY-MAP.md)
+  - [../intervention-proposals/152-harness-modifier-helper-payload-authority-map-implementation.md](../intervention-proposals/152-harness-modifier-helper-payload-authority-map-implementation.md)
+- [d:r:i] The next extraction move is no longer another generic helper-authority note. It is the bounded `project_uplift.py` neutralization proposal that the authority map now points at directly:
+  - [../intervention-proposals/153-harness-modifier-project-uplift-neutralization-proposal.md](../intervention-proposals/153-harness-modifier-project-uplift-neutralization-proposal.md)
+- [d:r:i] Lane `05` is now completed and inherited:
+  - [packets/05-harness-modifier-project-uplift-neutralization-proposal-reread-packet.md](packets/05-harness-modifier-project-uplift-neutralization-proposal-reread-packet.md)
+  - [specs/05-harness-modifier-project-uplift-neutralization-proposal-reread-spec.md](specs/05-harness-modifier-project-uplift-neutralization-proposal-reread-spec.md)
+  - [prompts/05-harness-modifier-project-uplift-neutralization-proposal-reread-opus47-max-r1-launch-prompt.md](prompts/05-harness-modifier-project-uplift-neutralization-proposal-reread-opus47-max-r1-launch-prompt.md)
+  - [launch-truth/05-harness-modifier-project-uplift-neutralization-proposal-reread-launch-truth.md](launch-truth/05-harness-modifier-project-uplift-neutralization-proposal-reread-launch-truth.md)
+  - [outputs/05-harness-modifier-project-uplift-neutralization-proposal-reread-opus47-max-r1.md](outputs/05-harness-modifier-project-uplift-neutralization-proposal-reread-opus47-max-r1.md)
+  - [dispositions/05-harness-modifier-project-uplift-neutralization-proposal-reread-inheritance.md](dispositions/05-harness-modifier-project-uplift-neutralization-proposal-reread-inheritance.md)
+- [d:r:i] The next extraction move is now the bounded neutralization implementation slice the lane named:
+  - [../intervention-proposals/154-harness-modifier-project-uplift-neutralization-implementation.md](../intervention-proposals/154-harness-modifier-project-uplift-neutralization-implementation.md)
+- [d:r:i] That slice is now landed:
+  - typed observation carrier
+  - typed uplift output-policy carrier
+  - typed seed-contract-shape carrier
+  - thinner declaration consumption in `project_uplift.py`
+  - downstream seed-shape carrier adoption in `seed_migration_inventory.py`
+  - uplift-output-policy adoption in `harness_canary.py`
+- [d:r:i] The next extraction move is now no longer carrier neutralization. It is the post-neutralization payload-home judgment opened in:
+  - [../intervention-proposals/155-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-proposal.md](../intervention-proposals/155-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-proposal.md)
+- [d:r:i] Lane `06` is now the active challenge on that boundary:
+  - [packets/06-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-packet.md](packets/06-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-packet.md)
+  - [specs/06-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-spec.md](specs/06-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-spec.md)
+  - [prompts/06-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-opus47-max-r1-launch-prompt.md](prompts/06-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-opus47-max-r1-launch-prompt.md)
+  - [launch-truth/06-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-launch-truth.md](launch-truth/06-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-launch-truth.md)
+  - [outputs/06-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-opus47-max-r1.md](outputs/06-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-opus47-max-r1.md)
+- [d:r:i] Lane `06` attempt `1` is now preserved as a stalled partial rather than a completed return:
+  - [artifacts/06-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-attempt-1-partial.md](artifacts/06-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-attempt-1-partial.md)
+  - [launch-truth/06-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-launch-truth.md](launch-truth/06-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-launch-truth.md)
+- [d:r:i] The next move inside lane `06` is the compact retry, not a wider family redirect:
+  - [packets/06b-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-compact-packet.md](packets/06b-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-compact-packet.md)
+  - [prompts/06b-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-opus47-max-r1-compact-launch-prompt.md](prompts/06b-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-opus47-max-r1-compact-launch-prompt.md)
+- [d:r:i] Lane `06` is now completed and inherited through:
+  - [outputs/06-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-opus47-max-r1.md](outputs/06-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-opus47-max-r1.md)
+  - [dispositions/06-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-inheritance.md](dispositions/06-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-inheritance.md)
+- [d:r:i] The next extraction object is now [../intervention-proposals/156-harness-modifier-project-uplift-host-doctrine-catalog-neutralization-proposal.md](../intervention-proposals/156-harness-modifier-project-uplift-host-doctrine-catalog-neutralization-proposal.md), not relocation and not a different adjacent family.
+- [d:r:i] Lane `07` is now the active challenge on that boundary:
+  - [packets/07-harness-modifier-project-uplift-host-doctrine-catalog-neutralization-proposal-reread-packet.md](packets/07-harness-modifier-project-uplift-host-doctrine-catalog-neutralization-proposal-reread-packet.md)
+  - [specs/07-harness-modifier-project-uplift-host-doctrine-catalog-neutralization-proposal-reread-spec.md](specs/07-harness-modifier-project-uplift-host-doctrine-catalog-neutralization-proposal-reread-spec.md)
+  - [prompts/07-harness-modifier-project-uplift-host-doctrine-catalog-neutralization-proposal-reread-opus47-max-r1-launch-prompt.md](prompts/07-harness-modifier-project-uplift-host-doctrine-catalog-neutralization-proposal-reread-opus47-max-r1-launch-prompt.md)
+  - [launch-truth/07-harness-modifier-project-uplift-host-doctrine-catalog-neutralization-proposal-reread-launch-truth.md](launch-truth/07-harness-modifier-project-uplift-host-doctrine-catalog-neutralization-proposal-reread-launch-truth.md)
+  - [outputs/07-harness-modifier-project-uplift-host-doctrine-catalog-neutralization-proposal-reread-opus47-max-r1.md](outputs/07-harness-modifier-project-uplift-host-doctrine-catalog-neutralization-proposal-reread-opus47-max-r1.md)
+- [d:r:i] Lane `07` is now completed and inherited through:
+  - [outputs/07-harness-modifier-project-uplift-host-doctrine-catalog-neutralization-proposal-reread-opus47-max-r1.md](outputs/07-harness-modifier-project-uplift-host-doctrine-catalog-neutralization-proposal-reread-opus47-max-r1.md)
+  - [dispositions/07-harness-modifier-project-uplift-host-doctrine-catalog-neutralization-proposal-reread-inheritance.md](dispositions/07-harness-modifier-project-uplift-host-doctrine-catalog-neutralization-proposal-reread-inheritance.md)
+- [d:r:i] The second neutralization tranche is now landed too:
+  - [../intervention-proposals/157-harness-modifier-project-uplift-host-doctrine-catalog-neutralization-implementation.md](../intervention-proposals/157-harness-modifier-project-uplift-host-doctrine-catalog-neutralization-implementation.md)
+  - [../propagation-audit/58-harness-modifier-project-uplift-host-doctrine-catalog-neutralization-change-triggered-refresh.md](../propagation-audit/58-harness-modifier-project-uplift-host-doctrine-catalog-neutralization-change-triggered-refresh.md)
+- [d:r:i] The next extraction move is now reopened under lane `08`:
+  - [packets/08-harness-modifier-project-uplift-post-second-neutralization-payload-home-judgment-reread-packet.md](packets/08-harness-modifier-project-uplift-post-second-neutralization-payload-home-judgment-reread-packet.md)
+  - [specs/08-harness-modifier-project-uplift-post-second-neutralization-payload-home-judgment-reread-spec.md](specs/08-harness-modifier-project-uplift-post-second-neutralization-payload-home-judgment-reread-spec.md)
+  - [prompts/08-harness-modifier-project-uplift-post-second-neutralization-payload-home-judgment-reread-opus47-max-r1-launch-prompt.md](prompts/08-harness-modifier-project-uplift-post-second-neutralization-payload-home-judgment-reread-opus47-max-r1-launch-prompt.md)
+  - [launch-truth/08-harness-modifier-project-uplift-post-second-neutralization-payload-home-judgment-reread-launch-truth.md](launch-truth/08-harness-modifier-project-uplift-post-second-neutralization-payload-home-judgment-reread-launch-truth.md)
+  - [outputs/08-harness-modifier-project-uplift-post-second-neutralization-payload-home-judgment-reread-opus47-max-r1.md](outputs/08-harness-modifier-project-uplift-post-second-neutralization-payload-home-judgment-reread-opus47-max-r1.md)
+  - [dispositions/08-harness-modifier-project-uplift-post-second-neutralization-payload-home-judgment-reread-inheritance.md](dispositions/08-harness-modifier-project-uplift-post-second-neutralization-payload-home-judgment-reread-inheritance.md)
+- [d:r:i] Lane `08` is now completed and inherited:
+  - relocation still remains later
+  - the materially remaining host-coupling surface is now the host-planning-shape writer/scanner reach
+  - `OVERLAY_MANIFEST_REL_PATH` stays a separate later install-contract slice
+- [d:r:i] The next extraction object is now [../intervention-proposals/158-harness-modifier-project-uplift-host-planning-shape-neutralization-proposal.md](../intervention-proposals/158-harness-modifier-project-uplift-host-planning-shape-neutralization-proposal.md), not relocation and not another adjacent extraction family.
+- [d:r:i] Lane `09` is now completed and inherited too:
+  - [packets/09-harness-modifier-project-uplift-host-planning-shape-neutralization-proposal-reread-packet.md](packets/09-harness-modifier-project-uplift-host-planning-shape-neutralization-proposal-reread-packet.md)
+  - [specs/09-harness-modifier-project-uplift-host-planning-shape-neutralization-proposal-reread-spec.md](specs/09-harness-modifier-project-uplift-host-planning-shape-neutralization-proposal-reread-spec.md)
+  - [prompts/09-harness-modifier-project-uplift-host-planning-shape-neutralization-proposal-reread-opus47-max-r1-launch-prompt.md](prompts/09-harness-modifier-project-uplift-host-planning-shape-neutralization-proposal-reread-opus47-max-r1-launch-prompt.md)
+  - [launch-truth/09-harness-modifier-project-uplift-host-planning-shape-neutralization-proposal-reread-launch-truth.md](launch-truth/09-harness-modifier-project-uplift-host-planning-shape-neutralization-proposal-reread-launch-truth.md)
+  - [outputs/09-harness-modifier-project-uplift-host-planning-shape-neutralization-proposal-reread-opus47-max-r1.md](outputs/09-harness-modifier-project-uplift-host-planning-shape-neutralization-proposal-reread-opus47-max-r1.md)
+  - [dispositions/09-harness-modifier-project-uplift-host-planning-shape-neutralization-proposal-reread-inheritance.md](dispositions/09-harness-modifier-project-uplift-host-planning-shape-neutralization-proposal-reread-inheritance.md)
+- [d:r:i] Lane `09` keeps `158` as the right next family but sharpens its internal split: `state_section.json`, `phase_layout.json`, and `state_writer.py` with distinct render/update entries, while `OVERLAY_MANIFEST_REL_PATH` stays a separate later install-contract slice.
+- [d:r:i] That third neutralization tranche is now landed too:
+  - [../intervention-proposals/159-harness-modifier-project-uplift-host-planning-shape-neutralization-implementation.md](../intervention-proposals/159-harness-modifier-project-uplift-host-planning-shape-neutralization-implementation.md)
+  - [../propagation-audit/59-harness-modifier-project-uplift-host-planning-shape-neutralization-change-triggered-refresh.md](../propagation-audit/59-harness-modifier-project-uplift-host-planning-shape-neutralization-change-triggered-refresh.md)
+- [d:r:i] The next bounded extraction move was then:
+  - [../intervention-proposals/160-harness-modifier-project-uplift-post-host-planning-shape-payload-home-judgment-proposal.md](../intervention-proposals/160-harness-modifier-project-uplift-post-host-planning-shape-payload-home-judgment-proposal.md)
+- [d:r:i] The payload-home judgment reopened after policy-data, host-doctrine/vocabulary, and host-planning-shape neutralization rather than after only the earlier two dissolutions.
+- [d:r:i] Lane `10` is now completed and inherited over that reopened `160` judgment:
+  - [packets/10-harness-modifier-project-uplift-post-host-planning-shape-payload-home-judgment-reread-packet.md](packets/10-harness-modifier-project-uplift-post-host-planning-shape-payload-home-judgment-reread-packet.md)
+  - [specs/10-harness-modifier-project-uplift-post-host-planning-shape-payload-home-judgment-reread-spec.md](specs/10-harness-modifier-project-uplift-post-host-planning-shape-payload-home-judgment-reread-spec.md)
+  - [prompts/10-harness-modifier-project-uplift-post-host-planning-shape-payload-home-judgment-reread-opus47-max-r1-launch-prompt.md](prompts/10-harness-modifier-project-uplift-post-host-planning-shape-payload-home-judgment-reread-opus47-max-r1-launch-prompt.md)
+  - [launch-truth/10-harness-modifier-project-uplift-post-host-planning-shape-payload-home-judgment-reread-launch-truth.md](launch-truth/10-harness-modifier-project-uplift-post-host-planning-shape-payload-home-judgment-reread-launch-truth.md)
+  - [outputs/10-harness-modifier-project-uplift-post-host-planning-shape-payload-home-judgment-reread-opus47-max-r1.md](outputs/10-harness-modifier-project-uplift-post-host-planning-shape-payload-home-judgment-reread-opus47-max-r1.md)
+  - [dispositions/10-harness-modifier-project-uplift-post-host-planning-shape-payload-home-judgment-reread-inheritance.md](dispositions/10-harness-modifier-project-uplift-post-host-planning-shape-payload-home-judgment-reread-inheritance.md)
+- [d:r:i] Lane `10` narrows the remaining helper coupling into two different later classes:
+  - install-contract pointer coupling, which is now the next bounded extraction object in [../intervention-proposals/167-harness-modifier-project-uplift-install-contract-pointer-neutralization-proposal.md](../intervention-proposals/167-harness-modifier-project-uplift-install-contract-pointer-neutralization-proposal.md)
+  - held-later artifact-home coupling, which now remains explicit through [../intervention-proposals/168-harness-modifier-project-uplift-held-later-artifact-home-sibling-note.md](../intervention-proposals/168-harness-modifier-project-uplift-held-later-artifact-home-sibling-note.md)
+- [d:r:i] Compact-prompt split, overwrite-family migration, and standalone repo design remain later.
+
+## Expected Artifact Pattern
+
+- [d:r:i] packet
+- [d:r:i] spec
+- [d:r:i] prompt
+- [d:r:i] launch-truth
+- [d:r:i] output
+- [d:r:i] inheritance

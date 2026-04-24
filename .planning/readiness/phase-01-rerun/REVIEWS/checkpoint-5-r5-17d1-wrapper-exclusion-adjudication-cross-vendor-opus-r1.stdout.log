@@ -1,0 +1,8 @@
+Adjudication written to `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-17d1-wrapper-exclusion-adjudication-cross-vendor-opus-r1.md`.
+
+**Key findings:**
+- **Convergent failures (accept):** `gsd-review`, `gsd-plan-phase --reviews`, `gsd-verify-work` — all invalid/not-safely-excluded with shared direct-file evidence; heuristics themselves fail as governing scope tests.
+- **Contested:** `gsd-research-phase` (lean internal — presumptive edit target; `.codex/skills/gsd-research-phase/SKILL.md:162` verbatim `Be prescriptive, not exploratory` contradicts live workflow) and `gsd-execute-phase` (lean cross-vendor — `under-justified conditional` aligns better with anti-regret).
+- **Surviving defensible:** `gsd-discuss-phase` — convergent accept.
+- **Scope widening:** Cross-vendor's three additions (`gsd-autonomous`:49, `gsd-ship`:49, `gsd-progress`:49) all verified verbatim; internal's `read-set adequacy: sufficient` does not survive. `R5.17d` must disposition them.
+- **Production-condition:** Compact prompt did not weaken first-order evidence but plausibly softened the `gsd-research-phase` call.

@@ -1,0 +1,39 @@
+label=workspace-state-audit-01
+exit_code=0
+elapsed_seconds=537.455
+stream=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/workspace-state-audit/logs/01/workspace-state-audit-01-20260422-124201.mu7didx3.stream.jsonl
+stderr=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/workspace-state-audit/logs/01/workspace-state-audit-01-20260422-124201.5zmiqdnf.stderr.log
+debug=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/workspace-state-audit/logs/01/workspace-state-audit-01-20260422-124201.fny2p7js.debug.log
+stream_bytes=3467756
+stderr_bytes=0
+debug_bytes=53149
+event_counts={"assistant": 43, "rate_limit_event": 2, "result": 1, "stream_event": 9326, "system": 34, "user": 36}
+system_subtypes={"hook_response": 7, "hook_started": 7, "init": 1, "status": 19}
+text_chunks=3
+last_text_begin
+The audit output has been written successfully to the target path. The write already completed prior to this reminder.
+
+Summary of the return:
+
+- Mapped the workspace as a four-part governed self-improvement machine (intervention-proposal chain, audit subtrees, governance spine, harness-improvement register) with distinct lifecycles and three automatic surfacing mechanisms (change-triggered refresh, bounded reread, classification-carrier landings).
+- Kept four horizon types explicit (short / medium / long / deferred-held-seed) rather than flattening them, and named the concrete carriers for each.
+- Routed findings through five ordered destinations (active state → audit-family memory → held-later → seed → doctrine), noting which routes are mechanical today and which remain operator-judgment.
+- Made bounded parallelization explicit: four earned patterns, four forbidden overlaps, plus one companion-carry gap not yet codified.
+- Named two earned governance/operator surface changes: add `Horizon Routing` to `HARNESS-IMPROVEMENT-REGISTER.md`, and add a `Bounded Parallelization And Overlap` section to `AUDIT-LANE-PATTERN-LIBRARY.md`. Held `.planning/AGENTS.md` promotion, `CURRENT-STATE.md` split, and compaction/continuation mirroring as queued later moves.
+- Preserved the Phase 01 rerun boundary, held the long-horizon doctrine layer as preserve-only, and named the next adjacent substantive moves (`gsd-review` helper-backed first slice; `from-gsd2` as next uplift-continuity consumer; exercising the `134`/`135` parity classifier) outside this audit's scope.
+last_text_end
+last_error_like_begin
+{"type":"result","subtype":"success","is_error":false,"api_error_status":null,"duration_ms":535290,"duration_api_ms":531627,"num_turns":37,"result":"The audit output has been written successfully to the target path. The write already completed prior to this reminder.\n\nSummary of the return:\n\n- Mapped the workspace as a four-part governed self-improvement machine (intervention-proposal chain, audit subtrees, governance spine, harness-improvement register) with distinct lifecycles and three automatic surfacing mechanisms (change-triggered refresh, bounded reread, classification-carrier landings).\n- Kept four horizon types explicit (short / medium / long / deferred-held-seed) rather than flattening them, and named the concrete carriers for each.\n- Routed findings through five ordered destinations (active state → audit-family memory → held-later → seed → doctrine), noting which routes are mechanical today and which remain operator-judgment.\n- Made bounded parallelization explicit: four earned patterns, four forbidden overlaps, plus one companion-carry gap not yet codified.\n- Named two earned governance/operator surface changes: add `Horizon Routing` to `HARNESS-IMPROVEMENT-REGISTER.md`, and add a `Bounded Parallelization And Overlap` section to `AUDIT-LANE-PATTERN-LIBRARY.md`. Held `.planning/AGENTS.md` promotion, `CURRENT-STATE.md` split, and compaction/continuation mirroring as queued later moves.\n- Preserved the Phase 01 rerun boundary, held the long-horizon doctrine layer as preserve-only, and named the next adjacent substantive moves (`gsd-review` helper-backed first slice; `from-gsd2` as next uplift-continuity consumer; exercising the `134`/`135` parity classifier) outside this audit's scope.","stop_reason":"end_turn","session_id":"9627340c-de62-4a2d-8649-e4d1888fed2e","total_cost_usd":3.72271175,"usage":{"input_tokens":6400,"cache_creation_input_tokens":240947,"cache_read_input_tokens":2816186,"output_tokens":31068,"server_tool_use":{"web_search_requests":0,"web_fetch_requests":0},"service_tier":"standard","cache_creation":{"ephemeral_1h_input_tokens":240947,"ephemeral_5m_input_tokens":0},"inference_geo":"","iterations":[{"input_tokens":6,"output_tokens":573,"cache_read_input_tokens":229112,"cache_creation_input_tokens":11835,"cache_creation":{"ephemeral_5m_input_tokens":0,"ephemeral_1h_input_tokens":11835},"type":"message"}],"speed":"standard"},"modelUsage":{"claude-opus-4-7[1m]":{"inputTokens":6400,"outputTokens":31068,"cacheReadInputTokens":2816186,"cacheCreationInputTokens":240947,"webSearchRequests":0,"costUSD":3.72271175,"contextWindow":1000000,"maxOutputTokens":64000}},"permission_denials":[],"terminal_reason":"completed","fast_mode_state":"off","uuid":"57e2cc42-a61f-48db-858e-a52d1bed27ad"}
+last_error_like_end
+debug_tail_begin
+2026-04-22T16:50:59.046Z [DEBUG] Successfully parsed and validated hook JSON output
+2026-04-22T16:50:59.046Z [DEBUG] "Hook Stop (Stop) success:\n{}"
+2026-04-22T16:50:59.048Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-22T16:50:59.052Z [DEBUG] MCP server "sequential-thinking": Sending SIGINT to MCP server process
+2026-04-22T16:50:59.153Z [DEBUG] MCP server "sequential-thinking": SIGINT failed, sending SIGTERM to MCP server process
+2026-04-22T16:50:59.188Z [DEBUG] MCP server "sequential-thinking": STDIO connection closed after 535s (cleanly)
+2026-04-22T16:50:59.188Z [DEBUG] MCP server "sequential-thinking": Cleared connection cache for reconnection
+2026-04-22T16:50:59.215Z [DEBUG] MCP server "sequential-thinking": MCP server process exited cleanly
+2026-04-22T16:50:59.227Z [DEBUG] LSP server manager shut down successfully
+2026-04-22T16:50:59.229Z [DEBUG] Cleaned up session snapshot: /home/rookslog/.claude/shell-snapshots/snapshot-bash-1776876163213-ke0nst.sh
+debug_tail_end

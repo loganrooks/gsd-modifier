@@ -1,0 +1,176 @@
+{
+  "version": 2,
+  "basis_commit": "16cfb8a",
+  "inherited_dispositions": [
+    "propagation-audit/dispositions/01-propagation-chain-reread-inheritance.md",
+    "propagation-audit/dispositions/02-broader-network-propagation-field-mapping-inheritance.md",
+    "propagation-audit/dispositions/03-propagation-registry-system-cross-vendor-inheritance.md",
+    "propagation-audit/16-compatibility-anchor-change-triggered-refresh.md",
+    "propagation-audit/17-compatibility-consumer-follow-through-refresh.md",
+    "propagation-audit/18-threshold-scanner-change-triggered-refresh.md",
+    "propagation-audit/19-verifier-lifecycle-carry-change-triggered-refresh.md",
+    "propagation-audit/20-setup-portable-gsd-robustness-change-triggered-refresh.md",
+    "propagation-audit/21-transition-lifecycle-carry-change-triggered-refresh.md",
+    "propagation-audit/22-milestone-boundary-lifecycle-carry-change-triggered-refresh.md",
+    "propagation-audit/23-state-progress-and-resume-future-carry-change-triggered-refresh.md",
+    "propagation-audit/24-spec-lifecycle-carry-change-triggered-refresh.md",
+    "propagation-audit/25-read-packet-and-relevance-control-change-triggered-refresh.md",
+    "propagation-audit/26-initialization-and-ingest-read-packet-change-triggered-refresh.md",
+    "propagation-audit/27-health-and-migration-follow-through-change-triggered-refresh.md",
+    "propagation-audit/28-update-follow-through-change-triggered-refresh.md",
+    "propagation-audit/29-seed-consumer-carry-change-triggered-refresh.md",
+    "propagation-audit/30-explore-seed-producer-convergence-change-triggered-refresh.md",
+    "propagation-audit/31-seed-doctrine-vintage-anchor-change-triggered-refresh.md",
+    "propagation-audit/32-uplift-seed-corpus-posture-change-triggered-refresh.md",
+    "propagation-audit/33-seed-operator-consumer-widening-change-triggered-refresh.md",
+    "propagation-audit/35-legacy-seed-corpus-migration-detect-only-change-triggered-refresh.md",
+    "propagation-audit/dispositions/04-seed-migration-detect-only-first-slice-reread-inheritance.md",
+    "propagation-audit/36-seed-migration-detect-only-harden-change-triggered-refresh.md",
+    "propagation-audit/39-propagation-review-route-change-triggered-refresh.md",
+    "propagation-audit/dispositions/07-propagation-review-route-reread-inheritance.md",
+    "propagation-audit/40-propagation-review-route-harden-change-triggered-refresh.md",
+    "propagation-audit/42-uplift-docs-governance-runtime-proof-change-triggered-refresh.md",
+    "propagation-audit/43-uplift-compatibility-annotation-change-triggered-refresh.md",
+    "propagation-audit/44-transition-state-uplift-continuity-change-triggered-refresh.md",
+    "propagation-audit/45-milestone-boundary-uplift-shared-reference-change-triggered-refresh.md",
+    "propagation-audit/46-health-uplift-deepen-in-place-change-triggered-refresh.md",
+    "propagation-audit/47-health-uplift-deepen-in-place-harden-change-triggered-refresh.md",
+    "propagation-audit/48-entry-runtime-continuity-shared-reference-change-triggered-refresh.md",
+    "propagation-audit/49-update-entry-runtime-continuity-follow-through-change-triggered-refresh.md",
+    "propagation-audit/50-codex-claude-parity-classification-carrier-change-triggered-refresh.md",
+    "propagation-audit/51-harness-modifier-in-place-rehome-step-1-change-triggered-refresh.md",
+    "propagation-audit/52-harness-modifier-compatibility-declaration-carrier-change-triggered-refresh.md",
+    "propagation-audit/53-review-route-helper-backed-run-home-first-slice-change-triggered-refresh.md",
+    "propagation-audit/54-harness-modifier-overlay-roster-and-scan-change-triggered-refresh.md",
+    "propagation-audit/55-harness-modifier-first-overlay-filesystem-rehome-change-triggered-refresh.md",
+    "propagation-audit/56-harness-modifier-first-overlay-residue-classification-change-triggered-refresh.md",
+    "propagation-audit/57-harness-modifier-project-uplift-neutralization-change-triggered-refresh.md",
+    "propagation-audit/58-harness-modifier-project-uplift-host-doctrine-catalog-neutralization-change-triggered-refresh.md",
+    "propagation-audit/59-harness-modifier-project-uplift-host-planning-shape-neutralization-change-triggered-refresh.md",
+    "propagation-audit/61-development-protocol-first-slice-change-triggered-refresh.md",
+    "propagation-audit/62-responsible-closure-observation-carrier-writer-first-slice-change-triggered-refresh.md",
+    "propagation-audit/63-responsible-closure-host-exercise-packet-contract-first-slice-change-triggered-refresh.md",
+    "propagation-audit/64-responsible-closure-first-observe-only-host-exercise-change-triggered-refresh.md",
+    "propagation-audit/65-responsible-closure-shipped-install-contract-classification-first-slice-change-triggered-refresh.md"
+  ],
+  "coverage_gate": [
+    {
+      "family": "doctrine",
+      "coverage_status": "mapped",
+      "roster_source": "root_doctrine",
+      "notes": "repo and planning doctrine carriers are represented in the semantic map"
+    },
+    {
+      "family": "helper",
+      "coverage_status": "mapped",
+      "roster_source": "local_tooling_inventory",
+      "notes": "helper cohort is still sampled rather than exhaustive; current slice now covers the named high-consequence helpers plus the threshold scanner helper, the gsd-sdk runtime helper, uplift-side seed corpus posture at project_uplift, operator-facing seed posture note emission through project_uplift, and the specialist seed-migration inventory helper with route-state disambiguation, post-write durable packet state, and producer-follow-through to plant-seed, plus the host-boundary project_uplift consumer now reading a portable compatibility declaration instead of re-declaring that posture locally, and now also reading typed host-doctrine catalog plus typed host-facing vocabulary carriers instead of keeping those payloads as helper-local declaration blobs"
+    },
+    {
+      "family": "install_overlay",
+      "coverage_status": "mapped",
+      "roster_source": "overlay_manifest_roster",
+      "notes": "typed through the overlay contract frontier, with fresh-install pristine capture now preserving overwrite-mode baseline truth before overlay application and the portable materialization contract now carrying bounded parity-reference disclosure for runtime-specific .claude hits inside live .codex materialization; the portable materialization contract now also echoes the typed compatibility declaration and checks overlay-schema alignment against it, the extraction family froze the same frontier into a per-entry roster plus contextualized blocker scan before the first overlay filesystem-rehome slice, and the first specialist source split now keeps authoritative source files under harness_modifier/overlay while the manifest preserves stable install targets through explicit source-path indirection, and the residue-classification follow-through now resolves the moved skill wrappers' source-side execution-context grammar through __PROJECT_ROOT__ token abstraction while keeping helper-payload promotion, default-source-root migration, and overwrite-family source indirection explicitly later"
+    },
+    {
+      "family": "install_pristine",
+      "coverage_status": "mapped",
+      "roster_source": "upstream_inventory",
+      "notes": "current slice now keeps the install bridge, bounded gsd-sdk runtime verification, and fresh-install pristine frontier distinction explicit, not full upstream file coverage"
+    },
+    {
+      "family": "registry",
+      "coverage_status": "mapped",
+      "roster_source": "upstream_inventory",
+      "notes": "current slice now keeps both general runtime registry carriers and the verifier agent overlay contract explicit; the registry family now also includes the portable compatibility declaration carrier that later standalone extraction can travel with unchanged, plus the typed runtime-observation, uplift-output-policy, seed-contract-shape, host-doctrine carrier-catalog, and host-facing vocabulary carriers that now govern project_uplift through shared declared surfaces rather than helper-local constants"
+    },
+    {
+      "family": "closure_observe_only",
+      "coverage_status": "mapped_but_pre_run_experimental",
+      "roster_source": "responsible_closure_artifacts",
+      "notes": "current slice now keeps the responsible-closure observation carrier, packet contract, host-exercise runner, and first real host-evidence bundle explicit as a read-side package family; second-host, mixed-runtime, and write-side deployment claims remain later"
+    },
+    {
+      "family": "launch_truth",
+      "coverage_status": "mapped_but_roster_thin",
+      "roster_source": "launch_history",
+      "notes": "launch-truth family is locally governed but still lacks a richer dedicated maintained roster surface"
+    },
+    {
+      "family": "workflow_output",
+      "coverage_status": "mapped",
+      "roster_source": "upstream_inventory",
+      "notes": "current slice now keeps uplift, progress, resume, new-project, new-milestone, plant-seed, explore, ingest-docs, health, update, verifier, transition, complete-milestone, discuss-phase, and the new propagation-review workflow explicit as routed carriers, including upstream spec future-carry movement plus re-entry, initialization/doc-ingest, repair-side, update-side, seed producer/consumer carry, ideation-side seed producer convergence, current-versus-legacy seed vintage anchor carry, uplift-side seed corpus posture, operator-facing seed posture visibility at progress/resume, compatibility annotation visibility at progress/resume/uplift outputs, the transition/state Project Uplift preserve-versus-refresh bridge at phase close, the milestone-boundary shared uplift reference consumed at milestone open and milestone close, the repair-facing health uplift continuity step plus its same-carrier harden on trigger/silence/footer relation, specialist packet candidate-count plus breakdown disclosure at progress/resume, the specialist seed-migration workflow, the inspect/write command split, the harder split between deeper packet disclosure and durable write side effects, the new baseline/delta-guided review route for later multi-family contract movement, the propagation-review harden follow-through that makes durable-note placement plus tool-result-to-disposition carry more explicit at the same route, the provider-gated update-side continuity review beat that reads the shared entry/runtime reference before clean-install rematerialization rewrites its runtime copy, and the first specialist overlay source split that now keeps uplift, propagation-review, and seed-migration workflow authorities under harness_modifier/overlay"
+    },
+    {
+      "family": "wrapper",
+      "coverage_status": "mapped_but_curated",
+      "roster_source": "upstream_inventory",
+      "notes": "current slice now keeps gsd-health, gsd-from-gsd2, gsd-update, gsd-plant-seed, gsd-explore, gsd-uplift-project, and the new gsd-propagation-review wrapper explicit as entry-binding or producer-binding wrapper carriers, including current seed vintage anchor, uplift-side seed posture visibility, held-runtime annotation movement routed through gsd-uplift-project, the seed-migration wrapper with clearer separation between deeper packet disclosure and durable write side effects plus the bridge-facing inspect/write command split, the provider-gated update-side continuity boundary at gsd-update, the new read-only review route that keeps specialist uplift or seed-migration handoffs separate, and the first specialist overlay source split that now keeps those moved wrappers under harness_modifier/overlay while the manifest holds the stable install target boundary; broader wrapper coverage remains later work. The same route now also keeps durable-note lane-home guidance explicit in the wrapper, and the moved specialist wrappers now keep source-side execution-context tokens explicit instead of preserving host-absolute embedded paths in their authoritative source files"
+    },
+    {
+      "family": "lib_runtime",
+      "coverage_status": "mapped_but_curated",
+      "roster_source": "upstream_inventory",
+      "notes": "current slice now keeps the repo-local state snapshot helper explicit as a runtime lib carrier, but broader lib-runtime coverage remains later work"
+    },
+    {
+      "family": "template_shape",
+      "coverage_status": "mapped_but_curated",
+      "roster_source": "upstream_inventory",
+      "notes": "current slice now keeps verification-report, the compact Future Carry Forward digest, the top-level Project Uplift continuity slot, and spec future-aware output shapes explicit, but broader template coverage remains later work"
+    },
+    {
+      "family": "reference_behavior",
+      "coverage_status": "mapped_but_curated",
+      "roster_source": "upstream_inventory",
+      "notes": "current slice now keeps verifier-side agent-contract reference carry plus the shared mandatory-read tier contract explicit across re-entry, initialization, milestone-open, doc-ingest, health, and update consumers, and now also keeps the dedicated milestone-boundary uplift continuity reference plus the dedicated entry/runtime uplift continuity reference explicit across milestone-open, milestone-close, new-project, ingest-docs, and the provider-gated update consumer while mandatory-initial-read stays grammar-only"
+    },
+    {
+      "family": "governance_lane",
+      "coverage_status": "mapped",
+      "roster_source": "workspace_governance",
+      "notes": "lane-local inheritance now carries both propagation and threshold-audit historical reread force explicitly, the first operator-facing baseline/delta pair, and multiple real change-triggered lifecycle and compatibility refreshes including the new propagation-review route refresh, the bounded route reread inheritance, the harden follow-through refresh, the transition/state Project Uplift continuity bridge on top of the earlier compatibility-family chain, and the extraction-side overlay roster plus contextualized blocker scan that now keep first rehome eligibility explicit instead of ambient"
+    },
+    {
+      "family": "compact_prompt",
+      "coverage_status": "mapped_but_local_only",
+      "roster_source": "workspace_governance",
+      "notes": "current slice keeps compact prompts explicit without treating them as upstream roster surfaces"
+    }
+  ],
+  "refresh_kinds": [
+    {
+      "kind": "lane_scoped_refresh",
+      "status": "landed_now",
+      "notes": "this v2 split is a lane-scoped refresh after the registry-system reread"
+    },
+    {
+      "kind": "change_triggered_slice_refresh",
+      "status": "anchor_consumer_threshold_scanner_verifier_lifecycle_setup_robustness_transition_lifecycle_milestone_boundary_first_read_consumer_spec_lifecycle_read_packet_initialization_ingest_health_migration_update_seed_consumer_explore_seed_producer_convergence_seed_vintage_anchor_uplift_seed_corpus_posture_seed_operator_consumer_widening_seed_audit_gate_widening_seed_migration_inventory_and_seed_migration_harden_follow_through_landed_seed_migration_operator_pointer_bridge_bridge_harden_follow_through_and_propagation_review_route_and_propagation_review_route_harden_follow_through_and_review_route_helper_run_home_and_uplift_docs_governance_runtime_proof_and_uplift_compatibility_annotation_and_transition_state_uplift_continuity_and_milestone_boundary_uplift_shared_reference_and_health_uplift_deepen_in_place_and_health_uplift_deepen_in_place_harden_and_entry_runtime_continuity_shared_reference_and_update_entry_runtime_continuity_follow_through_and_overlay_roster_scan_freeze_and_first_overlay_filesystem_rehome_and_first_overlay_residue_classification_and_project_uplift_neutralization_and_project_uplift_host_doctrine_catalog_neutralization_and_project_uplift_host_planning_shape_neutralization_and_development_protocol_first_slice_and_responsible_closure_observation_carrier_and_responsible_closure_packet_contract_and_responsible_closure_first_host_exercise",
+      "notes": "the compatibility anchor slice refreshed uplift/runtime carriers, the consumer-chain follow-through refreshed live read-only routing surfaces, the threshold-scanner slice refreshed helper plus lane-governance carry, the verifier-lifecycle slice refreshed workflow/template/reference/registry carry, the setup/materialization slice refreshed installer-entry/helper/contract carry, the transition-lifecycle slice refreshed phase-close workflow/template/state-continuity carry, the milestone-boundary slice refreshed milestone-open plus milestone-close workflow/state-continuity carry, the first-read consumer slice refreshed the state helper plus progress/resume future-carry routing, the spec lifecycle slice refreshed the spec producer pair plus discuss-phase upstream spec carry, the read-packet slice refreshed the shared mandatory-read contract plus current operator-facing reading-control consumers, the initialization/ingest slice refreshed the shared mandatory-read contract plus new-project/new-milestone/ingest-docs consumers with explicit progress-then-uplift and merge-versus-later-uplift route separation, the health/migration slice refreshed health plus the two wrappers with structural-repair, validation, and later-uplift route separation, the update slice refreshed update-side route separation, the seed-consumer slice refreshed the plant-seed -> new-milestone bridge, the explore convergence slice refreshed the ideation-side producer route into the live seed contract, the seed vintage anchor slice refreshed current-versus-legacy-unversioned carry at the main producer and main milestone-open consumer, the uplift seed posture slice refreshed project-wide seed visibility at the helper/workflow/wrapper/output cluster, the operator-consumer widening slice refreshed the project_uplift -> progress/resume bridge so ordinary re-entry keeps seed posture explicit too, the seed-audit gate slice refreshed the plant-seed -> audit-open helper -> milestone-close route while keeping verify-work named as an intentionally untouched neighboring consumer, the specialist detect-only seed migration slice refreshed the new helper/workflow/wrapper cluster plus uplift handoff while keeping rewrite automation separate, the seed-migration harden follow-through refreshed post-write durable-output state, plant-seed producer-follow-through, route-state disambiguation, uplift-side current-version shape-gap discovery, and clearer deeper-packet versus durable-write disclosure, the operator-facing specialist-packet pointer bridge refreshed the project_uplift -> progress/resume route so ordinary re-entry keeps candidate counts plus bounded packet disclosure visible when migration candidates are present, the bridge-harden follow-through refreshed the same route again so candidate breakdown, inspect/write split, fixture-backed packet shape, held-later evidence path, and stronger consumer gating proof stay explicit rather than ambient, the new propagation-review route refresh keeps the baseline/delta-guided operator path explicit instead of leaving later multi-family review on chat memory or local diff intuition alone, the propagation-review route reread preserved the first route-local inheritance signal, the route harden follow-through refreshed durable-note placement, claim-type carry, and the tool-result-to-disposition bridge so the operator-facing route carries more of its own output discipline explicitly, the review-route helper-backed run-home slice refreshed the review family through one durable producer-trail helper plus workflow/wrapper carry, the uplift docs-governance runtime-proof slice refreshed the assist-family proof plus the resulting durable uplift-memory handoff so the movement is no longer ambient in uplift-local memory alone, the uplift compatibility-annotation slice refreshed observed-basis versus held-annotation separation across helper, durable uplift memory, and read-only current-runtime consumers instead of flattening them back into one compatibility row, the transition/state uplift continuity slice refreshed the top-level state slot, helper fill-in-place behavior, bounded preserve-versus-refresh handling, and the proved phase-complete preservation seam on top of that compatibility-family chain, the milestone-boundary shared-reference slice now refreshes the dedicated reference carrier, overlay add ownership, milestone-open plus milestone-close consumers, and the bounded widening path from the compact Project Uplift digest toward narrative and typed uplift carriers, the health deepen-in-place slice now refreshes the repair-facing post-validation consumer, its compact-to-narrative-to-typed widening order, and the wrapper-side split between read-only continuity surfacing and later write-side uplift refresh, the health harden follow-through now refreshes the same carrier again so trigger sharpening, literal silence, and step/footer coexistence stay explicit instead of ambient, the entry/runtime shared-reference slice now refreshes the dedicated reference carrier, overlay add ownership, new-project plus ingest-docs consumers, and the explicit non-widening of mandatory-initial-read while keeping update plus from-gsd2 for the next adjacent branch, the update entry/runtime continuity follow-through now refreshes the first workflow-plus-wrapper consumer of that shared reference under a codex-or-claude provider gate while keeping broader multi-provider detection, structural-health routing, later uplift refresh, and from-gsd2 migration carry separate, the codex-claude parity classification carrier now refreshes the portable materialization contract itself so typed parity-reference disclosure, the known three-hit baseline, and the contextual-reread route for unreviewed runtime-specific hits are no longer ambient in lane-local audit prose alone, the extraction roster-plus-scan freeze refreshed install-overlay and governance-lane carry so first rehome eligibility and the real blockers were no longer ambient in extraction inheritance prose alone, the first specialist overlay filesystem rehome now refreshes the install-overlay, workflow-output, wrapper, and governance layers so source authority under harness_modifier/overlay and stable install targets under the overlay manifest stay explicit together, the first specialist overlay residue-classification pass now refreshes the moved skill-wrapper sources plus the roster so source-side token abstraction is explicit while helper-payload promotion, default-source-root migration, and overwrite-family source indirection stay visibly later, the project uplift neutralization slice now refreshes typed observation, uplift-output-policy, and seed-contract carriers together with the thinned helper/downstream consumers they now govern, the host-doctrine catalog neutralization slice now refreshes typed carrier-catalog plus typed vocabulary carriers so runtime-agent registry discovery, marker scanning, rerun-boundary phrases, command tokens, and recommendation sentences no longer remain ambient inside project_uplift, the host-planning-shape neutralization slice now refreshes the state-section, phase-layout, and state-writer split instead of leaving planning-shape payloads helper-local, the development-protocol slice now refreshes pattern-library-dominant overlap doctrine plus narrow planning and route companions, the responsible-closure observation and packet-contract slices now refresh package-owned carrier ownership explicitly, the first actual observe-only host exercise now refreshes the first read-side host-evidence boundary so compatibility-window evidence, deferred modifier-side verification, and the next move toward shipped/install-contract classification stay explicit together, and the shipped/install classification slice now refreshes the durable release-readiness baseline itself so tiered shipped/install rows, the extracted-project consequence, and the next CI/install-profile/extraction handoff are no longer ambient in review prose alone"
+    },
+    {
+      "kind": "scheduled_whole_registry_refresh",
+      "status": "held",
+      "notes": "cadence remains later-family work until the typed split has survived real slice refreshes"
+    }
+  ],
+  "refusals": [
+    "no whole-harness auto-extraction as semantic truth",
+    "no diff helper before the typed split has survived real refresh use",
+    "no semantic overclaim from validation or coherence outputs",
+    "no cross-runtime topology expansion inside this first typed refresh",
+    "no upstream-template drift machinery inside this first typed refresh"
+  ],
+  "held_pressures": [
+    "cross-runtime uplift composition",
+    "upstream-template drift machinery",
+    "aged-bespoke deep merge",
+    "broader compatibility window or standalone compatibility carrier",
+    "broader registry authorship policy across vendors",
+    "richer role-aware heuristic classification that still cannot drift into prose control",
+    "later lifecycle carry beyond the verifier, transition, milestone-boundary, first-read consumer, spec, and re-entry plus initialization/doc-ingest plus repair/migration plus update read-packet and route-separation bridges, including any later broader audit-open consumer widening, wider entry-wrapper retrofit, and any later rewrite or normalization family beyond the landed detect-only seed migration packet",
+    "broader repeated-reinstall durability beyond the first local setup/materialization harden slice"
+  ]
+}

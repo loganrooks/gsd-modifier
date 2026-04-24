@@ -1,0 +1,232 @@
+{
+  "version": 1,
+  "basis_commit": "f8186f8",
+  "source_notes": [
+    "propagation-audit/08-broader-network-producer-consumer-and-carrier-map.md",
+    "propagation-audit/09-sharpened-propagation-field-split.md",
+    "propagation-audit/10-model-policy-three-surface-invariant.md",
+    "propagation-audit/11-upstream-pristine-frontier-propagation-obligation.md",
+    "propagation-audit/12-cross-family-edge-supplement.md"
+  ],
+  "families": [
+    {"id": "doctrine", "label": "Governing doctrine"},
+    {"id": "install_pristine", "label": "Upstream-pristine install frontier"},
+    {"id": "install_overlay", "label": "Local-overlay frontier"},
+    {"id": "registry", "label": "Runtime registry / launch authority"},
+    {"id": "launch_truth", "label": "Launch-truth / orchestration capture"},
+    {"id": "workflow_output", "label": "Workflow -> durable output"},
+    {"id": "template_shape", "label": "Template -> output shape"},
+    {"id": "reference_behavior", "label": "Reference -> agent behavior"},
+    {"id": "lib_runtime", "label": "Lib -> runtime implementation"},
+    {"id": "wrapper", "label": "Invocation-binding wrapper"},
+    {"id": "reference_owner_skill", "label": "Reference-owner skill"},
+    {"id": "helper", "label": "Named helper cohorts"},
+    {"id": "state_continuity", "label": "State-continuity surface"},
+    {"id": "compact_prompt", "label": "Compact-prompt carry"},
+    {"id": "governance_repo", "label": "Repo-root doctrine scope"},
+    {"id": "governance_workspace", "label": "Workspace governance scope"},
+    {"id": "governance_lane", "label": "Audit-lane artifact scope"}
+  ],
+  "carriers": [
+    {
+      "id": "root_agents",
+      "family": "doctrine",
+      "path": "AGENTS.md",
+      "role": "repo doctrine and propagation policy"
+    },
+    {
+      "id": "planning_agents",
+      "family": "doctrine",
+      "path": ".planning/AGENTS.md",
+      "role": "planning-local doctrine and propagation hygiene"
+    },
+    {
+      "id": "portable_contract",
+      "family": "install_overlay",
+      "path": "tooling/codex/portable_gsd_contract.py",
+      "role": "overlay validation, application, reasoning defaults, materialization verification"
+    },
+    {
+      "id": "overlay_manifest",
+      "family": "install_overlay",
+      "path": "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
+      "role": "tracked overlay ownership and add/overwrite typing"
+    },
+    {
+      "id": "setup_script",
+      "family": "install_pristine",
+      "path": "scripts/setup-portable-gsd.sh",
+      "role": "upstream install entry and overlay/materialization bridge"
+    },
+    {
+      "id": "quality_reasoning",
+      "family": "registry",
+      "path": "tooling/codex/portable_gsd_contract.py",
+      "role": "installer-side reasoning defaults map"
+    },
+    {
+      "id": "agent_tomls",
+      "family": "registry",
+      "path": ".codex/agents/*.toml",
+      "role": "materialized runtime registry contracts"
+    },
+    {
+      "id": "launch_truth_tool",
+      "family": "launch_truth",
+      "path": "tooling/codex/capture_launch_truth.py",
+      "role": "requested-vs-effective launch capture"
+    },
+    {
+      "id": "launch_ledger",
+      "family": "launch_truth",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/LAUNCH-LEDGER.md",
+      "role": "durable launch history"
+    },
+    {
+      "id": "project_uplift",
+      "family": "helper",
+      "path": "tooling/codex/project_uplift.py",
+      "role": "authoritative uplift producer"
+    },
+    {
+      "id": "runtime_visibility",
+      "family": "helper",
+      "path": "tooling/codex/runtime_visibility.py",
+      "role": "runtime classification producer"
+    },
+    {
+      "id": "manifest_coherence",
+      "family": "helper",
+      "path": "tooling/codex/manifest_install_coherence.py",
+      "role": "multi-surface coherence producer"
+    },
+    {
+      "id": "audit_refmap",
+      "family": "helper",
+      "path": "tooling/codex/audit_refmap.py",
+      "role": "markdown reference graph producer"
+    },
+    {
+      "id": "uplift_workflow",
+      "family": "workflow_output",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/uplift-project.md",
+      "role": "operator-facing uplift workflow"
+    },
+    {
+      "id": "progress_workflow",
+      "family": "workflow_output",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/progress.md",
+      "role": "read-only uplift consumer"
+    },
+    {
+      "id": "resume_workflow",
+      "family": "workflow_output",
+      "path": "tooling/portable-gsd/overlay/get-shit-done/workflows/resume-project.md",
+      "role": "second read-only uplift consumer"
+    },
+    {
+      "id": "research_output_template",
+      "family": "reference_owner_skill",
+      "path": "tooling/portable-gsd/overlay/skills/gsd-rigorous-research/references/output-template.md",
+      "role": "reference-owner skill carrier sampled by uplift"
+    },
+    {
+      "id": "state_md",
+      "family": "state_continuity",
+      "path": ".planning/STATE.md",
+      "role": "multi-owner continuity surface"
+    },
+    {
+      "id": "compact_prompt_project",
+      "family": "compact_prompt",
+      "path": "tooling/compact-prompts/project.md",
+      "role": "default repo-local compact prompt"
+    },
+    {
+      "id": "workspace_current_state",
+      "family": "governance_workspace",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/CURRENT-STATE.md",
+      "role": "short governing synthesis"
+    },
+    {
+      "id": "workspace_status",
+      "family": "governance_workspace",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/STATUS.md",
+      "role": "mutable queue and checkpoint ledger"
+    },
+    {
+      "id": "lane_02_inheritance",
+      "family": "governance_lane",
+      "path": ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/propagation-audit/dispositions/02-broader-network-propagation-field-mapping-inheritance.md",
+      "role": "widened propagation inheritance"
+    }
+  ],
+  "edges": [
+    {
+      "id": "install_outputs_to_helper_inputs",
+      "from": "portable_contract",
+      "to": "project_uplift",
+      "kind": "materialized_runtime_sampled_by_helper"
+    },
+    {
+      "id": "overlay_to_workflow_to_helper",
+      "from": "overlay_manifest",
+      "to": "uplift_workflow",
+      "kind": "overlay_owns_workflow_surface"
+    },
+    {
+      "id": "workflow_to_helper",
+      "from": "uplift_workflow",
+      "to": "project_uplift",
+      "kind": "workflow_invokes_helper"
+    },
+    {
+      "id": "helper_to_progress",
+      "from": "project_uplift",
+      "to": "progress_workflow",
+      "kind": "read_only_json_bridge"
+    },
+    {
+      "id": "helper_to_resume",
+      "from": "project_uplift",
+      "to": "resume_workflow",
+      "kind": "read_only_json_bridge"
+    },
+    {
+      "id": "helper_to_state",
+      "from": "project_uplift",
+      "to": "state_md",
+      "kind": "durable_state_section_write"
+    },
+    {
+      "id": "registry_to_launch_truth",
+      "from": "agent_tomls",
+      "to": "launch_truth_tool",
+      "kind": "declared_registry_vs_observed_launch"
+    },
+    {
+      "id": "repo_doctrine_to_workspace_governance",
+      "from": "root_agents",
+      "to": "workspace_current_state",
+      "kind": "repo_doctrine_pressure"
+    },
+    {
+      "id": "workspace_governance_to_lane_inheritance",
+      "from": "workspace_status",
+      "to": "lane_02_inheritance",
+      "kind": "workspace_queue_records_lane_force"
+    },
+    {
+      "id": "helper_to_coherence_gate",
+      "from": "project_uplift",
+      "to": "manifest_coherence",
+      "kind": "multi_surface_coherence_check"
+    },
+    {
+      "id": "reference_owner_skill_to_helper",
+      "from": "research_output_template",
+      "to": "project_uplift",
+      "kind": "doctrine_sensitive_marker_sampling"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+Reread complete. Output written to `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-17e-exclusion-adjudication-reread-cross-vendor-opus-1m-r1.md`.
+
+**Verdict summary**: The split adjudication stack is structurally sound, preserves plurality (no false-consensus flattening), and qualifies the two compact-prompt-produced cross-vendor artifacts appropriately. `R5.18` trigger + convergent eight-file chain-tail trunk + `gsd-review`/`gsd-plan-phase --reviews` repair set are safe to govern. Five persistent problems remain.
+
+**Underreaches (ordered)**:
+1. `HIGH` — `gsd-research-phase` deferred through four levels without classification; d1/d4 both lean presumptive-edit but never call it
+2. `HIGH` — `R5.19` non-promotion not defended against the systemic heuristic-failure signal d4 itself calls "single strongest"
+3. `MEDIUM-HIGH` — `ship.md`/`autonomous.md`/`checkpoints.md` contested rather than convergent despite direct cheap-closure authority
+4. `MEDIUM` — B5 `invalid`/`under-justified` split unresolved; evidence supports `invalid`
+5. `MEDIUM` — d1 asymmetric trust of internal lane (falsifies read-set adequacy, ratifies substantive `gsd-research-phase` call)
+
+**Overreaches (ordered)**:
+1. `HIGH` — Three new governing heuristics installed without adversarial challenge: `authority-vs-must-edit-now`, `intersection-not-union`, `mandatory conditional disposition`
+2. `MEDIUM-HIGH` — Widened wrapper set (`gsd-autonomous`/`gsd-ship`/`gsd-progress`) carried forward at mandatory-disposition weight without ruling out compact-prompt-scope-drift
+3. `MEDIUM` — `uat.cjs`/`audit.cjs` drift from "qualified, not sovereign" to Trunk 3 mandatory-disposition without new evidence
+
+**Evidence-base adequacy**: Adequate for core consequences, three gaps for secondary — non-reverified grep, five non-reverified direct-line claims, inheritance pattern across levels.
+
+**What must change**: Eight specific items, headed by explicit `gsd-research-phase` disposition, `R5.19` merits defense, and adversarial test of the three new installed heuristics before codifying them as standing rules.

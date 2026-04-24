@@ -1,0 +1,583 @@
+2026-04-23T03:27:36.259Z [DEBUG] MDM settings load completed in 0ms
+2026-04-23T03:27:36.309Z [DEBUG] Broken symlink or missing file encountered for settings.json at path: /home/rookslog/workspace/projects/prix-guesser/.claude/settings.local.json
+2026-04-23T03:27:36.309Z [DEBUG] Broken symlink or missing file encountered for settings.json at path: /etc/claude-code/managed-settings.json
+2026-04-23T03:27:36.310Z [DEBUG] CA certs: Config fallback - globalEnv keys: , settingsEnv keys: BASH_DEFAULT_TIMEOUT_MS,BASH_MAX_TIMEOUT_MS
+2026-04-23T03:27:36.311Z [DEBUG] [init] configureGlobalMTLS starting
+2026-04-23T03:27:36.311Z [DEBUG] [init] configureGlobalMTLS complete
+2026-04-23T03:27:36.311Z [DEBUG] [init] configureGlobalAgents starting
+2026-04-23T03:27:36.311Z [DEBUG] CA certs: stores=bundled,system, extraCertsPath=undefined
+2026-04-23T03:27:36.312Z [DEBUG] CA certs: Loaded 145 bundled root certificates
+2026-04-23T03:27:36.321Z [DEBUG] CA certs: Loaded 294 system CA certificates
+2026-04-23T03:27:36.321Z [DEBUG] mTLS: Creating HTTPS agent with custom certificates
+2026-04-23T03:27:36.321Z [DEBUG] [init] configureGlobalAgents complete
+2026-04-23T03:27:36.323Z [DEBUG] Error log sink initialized
+2026-04-23T03:27:36.328Z [DEBUG] Applying permission update: Adding 111 allow rule(s) to destination 'userSettings': ["Read","Edit","Write","WebSearch","WebFetch","mcp__serena__*","mcp__sequential-thinking__*","mcp__context7__*","mcp__zlibrary__*","Bash(ls:*)","Bash(grep:*)","Bash(find:*)","Bash(head:*)","Bash(tail:*)","Bash(tree:*)","Bash(wc:*)","Bash(du:*)","Bash(df:*)","Bash(pwd:*)","Bash(cat:*)","Bash(echo:*)","Bash(tee:*)","Bash(sed:*)","Bash(awk:*)","Bash(sort:*)","Bash(uniq:*)","Bash(cut:*)","Bash(xargs:*)","Bash(jq:*)","Bash(yq:*)","Bash(diff:*)","Bash(touch:*)","Bash(mkdir:*)","Bash(rm:*)","Bash(mv:*)","Bash(cp:*)","Bash(ln:*)","Bash(tar:*)","Bash(gzip:*)","Bash(gunzip:*)","Bash(zip:*)","Bash(unzip:*)","Bash(rsync:*)","Bash(chmod +x:*)","Bash(basename:*)","Bash(dirname:*)","Bash(realpath:*)","Bash(stat:*)","Bash(file:*)","Bash(test:*)","Bash(tr:*)","Bash(source:*)","Bash(cd:*)","Bash(export:*)","Bash(env:*)","Bash(printenv:*)","Bash(date:*)","Bash(whoami:*)","Bash(hostname:*)","Bash(uname:*)","Bash(id:*)","Bash(which:*)","Bash(whereis:*)","Bash(type:*)","Bash(ps:*)","Bash(free:*)","Bash(nproc:*)","Bash(uptime:*)","Bash(lsof:*)","Bash(kill:*)","Bash(pkill:*)","Bash(timeout:*)","Bash(sleep:*)","Bash(git:*)","Bash(gh:*)","Bash(npm:*)","Bash(npx:*)","Bash(node:*)","Bash(yarn:*)","Bash(pnpm:*)","Bash(bun:*)","Bash(pip:*)","Bash(pip3:*)","Bash(uv:*)","Bash(poetry:*)","Bash(pdm:*)","Bash(python:*)","Bash(python3:*)","Bash(pytest:*)","Bash(jest:*)","Bash(eslint:*)","Bash(prettier:*)","Bash(black:*)","Bash(ruff:*)","Bash(isort:*)","Bash(mypy:*)","Bash(tsc:*)","Bash(make:*)","Bash(cargo:*)","Bash(go:*)","Bash(docker:*)","Bash(docker-compose:*)","Bash(curl localhost:*)","Bash(curl 127.0.0.1:*)","Bash(curl http://localhost:*)","Bash(curl http://127.0.0.1:*)","Bash(nvidia-smi:*)","Bash(nvcc:*)","Bash(CUDA_VISIBLE_DEVICES=:*)","Bash(tesseract:*)","mcp__philpapers__*"]
+2026-04-23T03:27:36.329Z [DEBUG] Applying permission update: Adding 27 deny rule(s) to destination 'userSettings': ["Bash(sudo:*)","Bash(rm -rf ~)","Bash(rm -rf ~/)","Bash(rm -rf ~/*)","Bash(chmod 777:*)","Bash(chmod -R 777:*)","Bash(git push --force:*)","Bash(git push -f:*)","Read(.env)","Read(.env.*)","Read(**/.env)","Read(**/.env.*)","Read(**/secrets/**)","Read(**/credentials.json)","Read(**/*.pem)","Read(**/*.key)","Read(**/id_rsa*)","Read(~/.ssh/id_*)","Read(~/.aws/**)","Read(~/.gcp/**)","Write(.env)","Write(.env.*)","Write(**/secrets/**)","Edit(.env)","Edit(.env.*)","Edit(.git/**)","Edit(__pycache__/**)"]
+2026-04-23T03:27:36.329Z [DEBUG] Applying permission update: Adding 14 ask rule(s) to destination 'userSettings': ["Edit(.claude/settings.json)","Edit(.claude/settings.local.json)","Edit(.serena/project.yml)","Bash(curl http://*)","Bash(curl https://*)","Bash(wget:*)","Bash(nc:*)","Bash(netcat:*)","Bash(scp:*)","Bash(systemctl:*)","Bash(service:*)","Bash(iptables:*)","Bash(ufw:*)","Bash(git reset --hard:*)"]
+2026-04-23T03:27:36.330Z [DEBUG] [claudeai-mcp] Fetching from https://api.anthropic.com/v1/mcp_servers?limit=1000
+2026-04-23T03:27:36.335Z [DEBUG] [STARTUP] Loading MCP configs...
+2026-04-23T03:27:36.341Z [DEBUG] [STARTUP] Running setup()...
+2026-04-23T03:27:36.344Z [DEBUG] Loading skills from: managed=/etc/claude-code/.claude/skills, user=/home/rookslog/.claude/skills, project=[]
+2026-04-23T03:27:36.344Z [DEBUG] Error log sink initialized
+2026-04-23T03:27:36.349Z [DEBUG] Loaded 0 installed plugins from /home/rookslog/.claude/plugins/installed_plugins.json
+2026-04-23T03:27:36.349Z [DEBUG] Found 0 plugins (0 enabled, 0 disabled)
+2026-04-23T03:27:36.349Z [DEBUG] getPluginSkills: Processing 0 enabled plugins
+2026-04-23T03:27:36.349Z [DEBUG] Registered 0 hooks from 0 plugins
+2026-04-23T03:27:36.349Z [DEBUG] Total plugin skills loaded: 0
+2026-04-23T03:27:36.349Z [DEBUG] Total plugin commands loaded: 0
+2026-04-23T03:27:36.359Z [DEBUG] Acquired PID lock for 2.1.118 (PID 2991009)
+2026-04-23T03:27:36.359Z [DEBUG] Acquired PID lock on running version: /home/rookslog/.local/share/claude/versions/2.1.118
+2026-04-23T03:27:36.361Z [DEBUG] Failed to stat directory /etc/claude-code/.claude/commands: ENOENT: no such file or directory, statx '/etc/claude-code/.claude/commands'
+2026-04-23T03:27:36.361Z [DEBUG] Failed to stat directory /etc/claude-code/.claude/agents: ENOENT: no such file or directory, statx '/etc/claude-code/.claude/agents'
+2026-04-23T03:27:36.429Z [DEBUG] Git remote URL: https://github.com/loganrooks/prix-guesser.git
+2026-04-23T03:27:36.429Z [DEBUG] Parsed repository: github.com/loganrooks/prix-guesser from URL: https://github.com/loganrooks/prix-guesser.git
+2026-04-23T03:27:36.456Z [DEBUG] Total plugin agents loaded: 0
+2026-04-23T03:27:36.525Z [DEBUG] Loaded 183 unique skills (183 unconditional, 0 conditional, managed: 0, user: 68, project: 0, additional: 0, legacy commands: 115)
+2026-04-23T03:27:36.525Z [DEBUG] getSkills returning: 183 skill dir commands, 0 plugin skills, 10 bundled skills, 0 builtin plugin skills
+2026-04-23T03:27:36.540Z [DEBUG] Preserving file permissions: 100664
+2026-04-23T03:27:36.540Z [DEBUG] Writing to temp file: /home/rookslog/.claude.json.tmp.2991009.1776914856540
+2026-04-23T03:27:36.548Z [DEBUG] Temp file written successfully, size: 95873 bytes
+2026-04-23T03:27:36.548Z [DEBUG] Applied original permissions to temp file
+2026-04-23T03:27:36.548Z [DEBUG] Renaming /home/rookslog/.claude.json.tmp.2991009.1776914856540 to /home/rookslog/.claude.json
+2026-04-23T03:27:36.548Z [DEBUG] File /home/rookslog/.claude.json written atomically
+2026-04-23T03:27:36.551Z [DEBUG] [claudeai-mcp] Fetch failed
+2026-04-23T03:27:36.587Z [DEBUG] [STARTUP] setup() completed in 246ms
+2026-04-23T03:27:36.587Z [DEBUG] Cleared CA certificates cache
+2026-04-23T03:27:36.587Z [DEBUG] Cleared mTLS configuration cache
+2026-04-23T03:27:36.587Z [DEBUG] Cleared proxy agent cache
+2026-04-23T03:27:36.587Z [DEBUG] CA certs: stores=bundled,system, extraCertsPath=undefined
+2026-04-23T03:27:36.587Z [DEBUG] CA certs: Loaded 145 bundled root certificates
+2026-04-23T03:27:36.588Z [DEBUG] CA certs: Loaded 294 system CA certificates
+2026-04-23T03:27:36.588Z [DEBUG] mTLS: Creating HTTPS agent with custom certificates
+2026-04-23T03:27:36.589Z [DEBUG] [STARTUP] Loading commands and agents...
+2026-04-23T03:27:36.590Z [DEBUG] [ToolSearch:optimistic] mode=tst, ENABLE_TOOL_SEARCH=undefined, result=true
+2026-04-23T03:27:36.603Z [DEBUG] [STARTUP] Commands and agents loaded in 14ms
+2026-04-23T03:27:36.603Z [DEBUG] [LSP MANAGER] initializeLspServerManager() called
+2026-04-23T03:27:36.603Z [DEBUG] [LSP MANAGER] Created manager instance, state=pending
+2026-04-23T03:27:36.603Z [DEBUG] [LSP MANAGER] Starting async initialization (generation 1)
+2026-04-23T03:27:36.603Z [DEBUG] Starting background startup prefetches
+2026-04-23T03:27:36.604Z [DEBUG] [Bootstrap] Fetching
+2026-04-23T03:27:36.606Z [DEBUG] Passes: Using fresh cached eligibility data
+2026-04-23T03:27:36.607Z [DEBUG] [STARTUP] MCP configs resolved in 14ms (awaited at +272ms)
+2026-04-23T03:27:36.610Z [DEBUG] All plugins already exist, skipping migration
+2026-04-23T03:27:36.610Z [DEBUG] Total LSP servers loaded: 0
+2026-04-23T03:27:36.610Z [DEBUG] Initialized versioned plugins system with 0 plugins
+2026-04-23T03:27:36.610Z [DEBUG] [LSP SERVER MANAGER] getAllLspServers returned 0 server(s)
+2026-04-23T03:27:36.610Z [DEBUG] LSP manager initialized with 0 servers
+2026-04-23T03:27:36.614Z [DEBUG] MCP server "sequential-thinking": Starting connection with timeout of 30000ms
+2026-04-23T03:27:36.615Z [DEBUG] Cleared CA certificates cache
+2026-04-23T03:27:36.615Z [DEBUG] Cleared mTLS configuration cache
+2026-04-23T03:27:36.616Z [DEBUG] Cleared proxy agent cache
+2026-04-23T03:27:36.616Z [DEBUG] CA certs: stores=bundled,system, extraCertsPath=undefined
+2026-04-23T03:27:36.616Z [DEBUG] CA certs: Loaded 145 bundled root certificates
+2026-04-23T03:27:36.616Z [DEBUG] CA certs: Loaded 294 system CA certificates
+2026-04-23T03:27:36.616Z [DEBUG] mTLS: Creating HTTPS agent with custom certificates
+2026-04-23T03:27:36.616Z [DEBUG] LSP server manager initialized successfully
+2026-04-23T03:27:36.616Z [DEBUG] LSP notification handlers registered successfully for all 0 server(s)
+2026-04-23T03:27:36.620Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:27:36.621Z [DEBUG] [Perfetto] initializePerfettoTracing called, env value: undefined
+2026-04-23T03:27:36.621Z [DEBUG] [3P telemetry] isTelemetryEnabled=false (CLAUDE_CODE_ENABLE_TELEMETRY=undefined)
+2026-04-23T03:27:36.623Z [WARN] [3P telemetry] Event dropped (no event logger initialized): hook_execution_start
+2026-04-23T03:27:36.624Z [DEBUG] [auto-mode] verifyAutoModeGateAccess: enabledState=enabled disabledBySettings=false model=claude-opus-4-7[1m] modelSupported=true disableFastModeBreakerFires=false carouselAvailable=true canEnterAuto=true
+2026-04-23T03:27:36.664Z [DEBUG] Ripgrep first use test: PASSED (mode=embedded, path=/home/rookslog/.local/share/claude/versions/2.1.118)
+2026-04-23T03:27:36.665Z [DEBUG] "rg error (signal=undefined, code=2, stderr: rg: /home/rookslog/.claude/plugins/cache: IO error for operation on /home/rookslog/.claude/plugins/cache: No such file or directory (os error 2)\n), 0 results"
+2026-04-23T03:27:36.690Z [DEBUG] Hook output does not start with {, treating as plain text
+2026-04-23T03:27:36.699Z [DEBUG] Hook output does not start with {, treating as plain text
+2026-04-23T03:27:36.699Z [DEBUG] Hook output does not start with {, treating as plain text
+2026-04-23T03:27:36.701Z [DEBUG] Hook output does not start with {, treating as plain text
+2026-04-23T03:27:36.702Z [DEBUG] Hook output does not start with {, treating as plain text
+2026-04-23T03:27:36.709Z [DEBUG] [Bootstrap] Fetching
+2026-04-23T03:27:36.712Z [DEBUG] Hook output does not start with {, treating as plain text
+2026-04-23T03:27:36.712Z [DEBUG] Hook output does not start with {, treating as plain text
+2026-04-23T03:27:36.850Z [DEBUG] [Bootstrap] Fetch ok
+2026-04-23T03:27:36.851Z [DEBUG] [Bootstrap] Cache unchanged, skipping write
+2026-04-23T03:27:37.161Z [DEBUG] Org fast mode: enabled
+2026-04-23T03:27:37.508Z [ERROR] "MCP server \"sequential-thinking\" Server stderr: Sequential Thinking MCP Server running on stdio\n"
+2026-04-23T03:27:37.509Z [DEBUG] MCP server "sequential-thinking": Successfully connected (transport: stdio) in 898ms
+2026-04-23T03:27:37.509Z [DEBUG] MCP server "sequential-thinking": Connection established with capabilities: {"hasTools":true,"hasPrompts":false,"hasResources":false,"hasResourceSubscribe":false,"serverVersion":{"name":"sequential-thinking-server","version":"0.2.0"}}
+2026-04-23T03:27:37.509Z [DEBUG] [MCP] Server "sequential-thinking" connected with subscribe=false
+2026-04-23T03:27:37.536Z [DEBUG] Grove: Using fresh cached config
+2026-04-23T03:27:37.563Z [DEBUG] Watching for changes in skill/command directories: /home/rookslog/.claude/skills, /home/rookslog/.claude/commands, /home/rookslog/workspace/projects/prix-guesser/.claude/commands...
+2026-04-23T03:27:37.564Z [DEBUG] Watching for changes in setting files /home/rookslog/.claude/settings.json, /home/rookslog/workspace/projects/prix-guesser/.claude/settings.json, /home/rookslog/workspace/projects/prix-guesser/.claude/settings.local.json...
+2026-04-23T03:27:37.827Z [DEBUG] [mcp-registry] Loaded 197 official MCP URLs (legacy)
+2026-04-23T03:27:37.976Z [DEBUG] [ScheduledTasks] scheduler start() — enabled=false, hasTasks=false
+2026-04-23T03:27:37.978Z [DEBUG] installPluginsForHeadless: starting
+2026-04-23T03:27:37.978Z [DEBUG] installPluginsForHeadless: no marketplaces declared
+2026-04-23T03:27:37.985Z [DEBUG] Failed to stat directory /etc/claude-code/.claude/output-styles: ENOENT: no such file or directory, statx '/etc/claude-code/.claude/output-styles'
+2026-04-23T03:27:37.985Z [DEBUG] Failed to stat directory /home/rookslog/.claude/output-styles: ENOENT: no such file or directory, statx '/home/rookslog/.claude/output-styles'
+2026-04-23T03:27:37.986Z [DEBUG] Total plugin output styles loaded: 0
+2026-04-23T03:27:37.989Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2026-04-23T03:27:37.989Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2026-04-23T03:27:37.989Z [DEBUG] Hooks: Found 0 total hooks in registry
+2026-04-23T03:27:37.990Z [DEBUG] Sending 193 skills via attachment (initial, 193 total sent)
+2026-04-23T03:27:37.991Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2026-04-23T03:27:38.035Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:27:38.044Z [DEBUG] Dynamic tool loading: 0/18 deferred tools included
+2026-04-23T03:27:38.045Z [DEBUG] attribution header x-anthropic-billing-header: cc_version=2.1.118.7b3; cc_entrypoint=sdk-cli; cch=00000;
+2026-04-23T03:27:38.046Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:27:38.046Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:27:38.047Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:27:38.047Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:27:38.048Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:27:38.049Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:27:38.052Z [DEBUG] [API REQUEST] /v1/messages x-client-request-id=5f7195ad-0594-4d20-b64a-abf31430e4ba source=sdk
+2026-04-23T03:27:39.792Z [DEBUG] Stream started - received first chunk
+2026-04-23T03:27:41.083Z [INFO] [Stall] tool_dispatch_start tool=Read toolUseId=toolu_01Hvpvs6Y5AymEtKPrDxCv3n permissionDecisionMs=5
+2026-04-23T03:27:41.093Z [INFO] [Stall] tool_dispatch_end tool=Read toolUseId=toolu_01Hvpvs6Y5AymEtKPrDxCv3n outcome=ok durationMs=10
+2026-04-23T03:27:41.131Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2026-04-23T03:27:41.131Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2026-04-23T03:27:41.131Z [DEBUG] Hooks: Found 0 total hooks in registry
+2026-04-23T03:27:41.131Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2026-04-23T03:27:41.154Z [DEBUG] Dynamic tool loading: 0/18 deferred tools included
+2026-04-23T03:27:41.155Z [DEBUG] attribution header x-anthropic-billing-header: cc_version=2.1.118.7b3; cc_entrypoint=sdk-cli; cch=00000;
+2026-04-23T03:27:41.155Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:27:41.156Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:27:41.156Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:27:41.156Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:27:41.156Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:27:41.157Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:27:41.159Z [DEBUG] [API REQUEST] /v1/messages x-client-request-id=9baa25af-ad69-499e-8640-e599c906767c source=sdk
+2026-04-23T03:27:42.852Z [DEBUG] Stream started - received first chunk
+2026-04-23T03:27:44.561Z [INFO] [Stall] tool_dispatch_start tool=Read toolUseId=toolu_01F9XmdXzu9cYJ99Rc3tL7cy permissionDecisionMs=2
+2026-04-23T03:27:44.564Z [INFO] [Stall] tool_dispatch_end tool=Read toolUseId=toolu_01F9XmdXzu9cYJ99Rc3tL7cy outcome=ok durationMs=3
+2026-04-23T03:27:44.587Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2026-04-23T03:27:44.587Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2026-04-23T03:27:44.587Z [DEBUG] Hooks: Found 0 total hooks in registry
+2026-04-23T03:27:44.587Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2026-04-23T03:27:44.618Z [DEBUG] Dynamic tool loading: 0/18 deferred tools included
+2026-04-23T03:27:44.619Z [DEBUG] attribution header x-anthropic-billing-header: cc_version=2.1.118.7b3; cc_entrypoint=sdk-cli; cch=00000;
+2026-04-23T03:27:44.619Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:27:44.620Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:27:44.621Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:27:44.621Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:27:44.621Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:27:44.622Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:27:44.625Z [DEBUG] [API REQUEST] /v1/messages x-client-request-id=df805695-00ad-44b0-bdc2-68d133278a2e source=sdk
+2026-04-23T03:27:46.593Z [DEBUG] Stream started - received first chunk
+2026-04-23T03:27:46.987Z [INFO] [Stall] tool_dispatch_start tool=Read toolUseId=toolu_011GAWsofSMML1RyEsu8Di6T permissionDecisionMs=3
+2026-04-23T03:27:46.990Z [INFO] [Stall] tool_dispatch_end tool=Read toolUseId=toolu_011GAWsofSMML1RyEsu8Di6T outcome=ok durationMs=3
+2026-04-23T03:27:47.046Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2026-04-23T03:27:47.046Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2026-04-23T03:27:47.046Z [DEBUG] Hooks: Found 0 total hooks in registry
+2026-04-23T03:27:47.047Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2026-04-23T03:27:47.056Z [DEBUG] Dynamic tool loading: 0/18 deferred tools included
+2026-04-23T03:27:47.056Z [DEBUG] attribution header x-anthropic-billing-header: cc_version=2.1.118.7b3; cc_entrypoint=sdk-cli; cch=00000;
+2026-04-23T03:27:47.057Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:27:47.057Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:27:47.057Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:27:47.057Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:27:47.058Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:27:47.058Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:27:47.060Z [DEBUG] [API REQUEST] /v1/messages x-client-request-id=cc5fddfa-ef8f-48d2-a15b-597dddb2dc35 source=sdk
+2026-04-23T03:27:49.328Z [DEBUG] Stream started - received first chunk
+2026-04-23T03:27:51.395Z [INFO] [Stall] tool_dispatch_start tool=Read toolUseId=toolu_01MTrKq9dAuwEyqeHkL3MvDF permissionDecisionMs=3
+2026-04-23T03:27:51.397Z [INFO] [Stall] tool_dispatch_end tool=Read toolUseId=toolu_01MTrKq9dAuwEyqeHkL3MvDF outcome=ok durationMs=3
+2026-04-23T03:27:51.449Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2026-04-23T03:27:51.449Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2026-04-23T03:27:51.449Z [DEBUG] Hooks: Found 0 total hooks in registry
+2026-04-23T03:27:51.450Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2026-04-23T03:27:51.481Z [DEBUG] Dynamic tool loading: 0/18 deferred tools included
+2026-04-23T03:27:51.482Z [DEBUG] attribution header x-anthropic-billing-header: cc_version=2.1.118.7b3; cc_entrypoint=sdk-cli; cch=00000;
+2026-04-23T03:27:51.483Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:27:51.483Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:27:51.484Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:27:51.484Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:27:51.485Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:27:51.486Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:27:51.488Z [DEBUG] [API REQUEST] /v1/messages x-client-request-id=1c77bbab-5a8b-46e7-a025-c007e00ea9ca source=sdk
+2026-04-23T03:27:53.405Z [DEBUG] Stream started - received first chunk
+2026-04-23T03:27:55.081Z [INFO] [Stall] tool_dispatch_start tool=Read toolUseId=toolu_0139wLMCn7AcY8oiD2cDxteT permissionDecisionMs=3
+2026-04-23T03:27:55.091Z [INFO] [Stall] tool_dispatch_end tool=Read toolUseId=toolu_0139wLMCn7AcY8oiD2cDxteT outcome=ok durationMs=10
+2026-04-23T03:27:55.127Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2026-04-23T03:27:55.127Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2026-04-23T03:27:55.127Z [DEBUG] Hooks: Found 0 total hooks in registry
+2026-04-23T03:27:55.128Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2026-04-23T03:27:55.151Z [DEBUG] Dynamic tool loading: 0/18 deferred tools included
+2026-04-23T03:27:55.152Z [DEBUG] attribution header x-anthropic-billing-header: cc_version=2.1.118.7b3; cc_entrypoint=sdk-cli; cch=00000;
+2026-04-23T03:27:55.153Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:27:55.153Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:27:55.153Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:27:55.154Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:27:55.154Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:27:55.155Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:27:55.158Z [DEBUG] [API REQUEST] /v1/messages x-client-request-id=22cf627a-8af1-43ca-9485-40d5e93065ef source=sdk
+2026-04-23T03:27:57.007Z [DEBUG] Stream started - received first chunk
+2026-04-23T03:27:58.555Z [INFO] [Stall] tool_dispatch_start tool=Read toolUseId=toolu_018Fzn8NYuhG724Tmk5kRBsP permissionDecisionMs=2
+2026-04-23T03:27:58.556Z [INFO] [Stall] tool_dispatch_end tool=Read toolUseId=toolu_018Fzn8NYuhG724Tmk5kRBsP outcome=ok durationMs=1
+2026-04-23T03:27:58.608Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2026-04-23T03:27:58.608Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2026-04-23T03:27:58.608Z [DEBUG] Hooks: Found 0 total hooks in registry
+2026-04-23T03:27:58.608Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2026-04-23T03:27:58.627Z [DEBUG] Dynamic tool loading: 0/18 deferred tools included
+2026-04-23T03:27:58.629Z [DEBUG] attribution header x-anthropic-billing-header: cc_version=2.1.118.7b3; cc_entrypoint=sdk-cli; cch=00000;
+2026-04-23T03:27:58.629Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:27:58.630Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:27:58.630Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:27:58.631Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:27:58.632Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:27:58.632Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:27:58.635Z [DEBUG] [API REQUEST] /v1/messages x-client-request-id=4ceb78b8-88f5-4912-9e68-9b0dcec21c1f source=sdk
+2026-04-23T03:28:00.513Z [DEBUG] Stream started - received first chunk
+2026-04-23T03:28:01.130Z [INFO] [Stall] tool_dispatch_start tool=Read toolUseId=toolu_01MXYwcMG8PfpLj58LWRtn8L permissionDecisionMs=2
+2026-04-23T03:28:01.133Z [INFO] [Stall] tool_dispatch_end tool=Read toolUseId=toolu_01MXYwcMG8PfpLj58LWRtn8L outcome=ok durationMs=3
+2026-04-23T03:28:01.174Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2026-04-23T03:28:01.174Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2026-04-23T03:28:01.174Z [DEBUG] Hooks: Found 0 total hooks in registry
+2026-04-23T03:28:01.174Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2026-04-23T03:28:01.190Z [DEBUG] Dynamic tool loading: 0/18 deferred tools included
+2026-04-23T03:28:01.192Z [DEBUG] attribution header x-anthropic-billing-header: cc_version=2.1.118.7b3; cc_entrypoint=sdk-cli; cch=00000;
+2026-04-23T03:28:01.192Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:01.192Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:01.193Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:28:01.193Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:28:01.193Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:28:01.194Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:01.196Z [DEBUG] [API REQUEST] /v1/messages x-client-request-id=3fa63d9c-dc1e-42fc-91a1-011c700af08a source=sdk
+2026-04-23T03:28:03.405Z [DEBUG] Stream started - received first chunk
+2026-04-23T03:28:06.554Z [INFO] [Stall] tool_dispatch_start tool=Read toolUseId=toolu_01Hp2JhznWkSb9tojdevjjvN permissionDecisionMs=4
+2026-04-23T03:28:06.566Z [INFO] [Stall] tool_dispatch_end tool=Read toolUseId=toolu_01Hp2JhznWkSb9tojdevjjvN outcome=ok durationMs=12
+2026-04-23T03:28:06.609Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2026-04-23T03:28:06.609Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2026-04-23T03:28:06.609Z [DEBUG] Hooks: Found 0 total hooks in registry
+2026-04-23T03:28:06.610Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2026-04-23T03:28:06.629Z [DEBUG] Dynamic tool loading: 0/18 deferred tools included
+2026-04-23T03:28:06.631Z [DEBUG] attribution header x-anthropic-billing-header: cc_version=2.1.118.7b3; cc_entrypoint=sdk-cli; cch=00000;
+2026-04-23T03:28:06.631Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:06.632Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:06.632Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:28:06.632Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:28:06.633Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:28:06.633Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:06.635Z [DEBUG] [API REQUEST] /v1/messages x-client-request-id=404b6ce6-20da-44dc-8c7a-1c49de79b013 source=sdk
+2026-04-23T03:28:08.456Z [DEBUG] Stream started - received first chunk
+2026-04-23T03:28:09.785Z [INFO] [Stall] tool_dispatch_start tool=Read toolUseId=toolu_012XBEU3MPhm43vnM3xoCvmX permissionDecisionMs=4
+2026-04-23T03:28:09.799Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:28:09.799Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:28:09.799Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:28:09.801Z [DEBUG] [API REQUEST] /v1/messages/count_tokens x-client-request-id=d7684b35-3067-401d-9bcc-17db22cb804f source=count_tokens
+2026-04-23T03:28:10.062Z [INFO] [Stall] tool_dispatch_end tool=Read toolUseId=toolu_012XBEU3MPhm43vnM3xoCvmX outcome=ok durationMs=277
+2026-04-23T03:28:10.072Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2026-04-23T03:28:10.072Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2026-04-23T03:28:10.072Z [DEBUG] Hooks: Found 0 total hooks in registry
+2026-04-23T03:28:10.072Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2026-04-23T03:28:10.082Z [DEBUG] Dynamic tool loading: 0/18 deferred tools included
+2026-04-23T03:28:10.084Z [DEBUG] attribution header x-anthropic-billing-header: cc_version=2.1.118.7b3; cc_entrypoint=sdk-cli; cch=00000;
+2026-04-23T03:28:10.084Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:10.084Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:10.085Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:28:10.085Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:28:10.085Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:28:10.086Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:10.087Z [DEBUG] [API REQUEST] /v1/messages x-client-request-id=5ea155a4-9ea9-486f-9911-57a4d420ce2a source=sdk
+2026-04-23T03:28:13.035Z [DEBUG] Stream started - received first chunk
+2026-04-23T03:28:14.148Z [INFO] [Stall] tool_dispatch_start tool=Read toolUseId=toolu_018FRicVKphYZ6jtyC1cAtVp permissionDecisionMs=3
+2026-04-23T03:28:14.152Z [INFO] [Stall] tool_dispatch_end tool=Read toolUseId=toolu_018FRicVKphYZ6jtyC1cAtVp outcome=ok durationMs=4
+2026-04-23T03:28:14.196Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2026-04-23T03:28:14.196Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2026-04-23T03:28:14.197Z [DEBUG] Hooks: Found 0 total hooks in registry
+2026-04-23T03:28:14.197Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2026-04-23T03:28:14.212Z [DEBUG] Dynamic tool loading: 0/18 deferred tools included
+2026-04-23T03:28:14.213Z [DEBUG] attribution header x-anthropic-billing-header: cc_version=2.1.118.7b3; cc_entrypoint=sdk-cli; cch=00000;
+2026-04-23T03:28:14.214Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:14.214Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:14.214Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:28:14.214Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:28:14.215Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:28:14.215Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:14.218Z [DEBUG] [API REQUEST] /v1/messages x-client-request-id=c530ab01-c195-486e-97ab-cecf36b61232 source=sdk
+2026-04-23T03:28:16.155Z [DEBUG] Stream started - received first chunk
+2026-04-23T03:28:18.271Z [INFO] [Stall] tool_dispatch_start tool=Read toolUseId=toolu_01QxGUp7gty2dd8eGV9La8r6 permissionDecisionMs=2
+2026-04-23T03:28:18.284Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:28:18.284Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:28:18.284Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:28:18.286Z [DEBUG] [API REQUEST] /v1/messages/count_tokens x-client-request-id=e112d256-e08d-4b5c-b944-bbdf3c91c8bb source=count_tokens
+2026-04-23T03:28:18.517Z [INFO] [Stall] tool_dispatch_end tool=Read toolUseId=toolu_01QxGUp7gty2dd8eGV9La8r6 outcome=ok durationMs=246
+2026-04-23T03:28:18.528Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2026-04-23T03:28:18.528Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2026-04-23T03:28:18.529Z [DEBUG] Hooks: Found 0 total hooks in registry
+2026-04-23T03:28:18.529Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2026-04-23T03:28:18.540Z [DEBUG] Dynamic tool loading: 0/18 deferred tools included
+2026-04-23T03:28:18.541Z [DEBUG] attribution header x-anthropic-billing-header: cc_version=2.1.118.7b3; cc_entrypoint=sdk-cli; cch=00000;
+2026-04-23T03:28:18.542Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:18.542Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:18.542Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:28:18.542Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:28:18.543Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:28:18.543Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:18.546Z [DEBUG] [API REQUEST] /v1/messages x-client-request-id=b5cc8c60-6da4-4187-9ac8-9f79e407bb6b source=sdk
+2026-04-23T03:28:20.797Z [DEBUG] Stream started - received first chunk
+2026-04-23T03:28:22.079Z [INFO] [Stall] tool_dispatch_start tool=Read toolUseId=toolu_01PpoMeYUgBAKJovNXk5VQhg permissionDecisionMs=2
+2026-04-23T03:28:22.097Z [INFO] [Stall] tool_dispatch_end tool=Read toolUseId=toolu_01PpoMeYUgBAKJovNXk5VQhg outcome=ok durationMs=18
+2026-04-23T03:28:22.134Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2026-04-23T03:28:22.134Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2026-04-23T03:28:22.134Z [DEBUG] Hooks: Found 0 total hooks in registry
+2026-04-23T03:28:22.134Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2026-04-23T03:28:22.151Z [DEBUG] Dynamic tool loading: 0/18 deferred tools included
+2026-04-23T03:28:22.152Z [DEBUG] attribution header x-anthropic-billing-header: cc_version=2.1.118.7b3; cc_entrypoint=sdk-cli; cch=00000;
+2026-04-23T03:28:22.152Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:22.152Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:22.152Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:28:22.152Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:28:22.153Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:28:22.153Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:22.155Z [DEBUG] [API REQUEST] /v1/messages x-client-request-id=ebdfa0a8-ece1-432a-8702-3405b505f006 source=sdk
+2026-04-23T03:28:25.101Z [DEBUG] Stream started - received first chunk
+2026-04-23T03:28:25.881Z [INFO] [Stall] tool_dispatch_start tool=Read toolUseId=toolu_013cz1tsSjHqm7fVWbSHPJCD permissionDecisionMs=3
+2026-04-23T03:28:25.884Z [INFO] [Stall] tool_dispatch_end tool=Read toolUseId=toolu_013cz1tsSjHqm7fVWbSHPJCD outcome=ok durationMs=3
+2026-04-23T03:28:25.929Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2026-04-23T03:28:25.929Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2026-04-23T03:28:25.929Z [DEBUG] Hooks: Found 0 total hooks in registry
+2026-04-23T03:28:25.929Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2026-04-23T03:28:25.951Z [DEBUG] Dynamic tool loading: 0/18 deferred tools included
+2026-04-23T03:28:25.952Z [DEBUG] attribution header x-anthropic-billing-header: cc_version=2.1.118.7b3; cc_entrypoint=sdk-cli; cch=00000;
+2026-04-23T03:28:25.953Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:25.953Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:25.954Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:28:25.954Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:28:25.955Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:28:25.955Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:25.959Z [DEBUG] [API REQUEST] /v1/messages x-client-request-id=56a7d9cc-be46-4a79-89eb-a9ccc8792b70 source=sdk
+2026-04-23T03:28:27.838Z [DEBUG] Stream started - received first chunk
+2026-04-23T03:28:29.003Z [INFO] [Stall] tool_dispatch_start tool=Read toolUseId=toolu_01BxNzy6W9Fz88Mse7VrfBe2 permissionDecisionMs=3
+2026-04-23T03:28:29.007Z [INFO] [Stall] tool_dispatch_end tool=Read toolUseId=toolu_01BxNzy6W9Fz88Mse7VrfBe2 outcome=ok durationMs=4
+2026-04-23T03:28:29.080Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2026-04-23T03:28:29.080Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2026-04-23T03:28:29.080Z [DEBUG] Hooks: Found 0 total hooks in registry
+2026-04-23T03:28:29.081Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2026-04-23T03:28:29.103Z [DEBUG] Dynamic tool loading: 0/18 deferred tools included
+2026-04-23T03:28:29.105Z [DEBUG] attribution header x-anthropic-billing-header: cc_version=2.1.118.7b3; cc_entrypoint=sdk-cli; cch=00000;
+2026-04-23T03:28:29.106Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:29.106Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:29.107Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:28:29.107Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:28:29.108Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:28:29.109Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:29.112Z [DEBUG] [API REQUEST] /v1/messages x-client-request-id=07e6a4dc-f50e-47d2-8387-fd507bff244a source=sdk
+2026-04-23T03:28:31.137Z [DEBUG] Stream started - received first chunk
+2026-04-23T03:28:32.374Z [INFO] [Stall] tool_dispatch_start tool=Read toolUseId=toolu_01Fknh1vWgt9kd1wpWCYFnT3 permissionDecisionMs=2
+2026-04-23T03:28:32.386Z [INFO] [Stall] tool_dispatch_end tool=Read toolUseId=toolu_01Fknh1vWgt9kd1wpWCYFnT3 outcome=ok durationMs=12
+2026-04-23T03:28:32.415Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2026-04-23T03:28:32.415Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2026-04-23T03:28:32.415Z [DEBUG] Hooks: Found 0 total hooks in registry
+2026-04-23T03:28:32.415Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2026-04-23T03:28:32.422Z [DEBUG] Dynamic tool loading: 0/18 deferred tools included
+2026-04-23T03:28:32.423Z [DEBUG] attribution header x-anthropic-billing-header: cc_version=2.1.118.7b3; cc_entrypoint=sdk-cli; cch=00000;
+2026-04-23T03:28:32.423Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:32.423Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:32.423Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:28:32.423Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:28:32.424Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:28:32.424Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:32.426Z [DEBUG] [API REQUEST] /v1/messages x-client-request-id=e1876a8a-61f0-4f14-8d22-a3d11346c11c source=sdk
+2026-04-23T03:28:34.581Z [DEBUG] Stream started - received first chunk
+2026-04-23T03:28:35.139Z [INFO] [Stall] tool_dispatch_start tool=Read toolUseId=toolu_01Ef8G73ce8Y53TJvNaTDgzh permissionDecisionMs=4
+2026-04-23T03:28:35.152Z [INFO] [Stall] tool_dispatch_end tool=Read toolUseId=toolu_01Ef8G73ce8Y53TJvNaTDgzh outcome=ok durationMs=13
+2026-04-23T03:28:35.200Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2026-04-23T03:28:35.200Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2026-04-23T03:28:35.200Z [DEBUG] Hooks: Found 0 total hooks in registry
+2026-04-23T03:28:35.200Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2026-04-23T03:28:35.206Z [DEBUG] Dynamic tool loading: 0/18 deferred tools included
+2026-04-23T03:28:35.206Z [DEBUG] attribution header x-anthropic-billing-header: cc_version=2.1.118.7b3; cc_entrypoint=sdk-cli; cch=00000;
+2026-04-23T03:28:35.206Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:35.207Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:35.207Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:28:35.207Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:28:35.207Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:28:35.207Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:35.209Z [DEBUG] [API REQUEST] /v1/messages x-client-request-id=985b0d32-0d3b-4ec2-826f-baf732074f59 source=sdk
+2026-04-23T03:28:37.695Z [DEBUG] Stream started - received first chunk
+2026-04-23T03:28:40.225Z [INFO] [Stall] tool_dispatch_start tool=Read toolUseId=toolu_01HoYeNiafr6eEmTRyqGzjky permissionDecisionMs=2
+2026-04-23T03:28:40.236Z [INFO] [Stall] tool_dispatch_end tool=Read toolUseId=toolu_01HoYeNiafr6eEmTRyqGzjky outcome=ok durationMs=12
+2026-04-23T03:28:40.365Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2026-04-23T03:28:40.365Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2026-04-23T03:28:40.365Z [DEBUG] Hooks: Found 0 total hooks in registry
+2026-04-23T03:28:40.365Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2026-04-23T03:28:40.385Z [DEBUG] Dynamic tool loading: 0/18 deferred tools included
+2026-04-23T03:28:40.386Z [DEBUG] attribution header x-anthropic-billing-header: cc_version=2.1.118.7b3; cc_entrypoint=sdk-cli; cch=00000;
+2026-04-23T03:28:40.386Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:40.386Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:40.387Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:28:40.387Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:28:40.387Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:28:40.388Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:40.391Z [DEBUG] [API REQUEST] /v1/messages x-client-request-id=97d07491-829b-4962-bfa7-db986d1d0fb8 source=sdk
+2026-04-23T03:28:42.595Z [DEBUG] Stream started - received first chunk
+2026-04-23T03:28:44.519Z [INFO] [Stall] tool_dispatch_start tool=Read toolUseId=toolu_01QvBbTpqWJ9xgytdG4eSzUw permissionDecisionMs=7
+2026-04-23T03:28:44.529Z [INFO] [Stall] tool_dispatch_end tool=Read toolUseId=toolu_01QvBbTpqWJ9xgytdG4eSzUw outcome=ok durationMs=10
+2026-04-23T03:28:44.588Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2026-04-23T03:28:44.588Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2026-04-23T03:28:44.588Z [DEBUG] Hooks: Found 0 total hooks in registry
+2026-04-23T03:28:44.588Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2026-04-23T03:28:44.601Z [DEBUG] Dynamic tool loading: 0/18 deferred tools included
+2026-04-23T03:28:44.603Z [DEBUG] attribution header x-anthropic-billing-header: cc_version=2.1.118.7b3; cc_entrypoint=sdk-cli; cch=00000;
+2026-04-23T03:28:44.603Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:44.604Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:44.605Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:28:44.605Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:28:44.607Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:28:44.607Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:28:44.610Z [DEBUG] [API REQUEST] /v1/messages x-client-request-id=03c22015-a28c-475d-84b9-7d91a25127bc source=sdk
+2026-04-23T03:28:46.504Z [DEBUG] Stream started - received first chunk
+2026-04-23T03:29:01.505Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=15000 bytesTotal=637 idleDeadlineMs=300000
+2026-04-23T03:29:25.271Z [DEBUG] Plugin autoupdate: checking installed plugins
+2026-04-23T03:29:30.018Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=15005 bytesTotal=673 idleDeadlineMs=300000
+2026-04-23T03:29:45.013Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=30000 bytesTotal=673 idleDeadlineMs=300000
+2026-04-23T03:30:00.019Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=15005 bytesTotal=709 idleDeadlineMs=300000
+2026-04-23T03:30:15.014Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=30000 bytesTotal=709 idleDeadlineMs=300000
+2026-04-23T03:30:30.018Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=15004 bytesTotal=745 idleDeadlineMs=300000
+2026-04-23T03:30:45.015Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=30000 bytesTotal=745 idleDeadlineMs=300000
+2026-04-23T03:31:00.022Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=15007 bytesTotal=781 idleDeadlineMs=300000
+2026-04-23T03:31:15.015Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=30000 bytesTotal=781 idleDeadlineMs=300000
+2026-04-23T03:31:30.020Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=15004 bytesTotal=817 idleDeadlineMs=300000
+2026-04-23T03:31:33.722Z [WARN] Streaming stall detected: 167.2s gap between events (stall #1)
+2026-04-23T03:32:00.021Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=15005 bytesTotal=45242 idleDeadlineMs=300000
+2026-04-23T03:32:15.016Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=30000 bytesTotal=45242 idleDeadlineMs=300000
+2026-04-23T03:32:30.021Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=15004 bytesTotal=45278 idleDeadlineMs=300000
+2026-04-23T03:32:45.018Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=30001 bytesTotal=45278 idleDeadlineMs=300000
+2026-04-23T03:33:00.023Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=15004 bytesTotal=45314 idleDeadlineMs=300000
+2026-04-23T03:33:15.018Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=30000 bytesTotal=45314 idleDeadlineMs=300000
+2026-04-23T03:33:30.024Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=15005 bytesTotal=45350 idleDeadlineMs=300000
+2026-04-23T03:33:45.019Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=30000 bytesTotal=45350 idleDeadlineMs=300000
+2026-04-23T03:34:00.023Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=15004 bytesTotal=45386 idleDeadlineMs=300000
+2026-04-23T03:34:15.019Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=30000 bytesTotal=45386 idleDeadlineMs=300000
+2026-04-23T03:34:30.024Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=15004 bytesTotal=45422 idleDeadlineMs=300000
+2026-04-23T03:34:45.020Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=30000 bytesTotal=45422 idleDeadlineMs=300000
+2026-04-23T03:35:00.021Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=15000 bytesTotal=45458 idleDeadlineMs=300000
+2026-04-23T03:35:15.020Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=29999 bytesTotal=45458 idleDeadlineMs=300000
+2026-04-23T03:35:20.552Z [WARN] Streaming stall detected: 224.6s gap between events (stall #2)
+2026-04-23T03:35:21.655Z [DEBUG] Write tool validation error: File has not been read yet. Read it first before writing to it.
+2026-04-23T03:35:21.699Z [WARN] Streaming completed with 2 stall(s), total stall time: 391.8s
+2026-04-23T03:35:21.704Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2026-04-23T03:35:21.704Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2026-04-23T03:35:21.704Z [DEBUG] Hooks: Found 0 total hooks in registry
+2026-04-23T03:35:21.704Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2026-04-23T03:35:21.710Z [DEBUG] Dynamic tool loading: 0/18 deferred tools included
+2026-04-23T03:35:21.712Z [DEBUG] attribution header x-anthropic-billing-header: cc_version=2.1.118.7b3; cc_entrypoint=sdk-cli; cch=00000;
+2026-04-23T03:35:21.712Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:35:21.713Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:35:21.713Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:35:21.713Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:35:21.714Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:35:21.714Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:35:21.718Z [DEBUG] [API REQUEST] /v1/messages x-client-request-id=8d4d03dd-4e84-4776-b8ca-e3f431dcaf7e source=sdk
+2026-04-23T03:35:24.143Z [DEBUG] Stream started - received first chunk
+2026-04-23T03:35:25.484Z [DEBUG] Hook output does not start with {, treating as plain text
+2026-04-23T03:35:25.487Z [DEBUG] Hook output does not start with {, treating as plain text
+2026-04-23T03:35:25.498Z [INFO] [Stall] tool_dispatch_start tool=Bash toolUseId=toolu_01T8ddhFn2jSmoBBj87NGn64 permissionDecisionMs=9
+2026-04-23T03:35:25.499Z [DEBUG] Creating shell snapshot for bash (/bin/bash)
+2026-04-23T03:35:25.499Z [DEBUG] Looking for shell config file: /home/rookslog/.bashrc
+2026-04-23T03:35:25.499Z [DEBUG] Snapshots directory: /home/rookslog/.claude/shell-snapshots
+2026-04-23T03:35:25.501Z [DEBUG] Creating snapshot at: /home/rookslog/.claude/shell-snapshots/snapshot-bash-1776915325499-h4foqx.sh
+2026-04-23T03:35:25.501Z [DEBUG] Execution timeout: 10000ms
+2026-04-23T03:35:25.554Z [DEBUG] Shell snapshot created successfully (2611 bytes)
+2026-04-23T03:35:25.555Z [DEBUG] No session environment scripts found
+2026-04-23T03:35:25.555Z [DEBUG] Spawning shell without login (-l flag skipped)
+2026-04-23T03:35:25.579Z [INFO] [Stall] tool_dispatch_end tool=Bash toolUseId=toolu_01T8ddhFn2jSmoBBj87NGn64 outcome=ok durationMs=81
+2026-04-23T03:35:25.639Z [DEBUG] Hook output does not start with {, treating as plain text
+2026-04-23T03:35:25.648Z [DEBUG] Hook output does not start with {, treating as plain text
+2026-04-23T03:35:25.654Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2026-04-23T03:35:25.655Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2026-04-23T03:35:25.655Z [DEBUG] Hooks: Found 0 total hooks in registry
+2026-04-23T03:35:25.655Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2026-04-23T03:35:25.659Z [DEBUG] Dynamic tool loading: 0/18 deferred tools included
+2026-04-23T03:35:25.661Z [DEBUG] attribution header x-anthropic-billing-header: cc_version=2.1.118.7b3; cc_entrypoint=sdk-cli; cch=00000;
+2026-04-23T03:35:25.661Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:35:25.662Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:35:25.662Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:35:25.662Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:35:25.663Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:35:25.663Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:35:25.666Z [DEBUG] [API REQUEST] /v1/messages x-client-request-id=a1cbf1ce-b722-452a-b1a8-f7150b426336 source=sdk
+2026-04-23T03:35:27.763Z [DEBUG] Stream started - received first chunk
+2026-04-23T03:35:28.360Z [INFO] [Stall] tool_dispatch_start tool=Read toolUseId=toolu_01R3bbXsH1Ap9uHPXnUm3x11 permissionDecisionMs=4
+2026-04-23T03:35:28.370Z [INFO] [Stall] tool_dispatch_end tool=Read toolUseId=toolu_01R3bbXsH1Ap9uHPXnUm3x11 outcome=ok durationMs=10
+2026-04-23T03:35:28.408Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2026-04-23T03:35:28.408Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2026-04-23T03:35:28.408Z [DEBUG] Hooks: Found 0 total hooks in registry
+2026-04-23T03:35:28.409Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2026-04-23T03:35:28.442Z [DEBUG] Dynamic tool loading: 0/18 deferred tools included
+2026-04-23T03:35:28.444Z [DEBUG] attribution header x-anthropic-billing-header: cc_version=2.1.118.7b3; cc_entrypoint=sdk-cli; cch=00000;
+2026-04-23T03:35:28.444Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:35:28.445Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:35:28.445Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:35:28.445Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:35:28.446Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:35:28.447Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:35:28.452Z [DEBUG] [API REQUEST] /v1/messages x-client-request-id=889075d5-cbad-4798-ade2-1e3a056de966 source=sdk
+2026-04-23T03:35:30.375Z [DEBUG] Stream started - received first chunk
+2026-04-23T03:35:46.135Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=14999 bytesTotal=6258 idleDeadlineMs=300000
+2026-04-23T03:36:13.839Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=14999 bytesTotal=6294 idleDeadlineMs=300000
+2026-04-23T03:36:28.839Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=30000 bytesTotal=6294 idleDeadlineMs=300000
+2026-04-23T03:36:43.839Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=15000 bytesTotal=6330 idleDeadlineMs=300000
+2026-04-23T03:36:58.840Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=30000 bytesTotal=6330 idleDeadlineMs=300000
+2026-04-23T03:37:13.841Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=15000 bytesTotal=6366 idleDeadlineMs=300000
+2026-04-23T03:37:28.841Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=30000 bytesTotal=6366 idleDeadlineMs=300000
+2026-04-23T03:37:38.090Z [DEBUG] Protecting locked version from cleanup: 2.1.80
+2026-04-23T03:37:38.147Z [DEBUG] Protecting locked version from cleanup: 2.1.117
+2026-04-23T03:37:43.858Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=14999 bytesTotal=6402 idleDeadlineMs=300000
+2026-04-23T03:37:58.858Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=30000 bytesTotal=6402 idleDeadlineMs=300000
+2026-04-23T03:38:13.864Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=15000 bytesTotal=6438 idleDeadlineMs=300000
+2026-04-23T03:38:28.863Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=29999 bytesTotal=6438 idleDeadlineMs=300000
+2026-04-23T03:38:43.865Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=14999 bytesTotal=6474 idleDeadlineMs=300000
+2026-04-23T03:38:58.867Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=30000 bytesTotal=6474 idleDeadlineMs=300000
+2026-04-23T03:39:13.868Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=14999 bytesTotal=6510 idleDeadlineMs=300000
+2026-04-23T03:39:28.870Z [WARN] [Stall] stream_idle_partial lastChunkAgeMs=30001 bytesTotal=6510 idleDeadlineMs=300000
+2026-04-23T03:39:35.442Z [WARN] Streaming stall detected: 244.3s gap between events (stall #1)
+2026-04-23T03:39:36.353Z [WARN] Streaming completed with 1 stall(s), total stall time: 244.3s
+2026-04-23T03:39:36.371Z [DEBUG] Hook output does not start with {, treating as plain text
+2026-04-23T03:39:36.372Z [DEBUG] Hook output does not start with {, treating as plain text
+2026-04-23T03:39:36.372Z [DEBUG] Hooks: Checking first line for async: {"hookSpecificOutput":{"hookEventName":"PreToolUse","additionalContext":"READ-BEFORE-EDIT REMINDER: You are about to modify \"02-harness-modifier-development-program-plan-audit-opus47-max-r1.md\" which already exists. If you have not already used the Read tool to read this file in the current session, you MUST Read it first before editing. The runtime will reject edits to files that have not been read. Use the Read tool on this file path, then retry your edit."}}
+2026-04-23T03:39:36.372Z [DEBUG] Hooks: Parsed initial response: {"hookSpecificOutput":{"hookEventName":"PreToolUse","additionalContext":"READ-BEFORE-EDIT REMINDER: You are about to modify \"02-harness-modifier-development-program-plan-audit-opus47-max-r1.md\" which already exists. If you have not already used the Read tool to read this file in the current session, you MUST Read it first before editing. The runtime will reject edits to files that have not been read. Use the Read tool on this file path, then retry your edit."}}
+2026-04-23T03:39:36.372Z [DEBUG] Hooks: Initial response is not async, continuing normal processing
+2026-04-23T03:39:36.373Z [DEBUG] Hooks: Checking first line for async: {"hookSpecificOutput":{"hookEventName":"PreToolUse","additionalContext":"READ-BEFORE-EDIT REMINDER: You are about to modify \"02-harness-modifier-development-program-plan-audit-opus47-max-r1.md\" which already exists. If you have not already used the Read tool to read this file in the current session, you MUST Read it first before editing. The runtime will reject edits to files that have not been read. Use the Read tool on this file path, then retry your edit."}}
+2026-04-23T03:39:36.373Z [DEBUG] Hooks: Parsed initial response: {"hookSpecificOutput":{"hookEventName":"PreToolUse","additionalContext":"READ-BEFORE-EDIT REMINDER: You are about to modify \"02-harness-modifier-development-program-plan-audit-opus47-max-r1.md\" which already exists. If you have not already used the Read tool to read this file in the current session, you MUST Read it first before editing. The runtime will reject edits to files that have not been read. Use the Read tool on this file path, then retry your edit."}}
+2026-04-23T03:39:36.373Z [DEBUG] Hooks: Initial response is not async, continuing normal processing
+2026-04-23T03:39:36.374Z [DEBUG] Hook output does not start with {, treating as plain text
+2026-04-23T03:39:36.374Z [DEBUG] Hook output does not start with {, treating as plain text
+2026-04-23T03:39:36.382Z [DEBUG] Successfully parsed and validated hook JSON output
+2026-04-23T03:39:36.382Z [DEBUG] "Hook PreToolUse:Write (PreToolUse) success:\n{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"READ-BEFORE-EDIT REMINDER: You are about to modify \\\"02-harness-modifier-development-program-plan-audit-opus47-max-r1.md\\\" which already exists. If you have not already used the Read tool to read this file in the current session, you MUST Read it first before editing. The runtime will reject edits to files that have not been read. Use the Read tool on this file path, then retry your edit.\"}}"
+2026-04-23T03:39:36.382Z [DEBUG] Hook PreToolUse (node "/home/rookslog/.claude/hooks/gsd-read-guard.js") provided additionalContext (389 chars)
+2026-04-23T03:39:36.382Z [DEBUG] Successfully parsed and validated hook JSON output
+2026-04-23T03:39:36.383Z [DEBUG] "Hook PreToolUse:Write (PreToolUse) success:\n{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"READ-BEFORE-EDIT REMINDER: You are about to modify \\\"02-harness-modifier-development-program-plan-audit-opus47-max-r1.md\\\" which already exists. If you have not already used the Read tool to read this file in the current session, you MUST Read it first before editing. The runtime will reject edits to files that have not been read. Use the Read tool on this file path, then retry your edit.\"}}"
+2026-04-23T03:39:36.383Z [DEBUG] Hook PreToolUse (node .claude/hooks/gsd-read-guard.js) provided additionalContext (389 chars)
+2026-04-23T03:39:36.388Z [INFO] [Stall] tool_dispatch_start tool=Write toolUseId=toolu_01GA18yvEFiePZU1Gz7gDZ1J permissionDecisionMs=2
+2026-04-23T03:39:36.388Z [DEBUG] Preserving file permissions: 100600
+2026-04-23T03:39:36.388Z [DEBUG] Writing to temp file: /home/rookslog/workspace/projects/prix-guesser/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/responsible-closure-audit/outputs/02-harness-modifier-development-program-plan-audit-opus47-max-r1.md.tmp.2991009.1776915576388
+2026-04-23T03:39:36.393Z [DEBUG] Temp file written successfully, size: 38667 bytes
+2026-04-23T03:39:36.393Z [DEBUG] Applied original permissions to temp file
+2026-04-23T03:39:36.393Z [DEBUG] Renaming /home/rookslog/workspace/projects/prix-guesser/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/responsible-closure-audit/outputs/02-harness-modifier-development-program-plan-audit-opus47-max-r1.md.tmp.2991009.1776915576388 to /home/rookslog/workspace/projects/prix-guesser/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/responsible-closure-audit/outputs/02-harness-modifier-development-program-plan-audit-opus47-max-r1.md
+2026-04-23T03:39:36.393Z [DEBUG] File /home/rookslog/workspace/projects/prix-guesser/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/responsible-closure-audit/outputs/02-harness-modifier-development-program-plan-audit-opus47-max-r1.md written atomically
+2026-04-23T03:39:36.397Z [INFO] [Stall] tool_dispatch_end tool=Write toolUseId=toolu_01GA18yvEFiePZU1Gz7gDZ1J outcome=ok durationMs=10
+2026-04-23T03:39:36.442Z [DEBUG] Hook output does not start with {, treating as plain text
+2026-04-23T03:39:36.443Z [DEBUG] Hook output does not start with {, treating as plain text
+2026-04-23T03:39:36.450Z [DEBUG] Hook output does not start with {, treating as plain text
+2026-04-23T03:39:36.450Z [DEBUG] Hook output does not start with {, treating as plain text
+2026-04-23T03:39:36.457Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2026-04-23T03:39:36.457Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2026-04-23T03:39:36.457Z [DEBUG] Hooks: Found 0 total hooks in registry
+2026-04-23T03:39:36.458Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2026-04-23T03:39:36.462Z [DEBUG] Dynamic tool loading: 0/18 deferred tools included
+2026-04-23T03:39:36.464Z [DEBUG] attribution header x-anthropic-billing-header: cc_version=2.1.118.7b3; cc_entrypoint=sdk-cli; cch=00000;
+2026-04-23T03:39:36.464Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:39:36.465Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:39:36.465Z [DEBUG] [API:request] Creating client, ANTHROPIC_CUSTOM_HEADERS present: false, has Authorization header: false
+2026-04-23T03:39:36.465Z [DEBUG] [API:auth] OAuth token check starting
+2026-04-23T03:39:36.466Z [DEBUG] [API:auth] OAuth token check complete
+2026-04-23T03:39:36.466Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:39:36.468Z [DEBUG] [API REQUEST] /v1/messages x-client-request-id=a3692184-83ec-4270-ae23-4986a25c202e source=sdk
+2026-04-23T03:39:38.338Z [DEBUG] Stream started - received first chunk
+2026-04-23T03:39:50.173Z [DEBUG] Hook output does not start with {, treating as plain text
+2026-04-23T03:39:51.671Z [DEBUG] Hooks: Checking first line for async: {}
+2026-04-23T03:39:51.671Z [DEBUG] Hooks: Parsed initial response: {}
+2026-04-23T03:39:51.672Z [DEBUG] Hooks: Initial response is not async, continuing normal processing
+2026-04-23T03:39:51.682Z [DEBUG] Successfully parsed and validated hook JSON output
+2026-04-23T03:39:51.682Z [DEBUG] "Hook Stop (Stop) success:\n{}"
+2026-04-23T03:39:51.684Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T03:39:51.689Z [DEBUG] MCP server "sequential-thinking": Sending SIGINT to MCP server process
+2026-04-23T03:39:51.789Z [DEBUG] MCP server "sequential-thinking": SIGINT failed, sending SIGTERM to MCP server process
+2026-04-23T03:39:51.820Z [DEBUG] MCP server "sequential-thinking": STDIO connection closed after 734s (cleanly)
+2026-04-23T03:39:51.821Z [DEBUG] MCP server "sequential-thinking": Cleared connection cache for reconnection
+2026-04-23T03:39:51.844Z [DEBUG] MCP server "sequential-thinking": MCP server process exited cleanly
+2026-04-23T03:39:51.853Z [DEBUG] LSP server manager shut down successfully
+2026-04-23T03:39:51.855Z [DEBUG] Cleaned up session snapshot: /home/rookslog/.claude/shell-snapshots/snapshot-bash-1776915325499-h4foqx.sh
+2026-04-23T03:39:51.959Z [DEBUG] Released PID lock for 2.1.118

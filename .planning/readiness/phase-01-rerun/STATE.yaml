@@ -1,0 +1,59 @@
+current_checkpoint: 5
+checkpoint_name: conditional_harness_gsd_follow_through
+checkpoint_state: in_progress
+readiness_state: not_ready
+current_task: checkpoint_5_r5_18_patch_bundle_review_prep_complete
+next_action: run_internal_and_cross_vendor_review_on_executed_r5_18_patch_bundle
+review_policy_path: .planning/readiness/phase-01-rerun/REVIEW-POLICY.yaml
+current_checkpoint_requires_independent_reviewer_for_closure: true
+working_tree_clean_expected: true
+blocked_by:
+  - executed_r5_18_patch_bundle_not_yet_internally_and_cross_vendor_reviewed
+  - non_first_wave_r5_18_contradictions_still_live_pending_checkpoint_disposition
+  - broader_r8_later_lane_ownership_not_yet_review_ratified
+  - branch_and_worktree_boundary_materialization_remains_accepted_bounded_risk
+open_findings:
+  - r5_18a1_now_carries_explicit_contradiction_ledger_rows_for_non_first_wave_live_items
+  - r5_18a2_names_r8_1_through_r8_4_as_explicit_broader_remainder_owners
+  - r5_18b_landed_review_consumer_contract_and_gsd_do_router_pair_symmetry
+  - r5_18c_landed_debt_aware_completion_routing_and_promoted_live_executor_verifier_pair_alignment
+  - executed_r5_18_patch_bundle_is_local_runtime_state_and_only_partially_git_tracked
+  - existing_checkpoint_5_reviews_apply_only_to_pre_reactivation_partial_scope
+  - commands_summary_init_and_other_non_promoted_chain_tail_consumers_remain_out_of_wave
+  - audit_uat_router_pair_is_explicitly_parked_not_closed
+  - branch_and_worktree_boundary_materialization_is_accepted_bounded_risk_not_cleanly_proven
+  - exclusion_heuristics_remain_barred_from_standing_doctrine_until_adversarially_tested
+open_opportunities:
+  - repo_local_non_phase_external_reread_protocol_template
+  - stronger_wrapper_level_alignment_after_workflow_follow_through
+deferred_items:
+  - scraped_radio_branch_archive_posture
+  - dedicated_cross_model_audit_skill_creation
+  - portable_gsd_reproducibility_and_provenance_hardening_unless_checkpoint_5_touches_materialization_surfaces
+ready_to_commit: false
+checkpointed_baselines:
+  - 9d1e22b docs(governance): tighten claim typing and checkpoint rules
+  - 2ad87fc docs(readiness): scaffold phase 01 rerun package
+  - c38ad2a docs(research): checkpoint multi-layer governance audit bundle
+  - dc71722 docs(research): add model assignment policy response
+  - dd3966c docs(research): repair governance audit bundle citations and markers
+  - 746e53a docs(readiness): add checkpoint 1 audit surface
+  - 97bd603 docs(readiness): close checkpoint 1 and advance to checkpoint 2
+  - bcbae15 docs(readiness): close checkpoint 2 and advance to checkpoint 3
+  - af9c21b docs(readiness): checkpoint checkpoint-3 initial surface maps
+  - 6974e54 docs(readiness): refine checkpoint-3 split mapping bundle
+  - 270d43a docs(readiness): add checkpoint-3 split-spec cross-vendor review
+  - f14ecf2 docs(readiness): tighten checkpoint-3 split specs after review
+  - cf174d9 docs(readiness): add checkpoint-3 deeper gsd maps
+  - b10043f docs(readiness): add checkpoint-3 gsd scope synthesis
+  - 302e6b1 docs(readiness): add checkpoint-3 scope audit review specs
+  - 8a6f42c docs(signal): cross-vendor-review-artifact-authority-failure
+  - 7f24b1d docs(readiness): finalize checkpoint 4 audit bundle
+  - 0947c13 docs(signal): overgeneralized-scope-rule-without-provenance
+  - 8e05b3d docs(readiness): reactivate checkpoint 5 scope
+  - c4111cd docs(readiness): clarify checkpoint 3 split review prompts
+  - d7c74d0 docs(readiness): reconcile checkpoint 5 package state
+next_expected_commit:
+  - checkpoint-5 executed and review-prepped r5-18 patch bundle
+  - checkpoint-5 internal and cross-vendor review outcomes
+requires_user_input: false

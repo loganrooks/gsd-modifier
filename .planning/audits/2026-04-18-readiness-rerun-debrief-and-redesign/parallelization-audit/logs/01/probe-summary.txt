@@ -1,0 +1,32 @@
+label=parallelization-audit-01
+exit_code=0
+elapsed_seconds=687.422
+stream=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/parallelization-audit/logs/01/parallelization-audit-01-20260422-222056.dkqbcr7b.stream.jsonl
+stderr=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/parallelization-audit/logs/01/parallelization-audit-01-20260422-222056.l0sg6lnx.stderr.log
+debug=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/parallelization-audit/logs/01/parallelization-audit-01-20260422-222056.ajq2b5wh.debug.log
+stream_bytes=3996696
+stderr_bytes=0
+debug_bytes=98873
+event_counts={"assistant": 73, "rate_limit_event": 18, "result": 1, "stream_event": 10381, "system": 47, "user": 60}
+system_subtypes={"hook_response": 7, "hook_started": 7, "init": 1, "status": 32}
+text_chunks=3
+last_text_begin
+The audit output has already been written successfully to the requested path.
+
+The audit covers all nine required output sections (Domain Split, Vanilla GSD Posture, Modified Harness Posture, Harness-Improvement Program Overlap, Safe Earned Parallelization, Promising But Not-Yet-Governed Parallelization, Likely Coherence And Quality Risks, Governance And Operator Surface Changes, Short / Medium / Long Horizon, Exact Next Moves) using the claim-type grammar from the repo's doctrine, keeps the three domains separate throughout, names explicit single-writer surfaces, distinguishes principled serial from accidental serial, surfaces the cross-vendor UI friction as a modifier-inherited worsening, names the modifier's companion-carry / propagation-review governance as an improvement relative to vanilla GSD, and stays out of scope on workflow rewrites, Phase 01 rerun, Reflect, telemetry, multi-provider portability, and horizon-routing promotion.
+last_text_end
+last_error_like_begin
+{"type":"result","subtype":"success","is_error":false,"api_error_status":null,"duration_ms":685093,"duration_api_ms":681066,"num_turns":61,"result":"The audit output has already been written successfully to the requested path.\n\nThe audit covers all nine required output sections (Domain Split, Vanilla GSD Posture, Modified Harness Posture, Harness-Improvement Program Overlap, Safe Earned Parallelization, Promising But Not-Yet-Governed Parallelization, Likely Coherence And Quality Risks, Governance And Operator Surface Changes, Short / Medium / Long Horizon, Exact Next Moves) using the claim-type grammar from the repo's doctrine, keeps the three domains separate throughout, names explicit single-writer surfaces, distinguishes principled serial from accidental serial, surfaces the cross-vendor UI friction as a modifier-inherited worsening, names the modifier's companion-carry / propagation-review governance as an improvement relative to vanilla GSD, and stays out of scope on workflow rewrites, Phase 01 rerun, Reflect, telemetry, multi-provider portability, and horizon-routing promotion.","stop_reason":"end_turn","session_id":"63b4e661-0c15-4f1f-a81c-c193bc5ca3d4","total_cost_usd":5.650262250000001,"usage":{"input_tokens":41,"cache_creation_input_tokens":319937,"cache_read_input_tokens":5281052,"output_tokens":40397,"server_tool_use":{"web_search_requests":0,"web_fetch_requests":0},"service_tier":"standard","cache_creation":{"ephemeral_1h_input_tokens":319937,"ephemeral_5m_input_tokens":0},"inference_geo":"","iterations":[{"input_tokens":6,"output_tokens":341,"cache_read_input_tokens":273576,"cache_creation_input_tokens":12842,"cache_creation":{"ephemeral_5m_input_tokens":0,"ephemeral_1h_input_tokens":12842},"type":"message"}],"speed":"standard"},"modelUsage":{"claude-opus-4-7[1m]":{"inputTokens":41,"outputTokens":40397,"cacheReadInputTokens":5281052,"cacheCreationInputTokens":319937,"webSearchRequests":0,"costUSD":5.650262250000001,"contextWindow":1000000,"maxOutputTokens":64000}},"permission_denials":[],"terminal_reason":"completed","fast_mode_state":"off","uuid":"f3f8059a-1768-40d7-acd6-6fa8e0eef5d4"}
+last_error_like_end
+debug_tail_begin
+2026-04-23T02:32:23.168Z [DEBUG] "Hook Stop (Stop) success:\n{}"
+2026-04-23T02:32:23.170Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T02:32:23.172Z [DEBUG] MCP server "sequential-thinking": Sending SIGINT to MCP server process
+2026-04-23T02:32:23.273Z [DEBUG] MCP server "sequential-thinking": SIGINT failed, sending SIGTERM to MCP server process
+2026-04-23T02:32:23.301Z [DEBUG] MCP server "sequential-thinking": STDIO connection closed after 685s (cleanly)
+2026-04-23T02:32:23.302Z [DEBUG] MCP server "sequential-thinking": Cleared connection cache for reconnection
+2026-04-23T02:32:23.328Z [DEBUG] MCP server "sequential-thinking": MCP server process exited cleanly
+2026-04-23T02:32:23.336Z [DEBUG] LSP server manager shut down successfully
+2026-04-23T02:32:23.339Z [DEBUG] Cleaned up session snapshot: /home/rookslog/.claude/shell-snapshots/snapshot-bash-1776910921489-objjkh.sh
+2026-04-23T02:32:23.543Z [DEBUG] Released PID lock for 2.1.118
+debug_tail_end

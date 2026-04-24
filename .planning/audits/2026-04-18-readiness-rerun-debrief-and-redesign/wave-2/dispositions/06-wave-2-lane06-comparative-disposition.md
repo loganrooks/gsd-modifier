@@ -1,0 +1,46 @@
+# Wave-2 Lane-06 Comparative Disposition
+
+Status: accepted local inheritance decision  
+Date: 2026-04-19
+
+## Frame
+
+- [d:r:i] This artifact dispositions the two Wave-2 lane-06 rerun-design outputs, with the bounded runtime-authority / materialization drift probe treated as challenge pressure on their program judgment. It chooses the next accepted program shape for this workspace; it does not yet rewrite canon or execute the full first slice. Sources: .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-opus47-max-r1.md:17-24, .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-gpt54-xhigh-r1.md:9-15, .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/05a-runtime-authority-materialization-drift-probe-gpt54-xhigh-r1.md:8-15.
+
+## Shared Findings
+
+- [d:c+i] Both lane-06 outputs reject plain incumbent `Proposal B-extended`, full `Proposal F`, `Proposal C-first`, and `Proposal E-first` as the immediate next program. Both converge on a narrower hybrid: keep the prep-first spine, but front-load a bounded harness-first prerequisite tranche before rerun rather than treating runtime-authority, carrier propagation, and rerun-floor recomputation as optional later carry. Sources: .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-opus47-max-r1.md:116-152, .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-gpt54-xhigh-r1.md:44-86.
+- [d:c+i] Both outputs also converge that the brake-exit problem is real and load-bearing. The rerun cannot honestly proceed under the old package shape without an explicit exit rule from recursive inward motion, and the preserve-only seams cannot remain pure preservation doctrine without companion activation logic. Sources: .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-opus47-max-r1.md:21-24, .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-opus47-max-r1.md:154-194, .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-gpt54-xhigh-r1.md:44-78, .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-gpt54-xhigh-r1.md:87-117.
+- [d:c+i] Both outputs keep `Proposal C` as the nearest fallback and bounded `Proposal F` as the strongest switch path. Both keep `Proposal E` live but still prospective, not the immediate recommendation. Sources: .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-opus47-max-r1.md:24-25, .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-opus47-max-r1.md:195-250, .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-gpt54-xhigh-r1.md:12-15, .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-gpt54-xhigh-r1.md:105-117.
+
+## Real Differences
+
+- [d:c+i] The Opus output is more ambitious on program shape. It labels the recommendation as `Option F`, adds an explicit learning-rerun posture at Checkpoint 7, and makes three doctrinal prerequisites fully program-carrying: brake-exit rule, activation-trigger doctrine, and execution-capacity reopen rule, alongside the bounded harness slice. Sources: .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-opus47-max-r1.md:116-194.
+- [d:c+i] The GPT-5.4 output is more conservative in naming, but substantively close. It keeps the recommendation inside a redefined `Proposal B-extended` label, emphasizes the compact review-space check, and treats the bounded harness-first tranche as a prerequisite cluster rather than as a renamed option family. Sources: .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-gpt54-xhigh-r1.md:44-86.
+- [d:r:i] The bounded runtime-authority drift probe materially supports the Opus side of that difference, but only narrowly. It does not justify full `Proposal F`; it does justify treating runtime-authority/materialization discrimination as a hard prerequisite and slightly strengthens the case for a bounded harness-first slice before rerun. Sources: .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/05a-runtime-authority-materialization-drift-probe-gpt54-xhigh-r1.md:8-15, .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/05a-runtime-authority-materialization-drift-probe-gpt54-xhigh-r1.md:35-54.
+
+## Accepted Synthesis
+
+- [d:r:i] Accepted program shape: `Proposal B-extended`, but only in a redefined form that front-loads a bounded harness-first prerequisite tranche, recomputes the minimum rerun-readiness set, adds an explicit brake-exit rule, adds preserve-only seam activation-trigger doctrine, and treats the fresh rerun as a learning-oriented pass rather than as a simple resumed checkpoint march.
+- [d:r:i] This workspace accepts the substance of Opus's hybrid recommendation and the restraint of the GPT-5.4 naming. So the accepted reading is neither `keep B as-is` nor `switch to Proposal F`. It is: keep the prep-first architecture, but let bounded harness-first work, brake-exit doctrine, activation-trigger doctrine, and rerun-floor recomputation become genuine prerequisites rather than background pressure.
+- [d:r:i] The bounded runtime-authority / materialization drift probe is now part of the accepted rationale for that synthesis. It tips the balance against a merely documentary or mapping-first reread by showing direct live runtime divergence that still needs a discriminating bounded follow-through.
+
+## Accepted Now
+
+- [d:c+i] Accept the rerun-design recommendation as: compact review-space check, chain-tail rule, named-consumer doctrine propagation, runtime-authority/materialization drift discrimination, executed-R5.18 reread or verifier/debt compatibility probe, recomputed rerun floor, brake-exit rule, and activation-trigger doctrine before the fresh rerun. Sources: .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-opus47-max-r1.md:126-152, .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-gpt54-xhigh-r1.md:50-78.
+- [d:c+i] Accept that the rerun itself should be framed as a learning-oriented pass with pre-commit friction capture, not as a naive return to the old readiness script. Opus states this more explicitly, and nothing in the GPT output pushes against it. Sources: .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-opus47-max-r1.md:118-124, .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-opus47-max-r1.md:154-194.
+- [d:r:i] Accept `Proposal C` as the nearest fallback, bounded `Proposal F` as the strongest switch path, and `Proposal E` as prospective but still not first. Carry their switch triggers forward explicitly rather than letting any of them collapse into rhetoric. Sources: .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-opus47-max-r1.md:195-250, .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-gpt54-xhigh-r1.md:105-117.
+
+## Held, Narrowed, Or Rejected
+
+- [d:c+i] Reject full `Proposal F` now, full `Proposal C-first`, `Proposal E-first`, maximal multi-wave escalation, blanket `.codex` de-ignore, immediate launch-truth hook automation, and broad audit-space reorganization now. Keep only their bounded probes, slices, and switch-trigger routes live. Sources: .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-opus47-max-r1.md:268-342, .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-gpt54-xhigh-r1.md:131-145.
+- [d:r:i] Hold the exact scope of the `.toml` repair tranche open at the bounded four-worker slice until the install-time/materialization discriminator is clearer. The probe strengthens that slice; it does not yet justify a full worker-roster program. Sources: .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/05a-runtime-authority-materialization-drift-probe-gpt54-xhigh-r1.md:35-54, .planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/wave-2/outputs/06-rerun-design-opus47-max-r1.md:169-176.
+
+## Status Consequence
+
+- [d:r:i] Wave-2 lane-06 is now accepted at the local inheritance layer.
+- [d:r:i] The next honest move is not another rerun-design review lane. It is to translate the accepted program into concrete bounded proposal artifacts and/or first-slice execution packets, while preserving the switch-trigger routes to `C`, bounded `F`, and `E`.
+- [d:r:i] Immediate candidate next artifacts are:
+  - a bounded first-slice program artifact for the accepted prerequisite tranche
+  - a launch-truth and packet-freeze record for that tranche
+  - if needed, one narrow implementation or review lane for the highest-value discriminator inside the tranche rather than a broad new meta wave

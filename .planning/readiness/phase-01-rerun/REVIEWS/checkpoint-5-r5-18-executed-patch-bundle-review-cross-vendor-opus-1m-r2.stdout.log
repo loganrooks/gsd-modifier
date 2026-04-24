@@ -1,0 +1,16 @@
+Review written to the required target path. Summary:
+
+**Verdict: `blocked`. Disposition: `revise-current`.**
+
+The doctrine-surface story is strong (contradiction ledger, R8.1–R8.4 naming, router-pair discipline, no exclusion-heuristic re-entry, real downstream semantic uptake in planner-reviews.md / plan-phase.md). But direct spot-checking uncovered a material tracking divergence the integration artifact undercalls.
+
+**HIGH finding:** The R5.18b/c patches did not propagate to the *tracked* `tooling/portable-gsd/overlay/*` canon:
+- Tracked overlay `agent-contracts.md` and `plan-phase.md` lack R5.18b/c content their live counterparts now carry.
+- Overlay `gsd-executor.toml`, `gsd-verifier.toml`, `review.md`, `planner-reviews.md` are untracked.
+- Most R5.18-patched live files (skills, progress/transition/do/verification-overrides workflows, phase.cjs/roadmap.cjs) have no overlay mirror at all.
+
+Because `scripts/setup-portable-gsd.sh` materializes `.codex/*` from the tracked overlay, any reinstall silently reverts R5.18. That fires the `R5.8` branch/worktree-materialization reopen trigger in the same wave it was re-accepted.
+
+**Medium findings:** "partially git-tracked" language shelters the divergence; R5.8 disposition is now self-inconsistent; GATES list only 5 of the 7 spec review questions.
+
+Closure needs an overlay-parity commit, R5.8 re-disposition, package-truth language rewrite, and a post-reinstall re-verification run.

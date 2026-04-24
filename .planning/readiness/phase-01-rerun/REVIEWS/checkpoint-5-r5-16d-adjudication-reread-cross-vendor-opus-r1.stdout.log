@@ -1,0 +1,9 @@
+Wrote the reread at `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-16d-adjudication-reread-cross-vendor-opus-r1.md`.
+
+**Verdict:** R5.17 promotion survives reread. Cross-vendor adjudication governs; internal is corroborating but thinner on direct verification (7 spot-checks vs 15). Non-promotion is correctly rejected; bounded-scope is correctly grounded.
+
+**Amendments required before the adjudication governs:**
+- **Underreaches:** vocabulary establishment (`completion_mode`/`debt_bearing`) not named as R5.17's first-order obligation; R5.17 spec/read-set discipline not a blocking launch precondition; `Proceed anyway` stall inconsistently classified (in convergence, outside widening); overlay-untracked durability hazard (confirmed `??` via git status); R5.17 closure standard silent on whether it needs the same four-stage discipline; B5 reviewer-prompt folded into B1.
+- **Overreaches:** 6-area scope list too prescriptive; tdd-review/human-verify resolved-for-inclusion on a single-lane reading; governance-naming claim rests on one grep pass that R5.17 should re-run with varied terms.
+
+Both adjudications preserved — not flattened, not reformulated narrower. The scope judgment is correct; the scope framing needs tightening.

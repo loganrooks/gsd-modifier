@@ -1,0 +1,640 @@
+{
+  "version": 1,
+  "generated_on": "2026-04-23",
+  "basis_commit": "ee3ce0b",
+  "artifact_family": "responsible_closure",
+  "axes": {
+    "tiers": [
+      "runtime-core",
+      "runtime-support",
+      "transitional-shipped-install-support",
+      "pre-run-experimental",
+      "development-program-only"
+    ],
+    "audiences": [
+      "runtime-user",
+      "contributing-user",
+      "harness-developer"
+    ],
+    "likely_later_install_profiles": [
+      "core",
+      "uplift-and-propagation",
+      "review-and-capture",
+      "development-program",
+      "host-local-only",
+      "none"
+    ],
+    "current_relations": [
+      "installer-entrypoint",
+      "installer-executed",
+      "selector-surface",
+      "manifest-materialized",
+      "runtime-consumed",
+      "live-route-invoked",
+      "package-home",
+      "repo-local-only",
+      "overwrite-carrier",
+      "additive-carrier",
+      "pre-run-experimental"
+    ],
+    "shim_authority_classes": [
+      "modifier-facing-transitional-bridge",
+      "derivative-downstream-bridge",
+      "thin-compatibility-shim",
+      "stable-repo-local-tooling-boundary"
+    ]
+  },
+  "surfaces": [
+    {
+      "id": "installer_setup_script",
+      "surface_kind": "installer_entrypoint",
+      "paths": [
+        "scripts/setup-portable-gsd.sh"
+      ],
+      "current_tier": "runtime-core",
+      "audience_posture": [
+        "runtime-user",
+        "contributing-user",
+        "harness-developer"
+      ],
+      "likely_later_install_profile": "core",
+      "current_install_runtime_relation": [
+        "installer-entrypoint",
+        "selector-surface",
+        "installer-executed"
+      ],
+      "authoritative_home": "scripts/setup-portable-gsd.sh",
+      "current_portability_posture": "host entrypoint that should later move with standalone extraction",
+      "later_pressure": [
+        "later extracted installer home",
+        "fixture-host CI coverage"
+      ],
+      "evidence_refs": [
+        "scripts/setup-portable-gsd.sh:1",
+        "scripts/setup-portable-gsd.sh:6",
+        "scripts/setup-portable-gsd.sh:30",
+        "scripts/setup-portable-gsd.sh:41",
+        "scripts/setup-portable-gsd.sh:52"
+      ]
+    },
+    {
+      "id": "installer_runtime_verifier_helper",
+      "surface_kind": "installer_executed_helper",
+      "paths": [
+        "harness_modifier/contract/ensure_gsd_sdk_runtime.py"
+      ],
+      "current_tier": "runtime-core",
+      "audience_posture": [
+        "runtime-user",
+        "contributing-user",
+        "harness-developer"
+      ],
+      "likely_later_install_profile": "core",
+      "current_install_runtime_relation": [
+        "installer-executed",
+        "package-home"
+      ],
+      "authoritative_home": "harness_modifier/contract/ensure_gsd_sdk_runtime.py",
+      "current_portability_posture": "modifier-owned install helper",
+      "later_pressure": [
+        "standalone installer packaging"
+      ],
+      "evidence_refs": [
+        "scripts/setup-portable-gsd.sh:30",
+        "tooling/codex/README.md:155"
+      ]
+    },
+    {
+      "id": "install_contract_manifest",
+      "surface_kind": "install_contract",
+      "paths": [
+        "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
+        "harness_modifier/contract/portable_gsd_contract.py"
+      ],
+      "current_tier": "runtime-core",
+      "audience_posture": [
+        "runtime-user",
+        "contributing-user",
+        "harness-developer"
+      ],
+      "likely_later_install_profile": "core",
+      "current_install_runtime_relation": [
+        "installer-executed",
+        "manifest-materialized",
+        "package-home"
+      ],
+      "authoritative_home": "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
+      "current_portability_posture": "shared install/materialization contract surface",
+      "later_pressure": [
+        "later extracted manifest authority",
+        "profile selection support"
+      ],
+      "evidence_refs": [
+        "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json:1",
+        "scripts/setup-portable-gsd.sh:36",
+        "scripts/setup-portable-gsd.sh:41",
+        "tooling/codex/README.md:140"
+      ]
+    },
+    {
+      "id": "runtime_config_carriers",
+      "surface_kind": "installed_runtime_family",
+      "paths": [
+        "tooling/portable-gsd/overlay/config.toml",
+        "tooling/portable-gsd/overlay/get-shit-done/templates/config.json"
+      ],
+      "current_tier": "runtime-core",
+      "audience_posture": [
+        "runtime-user",
+        "contributing-user",
+        "harness-developer"
+      ],
+      "likely_later_install_profile": "core",
+      "current_install_runtime_relation": [
+        "manifest-materialized",
+        "runtime-consumed"
+      ],
+      "authoritative_home": "tooling/portable-gsd/overlay",
+      "current_portability_posture": "installed runtime contract carry",
+      "later_pressure": [
+        "standalone packaging",
+        "runtime parity widening later"
+      ],
+      "evidence_refs": [
+        "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json:15",
+        "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json:27",
+        "harness_modifier/overlay/ROSTER.md:77"
+      ]
+    },
+    {
+      "id": "agent_carriers",
+      "surface_kind": "installed_runtime_family",
+      "paths": [
+        "tooling/portable-gsd/overlay/agents/"
+      ],
+      "current_tier": "runtime-core",
+      "audience_posture": [
+        "runtime-user",
+        "contributing-user",
+        "harness-developer"
+      ],
+      "likely_later_install_profile": "core",
+      "current_install_runtime_relation": [
+        "manifest-materialized",
+        "runtime-consumed"
+      ],
+      "authoritative_home": "tooling/portable-gsd/overlay/agents",
+      "current_portability_posture": "installed runtime carrier family",
+      "later_pressure": [
+        "later extracted runtime carrier packaging"
+      ],
+      "evidence_refs": [
+        "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json:4",
+        "harness_modifier/overlay/ROSTER.md:87"
+      ]
+    },
+    {
+      "id": "patched_cli_lib_carriers",
+      "surface_kind": "installed_runtime_family",
+      "paths": [
+        "tooling/portable-gsd/overlay/get-shit-done/bin/lib/"
+      ],
+      "current_tier": "runtime-core",
+      "audience_posture": [
+        "runtime-user",
+        "contributing-user",
+        "harness-developer"
+      ],
+      "likely_later_install_profile": "core",
+      "current_install_runtime_relation": [
+        "manifest-materialized",
+        "runtime-consumed",
+        "overwrite-carrier"
+      ],
+      "authoritative_home": "tooling/portable-gsd/overlay/get-shit-done/bin/lib",
+      "current_portability_posture": "installed patched upstream runtime surface",
+      "later_pressure": [
+        "overwrite-family extraction widening later"
+      ],
+      "evidence_refs": [
+        "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json:16",
+        "harness_modifier/overlay/ROSTER.md:100"
+      ]
+    },
+    {
+      "id": "reference_carriers",
+      "surface_kind": "installed_runtime_family",
+      "paths": [
+        "tooling/portable-gsd/overlay/get-shit-done/references/"
+      ],
+      "current_tier": "runtime-core",
+      "audience_posture": [
+        "runtime-user",
+        "contributing-user",
+        "harness-developer"
+      ],
+      "likely_later_install_profile": "core",
+      "current_install_runtime_relation": [
+        "manifest-materialized",
+        "live-route-invoked"
+      ],
+      "authoritative_home": "tooling/portable-gsd/overlay/get-shit-done/references",
+      "current_portability_posture": "installed shared-boundary runtime carry",
+      "later_pressure": [
+        "text-neutrality widening for selected add references"
+      ],
+      "evidence_refs": [
+        "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json:21",
+        "harness_modifier/overlay/ROSTER.md:116"
+      ]
+    },
+    {
+      "id": "template_carriers",
+      "surface_kind": "installed_runtime_family",
+      "paths": [
+        "tooling/portable-gsd/overlay/get-shit-done/templates/"
+      ],
+      "current_tier": "runtime-core",
+      "audience_posture": [
+        "runtime-user",
+        "contributing-user",
+        "harness-developer"
+      ],
+      "likely_later_install_profile": "core",
+      "current_install_runtime_relation": [
+        "manifest-materialized",
+        "live-route-invoked",
+        "overwrite-carrier"
+      ],
+      "authoritative_home": "tooling/portable-gsd/overlay/get-shit-done/templates",
+      "current_portability_posture": "installed shared-boundary runtime carry",
+      "later_pressure": [
+        "template extraction widening later"
+      ],
+      "evidence_refs": [
+        "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json:27",
+        "harness_modifier/overlay/ROSTER.md:129"
+      ]
+    },
+    {
+      "id": "overwrite_workflow_carriers",
+      "surface_kind": "installed_runtime_family",
+      "paths": [
+        "tooling/portable-gsd/overlay/get-shit-done/workflows/",
+        "tooling/portable-gsd/overlay/skills/"
+      ],
+      "current_tier": "runtime-core",
+      "audience_posture": [
+        "runtime-user",
+        "contributing-user",
+        "harness-developer"
+      ],
+      "likely_later_install_profile": "core",
+      "current_install_runtime_relation": [
+        "manifest-materialized",
+        "live-route-invoked",
+        "overwrite-carrier"
+      ],
+      "authoritative_home": "tooling/portable-gsd/overlay",
+      "current_portability_posture": "installed shared-boundary runtime carry",
+      "later_pressure": [
+        "workflow and skill extraction widening later"
+      ],
+      "evidence_refs": [
+        "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json:34",
+        "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json:62",
+        "harness_modifier/overlay/ROSTER.md:138",
+        "harness_modifier/overlay/ROSTER.md:170"
+      ]
+    },
+    {
+      "id": "additive_modifier_workflows_and_skills",
+      "surface_kind": "installed_runtime_family",
+      "paths": [
+        "harness_modifier/overlay/get-shit-done/workflows/uplift-project.md",
+        "harness_modifier/overlay/get-shit-done/workflows/propagation-review.md",
+        "harness_modifier/overlay/get-shit-done/workflows/seed-migration-inventory.md",
+        "harness_modifier/overlay/skills/gsd-uplift-project/SKILL.md",
+        "harness_modifier/overlay/skills/gsd-propagation-review/SKILL.md",
+        "harness_modifier/overlay/skills/gsd-seed-migration-inventory/SKILL.md"
+      ],
+      "current_tier": "runtime-support",
+      "audience_posture": [
+        "contributing-user",
+        "harness-developer"
+      ],
+      "likely_later_install_profile": "uplift-and-propagation",
+      "current_install_runtime_relation": [
+        "manifest-materialized",
+        "live-route-invoked",
+        "additive-carrier"
+      ],
+      "authoritative_home": "harness_modifier/overlay",
+      "current_portability_posture": "modifier-owned installed support surface",
+      "later_pressure": [
+        "profile-based optionality",
+        "standalone packaging"
+      ],
+      "evidence_refs": [
+        "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json:46",
+        "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json:70",
+        "harness_modifier/overlay/ROSTER.md:43",
+        "harness_modifier/overlay/ROSTER.md:155"
+      ]
+    },
+    {
+      "id": "compact_prompt_selector_and_bodies",
+      "surface_kind": "installed_runtime_family",
+      "paths": [
+        ".codex.local/compact-prompt.txt",
+        "tooling/portable-gsd/overlay/tooling/compact-prompts/project.md",
+        "tooling/portable-gsd/overlay/tooling/compact-prompts/readiness.md"
+      ],
+      "current_tier": "transitional-shipped-install-support",
+      "audience_posture": [
+        "harness-developer"
+      ],
+      "likely_later_install_profile": "host-local-only",
+      "current_install_runtime_relation": [
+        "selector-surface",
+        "manifest-materialized",
+        "runtime-consumed"
+      ],
+      "authoritative_home": "tooling/portable-gsd/overlay/tooling/compact-prompts",
+      "current_portability_posture": "installed but host-local / non-portable",
+      "later_pressure": [
+        "mechanism-body split",
+        "host-local doctrine separation"
+      ],
+      "evidence_refs": [
+        "scripts/setup-portable-gsd.sh:4",
+        "scripts/setup-portable-gsd.sh:6",
+        "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json:78",
+        "harness_modifier/overlay/ROSTER.md:145"
+      ]
+    },
+    {
+      "id": "package_contract_family",
+      "surface_kind": "package_family",
+      "paths": [
+        "harness_modifier/contract/"
+      ],
+      "current_tier": "runtime-core",
+      "audience_posture": [
+        "runtime-user",
+        "contributing-user",
+        "harness-developer"
+      ],
+      "likely_later_install_profile": "core",
+      "current_install_runtime_relation": [
+        "package-home",
+        "installer-executed",
+        "live-route-invoked"
+      ],
+      "authoritative_home": "harness_modifier/contract",
+      "current_portability_posture": "modifier-owned package core",
+      "later_pressure": [
+        "standalone package extraction"
+      ],
+      "evidence_refs": [
+        "harness_modifier/README.md:5",
+        "tooling/codex/README.md:121",
+        "tooling/codex/README.md:140",
+        "tooling/codex/README.md:155"
+      ]
+    },
+    {
+      "id": "package_compatibility_family",
+      "surface_kind": "package_family",
+      "paths": [
+        "harness_modifier/compatibility/"
+      ],
+      "current_tier": "runtime-core",
+      "audience_posture": [
+        "runtime-user",
+        "contributing-user",
+        "harness-developer"
+      ],
+      "likely_later_install_profile": "core",
+      "current_install_runtime_relation": [
+        "package-home",
+        "live-route-invoked"
+      ],
+      "authoritative_home": "harness_modifier/compatibility",
+      "current_portability_posture": "modifier-owned portable declaration family",
+      "later_pressure": [
+        "standalone package extraction",
+        "later claude widening"
+      ],
+      "evidence_refs": [
+        "harness_modifier/README.md:15",
+        "tooling/codex/README.md:133"
+      ]
+    },
+    {
+      "id": "package_uplift_family",
+      "surface_kind": "package_family",
+      "paths": [
+        "harness_modifier/uplift/",
+        "tooling/codex/project_uplift.py"
+      ],
+      "current_tier": "runtime-support",
+      "audience_posture": [
+        "contributing-user",
+        "harness-developer"
+      ],
+      "likely_later_install_profile": "uplift-and-propagation",
+      "current_install_runtime_relation": [
+        "package-home",
+        "live-route-invoked"
+      ],
+      "authoritative_home": "harness_modifier/uplift",
+      "current_portability_posture": "modifier-owned support family with remaining bridge residue",
+      "later_pressure": [
+        "complete install-contract neutralization",
+        "standalone extraction"
+      ],
+      "evidence_refs": [
+        "harness_modifier/README.md:5",
+        "tooling/codex/README.md:109",
+        "harness_modifier/overlay/helpers/AUTHORITY-MAP.md:10"
+      ]
+    },
+    {
+      "id": "package_capture_family",
+      "surface_kind": "package_family",
+      "paths": [
+        "harness_modifier/capture/"
+      ],
+      "current_tier": "runtime-support",
+      "audience_posture": [
+        "contributing-user",
+        "harness-developer"
+      ],
+      "likely_later_install_profile": "review-and-capture",
+      "current_install_runtime_relation": [
+        "package-home",
+        "live-route-invoked"
+      ],
+      "authoritative_home": "harness_modifier/capture",
+      "current_portability_posture": "mixed runtime-support and development-program support family",
+      "later_pressure": [
+        "clearer product-facing boundary",
+        "standalone extraction"
+      ],
+      "evidence_refs": [
+        "harness_modifier/README.md:12",
+        "tooling/codex/README.md:28",
+        "tooling/codex/README.md:59"
+      ]
+    },
+    {
+      "id": "package_closure_family",
+      "surface_kind": "package_family",
+      "paths": [
+        "harness_modifier/closure/"
+      ],
+      "current_tier": "pre-run-experimental",
+      "audience_posture": [
+        "contributing-user",
+        "harness-developer"
+      ],
+      "likely_later_install_profile": "review-and-capture",
+      "current_install_runtime_relation": [
+        "package-home",
+        "pre-run-experimental"
+      ],
+      "authoritative_home": "harness_modifier/closure",
+      "current_portability_posture": "pre-run experimental / observe-only support",
+      "later_pressure": [
+        "rename around product function",
+        "prove contributor-facing use",
+        "second host evidence"
+      ],
+      "evidence_refs": [
+        "harness_modifier/README.md:6",
+        ".planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/intervention-proposals/178-harness-modifier-first-observe-only-host-exercise-implementation.md:7"
+      ]
+    },
+    {
+      "id": "project_uplift_transitional_bridge",
+      "surface_kind": "helper_bridge",
+      "paths": [
+        "tooling/codex/project_uplift.py"
+      ],
+      "current_tier": "transitional-shipped-install-support",
+      "audience_posture": [
+        "contributing-user",
+        "harness-developer"
+      ],
+      "likely_later_install_profile": "uplift-and-propagation",
+      "current_install_runtime_relation": [
+        "live-route-invoked"
+      ],
+      "authoritative_home": "tooling/codex/project_uplift.py",
+      "current_portability_posture": "modifier-facing transitional bridge",
+      "shim_authority_class": "modifier-facing-transitional-bridge",
+      "later_pressure": [
+        "167 install-contract pointer neutralization",
+        "later payload-home judgment"
+      ],
+      "evidence_refs": [
+        "harness_modifier/overlay/helpers/AUTHORITY-MAP.md:10",
+        "tooling/codex/README.md:109"
+      ]
+    },
+    {
+      "id": "seed_migration_derivative_bridge",
+      "surface_kind": "helper_bridge",
+      "paths": [
+        "tooling/codex/seed_migration_inventory.py"
+      ],
+      "current_tier": "transitional-shipped-install-support",
+      "audience_posture": [
+        "contributing-user",
+        "harness-developer"
+      ],
+      "likely_later_install_profile": "uplift-and-propagation",
+      "current_install_runtime_relation": [
+        "live-route-invoked"
+      ],
+      "authoritative_home": "tooling/codex/seed_migration_inventory.py",
+      "current_portability_posture": "derivative/downstream bridge",
+      "shim_authority_class": "derivative-downstream-bridge",
+      "later_pressure": [
+        "inherits project_uplift movement",
+        "do not lead relocation"
+      ],
+      "evidence_refs": [
+        "harness_modifier/overlay/helpers/AUTHORITY-MAP.md:11",
+        "tooling/codex/README.md:146"
+      ]
+    },
+    {
+      "id": "thin_capture_and_contract_shims",
+      "surface_kind": "helper_bridge",
+      "paths": [
+        "tooling/codex/run_claude_probe.py",
+        "tooling/codex/extract_stream_text.py",
+        "tooling/codex/capture_launch_truth.py",
+        "tooling/codex/capture_runtime_visibility_snapshot.py",
+        "tooling/codex/runtime_visibility.py",
+        "tooling/codex/manifest_install_coherence.py",
+        "tooling/codex/harness_canary.py",
+        "tooling/codex/portable_gsd_contract.py",
+        "tooling/codex/ensure_gsd_sdk_runtime.py"
+      ],
+      "current_tier": "transitional-shipped-install-support",
+      "audience_posture": [
+        "contributing-user",
+        "harness-developer"
+      ],
+      "likely_later_install_profile": "review-and-capture",
+      "current_install_runtime_relation": [
+        "live-route-invoked"
+      ],
+      "authoritative_home": "harness_modifier/capture and harness_modifier/contract",
+      "current_portability_posture": "thin compatibility shim layer over package homes",
+      "shim_authority_class": "thin-compatibility-shim",
+      "later_pressure": [
+        "retire shims after callers migrate",
+        "avoid treating them as permanent package truth"
+      ],
+      "evidence_refs": [
+        "tooling/codex/README.md:59",
+        "tooling/codex/README.md:67",
+        "tooling/codex/README.md:76",
+        "tooling/codex/README.md:85",
+        "tooling/codex/README.md:94",
+        "tooling/codex/README.md:121",
+        "tooling/codex/README.md:140",
+        "tooling/codex/README.md:155"
+      ]
+    },
+    {
+      "id": "repo_local_audit_tooling_boundary",
+      "surface_kind": "repo_local_boundary",
+      "paths": [
+        "tooling/codex/audit_refmap.py"
+      ],
+      "current_tier": "development-program-only",
+      "audience_posture": [
+        "harness-developer"
+      ],
+      "likely_later_install_profile": "development-program",
+      "current_install_runtime_relation": [
+        "repo-local-only"
+      ],
+      "authoritative_home": "tooling/codex/audit_refmap.py",
+      "current_portability_posture": "stable repo-local tooling boundary",
+      "shim_authority_class": "stable-repo-local-tooling-boundary",
+      "later_pressure": [
+        "separate repo-local audit tooling from shipped modifier package"
+      ],
+      "evidence_refs": [
+        "harness_modifier/overlay/helpers/AUTHORITY-MAP.md:12",
+        "tooling/codex/README.md:24"
+      ]
+    }
+  ]
+}

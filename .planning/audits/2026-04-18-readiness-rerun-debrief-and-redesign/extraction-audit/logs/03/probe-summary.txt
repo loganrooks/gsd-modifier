@@ -1,0 +1,45 @@
+label=extraction-audit-03
+exit_code=0
+elapsed_seconds=436.270
+stream=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/logs/03/extraction-audit-03-20260422-171221.lakfwtu5.stream.jsonl
+stderr=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/logs/03/extraction-audit-03-20260422-171221.289tdxux.stderr.log
+debug=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/logs/03/extraction-audit-03-20260422-171221.6tk25w9u.debug.log
+stream_bytes=2292182
+stderr_bytes=0
+debug_bytes=83357
+event_counts={"assistant": 51, "rate_limit_event": 1, "result": 1, "stream_event": 6388, "system": 57, "user": 41}
+system_subtypes={"hook_response": 7, "hook_started": 7, "init": 1, "status": 42}
+text_chunks=3
+last_text_begin
+The output has been written successfully. The file:
+
+`/home/rookslog/workspace/projects/prix-guesser/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/outputs/03-harness-modifier-first-overlay-filesystem-rehome-reread-opus47-max-r1.md`
+
+now carries the lane-03 return in the required 9-section shape.
+
+Core judgment: the landed `148 + 55 + ROSTER` boundary earns neither a second filesystem tranche nor a flat hold. It earns one bounded classification pass over the residues the first slice exposed but did not touch:
+
+- **Skill-adapter `execution_context`** still carries literal `@/home/rookslog/...` host-absolute paths in all three moved SKILL.md files — the `__PROJECT_ROOT__` token pattern landed on workflow shells but not on skill adapters.
+- **Helper-shim substance**: the three `harness_modifier/overlay/helpers/*.py` files are still `from tooling.codex.X import *` re-exports; "modifier-owned-source" is accurate for the shim stub, not yet for the helper payload.
+- **Default-source-root policy**: `OVERLAY_REL_PATH = "tooling/portable-gsd/overlay"` still governs 72 of 78 entries; per-entry `source` indirection is typed, but the fallback still co-locates source-root and manifest inside the host overlay tree.
+- **Overwrite-mode readiness**: the `add`-mode slice proved the split works for additive entries only; `capture-pristine-overwrites` + `verify-materialized` against a modifier-owned overwrite source remains unexercised.
+
+What no longer needs re-litigation: whether source/install can separate inside one manifest, whether the specialist trio was the right first set, whether workflow-shell text can become host-neutral. Runtime horizon stays `.codex` with `.claude` as held annotation; standalone repo split, packaging, and second-host exercise stay outside this lane.
+
+Exact next move: open one bounded proposal for the classification pass (mirroring `146`'s shape) before any second tranche, helper-payload promotion, or overwrite-family source-split exercise is written.
+last_text_end
+last_error_like_begin
+{"type":"result","subtype":"success","is_error":false,"api_error_status":null,"duration_ms":433966,"duration_api_ms":430167,"num_turns":42,"result":"The output has been written successfully. The file:\n\n`/home/rookslog/workspace/projects/prix-guesser/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/outputs/03-harness-modifier-first-overlay-filesystem-rehome-reread-opus47-max-r1.md`\n\nnow carries the lane-03 return in the required 9-section shape.\n\nCore judgment: the landed `148 + 55 + ROSTER` boundary earns neither a second filesystem tranche nor a flat hold. It earns one bounded classification pass over the residues the first slice exposed but did not touch:\n\n- **Skill-adapter `execution_context`** still carries literal `@/home/rookslog/...` host-absolute paths in all three moved SKILL.md files — the `__PROJECT_ROOT__` token pattern landed on workflow shells but not on skill adapters.\n- **Helper-shim substance**: the three `harness_modifier/overlay/helpers/*.py` files are still `from tooling.codex.X import *` re-exports; \"modifier-owned-source\" is accurate for the shim stub, not yet for the helper payload.\n- **Default-source-root policy**: `OVERLAY_REL_PATH = \"tooling/portable-gsd/overlay\"` still governs 72 of 78 entries; per-entry `source` indirection is typed, but the fallback still co-locates source-root and manifest inside the host overlay tree.\n- **Overwrite-mode readiness**: the `add`-mode slice proved the split works for additive entries only; `capture-pristine-overwrites` + `verify-materialized` against a modifier-owned overwrite source remains unexercised.\n\nWhat no longer needs re-litigation: whether source/install can separate inside one manifest, whether the specialist trio was the right first set, whether workflow-shell text can become host-neutral. Runtime horizon stays `.codex` with `.claude` as held annotation; standalone repo split, packaging, and second-host exercise stay outside this lane.\n\nExact next move: open one bounded proposal for the classification pass (mirroring `146`'s shape) before any second tranche, helper-payload promotion, or overwrite-family source-split exercise is written.","stop_reason":"end_turn","session_id":"e72d17cf-1573-4892-aeaa-442eff3c8375","total_cost_usd":3.552747250000001,"usage":{"input_tokens":51,"cache_creation_input_tokens":164467,"cache_read_input_tokens":3912947,"output_tokens":22724,"server_tool_use":{"web_search_requests":0,"web_fetch_requests":0},"service_tier":"standard","cache_creation":{"ephemeral_1h_input_tokens":164467,"ephemeral_5m_input_tokens":0},"inference_geo":"","iterations":[{"input_tokens":6,"output_tokens":750,"cache_read_input_tokens":142750,"cache_creation_input_tokens":6521,"cache_creation":{"ephemeral_5m_input_tokens":0,"ephemeral_1h_input_tokens":6521},"type":"message"}],"speed":"standard"},"modelUsage":{"claude-opus-4-7[1m]":{"inputTokens":51,"outputTokens":22724,"cacheReadInputTokens":3912947,"cacheCreationInputTokens":164467,"webSearchRequests":0,"costUSD":3.552747250000001,"contextWindow":1000000,"maxOutputTokens":64000}},"permission_denials":[],"terminal_reason":"completed","fast_mode_state":"off","uuid":"2e5cd7c5-f841-4ad9-9816-962178ef3d43"}
+last_error_like_end
+debug_tail_begin
+2026-04-22T21:19:37.363Z [DEBUG] Successfully parsed and validated hook JSON output
+2026-04-22T21:19:37.363Z [DEBUG] "Hook Stop (Stop) success:\n{}"
+2026-04-22T21:19:37.365Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-22T21:19:37.370Z [DEBUG] MCP server "sequential-thinking": Sending SIGINT to MCP server process
+2026-04-22T21:19:37.471Z [DEBUG] MCP server "sequential-thinking": SIGINT failed, sending SIGTERM to MCP server process
+2026-04-22T21:19:37.505Z [DEBUG] MCP server "sequential-thinking": STDIO connection closed after 434s (cleanly)
+2026-04-22T21:19:37.506Z [DEBUG] MCP server "sequential-thinking": Cleared connection cache for reconnection
+2026-04-22T21:19:37.533Z [DEBUG] MCP server "sequential-thinking": MCP server process exited cleanly
+2026-04-22T21:19:37.543Z [DEBUG] LSP server manager shut down successfully
+2026-04-22T21:19:37.545Z [DEBUG] Cleaned up session snapshot: /home/rookslog/.claude/shell-snapshots/snapshot-bash-1776892383778-axn9gi.sh
+debug_tail_end

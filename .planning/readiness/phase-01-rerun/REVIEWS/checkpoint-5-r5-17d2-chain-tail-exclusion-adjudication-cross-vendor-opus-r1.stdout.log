@@ -1,0 +1,9 @@
+Adjudication written. Summary:
+
+- **Verdict**: Internal R1 and cross-vendor Opus R1 are strongly convergent on core exclusion failure; disagreement is on breadth and wave sequencing, not on whether blanket exclusion stands.
+- **Shared failures (8, convergent)**: `gsd-verifier.toml`, `verification-overrides.md`, `roadmap.cjs`, `progress.md`, `transition.md`, `phase.cjs`, `gsd-executor.toml`, `agent-contracts.md`. Direct spot-checks confirm the cited prose.
+- **Contested (3 candidates + adjacent libs)**: `checkpoints.md` (internal `under-justified` vs. Opus `invalid`), `autonomous.md` and `ship.md` (wave vs. bounded-risk park); `commands.cjs`/`summary.md` convergent for disposition, `uat.cjs`/`audit.cjs` supported-but-single-lane.
+- **Defensible exclusions**: portability/provenance, branch/worktree, `capture_launch_truth.py` rendering (last one supported-not-convergent); no whole-file candidate survives.
+- **Production-condition qualification**: Opus widening claims (`capture_launch_truth.py`, `checkpoints.md` severity upgrade, `uat.cjs`/`audit.cjs`) accepted as mandatory-disposition but not sovereign. Also flagged a read-set limitation: five chain-tail surfaces not in the permitted spot-check list rely on cross-lane agreement, not independent verification.
+
+Wrote: `.planning/readiness/phase-01-rerun/REVIEWS/checkpoint-5-r5-17d2-chain-tail-exclusion-adjudication-cross-vendor-opus-r1.md`.

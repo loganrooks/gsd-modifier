@@ -1,0 +1,34 @@
+label=extraction-audit-06b
+exit_code=0
+elapsed_seconds=225.724
+stream=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/logs/06b/extraction-audit-06b-20260422-202157.kwfc69k2.stream.jsonl
+stderr=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/logs/06b/extraction-audit-06b-20260422-202157.owsujjsa.stderr.log
+debug=.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/extraction-audit/logs/06b/extraction-audit-06b-20260422-202157.1o6a8spb.debug.log
+stream_bytes=1503218
+stderr_bytes=0
+debug_bytes=48369
+event_counts={"assistant": 37, "rate_limit_event": 1, "result": 1, "stream_event": 4133, "system": 32, "user": 29}
+system_subtypes={"hook_response": 7, "hook_started": 7, "init": 1, "status": 17}
+text_chunks=3
+last_text_begin
+The write completed successfully — the lane return is now at the specified output path.
+
+Written: `06-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-opus47-max-r1.md`
+
+Judgment summary: the neutralization slice thinned `project_uplift.py` at its policy-data seams (observation, output-policy, seed-contract) but three still-embedded surfaces keep the helper materially host-coupled — the `STATIC_FILE_CARRIERS`/`MARKER_CARRIERS` doctrine catalog, the rerun-boundary plus skill-command vocabulary, and the direct `.planning/STATE.md` / `.planning/phases/` reach. The sharper next move is a second bounded neutralization tranche (typed `carrier_catalog.json` + `vocabulary.json` under `harness_modifier/`, planning-writer deferred to its own slice), not relocation, not a pivot to a different adjacent extraction family. Recommended next artifact is a `156-…-host-doctrine-catalog-neutralization-proposal`. Relocation, overlay second tranche, overwrite-family split, standalone repo, and packaging remain explicitly held later.
+last_text_end
+last_error_like_begin
+{"type":"result","subtype":"success","is_error":false,"api_error_status":null,"duration_ms":223710,"duration_api_ms":220956,"num_turns":30,"result":"The write completed successfully — the lane return is now at the specified output path.\n\nWritten: `06-harness-modifier-project-uplift-post-neutralization-payload-home-judgment-reread-opus47-max-r1.md`\n\nJudgment summary: the neutralization slice thinned `project_uplift.py` at its policy-data seams (observation, output-policy, seed-contract) but three still-embedded surfaces keep the helper materially host-coupled — the `STATIC_FILE_CARRIERS`/`MARKER_CARRIERS` doctrine catalog, the rerun-boundary plus skill-command vocabulary, and the direct `.planning/STATE.md` / `.planning/phases/` reach. The sharper next move is a second bounded neutralization tranche (typed `carrier_catalog.json` + `vocabulary.json` under `harness_modifier/`, planning-writer deferred to its own slice), not relocation, not a pivot to a different adjacent extraction family. Recommended next artifact is a `156-…-host-doctrine-catalog-neutralization-proposal`. Relocation, overlay second tranche, overwrite-family split, standalone repo, and packaging remain explicitly held later.","stop_reason":"end_turn","session_id":"5cbfd838-50d7-40a5-acee-937c0f4f027d","total_cost_usd":1.67382975,"usage":{"input_tokens":26,"cache_creation_input_tokens":107583,"cache_read_input_tokens":1244662,"output_tokens":15159,"server_tool_use":{"web_search_requests":0,"web_fetch_requests":0},"service_tier":"standard","cache_creation":{"ephemeral_1h_input_tokens":107583,"ephemeral_5m_input_tokens":0},"inference_geo":"","iterations":[{"input_tokens":6,"output_tokens":403,"cache_read_input_tokens":112512,"cache_creation_input_tokens":4792,"cache_creation":{"ephemeral_5m_input_tokens":0,"ephemeral_1h_input_tokens":4792},"type":"message"}],"speed":"standard"},"modelUsage":{"claude-opus-4-7[1m]":{"inputTokens":26,"outputTokens":15159,"cacheReadInputTokens":1244662,"cacheCreationInputTokens":107583,"webSearchRequests":0,"costUSD":1.67382975,"contextWindow":1000000,"maxOutputTokens":64000}},"permission_denials":[],"terminal_reason":"completed","fast_mode_state":"off","uuid":"9c0f6e47-8f9f-434a-ad80-19e171d7594d"}
+last_error_like_end
+debug_tail_begin
+2026-04-23T00:25:43.254Z [DEBUG] Successfully parsed and validated hook JSON output
+2026-04-23T00:25:43.255Z [DEBUG] "Hook Stop (Stop) success:\n{}"
+2026-04-23T00:25:43.257Z [DEBUG] Fast mode unavailable: Fast mode is not available in the Agent SDK
+2026-04-23T00:25:43.261Z [DEBUG] MCP server "sequential-thinking": Sending SIGINT to MCP server process
+2026-04-23T00:25:43.362Z [DEBUG] MCP server "sequential-thinking": SIGINT failed, sending SIGTERM to MCP server process
+2026-04-23T00:25:43.395Z [DEBUG] MCP server "sequential-thinking": STDIO connection closed after 224s (cleanly)
+2026-04-23T00:25:43.395Z [DEBUG] MCP server "sequential-thinking": Cleared connection cache for reconnection
+2026-04-23T00:25:43.424Z [DEBUG] MCP server "sequential-thinking": MCP server process exited cleanly
+2026-04-23T00:25:43.432Z [DEBUG] LSP server manager shut down successfully
+2026-04-23T00:25:43.434Z [DEBUG] Cleaned up session snapshot: /home/rookslog/.claude/shell-snapshots/snapshot-bash-1776903736037-68v7cf.sh
+debug_tail_end

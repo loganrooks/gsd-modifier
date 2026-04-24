@@ -1,0 +1,248 @@
+{
+  "checks": [
+    {
+      "details": {
+        "path": ".codex/get-shit-done/VERSION",
+        "version": "1.38.3"
+      },
+      "name": "runtime_version_anchor",
+      "status": "ok",
+      "summary": "canonical runtime version anchor is present"
+    },
+    {
+      "details": {
+        "summary": {
+          "add_count": 19,
+          "backup_meta_count": 33,
+          "manifest_entry_count": 52,
+          "overlay_file_count": 52,
+          "overwrite_count": 33
+        }
+      },
+      "name": "overlay_manifest_contract",
+      "status": "ok",
+      "summary": "overlay manifest contract validates cleanly"
+    },
+    {
+      "details": {
+        "summary": {
+          "add_count": 19,
+          "backup_copy_missing_count": 0,
+          "backup_meta_count": 33,
+          "content_mismatch_count": 0,
+          "live_target_count": 52,
+          "manifest_entry_count": 52,
+          "missing_live_target_count": 0,
+          "overlay_file_count": 52,
+          "overwrite_count": 33
+        }
+      },
+      "name": "post_materialization_coherence",
+      "status": "ok",
+      "summary": "post-materialization coherence is aligned"
+    },
+    {
+      "details": {
+        "actual": "xhigh",
+        "expected": "xhigh",
+        "path": ".codex/config.toml"
+      },
+      "name": "runtime_config_reasoning",
+      "status": "ok",
+      "summary": "runtime config reasoning default matches repo-local policy"
+    },
+    {
+      "details": {
+        "actual": "high",
+        "expected": "high",
+        "path": ".codex/agents/gsd-codebase-mapper.toml"
+      },
+      "name": "agent_reasoning:gsd-codebase-mapper",
+      "status": "ok",
+      "summary": "high-stakes agent reasoning matches repo-local policy"
+    },
+    {
+      "details": {
+        "actual": "high",
+        "expected": "high",
+        "path": ".codex/agents/gsd-debugger.toml"
+      },
+      "name": "agent_reasoning:gsd-debugger",
+      "status": "ok",
+      "summary": "high-stakes agent reasoning matches repo-local policy"
+    },
+    {
+      "details": {
+        "actual": "high",
+        "expected": "high",
+        "path": ".codex/agents/gsd-doc-verifier.toml"
+      },
+      "name": "agent_reasoning:gsd-doc-verifier",
+      "status": "ok",
+      "summary": "high-stakes agent reasoning matches repo-local policy"
+    },
+    {
+      "details": {
+        "actual": "high",
+        "expected": "high",
+        "path": ".codex/agents/gsd-doc-writer.toml"
+      },
+      "name": "agent_reasoning:gsd-doc-writer",
+      "status": "ok",
+      "summary": "high-stakes agent reasoning matches repo-local policy"
+    },
+    {
+      "details": {
+        "actual": "high",
+        "expected": "high",
+        "path": ".codex/agents/gsd-executor.toml"
+      },
+      "name": "agent_reasoning:gsd-executor",
+      "status": "ok",
+      "summary": "high-stakes agent reasoning matches repo-local policy"
+    },
+    {
+      "details": {
+        "actual": "high",
+        "expected": "high",
+        "path": ".codex/agents/gsd-integration-checker.toml"
+      },
+      "name": "agent_reasoning:gsd-integration-checker",
+      "status": "ok",
+      "summary": "high-stakes agent reasoning matches repo-local policy"
+    },
+    {
+      "details": {
+        "actual": "high",
+        "expected": "high",
+        "path": ".codex/agents/gsd-nyquist-auditor.toml"
+      },
+      "name": "agent_reasoning:gsd-nyquist-auditor",
+      "status": "ok",
+      "summary": "high-stakes agent reasoning matches repo-local policy"
+    },
+    {
+      "details": {
+        "actual": "xhigh",
+        "expected": "xhigh",
+        "path": ".codex/agents/gsd-phase-researcher.toml"
+      },
+      "name": "agent_reasoning:gsd-phase-researcher",
+      "status": "ok",
+      "summary": "high-stakes agent reasoning matches repo-local policy"
+    },
+    {
+      "details": {
+        "actual": "high",
+        "expected": "high",
+        "path": ".codex/agents/gsd-plan-checker.toml"
+      },
+      "name": "agent_reasoning:gsd-plan-checker",
+      "status": "ok",
+      "summary": "high-stakes agent reasoning matches repo-local policy"
+    },
+    {
+      "details": {
+        "actual": "xhigh",
+        "expected": "xhigh",
+        "path": ".codex/agents/gsd-planner.toml"
+      },
+      "name": "agent_reasoning:gsd-planner",
+      "status": "ok",
+      "summary": "high-stakes agent reasoning matches repo-local policy"
+    },
+    {
+      "details": {
+        "actual": "xhigh",
+        "expected": "xhigh",
+        "path": ".codex/agents/gsd-project-researcher.toml"
+      },
+      "name": "agent_reasoning:gsd-project-researcher",
+      "status": "ok",
+      "summary": "high-stakes agent reasoning matches repo-local policy"
+    },
+    {
+      "details": {
+        "actual": "high",
+        "expected": "high",
+        "path": ".codex/agents/gsd-research-synthesizer.toml"
+      },
+      "name": "agent_reasoning:gsd-research-synthesizer",
+      "status": "ok",
+      "summary": "high-stakes agent reasoning matches repo-local policy"
+    },
+    {
+      "details": {
+        "actual": "xhigh",
+        "expected": "xhigh",
+        "path": ".codex/agents/gsd-roadmapper.toml"
+      },
+      "name": "agent_reasoning:gsd-roadmapper",
+      "status": "ok",
+      "summary": "high-stakes agent reasoning matches repo-local policy"
+    },
+    {
+      "details": {
+        "actual": "high",
+        "expected": "high",
+        "path": ".codex/agents/gsd-ui-auditor.toml"
+      },
+      "name": "agent_reasoning:gsd-ui-auditor",
+      "status": "ok",
+      "summary": "high-stakes agent reasoning matches repo-local policy"
+    },
+    {
+      "details": {
+        "actual": "high",
+        "expected": "high",
+        "path": ".codex/agents/gsd-ui-checker.toml"
+      },
+      "name": "agent_reasoning:gsd-ui-checker",
+      "status": "ok",
+      "summary": "high-stakes agent reasoning matches repo-local policy"
+    },
+    {
+      "details": {
+        "actual": "xhigh",
+        "expected": "xhigh",
+        "path": ".codex/agents/gsd-ui-researcher.toml"
+      },
+      "name": "agent_reasoning:gsd-ui-researcher",
+      "status": "ok",
+      "summary": "high-stakes agent reasoning matches repo-local policy"
+    },
+    {
+      "details": {
+        "actual": "high",
+        "expected": "high",
+        "path": ".codex/agents/gsd-verifier.toml"
+      },
+      "name": "agent_reasoning:gsd-verifier",
+      "status": "ok",
+      "summary": "high-stakes agent reasoning matches repo-local policy"
+    },
+    {
+      "details": {
+        "compatibility_basis_changed": false,
+        "manifest_path": ".planning/UPLIFT-MANIFEST.json",
+        "reasons": [
+          "current doctrine reference fingerprint moved after the last uplift pass",
+          "doctrine-sensitive proposals still recorded: Root AGENTS (drifted), Planning AGENTS (drifted)"
+        ],
+        "recommend_write": false,
+        "recommendation": "Run `$gsd-uplift-project --detect-only` to refresh uplift memory."
+      },
+      "name": "uplift_compatibility_anchor",
+      "status": "ok",
+      "summary": "uplift compatibility anchor is aligned with the observed runtime basis"
+    }
+  ],
+  "repo_root": "/home/rookslog/workspace/projects/prix-guesser",
+  "summary": {
+    "check_count": 22,
+    "issue_count": 0,
+    "not_applicable_count": 0,
+    "ok_count": 22,
+    "status": "ok"
+  }
+}

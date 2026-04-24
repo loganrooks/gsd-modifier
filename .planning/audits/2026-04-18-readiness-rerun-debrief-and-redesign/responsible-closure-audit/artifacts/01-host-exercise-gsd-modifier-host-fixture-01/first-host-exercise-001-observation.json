@@ -1,0 +1,129 @@
+{
+  "automation_level": 1,
+  "basis_commit": "43bd1f4e11bbdd5741cd209d32827d1241ff8e11",
+  "bundle_family": "responsible-closure",
+  "carrier_version": 1,
+  "deployment_context": [
+    {
+      "key": "host_reference",
+      "value": "gsd-modifier-host-fixture-01"
+    },
+    {
+      "key": "host_repo_path",
+      "value": "/home/rookslog/workspace/projects/gsd-modifier-host-fixture-01"
+    },
+    {
+      "key": "host_age_posture",
+      "value": "pristine"
+    },
+    {
+      "key": "host_branch",
+      "value": "main"
+    },
+    {
+      "key": "host_basis_commit",
+      "value": "43bd1f4e11bbdd5741cd209d32827d1241ff8e11"
+    },
+    {
+      "key": "declaration_posture",
+      "value": "observed_basis_only"
+    },
+    {
+      "key": "observed_basis_runtime",
+      "value": ".codex"
+    },
+    {
+      "key": "held_annotation_runtime",
+      "value": ".claude"
+    },
+    {
+      "key": "compatibility_window_state",
+      "value": "inside-window"
+    },
+    {
+      "key": "compatibility_window_reason",
+      "value": "host runtime version and manifest version match the observed basis"
+    },
+    {
+      "key": "host_runtime_version",
+      "value": "1.38.3"
+    },
+    {
+      "key": "host_runtime_manifest_version",
+      "value": "1.38.3"
+    },
+    {
+      "key": "reflect_artifact_count",
+      "value": 0
+    },
+    {
+      "key": "runtime_visibility_snapshot_path",
+      "value": "/home/rookslog/workspace/projects/prix-guesser/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/responsible-closure-audit/artifacts/01-host-exercise-gsd-modifier-host-fixture-01/first-host-exercise-001-runtime-visibility-snapshot.json"
+    },
+    {
+      "key": "verify_materialized_summary_path",
+      "value": "/home/rookslog/workspace/projects/prix-guesser/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/responsible-closure-audit/artifacts/01-host-exercise-gsd-modifier-host-fixture-01/first-host-exercise-001-verify-materialized-summary.md"
+    }
+  ],
+  "disposition": "shift-mode",
+  "evidence_family": "derived",
+  "exercise_id": "first-host-exercise-001",
+  "expectation_vs_observation": [
+    {
+      "check": "reflect_artifact_scan",
+      "check_outcome": "accept"
+    },
+    {
+      "check": "host_clean_worktree",
+      "check_outcome": "accept"
+    },
+    {
+      "check": "host_known_basis_commit",
+      "check_outcome": "accept"
+    },
+    {
+      "check": "compatibility_window",
+      "check_outcome": "accept"
+    },
+    {
+      "check": "runtime_visibility_snapshot",
+      "check_outcome": "accept"
+    },
+    {
+      "check": "verify_materialized",
+      "skip_reason": "context_deferred"
+    }
+  ],
+  "measurement_provenance": {
+    "about_work": {
+      "bundle_family": "responsible-closure",
+      "packet_path": "/home/rookslog/workspace/projects/prix-guesser/.planning/audits/2026-04-18-readiness-rerun-debrief-and-redesign/responsible-closure-audit/artifacts/01-host-exercise-gsd-modifier-host-fixture-01/first-host-exercise-001-packet.json"
+    },
+    "detected_by": {
+      "helper": "harness_modifier.closure.host_exercise_runner",
+      "runtime": "codex"
+    },
+    "written_by": {
+      "helper": "harness_modifier.closure.host_exercise_runner",
+      "runtime": "codex"
+    }
+  },
+  "narrative_summary": "Regular Codex GSD host stayed read-side; modifier-owned verification surfaced install-contract gap rather than mutating the host.",
+  "observation_id": "first-host-exercise-001-observation",
+  "observed_at": "2026-04-23T07:55:08.879871+00:00",
+  "positive_gain": [
+    {
+      "signal_subtype": "verification-surface-sharpened",
+      "summary": "First disjoint host exercise now carries packet, snapshot, and materialization-summary evidence in one durable record."
+    }
+  ],
+  "provenance_schema": "v2_split",
+  "semantic_deviation": [
+    {
+      "signal_subtype": "contract-mismatch",
+      "summary": "Host is inside the observed-basis version window but does not yet carry the modifier-side pristine/materialization marker, so verify-materialized stayed deferred and the run remained read-side."
+    }
+  ],
+  "status": "recorded",
+  "target_host_class": "codex-disjoint-gsd-installed-no-reflect"
+}
