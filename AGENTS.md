@@ -103,7 +103,13 @@ This repo is the standalone home for `gsd-modifier`.
 ## Commit Hygiene
 
 - keep commits scoped to one coherent change
+- use Conventional Commit subjects for every commit:
+  - format: `<type>(<scope>): <imperative summary>`
+  - common types: `feat`, `fix`, `docs`, `test`, `refactor`, `chore`, `build`, `ci`
+  - scope should name the affected subsystem or artifact family, for example `audit-refmap`, `origin-audit`, `planning`, `portable-gsd`, `contracts`, or `model-benchmark`
+  - avoid subject-only bucket labels such as `Import origin audit into planning`; write the actual type, scope, and action instead
 - write commit messages and adjacent artifacts so a later reviewer can tell both what changed and why it changed
+- for substantive commits, include a body with concise `Why`, `Verification`, and `Boundary` notes unless the change is truly trivial
 - prefer separate commits for:
   - shipped/runtime or overlay behavior changes
   - contract or verification-tool changes
