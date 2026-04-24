@@ -8,6 +8,7 @@ from tooling.codex.model_opinion_mining import build_inventory
 from tooling.codex.model_opinion_mining import common
 from tooling.codex.model_opinion_mining import extract_text
 from tooling.codex.model_opinion_mining import fetch_pages
+from tooling.codex.model_opinion_mining import verify_sources
 
 
 class FakeResponse:
@@ -16,6 +17,10 @@ class FakeResponse:
         self.text = text
         self.headers = headers or {}
         self.encoding = "utf-8"
+        self.url = "https://example.test/final"
+
+    def json(self):
+        return json.loads(self.text)
 
 
 class ModelOpinionMiningTests(unittest.TestCase):
@@ -217,6 +222,110 @@ class ModelOpinionMiningTests(unittest.TestCase):
             self.assertEqual(rows[0]["text_char_count"], 0)
             self.assertIn("GPT-5.5 completed the UI task faster", rows[0]["summary"])
             self.assertTrue(output_path.exists())
+
+    def test_verify_sources_uses_low_noise_probe_endpoints(self) -> None:
+        reddit = self._seed_row(url="https://www.reddit.com/r/codex/comments/abc/example/")
+        hacker_news = self._seed_row(
+            source_id="hn-001",
+            platform="Hacker News",
+            url="https://news.ycombinator.com/item?id=12345",
+        )
+        github = self._seed_row(
+            source_id="gh-001",
+            platform="github-issue",
+            url="https://github.com/openai/codex/issues/14181",
+        )
+
+        self.assertEqual(
+            verify_sources.probe_url(reddit),
+            "https://www.reddit.com/r/codex/comments/abc/example/.json",
+        )
+        self.assertEqual(
+            verify_sources.probe_url(hacker_news),
+            "https://hacker-news.firebaseio.com/v0/item/12345.json",
+        )
+        self.assertEqual(
+            verify_sources.probe_url(github),
+            "https://api.github.com/repos/openai/codex/issues/14181",
+        )
+
+    def test_verify_sources_accepts_reddit_json_thread(self) -> None:
+        seed = self._seed_row(url="https://www.reddit.com/r/codex/comments/abc/example/")
+        with mock.patch.object(
+            verify_sources.requests,
+            "get",
+            return_value=FakeResponse(
+                status_code=200,
+                text=json.dumps([{"data": {"children": [{"data": {"title": "GPT-5.5 usage thread"}}]}}]),
+                headers={"Content-Type": "application/json"},
+            ),
+        ):
+            row = verify_sources.verify_one(seed, timeout=1.0)
+
+        self.assertEqual(row["verification_status"], "accept")
+        self.assertEqual(row["source_kind"], "discussion_thread")
+        self.assertEqual(row["title"], "GPT-5.5 usage thread")
+
+    def test_verify_sources_rejects_inferred_social_permalink(self) -> None:
+        seed = self._seed_row(
+            source_id="x-001",
+            platform="X/Twitter",
+            url="https://x.com/openai/status/1914940000000000000",
+            collection_caveat="X URL inferred from search-indexed excerpt.",
+        )
+        with mock.patch.object(
+            verify_sources.requests,
+            "get",
+            return_value=FakeResponse(
+                status_code=200,
+                text="<html><body></body></html>",
+                headers={"Content-Type": "text/html"},
+            ),
+        ):
+            row = verify_sources.verify_one(seed, timeout=1.0)
+
+        self.assertEqual(row["verification_status"], "reject")
+        self.assertEqual(row["rejection_reason"], "inferred_social_permalink")
+
+    def test_verify_sources_holds_fetch_blocked_official_source(self) -> None:
+        seed = self._seed_row(
+            source_id="official-001",
+            platform="official",
+            url="https://openai.com/index/introducing-gpt-5-5/",
+        )
+        with mock.patch.object(
+            verify_sources.requests,
+            "get",
+            return_value=FakeResponse(
+                status_code=403,
+                text="<html><title>Forbidden</title></html>",
+                headers={"Content-Type": "text/html"},
+            ),
+        ):
+            row = verify_sources.verify_one(seed, timeout=1.0)
+
+        self.assertEqual(row["verification_status"], "hold")
+        self.assertEqual(row["rejection_reason"], "official_fetch_blocked_403")
+
+    def test_verify_sources_does_not_classify_openai_community_as_official(self) -> None:
+        seed = self._seed_row(
+            source_id="community-001",
+            platform="OpenAI Community",
+            url="https://community.openai.com/t/usage-limits-of-codex-within-cursor/1356784",
+        )
+        with mock.patch.object(
+            verify_sources.requests,
+            "get",
+            return_value=FakeResponse(
+                status_code=200,
+                text="<html><title>Usage Limits of Codex within Cursor - Codex - OpenAI Developer Community</title></html>",
+                headers={"Content-Type": "text/html"},
+            ),
+        ):
+            row = verify_sources.verify_one(seed, timeout=1.0)
+
+        self.assertEqual(row["source_kind"], "discussion_thread")
+        self.assertEqual(row["verification_status"], "accept")
 
 
 if __name__ == "__main__":
