@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from tooling.codex.model_benchmark import manifest, store
+from tooling.codex.model_benchmark.adapters import claude_local, validate_adapter_output
 
 
 HASH_ALGORITHM = "sha256"
@@ -173,90 +174,65 @@ def _insert_manual_rubrics(conn: sqlite3.Connection, path: Path, source_artifact
 
 
 def _insert_claude_jsonl(conn: sqlite3.Connection, path: Path, source_artifact_id: int) -> dict[str, int]:
-    inserted_items = 0
-    inserted_diagnostics = 0
-    with path.open("r", encoding="utf-8") as handle:
-        for line_number, line in enumerate(handle, start=1):
-            if not line.strip():
-                continue
-            try:
-                record = json.loads(line)
-            except json.JSONDecodeError as exc:
-                record = {
-                    "record_type": "parse_diagnostic",
-                    "line_number": line_number,
-                    "status": "malformed_source",
-                    "redaction_state": "synthetic",
-                    "content_contract": "metadata_only",
-                    "message": f"invalid JSON: {exc.msg}",
-                }
-            if not isinstance(record, dict):
-                continue
-            record_type = str(record.get("record_type", "unknown"))
-            if record_type == "parse_diagnostic":
-                diagnostic = {
-                    "source_path": path.name,
-                    "line_number": int(record.get("line_number", line_number)),
-                    "status": record.get("status", "malformed_source"),
-                    "evidence_class": "synthetic_fixture",
-                    "reliability_mode": "local_structural_field",
-                    "content_contract": record.get("content_contract", "metadata_only"),
-                    "cost_evidence_mode": "not_applicable",
-                    "comparability": "not_comparable",
-                    "redaction_state": record.get("redaction_state", "synthetic"),
-                }
-                store.insert_observation(
-                    conn,
-                    {
-                        "entity_type": "source_artifact",
-                        "entity_id": str(source_artifact_id),
-                        "metric_id": "source.parse_status",
-                        "status": diagnostic["status"],
-                        "evidence_class": diagnostic["evidence_class"],
-                        "reliability_mode": diagnostic["reliability_mode"],
-                        "content_contract": diagnostic["content_contract"],
-                        "comparability": diagnostic["comparability"],
-                        "source_artifact_id": source_artifact_id,
-                        "value_json": diagnostic,
-                        "provenance_json": {
-                            "fixture_id": "claude_local_jsonl_minimal_structure",
-                            "line_number": line_number,
-                        },
-                    },
-                )
-                inserted_diagnostics += 1
-                continue
-            store.insert_runtime_response_item(
-                conn,
-                {
-                    "session_id": None,
-                    "turn_id": None,
-                    "model_call_id": None,
-                    "source_artifact_id": source_artifact_id,
-                    "source_kind": "runtime.claude_code.local_jsonl",
-                    "provider_namespace": "provider.anthropic",
-                    "runtime_namespace": "runtime.claude_code",
-                    "item_type": record_type,
-                    "status": record.get("status", "unknown"),
-                    "role": record.get("role"),
-                    "redaction_state": record.get("redaction_state", "synthetic"),
-                    "content_state": "redacted_reference" if record.get("content_ref") else "structural_only",
-                    "correlation_status": "unknown",
-                    "payload_json": {
-                        "claude": {
-                            "record_type": record_type,
-                            "content_contract": record.get("content_contract", "structural_only"),
-                        }
-                    },
-                    "provenance_json": {
-                        "fixture_id": "claude_local_jsonl_minimal_structure",
-                        "source_path": str(path),
-                        "line_number": line_number,
-                    },
+    output = validate_adapter_output(claude_local.normalize_local_jsonl(path), strict=True)
+
+    for diagnostic in output["parse_diagnostics"]:
+        value = {
+            "source_path": path.name,
+            "line_number": diagnostic["line_number"],
+            "status": diagnostic["status"],
+            "content_contract": diagnostic["content_contract"],
+            "redaction_state": diagnostic.get("redaction_state", "synthetic"),
+        }
+        store.insert_observation(
+            conn,
+            {
+                "entity_type": "source_artifact",
+                "entity_id": str(source_artifact_id),
+                "metric_id": "source.parse_status",
+                "status": diagnostic["status"],
+                "evidence_class": diagnostic["evidence_class"],
+                "reliability_mode": diagnostic["reliability_mode"],
+                "content_contract": diagnostic["content_contract"],
+                "comparability": diagnostic["comparability"],
+                "source_artifact_id": source_artifact_id,
+                "value_json": value,
+                "provenance_json": {
+                    **diagnostic["provenance"],
+                    "fixture_id": "claude_local_jsonl_minimal_structure",
                 },
-            )
-            inserted_items += 1
-    return {"runtime_items": inserted_items, "diagnostics": inserted_diagnostics}
+            },
+        )
+
+    for item in output["runtime_response_items"]:
+        store.insert_runtime_response_item(
+            conn,
+            {
+                "session_id": None,
+                "turn_id": None,
+                "model_call_id": None,
+                "source_artifact_id": source_artifact_id,
+                "source_kind": item["source_kind"],
+                "provider_namespace": item["provider_namespace"],
+                "runtime_namespace": item["runtime_namespace"],
+                "item_type": item["item_type"],
+                "status": item.get("status", "unknown"),
+                "role": item.get("role"),
+                "redaction_state": item["redaction_state"],
+                "content_state": item["content_state"],
+                "correlation_status": item["correlation_status"],
+                "payload_json": item["payload"],
+                "provenance_json": {
+                    **item["provenance"],
+                    "fixture_id": "claude_local_jsonl_minimal_structure",
+                },
+            },
+        )
+
+    return {
+        "runtime_items": len(output["runtime_response_items"]),
+        "diagnostics": len(output["parse_diagnostics"]),
+    }
 
 
 def _insert_provider_usage(conn: sqlite3.Connection, path: Path, source_artifact_id: int) -> int:
