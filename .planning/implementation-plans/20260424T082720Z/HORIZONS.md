@@ -3,6 +3,12 @@
 Date: 2026-04-24
 Status: draft strategic frame
 
+## Trace Links
+
+- Package index: [README.md](README.md)
+- Short-horizon program plan: [SHORT-HORIZON.md](SHORT-HORIZON.md)
+- Current immediate concrete plan: [concrete-plans/001-audit-import-refmap-stabilization/PLAN.md](concrete-plans/001-audit-import-refmap-stabilization/PLAN.md)
+
 ## Context
 
 `gsd-modifier` is intended to become a deployable, robust modified GSD/GSDR harness for near-term use. It should help early `prix-guesser` development without pretending to be the final product-building harness.
@@ -38,6 +44,10 @@ Exit criteria:
 - missing-link count is explained and not silently worsened
 - audit import, script/tooling fixes, and docs/handoff updates are separated into reviewable commit buckets
 - deterministic local verification passes for touched tooling
+
+Current concrete plan:
+
+- [001 Audit Import Refmap Stabilization](concrete-plans/001-audit-import-refmap-stabilization/PLAN.md)
 
 ## Short-Term Horizon
 
@@ -112,4 +122,3 @@ Exit criteria:
 - `harness-studio` can explain which harness shape fits which project class
 - GSD's future role is explicitly decided rather than assumed
 - early `prix-guesser` bridge artifacts can be imported or interpreted by the future harness
-

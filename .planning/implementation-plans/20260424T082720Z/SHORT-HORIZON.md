@@ -1,11 +1,19 @@
 # Short-Horizon Plan
 
 Date: 2026-04-24
-Status: detailed short-horizon draft
+Status: short-horizon program draft
+
+## Trace Links
+
+- Package index: [README.md](README.md)
+- Strategic horizon frame: [HORIZONS.md](HORIZONS.md)
+- Current blocking concrete plan: [concrete-plans/001-audit-import-refmap-stabilization/PLAN.md](concrete-plans/001-audit-import-refmap-stabilization/PLAN.md)
 
 ## Goal
 
 Produce a deployable `gsd-modifier` bridge harness that can support early `prix-guesser` development without foreclosing later migration to a richer `harness-studio` operating model.
+
+This file is not itself an executable implementation plan. It is the short-horizon program plan that concrete plans should cite and refine.
 
 ## Design Principles
 
@@ -205,3 +213,18 @@ Optional but release-relevant:
 7. Run repo-self dual-runtime proof.
 8. Decide whether to cut a short-term deployable release or do one more hardening slice.
 
+## Concrete Plan Registry
+
+| Plan | Parent workstream | Status | Notes |
+| --- | --- | --- | --- |
+| [001 Audit Import Refmap Stabilization](concrete-plans/001-audit-import-refmap-stabilization/PLAN.md) | prerequisite stabilization before Workstream 1 | draft executable | Clears the mixed worktree and audit/reference-map blocker before new bridge-harness behavior. |
+
+Future concrete plans should be added here when they become ready to execute.
+
+Potential next plans:
+
+- `002-runtime-intervention-surface-inventory`
+- `003-instruction-surface-generation-parity`
+- `004-compact-prompt-runtime-capability-contract`
+- `005-governance-artifact-seeding-proposal`
+- `006-prix-bridge-harness-contract`

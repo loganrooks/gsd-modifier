@@ -2,12 +2,29 @@
 
 Date: 2026-04-24
 Status: executable draft
+Plan ID: `001-audit-import-refmap-stabilization`
+
+## Trace Links
+
+- Package index: [../../README.md](../../README.md)
+- Strategic horizon frame: [../../HORIZONS.md](../../HORIZONS.md)
+- Short-horizon program plan: [../../SHORT-HORIZON.md](../../SHORT-HORIZON.md)
+- Governing handoff: [../../../../docs/handoff/current.md](../../../../docs/handoff/current.md)
+- Repo instructions: [../../../../AGENTS.md](../../../../AGENTS.md)
 
 ## Objective
 
 Stabilize the current `gsd-modifier` worktree after the audit import/reorganization and prepare the repo for the next deployable bridge-harness slice.
 
 This immediate plan does not implement new bridge-harness behavior. It creates the stable ground required before that work can be done safely.
+
+Parent horizon:
+
+- Immediate horizon in [../../HORIZONS.md](../../HORIZONS.md)
+
+Parent short-horizon relationship:
+
+- Prerequisite stabilization before the runtime intervention surface inventory in [../../SHORT-HORIZON.md](../../SHORT-HORIZON.md)
 
 ## Current Observed State
 
@@ -247,3 +264,13 @@ Main thread responsibilities:
 - If an imported artifact is intentionally not reorganized further, record that boundary.
 - If a runtime parity surface is deferred, record the deferral explicitly.
 
+## Upstream Plan Feedback
+
+If execution discovers that this plan changes the short-horizon sequencing, update [../../SHORT-HORIZON.md](../../SHORT-HORIZON.md) in a separate planning commit.
+
+Examples of upstream-impacting discoveries:
+
+- audit import cannot be stabilized without changing the release boundary
+- `audit_refmap.py` needs a larger redesign than planned
+- missing-link baseline reveals imported audit content is materially incomplete
+- runtime intervention surface inventory must happen before reference-map stabilization

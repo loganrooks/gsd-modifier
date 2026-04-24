@@ -1,17 +1,31 @@
-# Implementation Plan Package
+# Bridge Harness Stabilization Planning Package
 
 Date: 2026-04-24
-Status: draft execution package
+Status: draft planning package
 
 ## Purpose
 
-This package captures the immediate, short-term, medium-term, and long-term plan for getting `gsd-modifier` to a deployable bridge-harness boundary while preserving the larger `harness-studio` direction.
+This package separates strategic horizon framing from concrete executable implementation plans.
+
+It exists because one short horizon may contain multiple concrete plans, and some concrete plans may change or refine the upstream horizon. The package therefore keeps each layer separate but cross-cited.
 
 ## Files
 
-- `HORIZONS.md` - horizon framing and strategic sequencing.
-- `SHORT-HORIZON.md` - detailed short-horizon plan for a deployable bridge harness.
-- `PLAN.md` - concrete immediate implementation plan for stabilizing the current worktree and preparing the next release slice.
+- [HORIZONS.md](HORIZONS.md) - strategic immediate, short, medium, and long horizon framing.
+- [SHORT-HORIZON.md](SHORT-HORIZON.md) - short-horizon program plan for a deployable bridge harness.
+- [concrete-plans/001-audit-import-refmap-stabilization/PLAN.md](concrete-plans/001-audit-import-refmap-stabilization/PLAN.md) - immediate executable implementation plan for stabilizing the current audit import and reference-map state.
+
+## Traceability Model
+
+Use this package from broadest to narrowest:
+
+```text
+HORIZONS.md
+  -> SHORT-HORIZON.md
+    -> concrete-plans/<plan-id>/PLAN.md
+```
+
+Concrete plans should cite their parent horizon/workstream and record when execution discovers something that should revise the upstream plan.
 
 ## Current Boundary
 
@@ -19,3 +33,4 @@ The current blocking concern is not adding new bridge-harness behavior yet.
 
 The immediate blocker is stabilizing the imported audit/reference-map state and restoring a clean, reviewable `gsd-modifier` worktree. After that, the next release slice can address exposed intervention surfaces and bridge-harness governance.
 
+The current concrete plan for that blocker is [concrete-plans/001-audit-import-refmap-stabilization/PLAN.md](concrete-plans/001-audit-import-refmap-stabilization/PLAN.md).
