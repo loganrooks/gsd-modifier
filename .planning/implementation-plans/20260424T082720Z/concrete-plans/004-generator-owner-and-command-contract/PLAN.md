@@ -1,8 +1,9 @@
-# Immediate Implementation Plan
+# Contract Decision Spike Plan
 
 Date: 2026-04-24
 Status: executable draft
 Plan ID: `004-generator-owner-and-command-contract`
+Task type: contract decision spike with a bounded implementation tail
 
 ## Trace Links
 
@@ -14,6 +15,19 @@ Plan ID: `004-generator-owner-and-command-contract`
 - Runtime intervention inventory: [../../../../../docs/runtime-intervention-surfaces.md](../../../../../docs/runtime-intervention-surfaces.md)
 - Governing handoff: [../../../../../docs/handoff/current.md](../../../../../docs/handoff/current.md)
 - Repo instructions: [../../../../../AGENTS.md](../../../../../AGENTS.md)
+
+## Classification
+
+This is not ordinary implementation and not open-ended research.
+
+It is a contract decision spike: the first deliverable is a defensible decision about generator ownership, command semantics, and target instruction files. Implementation is allowed only after the decision artifact names an option and authorizes a concrete write set.
+
+Why this classification matters:
+
+- the prior slice found contradictory command behavior;
+- choosing a command path changes a runtime-facing workflow contract;
+- choosing `AGENTS.md`, `CLAUDE.md`, or both changes instruction authority semantics;
+- source-only evidence is insufficient if behavior changes materialized runtime output.
 
 ## Objective
 
@@ -33,50 +47,36 @@ node .../get-shit-done/bin/gsd-tools.cjs generate-claude-md --output <path>
 
 does write a file, but its template is documented as a `CLAUDE.md` generator.
 
-This plan decides and implements the smallest safe command/generator contract so initialization either writes the file it claims to write or explicitly routes the missing generator to upstream/follow-up.
+This plan must produce a reviewable answer to:
+
+1. who owns the generator contract;
+2. what command initialization should call;
+3. which instruction file or files should be generated;
+4. what tests prove the command writes what the workflow claims.
+
+## Required Deliverables
+
+Create these plan-local artifacts before source behavior edits:
+
+- `evidence/generator-command-map.md`
+- `evidence/template-and-body-semantics.md`
+- `evidence/runtime-path-contract.md`
+- `evidence/decision.md`
+
+If implementation proceeds, also create:
+
+- `evidence/implementation-disposition.md`
+
+Each evidence file must distinguish observed facts from inference.
 
 ## Non-Goals
 
 - Do not broaden compact-prompt capability behavior.
 - Do not seed broader project-governance artifacts.
 - Do not change host matrix semantics or broader support language.
-- Do not remove `CLAUDE.md` or `.planning/CLAUDE.md` from the uplift carrier catalog unless the generator decision explicitly proves that catalog semantics must change.
+- Do not remove `CLAUDE.md` or `.planning/CLAUDE.md` from the uplift carrier catalog unless `evidence/decision.md` explicitly proves that catalog semantics must change.
 - Do not hand-edit generated `.codex/` or `.claude/` runtime output.
-
-## Required Questions
-
-1. Is the file-writing generator this repo should call the installed CJS command, a new repo-owned wrapper, or a fixed SDK query handler?
-2. If the repo calls CJS directly, what command path works from both Codex and Claude materialized workflows?
-3. Is the generated body acceptable for `AGENTS.md`, or does `AGENTS.md` need a runtime-neutral generator/template?
-4. Should non-Codex host initialization generate `CLAUDE.md`, `AGENTS.md`, or both?
-5. What happens when an instruction file already exists?
-6. Which test proves the command actually writes the claimed file?
-
-## Candidate Outcomes
-
-### Option A: Repo-Owned Runtime-Neutral Wrapper
-
-Create or expose a modifier-owned wrapper that writes the chosen instruction file and hides upstream command differences.
-
-Use when the safest intervention is to own a stable command contract in this repo without changing upstream SDK internals.
-
-### Option B: SDK Handler Fix Routed Upstream
-
-Defer repo behavior changes and record that the real fix belongs in upstream `gsd-sdk query generate-claude-md`.
-
-Use when local overlay changes would mask an upstream command contract defect.
-
-### Option C: CJS Command Path Correction
-
-Update `new-project.md` to call the installed file-writing CJS generator directly, with a runtime-safe command path and tests.
-
-Use only if the generated body semantics and runtime path are acceptable for both target runtimes.
-
-### Option D: Generated Companion Contract
-
-Generate `AGENTS.md` plus runtime-native companion instructions with explicit conflict/update policy.
-
-Use only if evidence shows a single generated instruction file cannot support the accepted Codex/Claude host behavior.
+- Do not silently fix only the filename while leaving the command unwritten or untested.
 
 ## Worktree Protocol
 
@@ -88,17 +88,137 @@ git rev-parse --short HEAD
 git branch --show-current
 ```
 
+If the worktree is dirty with unrelated changes, stop and bucket or ask before editing.
+
 Do not run install/materialization until the decision requires runtime-facing verification.
 
-## Execution Steps
+## Phase 1: Evidence
 
-1. Re-read the prior 003 evidence and decision.
-2. Trace all installed and repo-owned command paths for `generate-claude-md`.
-3. Decide the generator owner and target file policy before source edits.
-4. If editing behavior, update the workflow, adjacent docs, and focused tests together.
-5. If deferring to upstream, write the upstream-boundary artifact and add a contract test or docs note that prevents silent reclassification.
-6. Run source verification for docs/tests changes.
-7. Run materialized verification if runtime-facing workflow behavior changes.
+Write `evidence/generator-command-map.md`.
+
+Required observations:
+
+- repo overlay `new-project.md` generator command and `INSTRUCTION_FILE` policy;
+- installed upstream `new-project.md` generator command and `INSTRUCTION_FILE` policy;
+- `gsd-sdk` executable path and package source path;
+- SDK registry entry for `generate-claude-md`;
+- SDK handler behavior with and without `--output`;
+- CJS `gsd-tools.cjs generate-claude-md --output` behavior;
+- whether repo-owned overlay code currently provides a generator wrapper.
+
+Write `evidence/template-and-body-semantics.md`.
+
+Required observations:
+
+- source of the file-writing template;
+- marker sections generated by the CJS command;
+- whether the generated body says Claude-specific things, runtime-neutral things, or mixed things;
+- whether using that body as `AGENTS.md` would be semantically honest;
+- whether a runtime-neutral template exists in this repo or upstream package.
+
+Write `evidence/runtime-path-contract.md`.
+
+Required observations:
+
+- how shared workflows currently call CJS tools from materialized Codex paths;
+- whether equivalent Claude materialized paths exist after setup;
+- whether `new-project.md` is mapped to Codex, Claude, or both by `OVERLAY-MANIFEST.json`;
+- whether a command path can be source-valid before runtime roots exist;
+- what materialized checks are required if the workflow command changes.
+
+## Phase 2: Decision
+
+Write `evidence/decision.md` before source edits.
+
+The decision must select exactly one option:
+
+### Option A: Repo-Owned Runtime-Neutral Wrapper
+
+Create or expose a modifier-owned wrapper that writes the chosen instruction file and hides upstream command differences.
+
+Required decision proof:
+
+- why repo ownership is safer than direct upstream/CJS calls;
+- exact wrapper path;
+- exact command contract;
+- target file policy;
+- tests that prove file write behavior.
+
+### Option B: Upstream SDK Contract Defect
+
+Defer repo behavior changes and record that the fix belongs in upstream `gsd-sdk query generate-claude-md`.
+
+Required decision proof:
+
+- why local overlay edits would mask the defect;
+- where the upstream defect is observed;
+- what local guard prevents future agents from assuming generation works;
+- whether compact-prompt work can proceed while this remains open.
+
+### Option C: CJS Command Path Correction
+
+Update `new-project.md` to call the installed file-writing CJS generator directly, with a runtime-safe command path and tests.
+
+Required decision proof:
+
+- the command path is valid for every runtime the workflow materializes into;
+- generated body semantics are acceptable for the chosen target file;
+- existing-file conflict behavior is known;
+- materialized checks are planned.
+
+### Option D: Generated Companion Contract
+
+Generate `AGENTS.md` plus runtime-native companion instructions with explicit conflict/update policy.
+
+Required decision proof:
+
+- why single-file generation cannot meet the accepted authority model;
+- which file is governing for Codex;
+- which file is governing for Claude;
+- whether companion files are generated, mirrored, or tracked-only;
+- how conflicts are resolved when both files already exist.
+
+## Phase 3: Implementation Tail
+
+Only implement the write set authorized by `evidence/decision.md`.
+
+Allowed write sets by option:
+
+- Option A:
+  - generator wrapper source or script named in the decision;
+  - `new-project.md`;
+  - focused tests proving write behavior;
+  - adjacent docs only if they carry the command contract.
+- Option B:
+  - evidence and planning docs only;
+  - focused guard test or docs note that prevents false claims about the SDK command.
+- Option C:
+  - `new-project.md`;
+  - focused tests under `tooling/codex/tests/`;
+  - adjacent docs only if command-path semantics change.
+- Option D:
+  - `new-project.md`;
+  - target-file conflict/update policy docs;
+  - focused tests;
+  - carrier catalog only if generated/tracked semantics change.
+
+If a needed write is outside the selected write set, stop and revise the decision artifact before editing.
+
+## Auditability Requirements
+
+Before closeout, write `evidence/implementation-disposition.md` if any source behavior changes.
+
+It must record:
+
+- selected option;
+- files changed;
+- why each changed file belongs in the write set;
+- tests run;
+- materialized-runtime status;
+- intentionally held surfaces;
+- remaining risks.
+
+If no behavior changes, the decision artifact must explicitly say implementation was deferred and name the next owner.
 
 ## Verification
 
@@ -127,13 +247,36 @@ python3 harness_modifier/contract/portable_gsd_contract.py verify-materialized .
 python3 harness_modifier/contract/harness_canary.py report . --all-supported --strict
 ```
 
+Do not claim materialized parity unless the materialized checks were run.
+
+## Commit Protocol
+
+Use separate commits when both evidence and behavior changes occur:
+
+1. `docs(planning): decide instruction generator contract`
+   - evidence files;
+   - decision artifact;
+   - registry updates if needed.
+2. Optional behavior commit named for the selected option, for example:
+   - `fix(instructions): route initialization to file-writing generator`
+   - `feat(instructions): add runtime-neutral instruction generator`
+   - `test(instructions): guard instruction generator command contract`
+
+Commit bodies must include:
+
+- `Why:`
+- `Verification:`
+- `Boundary:`
+
 ## Closeout
 
 Closeout must record:
 
-- chosen generator owner
-- chosen target file policy
-- exact command contract
-- verification run
-- materialized-runtime status
-- whether compact-prompt work can proceed next
+- chosen task classification;
+- chosen generator owner;
+- chosen target file policy;
+- exact command contract;
+- verification commands and results;
+- whether runtime-facing files changed;
+- whether materialized-runtime checks were required and run;
+- whether compact-prompt work can proceed next.
