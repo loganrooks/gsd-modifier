@@ -96,9 +96,17 @@ def _validate_runtime_item(row: dict[str, Any], strict: bool) -> None:
     _validate_source_ref(row["source_artifact_ref"], strict)
     _require_mapping(row["provenance"], "provenance")
     payload = _require_mapping(row["payload"], "payload")
+    provider_namespace = row.get("provider_namespace")
+    runtime_namespace = row.get("runtime_namespace")
+    if provider_namespace == "provider.openai" and runtime_namespace == "runtime.codex_cli":
+        allowed_payload_namespaces = {"codex"}
+    elif provider_namespace == "provider.anthropic" and runtime_namespace == "runtime.claude_code":
+        allowed_payload_namespaces = {"anthropic", "claude_code"}
+    else:
+        allowed_payload_namespaces = set()
     for key in payload:
-        if key != "codex":
-            raise ValueError("provider-specific payload fields must be namespaced")
+        if key not in allowed_payload_namespaces:
+            raise ValueError("payload namespace does not match provider/runtime namespace")
 
 
 def validate_adapter_output(output: dict[str, Any], *, strict: bool = True) -> dict[str, Any]:
