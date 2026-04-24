@@ -5,6 +5,14 @@ from __future__ import annotations
 from decimal import Decimal
 from typing import Any
 
+from tooling.codex.model_benchmark.enums import (
+    COMPARABILITY_VALUES,
+    CONTENT_CONTRACTS,
+    COST_EVIDENCE_MODES,
+    EVIDENCE_CLASSES,
+    OBSERVATION_STATUSES,
+    RELIABILITY_MODES,
+)
 from tooling.codex.model_benchmark.schema import NOT_AVAILABLE, total_known_tokens, validate_run_record
 
 
@@ -123,3 +131,47 @@ def summarize_runs(records: list[dict[str, Any]]) -> dict[str, Any]:
             summary.pop(internal)
         summaries.append(summary)
     return {"groups": sorted(summaries, key=lambda item: (item["task_id"], item["candidate_profile"], item["reasoning_effort"]))}
+
+
+def _check_enum(value: Any, allowed: frozenset[str], field: str, strict: bool) -> None:
+    if value is None:
+        return
+    if strict and value not in allowed:
+        raise ValueError(f"{field} must be one of {sorted(allowed)}")
+
+
+def _validate_report_diagnostic(diagnostic: dict[str, Any], strict: bool) -> None:
+    _check_enum(diagnostic.get("status"), OBSERVATION_STATUSES, "status", strict)
+    _check_enum(diagnostic.get("evidence_class"), EVIDENCE_CLASSES, "evidence_class", strict)
+    _check_enum(diagnostic.get("reliability_mode"), RELIABILITY_MODES, "reliability_mode", strict)
+    _check_enum(diagnostic.get("content_contract"), CONTENT_CONTRACTS, "content_contract", strict)
+    _check_enum(diagnostic.get("cost_evidence_mode"), COST_EVIDENCE_MODES, "cost_evidence_mode", strict)
+    _check_enum(diagnostic.get("comparability"), COMPARABILITY_VALUES, "comparability", strict)
+
+
+def telemetry_rebuild_report(
+    query_output: dict[str, Any],
+    *,
+    registry_hash: str | None = None,
+    strict: bool = True,
+) -> dict[str, Any]:
+    """Render a small report from rebuild query output with parity checks."""
+
+    actual_hash = query_output.get("registry_hash")
+    if strict and registry_hash is not None and registry_hash != actual_hash:
+        raise ValueError(f"registry_hash mismatch: expected {registry_hash}, found {actual_hash}")
+    diagnostics = query_output.get("diagnostics", [])
+    if not isinstance(diagnostics, list):
+        raise ValueError("diagnostics must be a list")
+    for diagnostic in diagnostics:
+        if not isinstance(diagnostic, dict):
+            raise ValueError("diagnostics entries must be objects")
+        _validate_report_diagnostic(diagnostic, strict)
+    return {
+        "registry_hash": actual_hash,
+        "registry_version": query_output.get("registry_version"),
+        "source_set_hash": query_output.get("source_set_hash"),
+        "status": query_output.get("status"),
+        "diagnostic_count": len(diagnostics),
+        "diagnostics": diagnostics,
+    }
