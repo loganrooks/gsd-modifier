@@ -46,6 +46,17 @@ This repo is the standalone home for `gsd-modifier`.
 ## Workflow Rules
 
 - when the user invokes a repo-defined workflow, script, skill, or operator surface, follow that workflow for real rather than implementing first and backfilling artifacts later
+- for ambiguous, architectural, policy-bearing, or contract-carrying changes, do not edit files or commit until the proposed change has been explained and the user gives explicit approval
+- before seeking approval for those changes, state:
+  - the observed problem
+  - the proposed change
+  - why that change is appropriate
+  - alternatives considered
+  - the expected write set
+  - the verification plan
+- read-only investigation is allowed before approval when needed to ground the proposal
+- small mechanical fixes may proceed only when the user's request is already explicit and the change is low-risk
+- if the user challenges the premise of a change, pause implementation and reconcile the premise before touching files
 - if a task needs a proposal, audit, checkpoint, or measurement artifact to stay reviewable, create or update it in the same slice instead of leaving the reasoning in chat only
 - when a non-trivial decision is made, capture a concise local explanation of the decision basis where later reviewers will actually look: proposal, audit artifact, handoff, review note, or commit message as appropriate
 - if you must deviate from the normal workflow, state the deviation plainly and record the boundary in a repo artifact when it matters downstream
