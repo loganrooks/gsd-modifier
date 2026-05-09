@@ -65,3 +65,32 @@ Result: both Codex and Claude runtime roots materialized the wrapper and passed 
 
 - The wrapper is intentionally narrower than the legacy CJS `generate-claude-md` command. If future work wants both generated companion files, richer profile integration, or direct upstream CJS reuse, it should be planned as a separate generated-instruction contract.
 - The command name `generate-instruction.cjs` is repo-owned; upstream may later repair SDK generation semantics under a different name. If that happens, this wrapper should be reassessed rather than silently replaced.
+
+## Premise Update — 2026-05-08
+
+The Plan 004 decision was made on 2026-04-24 against upstream evidence that distinguished three states: snapshot v1.36.0, latest npm stable v1.38.3 (where `gsd-sdk query generate-claude-md --output` did not write a file), and upstream `origin/main` (which had a fix in PR #2341 / commit `c5b14455` not yet released).
+
+A subsequent temp handoff (`docs/handoff/DELETE-AFTER-INGESTION-2026-04-24-release-readiness-and-plan-004.md`) framed the modifier wrapper as a possible release-bound shim that should be removed once #2341 shipped in a stable release.
+
+That framing is rejected on the corrected evidence:
+
+- PR #2341 / commit `c5b14455` shipped in `v1.38.4` on 2026-04-25 (one day after the original decision) and is in every stable release through `v1.41.0` (2026-05-07).
+- Tag-membership verified by `git tag --contains c5b14455` against `~/workspace/projects/get-shit-done-upstream` (`gsd-build/get-shit-done`), refs refreshed 2026-05-08.
+
+The release-window for a "shim" no longer exists. More importantly, the wrapper is not a shim. It carries modifier-specific content that upstream's `generateClaudeMd` writer does not provide:
+
+- `--runtime` flag for runtime-targeted output path selection (`AGENTS.md` for Codex, `CLAUDE.md` otherwise) — implemented at `tooling/portable-gsd/overlay/get-shit-done/bin/generate-instruction.cjs:56`;
+- multi-runtime skill discovery across `.codex/skills/`, `.claude/skills/`, `.agents/skills/`, `.cursor/skills/`, `.github/skills/` — at `generate-instruction.cjs:47`;
+- modifier-owned `## GSD Workflow Enforcement` section content — at `generate-instruction.cjs:29-38`;
+- `<!-- GSD:profile-start -->` placeholder for `$gsd-profile-user` — at `generate-instruction.cjs:39-46`;
+- marker-section update model preserving user content outside markers — at `generate-instruction.cjs:212-228`.
+
+Upstream's writer is Claude-specific and writes a Claude-context file. Modifier's wrapper is runtime-neutral and writes a runtime-targeted instruction file with multi-runtime content. They are not equivalents; there is no swap.
+
+Conclusion: Option A's selection stands as recorded. The wrapper remains modifier-owned content under `parity_tier: core_required` for both Codex and Claude. The "Remaining Risks" entry that says the wrapper "should be reassessed rather than silently replaced" if upstream later repairs SDK generation under a different name still applies and is reaffirmed.
+
+No source, contract, or manifest changes follow from this update. This entry exists so future readers do not re-litigate the disposition based on the temp handoff's stale framing.
+
+### Evidence reference
+
+Full upstream-gap snapshot, drift inventory, and downstream proposal sequence are recorded in `.planning/readiness/release-readiness-orientation-2026-05-08.md`. That file is a dated snapshot and will be archived after the short-term proposal slice closes.
