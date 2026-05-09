@@ -7,6 +7,7 @@ This repo is the standalone home for `gsd-modifier`.
 - treat this repo as the modifier project, not as a host product repo
 - do not import `prix-guesser` product-planning horizons as if they govern this repo
 - use [WORKFLOW.md](WORKFLOW.md) and [docs/development.md](docs/development.md) as the primary operator surfaces
+- this file is the runtime-neutral source of truth for governance; [`CLAUDE.md`](CLAUDE.md) is the Claude-side carrier and points back here for the rules
 
 ## Source Of Truth
 

@@ -25,11 +25,12 @@ Use this file to re-enter the repo without depending on chat memory.
 
 Read in this order:
 
-1. [AGENTS.md](../../AGENTS.md)
-2. [WORKFLOW.md](../../WORKFLOW.md)
-3. [docs/development.md](../development.md)
-4. [docs/install-profiles.md](../install-profiles.md)
-5. [docs/host-exercise-matrix.md](../host-exercise-matrix.md)
+1. [AGENTS.md](../../AGENTS.md) — runtime-neutral governance
+2. [CLAUDE.md](../../CLAUDE.md) — Claude-side carrier (points back to AGENTS.md for the rules)
+3. [WORKFLOW.md](../../WORKFLOW.md)
+4. [docs/development.md](../development.md)
+5. [docs/install-profiles.md](../install-profiles.md)
+6. [docs/host-exercise-matrix.md](../host-exercise-matrix.md)
 
 Historical carry:
 - compact orientation: [docs/origin-audit/current-route.md](../origin-audit/current-route.md)
