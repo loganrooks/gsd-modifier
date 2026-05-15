@@ -2,18 +2,18 @@
 
 # Inject Migration State
 
-Last updated: 2026-05-15T23:30:00Z (operator resolution of slice 0 spec contradictions; resumed)
-Last updated by: operator (post-hard-stop revision)
+Last updated: 2026-05-15T23:35:21Z (slice 0 reconcile and attest baseline)
+Last updated by: inject-migration /goal agent
 Schema version: 2
 
 ## Current Status
 
 - **Phase**: 0 (`00-surface-cleanup`)
-- **Slice within phase**: 0 (revised spec — "Reconcile and attest baseline"; ready to re-execute)
-- **Status**: `pending` (one of: `pending`, `in-progress`, `paused-for-operator`, `blocked`, `complete`, `aborted`)
-- **Last checkpoint**: `checkpoints/2026-05-15T225033Z-phase00-slice00.md` (hard-stop record; superseded by operator resolution commit and revised slice spec)
-- **Last commit**: (set by next iteration's reconciliation per PROTOCOL.md cold-start step 4; current HEAD is the operator resolution commit)
-- **Sentinel**: `IN-PROGRESS` (first turn fired; slice 0 hard-stopped; operator has resolved per revised spec; ready to resume)
+- **Slice within phase**: 1 (slice 0 complete; next is "Reclassify gsd-do skill as modifier-owned")
+- **Status**: `in-progress` (one of: `pending`, `in-progress`, `paused-for-operator`, `blocked`, `complete`, `aborted`)
+- **Last checkpoint**: `checkpoints/2026-05-15T233521Z-phase00-slice00.md`
+- **Last commit**: `35dda63003739a77fd827950b3f3b206090d97a8` (lag-by-one — will be reconciled to slice 0's commit SHA in next turn's cold start per PROTOCOL.md step 4)
+- **Sentinel**: `IN-PROGRESS` (slice 0 succeeded; loop advancing through Phase 0 reclassifications)
 
 ## Phase Progress
 
@@ -31,9 +31,9 @@ Schema version: 2
 
 ## Active Work
 
-- **Current task**: ready to advance — Phase 0 Slice 0 (revised: "Reconcile and attest baseline")
-- **Started**: (will be set by next turn)
-- **Expected completion**: next turn fires slice 0 with revised spec; should succeed and advance to Slice 1
+- **Current task**: executing Phase 0 Slice 1 (reclassify `gsd-do` skill as modifier-owned `mode: add`)
+- **Started**: 2026-05-15T23:35:21Z
+- **Expected completion**: slice 1 moves `gsd-do/SKILL.md` from `tooling/portable-gsd/overlay/` to `harness_modifier/overlay/` and flips its manifest entry from `mode: overwrite` to `mode: add`
 
 ## Blockers
 
@@ -64,13 +64,14 @@ Schema version: 2
 - Inject unit tests passing: 0 / target TBD
 - Bootstrap gate hard_failures: 4 (target: 0 after Phase 0)
 - Phases complete: 0 / 11
-- Slices complete: 0
+- Slices complete: 1
 
 ## Recent Checkpoints
 
 | Timestamp | Phase.Slice | Outcome | Note |
 |---|---|---|---|
 | 2026-05-15T22:50:33Z | 0.0 | paused-for-operator | Hard-stop on slice 0 spec contradictions (gsd-debugger FAIL + Plan FAIL); see `checkpoints/2026-05-15T225033Z-phase00-slice00.md` |
+| 2026-05-15T23:35:21Z | 0.0 | success | Slice 0 reconcile and attest baseline; STATE.md ground-truthed against `git rev-parse HEAD`; `audit_refmap.py snapshot .` exit 0 (non-enforcing per Required Discipline #8 known baseline); no reviewer invoked |
 
 ## Reviewer Decisions Log
 
@@ -104,15 +105,13 @@ For the loop to start cleanly (under normal operation, not paused-for-operator s
 - `bash scripts/ci/check-bootstrap.sh` passed at the most recent commit (last verified: 2026-05-08, exit 0; surfaces 4 expected hard_failures from §1.4 of intervention-strategies)
 - ~~`python3 tooling/codex/audit_refmap.py verify .` exit 0~~ — KNOWN FAILING since 73f130d (2026-05-08); see Out-Of-Scope Surfaces #1; expected exit 1 with 8 unclassified items until operator addresses
 
-### Current actual worktree (during paused-for-operator)
+### Current actual worktree (normal operation, post-slice-0)
 
 ```
 ?? docs/handoff/DELETE-AFTER-INGESTION-2026-04-24-release-readiness-and-plan-004.md
- M .planning/initiatives/inject-migration/STATE.md
-?? .planning/initiatives/inject-migration/checkpoints/2026-05-15T225033Z-phase00-slice00.md
 ```
 
-The two added/modified items are state-management artifacts written during the hard-stop turn per PROTOCOL.md "Hard-Stop Protocol" steps 2–3. They are intentionally uncommitted (per step 1, "do NOT commit any pending changes"). The operator's resumption commit should land them.
+Only the pre-declared temp-handoff item remains. It is slated for deletion in Phase 0 Slice 6 per the phase plan. All other slice 0 artifacts (STATE.md edits, this slice's checkpoint) were committed atomically with the slice's work per PROTOCOL.md "State-Update Protocol".
 
 ## Notes For The Agent
 
@@ -123,4 +122,3 @@ The two added/modified items are state-management artifacts written during the h
 - When a reviewer is invoked (per [REVIEWERS.md](REVIEWERS.md)), append a row to `Reviewer Decisions Log` AND record the full verdict block in the slice's checkpoint under `## Reviewer Verdict`.
 - The `[GOAL-EVAL]` line at turn end is mandatory — see [PROTOCOL.md](PROTOCOL.md) "Turn-End Discipline" for exact format.
 - The 3-consecutive-failure rule: if `Auto-Recovery Counters → Per-slice attempt counts` shows the same slice at 3, the next failure is an automatic hard-stop.
-- **Operator: on resumption from this hard-stop**, see checkpoint `checkpoints/2026-05-15T225033Z-phase00-slice00.md` → "Question for operator" for the two contradictions in slice 0's spec and recommended resolutions from the Plan reviewer.
