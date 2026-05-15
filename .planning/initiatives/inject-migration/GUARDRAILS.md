@@ -61,10 +61,10 @@ Every iteration must satisfy these or the iteration's commit is invalid (revert 
 3. **Body has Why/Verification/Boundary sections** per AGENTS.md §123
 4. **`Initiative: inject-migration phase <NN> slice <MM>` trailer** is present
 5. **`Reviewer:` trailer** is present when a reviewer's verdict influenced the commit (e.g., `Reviewer: adversarial-auditor-xhigh PASS @ phase-boundary-04`)
-6. **Files staged exactly match the slice's declared write set** — no surprises
+6. **Files staged match the slice's declared write set, plus STATE.md and the slice's checkpoint file** — STATE.md and `checkpoints/<UTC>-phase<NN>-slice<MM>.md` are implicitly authorized as state-management artifacts for every slice's commit per PROTOCOL.md "State-Update Protocol". Any OTHER file staged is a violation
 7. **`git diff --check` is clean** before commit
-8. **`audit_refmap.py verify .` is clean** (exit 0) before commit
-9. **STATE.md updated AFTER commit, in a SEPARATE commit** if STATE.md edit is non-trivial; in the SAME commit only if the slice spec explicitly says so
+8. **`audit_refmap.py verify .` introduces no new unclassified items** before commit — the gate may exit 1 if and only if its unclassified items are bounded by the known pre-existing baseline documented in `STATE.md → Out-Of-Scope Surfaces #1` (8 items as of 2026-05-15: 3 tool defects from gitignore-blind scanner, 5 stale audit-packet refs to upstream-deleted skill paths). Slices that introduce additional unclassified items must classify them in `.planning/refmap/audit-refmap-policy.json` before commit, or fix the root cause via a reviewer-mediated change
+9. **STATE.md and the slice's checkpoint file are committed atomically with the slice's work** — per PROTOCOL.md Per-Turn Flow, the State-Update Protocol writes STATE.md and the checkpoint as part of the slice's single commit. Two-commit-per-slice patterns are forbidden under this discipline (one slice → one commit containing all artifacts)
 10. **`[GOAL-EVAL]` line printed at end of each turn** — see PROTOCOL.md "Turn-End Discipline"
 
 ## Reviewer-Mediated Continuation (replaces former Approval-Required Actions)

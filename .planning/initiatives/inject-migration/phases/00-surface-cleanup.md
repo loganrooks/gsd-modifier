@@ -34,19 +34,41 @@ This preserves modifier-owned content without changing what materializes per run
 
 ## Slice Catalog
 
-### Slice 0 — Sanity check (read-only)
+### Slice 0 — Reconcile and attest baseline
 
 - **Status**: `[ ]`
-- **Type**: read-only verification
-- **Write set**: none
-- **Action**: Run baseline gates from a clean main to confirm starting state
+- **Type**: state reconciliation (produces a commit; the slice's WORK is the STATE.md edit)
+- **Write set**:
+  - `.planning/initiatives/inject-migration/STATE.md` → EDIT
+  - `.planning/initiatives/inject-migration/checkpoints/<UTC-timestamp>-phase00-slice00.md` → CREATE
+- **Action**: Reconcile STATE.md against git ground-truth (Last commit field; Status advance), attest worktree precondition, ensure refmap baseline is recorded in Out-Of-Scope Surfaces, and produce a commit. This is the first runtime turn after the `/goal` invocation; its purpose is to establish a clean attested baseline before any migration work.
+- **Approach**:
+  1. Read `git rev-parse HEAD` → call it `CURRENT_HEAD`
+  2. Edit STATE.md fields per PROTOCOL.md "State-Update Protocol":
+     - `Last updated` → current ISO-8601 UTC timestamp
+     - `Last updated by` → `inject-migration /goal agent`
+     - `Current Status → Status` → `in-progress` (was `pending`)
+     - `Current Status → Slice within phase` → `1` (advance past this slice)
+     - `Current Status → Last commit` → `<CURRENT_HEAD>` (will lag by one after this slice's commit — see PROTOCOL.md cold-start step 4 lag-by-one reconciliation)
+     - `Current Status → Last checkpoint` → path to this slice's checkpoint
+     - `Active Work → Current task` → `executing Phase 0 Slice 1 (reclassify gsd-do)`
+     - `Active Work → Started` → current timestamp
+     - `Counters → Slices complete` → 1 (was 0)
+     - `Recent Checkpoints` → append a row for this slice (outcome `success`)
+     - Confirm `Out-Of-Scope Surfaces` section exists with the refmap-baseline entry (idempotent — preserve if already present from a prior hard-stop reconciliation)
+  3. Write the slice 0 checkpoint per PROTOCOL.md template (outcome `success`)
+  4. Run verification gates (below)
+  5. Commit
 - **Verification**:
-  - `git status --short --branch` must show only `?? docs/handoff/DELETE-AFTER-INGESTION-2026-04-24-release-readiness-and-plan-004.md` untracked
-  - `git rev-parse HEAD` must match `STATE.md → Last commit`
+  - `git status --short --branch` shows only the modified STATE.md, the added checkpoint file, and the pre-condition untracked items
   - `git diff --check` clean
-  - `python3 tooling/codex/audit_refmap.py verify .` exit 0
-- **State update**: advance to Slice 1; this slice does not produce a commit (read-only baseline confirmation)
-- **Checkpoint outcome**: `success` if baseline confirms; otherwise `blocked`
+  - `python3 tooling/codex/audit_refmap.py snapshot .` runs to capture baseline (non-enforcing; exit code is NOT gated for this slice — see GUARDRAILS.md Required Discipline #8 known-baseline allowance)
+- **Commit**:
+  - Subject: `chore(state): reconcile inject-migration STATE.md with git ground-truth`
+  - Body: includes `Why` (slice 0 baseline reconciliation), `Verification` (gates run), `Boundary` (no migration work; only state reconciliation), and the `Initiative: inject-migration phase 00 slice 0` trailer
+- **Boundary**: This slice does NOT migrate any carrier. It does NOT touch contract code, manifest, or upstream files. It does NOT run the `audit_refmap.py verify .` gate (per Required Discipline #8 known-baseline allowance). It does NOT modify governance carriers.
+- **Why** (for commit body): "Slice 0 is the first runtime turn after `/goal` invocation. Its job is to reconcile STATE.md against actual git ground-truth (placeholder fields become real SHAs; status advances from pending to in-progress) and to attest that the baseline matches the initiative's documented preconditions. The `audit_refmap.py verify .` gate is intentionally not enforced here — its known 8-item baseline (3 tool defects from gitignore-blind scanner; 5 stale audit-packet refs to upstream-deleted skill paths) is documented in STATE.md → Out-Of-Scope Surfaces #1 and accepted per the revised Required Discipline #8. Architectural fix is deferred to a separate reviewer-mediated initiative."
+- **Checkpoint outcome**: `success` after commit lands
 
 ### Slice 1 — Reclassify `gsd-do` skill as modifier-owned
 
@@ -225,6 +247,7 @@ The phase-boundary verification is run by the agent in a SEPARATE iteration afte
 | The temp handoff's delete-after-ingestion contract is interpreted as "ingestion required by all consumers, not just the operator" | low | low (the handoff's content is in the orientation artifact and PR documentation) | the orientation artifact and Plan 004 disposition together preserve every durable piece of the temp handoff |
 | Bootstrap gate's "hard_failures" continues to report after all four reclassifications | medium | medium | indicates a fifth drift item we missed; treat as new evidence; pause and re-orient |
 | AGENTS.md / CLAUDE.md edits surface a `scan_threshold_language.py` finding | low | low | edit phrasing to avoid threshold language; re-run scanner |
+| The pre-existing refmap baseline (8 unclassified items since 73f130d 2026-05-08) drifts during phase work, introducing additional unclassified items | low | medium | per-slice gates require no NEW unclassified items per the revised Required Discipline #8; the 8-item baseline is documented in STATE.md → Out-Of-Scope Surfaces #1; root-cause architectural fix (gitignore-aware `audit_refmap.py:iter_markdown_files`) is deferred to a separate reviewer-mediated initiative outside this scope |
 
 ## Notes For Future Iterations
 

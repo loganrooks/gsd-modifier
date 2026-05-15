@@ -2,18 +2,18 @@
 
 # Inject Migration State
 
-Last updated: 2026-05-15T00:00:00Z (rebuilt around `/goal` + reviewer-mediated checkpoints; still not started)
-Last updated by: initiative author (manual)
+Last updated: 2026-05-15T23:30:00Z (operator resolution of slice 0 spec contradictions; resumed)
+Last updated by: operator (post-hard-stop revision)
 Schema version: 2
 
 ## Current Status
 
 - **Phase**: 0 (`00-surface-cleanup`)
-- **Slice within phase**: 0 (not started)
+- **Slice within phase**: 0 (revised spec — "Reconcile and attest baseline"; ready to re-execute)
 - **Status**: `pending` (one of: `pending`, `in-progress`, `paused-for-operator`, `blocked`, `complete`, `aborted`)
-- **Last checkpoint**: none yet
-- **Last commit**: (set by next iteration's reconciliation to `git rev-parse HEAD`)
-- **Sentinel**: `NOT-STARTED` (when this becomes `INITIATIVE-COMPLETE`, the `/goal` evaluator terminates the goal)
+- **Last checkpoint**: `checkpoints/2026-05-15T225033Z-phase00-slice00.md` (hard-stop record; superseded by operator resolution commit and revised slice spec)
+- **Last commit**: (set by next iteration's reconciliation per PROTOCOL.md cold-start step 4; current HEAD is the operator resolution commit)
+- **Sentinel**: `IN-PROGRESS` (first turn fired; slice 0 hard-stopped; operator has resolved per revised spec; ready to resume)
 
 ## Phase Progress
 
@@ -31,13 +31,28 @@ Schema version: 2
 
 ## Active Work
 
-- **Current task**: (none — initiative not started)
-- **Started**: (n/a)
-- **Expected completion**: (n/a)
+- **Current task**: ready to advance — Phase 0 Slice 0 (revised: "Reconcile and attest baseline")
+- **Started**: (will be set by next turn)
+- **Expected completion**: next turn fires slice 0 with revised spec; should succeed and advance to Slice 1
 
 ## Blockers
 
-(none)
+(none active)
+
+### Resolved blockers
+
+1. ~~**Slice 0 spec contradictions (gsd-debugger + Plan reviewer concur, 2026-05-15)**~~ — **RESOLVED 2026-05-15** by operator resolution commit. Both contradictions addressed:
+   - **Contradiction A** (STATE.md placeholder vs read-only slice 0): resolved by revising slice 0 in `phases/00-surface-cleanup.md` to "Reconcile and attest baseline" type with `STATE.md` in declared write set; slice now produces a commit.
+   - **Contradiction B** (audit_refmap.py verify gate vs pre-existing baseline): resolved by amending Required Discipline #8 in `GUARDRAILS.md` to allow the documented 8-item known baseline and require slices to not introduce NEW unclassified items.
+   - Additional PROTOCOL fixes: cold-start step 4 documents the lag-by-one pattern; cold-start step 7 consults STATE.md → Status as resume authority; per-turn flow reordered to commit STATE.md + checkpoint atomically with slice work; Discipline #5/#9 amended to authorize STATE.md and checkpoint in every slice's write set implicitly.
+   - Original hard-stop record preserved: `checkpoints/2026-05-15T225033Z-phase00-slice00.md`.
+
+## Out-Of-Scope Surfaces
+
+(Per GUARDRAILS.md "Sub-Initiative Isolation" — concerns surfaced during iteration that do not belong to this initiative.)
+
+1. **Refmap policy gap (8 unclassified missing local targets, deterministic since 2026-05-08)** — surfaced at slice 0 sanity check. Root cause: (a) `tooling/codex/audit_refmap.py:iter_markdown_files` scans gitignored `.codex/` materialized runtime; (b) `.planning/refmap/audit-refmap-policy.json` missed 8 paths in the 73f130d cleanup. Recommended fix path: architectural fix in `audit_refmap.py` to honor `.gitignore` (reviewer-gated per GUARDRAILS Reviewer-Mediated Continuation table; should be a separate `adversarial-auditor-xhigh`-mediated change outside this initiative). Minimum-policy-patch alternative would entrench tool noise as policy and is rejected per Plan reviewer 2026-05-15.
+2. **`classification_counts` drift in `audit-refmap-policy.json:1-5`** — header reports `intentionally_unimported_origin_artifact: 47` but the live gate reports `43`; 4 entries' source/line referents have shifted. Also out-of-scope; should be addressed alongside item #1.
 
 ## Counters
 
@@ -53,40 +68,51 @@ Schema version: 2
 
 ## Recent Checkpoints
 
-(none — initiative not started; checkpoints will accumulate under `checkpoints/`)
+| Timestamp | Phase.Slice | Outcome | Note |
+|---|---|---|---|
+| 2026-05-15T22:50:33Z | 0.0 | paused-for-operator | Hard-stop on slice 0 spec contradictions (gsd-debugger FAIL + Plan FAIL); see `checkpoints/2026-05-15T225033Z-phase00-slice00.md` |
 
 ## Reviewer Decisions Log
 
-(no decisions yet — initiative not started)
-
-<!-- Format (append-only; one row per reviewer invocation):
 | Timestamp (ISO-8601 UTC) | Phase.Slice | Reviewer | Verdict | One-line reasoning | Decision taken |
 |---|---|---|---|---|---|
-| 2026-05-15T14:32:00Z | 1.2 | adversarial-auditor-xhigh | PASS | ADR-001 scope sound; risks honestly enumerated | proceeded to commit; logged in checkpoints/2026-05-15T143200Z-phase01-slice02.md |
--->
+| 2026-05-15T22:45:00Z | 0.0 | gsd-debugger | FAIL | `audit_refmap.py verify .` exit 1 deterministically; 8 unclassified items; fix outside slice 0's empty write set | escalated to Plan reviewer per auto-recovery #4 |
+| 2026-05-15T22:48:00Z | 0.0 | Plan | FAIL | Slice 0 spec contains internally contradictory directives; route to GUARDRAILS Hard Stops #5 | executed Hard-Stop Protocol; turn ends; goal terminated |
 
 ## Auto-Recovery Counters
 
 Tracks resilience of the loop. The 3-consecutive-failure rule fires when any slice's `attempts` here reaches 3.
 
-- Total reviewer invocations: 0
+- Total reviewer invocations: 2
 - Reviewer PASS verdicts: 0
-- Reviewer FAIL verdicts: 0
+- Reviewer FAIL verdicts: 2 (gsd-debugger, Plan)
 - Reviewer ESCALATE verdicts: 0
 - Reviewer HALT verdicts: 0
-- Auto-recovery successes: 0 (a gate failed but the recovery pattern in GUARDRAILS.md restored green)
-- Auto-recovery escalations to hard-stop: 0
-- Slice-level retries (cumulative): 0
-- Per-slice attempt counts (only for slices not yet completed): (none)
+- Auto-recovery successes: 0
+- Auto-recovery escalations to hard-stop: 1 (this turn)
+- Slice-level retries (cumulative): 1 (the `audit_refmap.py verify .` deterministic retry; counted once because outcome was identical)
+- Per-slice attempt counts (only for slices not yet completed):
+  - phase 0 slice 0: **1 attempt** (hard-stopped before re-attempt; 3-consecutive-failure rule has not yet been reached, but the underlying condition will not change without operator action so re-attempt would also fail)
 
 ## Dirty-Worktree Pre-Conditions
 
-For the loop to start cleanly:
+For the loop to start cleanly (under normal operation, not paused-for-operator state):
 
 - `git status --short` should show only the temp handoff (`docs/handoff/DELETE-AFTER-INGESTION-...md`) until Phase 0 Slice 6 deletes it
 - `git diff --check` should be clean
 - `bash scripts/ci/check-deterministic.sh` passed at the most recent commit (last verified: 2026-05-08, exit 0)
 - `bash scripts/ci/check-bootstrap.sh` passed at the most recent commit (last verified: 2026-05-08, exit 0; surfaces 4 expected hard_failures from §1.4 of intervention-strategies)
+- ~~`python3 tooling/codex/audit_refmap.py verify .` exit 0~~ — KNOWN FAILING since 73f130d (2026-05-08); see Out-Of-Scope Surfaces #1; expected exit 1 with 8 unclassified items until operator addresses
+
+### Current actual worktree (during paused-for-operator)
+
+```
+?? docs/handoff/DELETE-AFTER-INGESTION-2026-04-24-release-readiness-and-plan-004.md
+ M .planning/initiatives/inject-migration/STATE.md
+?? .planning/initiatives/inject-migration/checkpoints/2026-05-15T225033Z-phase00-slice00.md
+```
+
+The two added/modified items are state-management artifacts written during the hard-stop turn per PROTOCOL.md "Hard-Stop Protocol" steps 2–3. They are intentionally uncommitted (per step 1, "do NOT commit any pending changes"). The operator's resumption commit should land them.
 
 ## Notes For The Agent
 
@@ -97,3 +123,4 @@ For the loop to start cleanly:
 - When a reviewer is invoked (per [REVIEWERS.md](REVIEWERS.md)), append a row to `Reviewer Decisions Log` AND record the full verdict block in the slice's checkpoint under `## Reviewer Verdict`.
 - The `[GOAL-EVAL]` line at turn end is mandatory — see [PROTOCOL.md](PROTOCOL.md) "Turn-End Discipline" for exact format.
 - The 3-consecutive-failure rule: if `Auto-Recovery Counters → Per-slice attempt counts` shows the same slice at 3, the next failure is an automatic hard-stop.
+- **Operator: on resumption from this hard-stop**, see checkpoint `checkpoints/2026-05-15T225033Z-phase00-slice00.md` → "Question for operator" for the two contradictions in slice 0's spec and recommended resolutions from the Plan reviewer.

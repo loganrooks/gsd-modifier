@@ -19,14 +19,18 @@ You do **not** need to read other phase files unless the active phase plan refer
 1. **Verify the repo location**: working directory is `/home/rookslog/workspace/projects/gsd-modifier`. If not, hard-stop.
 2. **Verify branch**: `git rev-parse --abbrev-ref HEAD` should return `main` unless `STATE.md → Current Status` says otherwise. If not on `main`, hard-stop.
 3. **Read the five files** in the order above.
-4. **Reconcile STATE.md against `git log`**: `git rev-parse HEAD` must equal `STATE.md → Last commit`. If they diverge, treat `git log` as ground truth and update STATE.md before proceeding.
+4. **Reconcile STATE.md against `git log`**: `git rev-parse HEAD` should equal `STATE.md → Last commit`, OR equal the commit immediately AFTER `STATE.md → Last commit` (the "lag by one" pattern: the prior turn's commit set Last commit to its own parent, since self-SHA is unknowable pre-commit; this is normal and expected). If neither matches, treat `git log` as ground truth and update STATE.md → Last commit before proceeding. If the lag-by-one pattern matches, update STATE.md → Last commit to current HEAD before proceeding (a routine reconciliation, written in the next slice's STATE.md update).
 5. **Verify clean worktree**: `git status --short` should show only items listed in `STATE.md → Dirty-Worktree Pre-Conditions`. Any other untracked or modified files trigger the worktree-drift auto-recovery pattern (see GUARDRAILS.md).
 6. **Check the sentinel**: if `STATE.md → Sentinel` is `INITIATIVE-COMPLETE` or `ABORTED`, output `[GOAL-EVAL] Sentinel: <value>` and end the turn. The `/goal` evaluator will terminate the goal.
-7. **Check the most-recent checkpoint outcome**:
-   - `success` → proceed to Per-Turn Flow
-   - `paused-for-operator` → hard-stop with the prior reason; end the turn
-   - `blocked` → re-attempt the same slice via auto-recovery (this is what the 3-consecutive-failure rule counts)
-   - `aborted` → end the turn
+7. **Check resume status**. Consult `STATE.md → Current Status → Status` as the primary resume-decision authority; the most-recent checkpoint outcome is informational (confirms what happened) but does NOT gate resumption.
+
+   - `STATE.md → Status` is `pending` or `in-progress` → proceed to Per-Turn Flow with the slice referenced by `STATE.md → Slice within phase`
+   - `STATE.md → Status` is `complete` → proceed to the next phase per `Phase Progress` (or initiative-level closeout if all phases are complete)
+   - `STATE.md → Status` is `paused-for-operator` → re-emit the prior `HARD-STOP:` marker (read it from the most-recent checkpoint's `## Question for operator` section) and end the turn
+   - `STATE.md → Status` is `blocked` → re-attempt the same slice via auto-recovery (the 3-consecutive-failure rule counts cross-turn retries)
+   - `STATE.md → Status` is `aborted` → emit `Sentinel: ABORTED` and end the turn
+
+   The most-recent checkpoint outcome is consulted for confirmation: if checkpoint `Outcome` is `paused-for-operator` but `STATE.md → Status` is `pending` or `in-progress`, the operator has intervened to resolve the prior pause — trust `STATE.md → Status` and proceed.
 
 ## Per-Turn Flow
 
@@ -64,20 +68,23 @@ You do **not** need to read other phase files unless the active phase plan refer
 │    - At phase debrief slice: spawn adversarial-auditor-xhigh               │
 │    - Capture verdict per REVIEWERS.md; act on it                           │
 ├────────────────────────────────────────────────────────────────────────────┤
-│ 8. Commit                                                                  │
-│    - Conventional subject; Why/Verification/Boundary body                  │
-│    - Initiative: trailer                                                   │
-│    - Reviewer: trailer if a reviewer's verdict influenced the commit       │
-├────────────────────────────────────────────────────────────────────────────┤
-│ 9. Update STATE.md                                                         │
-│    - Last commit, Last checkpoint, Slice within phase                      │
+│ 8. Update STATE.md (on disk; pre-commit)                                   │
+│    - Last commit (set to PARENT of upcoming commit = current HEAD;         │
+│      will lag by one after commit and is reconciled in next cold-start)    │
+│    - Last checkpoint, Slice within phase                                   │
 │    - Status, Counters                                                      │
 │    - Reviewer Decisions Log (append row if a reviewer was invoked)         │
 │    - Auto-Recovery Counters (increment if relevant)                        │
 │    - Phase Progress (mark [x] if phase just completed)                     │
 ├────────────────────────────────────────────────────────────────────────────┤
-│ 10. Write checkpoint                                                       │
+│ 9. Write checkpoint (on disk; pre-commit)                                  │
 │    checkpoints/<UTC-timestamp>-phase<NN>-slice<MM>.md per template         │
+├────────────────────────────────────────────────────────────────────────────┤
+│ 10. Commit ALL changes atomically                                          │
+│    - Slice's primary edits + STATE.md + checkpoint, in ONE commit          │
+│    - Conventional subject; Why/Verification/Boundary body                  │
+│    - Initiative: trailer                                                   │
+│    - Reviewer: trailer if a reviewer's verdict influenced the commit       │
 ├────────────────────────────────────────────────────────────────────────────┤
 │ 11. Output [GOAL-EVAL] line (Turn-End Discipline below)                    │
 │     End the turn. /goal evaluator decides whether to fire next turn.       │
