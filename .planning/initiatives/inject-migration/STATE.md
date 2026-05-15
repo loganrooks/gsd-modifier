@@ -2,18 +2,18 @@
 
 # Inject Migration State
 
-Last updated: 2026-05-15T23:51:39Z (slice 5 add change-class triggers)
+Last updated: 2026-05-15T23:54:00Z (slice 6 delete temp handoff; Phase 0 last regular slice committed; phase-boundary verifier pending next turn)
 Last updated by: inject-migration /goal agent
 Schema version: 2
 
 ## Current Status
 
 - **Phase**: 0 (`00-surface-cleanup`)
-- **Slice within phase**: 6 (slice 5 complete; next is "Delete temp handoff" — final Phase 0 slice before the phase-boundary trajectory-verifier turn)
+- **Slice within phase**: 7 (sentinel: all 7 regular slices 0–6 committed; next turn runs `trajectory-verifier` for phase-boundary verification per PROTOCOL.md "Phase-boundary mandate"; Phase 0 will be marked `[x]` only after verifier PASS)
 - **Status**: `in-progress` (one of: `pending`, `in-progress`, `paused-for-operator`, `blocked`, `complete`, `aborted`)
-- **Last checkpoint**: `checkpoints/2026-05-15T235139Z-phase00-slice05.md`
-- **Last commit**: `95fba75a6b40259400484b7b7891fd14529761e8` (lag-by-one — slice 4's commit reconciled via PROTOCOL.md cold-start step 4; will lag again to slice 5's commit after this turn's atomic commit)
-- **Sentinel**: `IN-PROGRESS` (slice 5 succeeded; change-class trigger taxonomy landed in AGENTS.md + CLAUDE.md + operational checklist; slice 6 deletes temp handoff; phase 0 boundary verifier fires the turn AFTER slice 6 commits)
+- **Last checkpoint**: `checkpoints/2026-05-15T235400Z-phase00-slice06.md`
+- **Last commit**: `6208b54506d105c529f691890e041ee3ad8e33b7` (lag-by-one — slice 5's commit reconciled via PROTOCOL.md cold-start step 4; will lag again to slice 6's commit after this turn's atomic commit)
+- **Sentinel**: `IN-PROGRESS` (Phase 0 regular slices complete; trajectory-verifier is the next-turn gate before Phase 0 marks `[x]` and Phase 1 begins)
 
 ## Phase Progress
 
@@ -31,9 +31,9 @@ Schema version: 2
 
 ## Active Work
 
-- **Current task**: executing Phase 0 Slice 6 (delete temp handoff `docs/handoff/DELETE-AFTER-INGESTION-2026-04-24-release-readiness-and-plan-004.md`)
-- **Started**: 2026-05-15T23:51:39Z
-- **Expected completion**: slice 6 confirms the orientation artifact + Plan 004 disposition + change-class triggers (just landed in slice 5) absorb the temp handoff's durable content, then `git rm`s the temp handoff to satisfy its delete-after-ingestion contract; phase-boundary trajectory-verifier fires in the turn AFTER slice 6's commit
+- **Current task**: NEXT TURN must run `trajectory-verifier` per REVIEWERS.md "Phase Boundary Verification" template for phase `00-surface-cleanup`. The verifier reads the phase plan's Exit Criteria, the commits since phase start (slices 0–6: `ff9b943`, `e6e4ebf`, `bbcbe23`, `a212b47`, `95fba75`, `6208b54`, plus slice 6's commit this turn), STATE.md, and slice checkpoints. The Exit Criteria require: (1) all slices `[x]`, (2) `bash scripts/ci/check-bootstrap.sh` reports `hard_failures: []`, (3) `bash scripts/ci/check-deterministic.sh` exit 0 with no hard_failures/missing_*, (4) STATE.md reflects 4/4 reclassifications + Phase 0 marked `[x]`. The verifier's PASS verdict authorizes marking Phase 0 `[x]` and advancing to Phase 1.
+- **Started**: (next-turn cold start)
+- **Expected completion**: next turn's trajectory-verifier returns PASS → STATE.md marks Phase 0 `[x]` and Phase advances to 1 Slice 0 (schema foundation: ADR-001)
 
 ## Blockers
 
@@ -64,7 +64,7 @@ Schema version: 2
 - Inject unit tests passing: 0 / target TBD
 - Bootstrap gate hard_failures: 4 (target: 0 after Phase 0; confirmed by Slice 4's exit verification once all 4 carriers reclassified)
 - Phases complete: 0 / 11
-- Slices complete: 6
+- Slices complete: 7 (all Phase 0 regular slices done; phase-boundary trajectory-verifier counts as the next iteration's work)
 
 ## Recent Checkpoints
 
@@ -77,6 +77,7 @@ Schema version: 2
 | 2026-05-15T23:45:17Z | 0.3 | success | Slice 3 reclassify `gsd-plant-seed` skill — `git mv` for byte-perfect rename (3119 bytes preserved); manifest entry flipped to `mode: add`; all 3 verification gates exit 0; no reviewer invoked |
 | 2026-05-15T23:47:45Z | 0.4 | success | Slice 4 reclassify `research-phase` workflow (dual-materializer case) — `git mv` for byte-perfect rename (3791 bytes preserved); BOTH codex AND claude materializer entries flipped to `mode: add` with new `source` paths; dual-materializer assertion `manifest entry correct`; all 3 verification gates exit 0; no reviewer invoked; bootstrap gate hard-failure-clearing batch now complete (deferred Slice 4 boundary check to phase-boundary trajectory-verifier turn) |
 | 2026-05-15T23:51:39Z | 0.5 | success | Slice 5 add change-class trigger taxonomy — added `### Change-Class Triggers` subsection in AGENTS.md "Workflow Rules" (before "Contract Propagation"); appended a parallel acknowledgement paragraph in CLAUDE.md "Workflow Discipline"; created `.planning/initiatives/inject-migration/posture-triggers.md` (66 lines operational checklist); spec's dangling `§58` reference adapted to "the carve-out above" for self-contained reference; 4 verification gates exit 0 (added `scan_threshold_language.py` to baseline gates: no findings on AGENTS.md, CLAUDE.md, or posture-triggers.md); no reviewer invoked (slice spec is the pre-spec'd governance authorization per GUARDRAILS Reviewer-Mediated Continuation table) |
+| 2026-05-15T23:54:00Z | 0.6 | success | Slice 6 delete temp handoff — file was UNTRACKED (`??` in git status, `git ls-files` empty), so used plain `rm` instead of spec's `git rm` (spec's verification step DID acknowledge file was untracked); worktree now fully clean; all 4 slice 6 prerequisites confirmed (orientation artifact, intervention-strategies, Plan 004 disposition, change-class triggers); commit body captures the delete-after-ingestion contract satisfaction; 2 verification gates exit 0; no reviewer invoked |
 
 ## Reviewer Decisions Log
 
@@ -110,13 +111,13 @@ For the loop to start cleanly (under normal operation, not paused-for-operator s
 - `bash scripts/ci/check-bootstrap.sh` passed at the most recent commit (last verified: 2026-05-08, exit 0; surfaces 4 expected hard_failures from §1.4 of intervention-strategies)
 - ~~`python3 tooling/codex/audit_refmap.py verify .` exit 0~~ — KNOWN FAILING since 73f130d (2026-05-08); see Out-Of-Scope Surfaces #1; expected exit 1 with 8 unclassified items until operator addresses
 
-### Current actual worktree (normal operation, post-slice-0)
+### Current actual worktree (normal operation, post-slice-6)
 
 ```
-?? docs/handoff/DELETE-AFTER-INGESTION-2026-04-24-release-readiness-and-plan-004.md
+(empty)
 ```
 
-Only the pre-declared temp-handoff item remains. It is slated for deletion in Phase 0 Slice 6 per the phase plan. All other slice 0 artifacts (STATE.md edits, this slice's checkpoint) were committed atomically with the slice's work per PROTOCOL.md "State-Update Protocol".
+The temp handoff was deleted in this slice. The worktree is now fully clean. All Phase 0 deltas committed; nothing pending. Future iterations should observe `git status --short` returning empty (modulo any in-flight slice's pre-commit edits, which are normal mid-slice state).
 
 ## Notes For The Agent
 
