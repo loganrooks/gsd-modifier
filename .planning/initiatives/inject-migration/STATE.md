@@ -2,18 +2,18 @@
 
 # Inject Migration State
 
-Last updated: 2026-05-15T23:35:21Z (slice 0 reconcile and attest baseline)
+Last updated: 2026-05-15T23:40:50Z (slice 1 reclassify gsd-do skill)
 Last updated by: inject-migration /goal agent
 Schema version: 2
 
 ## Current Status
 
 - **Phase**: 0 (`00-surface-cleanup`)
-- **Slice within phase**: 1 (slice 0 complete; next is "Reclassify gsd-do skill as modifier-owned")
+- **Slice within phase**: 2 (slice 1 complete; next is "Reclassify gsd-from-gsd2 skill as modifier-owned")
 - **Status**: `in-progress` (one of: `pending`, `in-progress`, `paused-for-operator`, `blocked`, `complete`, `aborted`)
-- **Last checkpoint**: `checkpoints/2026-05-15T233521Z-phase00-slice00.md`
-- **Last commit**: `35dda63003739a77fd827950b3f3b206090d97a8` (lag-by-one — will be reconciled to slice 0's commit SHA in next turn's cold start per PROTOCOL.md step 4)
-- **Sentinel**: `IN-PROGRESS` (slice 0 succeeded; loop advancing through Phase 0 reclassifications)
+- **Last checkpoint**: `checkpoints/2026-05-15T234050Z-phase00-slice01.md`
+- **Last commit**: `ff9b943a111297d06d5c22811f22b123fcaa33d1` (lag-by-one — slice 0's commit reconciled via PROTOCOL.md cold-start step 4; will lag again to slice 1's commit after this turn's atomic commit)
+- **Sentinel**: `IN-PROGRESS` (slice 1 succeeded; first `mode: overwrite → mode: add` reclassification complete; 3 more carriers to go in Phase 0)
 
 ## Phase Progress
 
@@ -31,9 +31,9 @@ Schema version: 2
 
 ## Active Work
 
-- **Current task**: executing Phase 0 Slice 1 (reclassify `gsd-do` skill as modifier-owned `mode: add`)
-- **Started**: 2026-05-15T23:35:21Z
-- **Expected completion**: slice 1 moves `gsd-do/SKILL.md` from `tooling/portable-gsd/overlay/` to `harness_modifier/overlay/` and flips its manifest entry from `mode: overwrite` to `mode: add`
+- **Current task**: executing Phase 0 Slice 2 (reclassify `gsd-from-gsd2` skill as modifier-owned `mode: add`)
+- **Started**: 2026-05-15T23:40:50Z
+- **Expected completion**: slice 2 moves `gsd-from-gsd2/SKILL.md` from `tooling/portable-gsd/overlay/` to `harness_modifier/overlay/` and flips its manifest entry from `mode: overwrite` to `mode: add`
 
 ## Blockers
 
@@ -57,14 +57,14 @@ Schema version: 2
 ## Counters
 
 - Carriers migrated to `mode: inject`: 0 / target ~25–30
-- Carriers reclassified to `mode: add`: 0 / target 4 (Phase 0)
+- Carriers reclassified to `mode: add`: 1 / target 4 (Phase 0)
 - Carriers staying as `mode: overwrite`: ~5 (lib *.cjs) + others TBD per phase decisions
 - Net-new modifier-owned (`mode: add`): 18 (no migration; baseline)
 - Inject operation kinds implemented: 0 / target ~7
 - Inject unit tests passing: 0 / target TBD
-- Bootstrap gate hard_failures: 4 (target: 0 after Phase 0)
+- Bootstrap gate hard_failures: 4 (target: 0 after Phase 0; confirmed by Slice 4's exit verification once all 4 carriers reclassified)
 - Phases complete: 0 / 11
-- Slices complete: 1
+- Slices complete: 2
 
 ## Recent Checkpoints
 
@@ -72,6 +72,7 @@ Schema version: 2
 |---|---|---|---|
 | 2026-05-15T22:50:33Z | 0.0 | paused-for-operator | Hard-stop on slice 0 spec contradictions (gsd-debugger FAIL + Plan FAIL); see `checkpoints/2026-05-15T225033Z-phase00-slice00.md` |
 | 2026-05-15T23:35:21Z | 0.0 | success | Slice 0 reconcile and attest baseline; STATE.md ground-truthed against `git rev-parse HEAD`; `audit_refmap.py snapshot .` exit 0 (non-enforcing per Required Discipline #8 known baseline); no reviewer invoked |
+| 2026-05-15T23:40:50Z | 0.1 | success | Slice 1 reclassify `gsd-do` skill — moved `SKILL.md` from `tooling/portable-gsd/overlay/skills/gsd-do/` to `harness_modifier/overlay/skills/gsd-do/`; manifest entry flipped to `mode: add` with new `source` path; all 3 verification gates exit 0; no reviewer invoked |
 
 ## Reviewer Decisions Log
 

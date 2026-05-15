@@ -911,9 +911,9 @@
       "parity_tier": "runtime_specific",
       "materializers": {
         "codex": {
-          "mode": "overwrite",
+          "mode": "add",
           "target": "skills/gsd-do/SKILL.md",
-          "source": "tooling/portable-gsd/overlay/skills/gsd-do/SKILL.md"
+          "source": "harness_modifier/overlay/skills/gsd-do/SKILL.md"
         }
       }
     },
