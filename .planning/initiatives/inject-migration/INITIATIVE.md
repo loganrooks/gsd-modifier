@@ -172,9 +172,9 @@ Between operator-required events, the agent loops autonomously per [PROTOCOL.md]
 
 ## How To Start
 
-Open a Claude Code session at `/home/rookslog/workspace/projects/gsd-modifier` (v2.1.139 or later) and paste the `/goal` invocation from [LOOP-PROMPT.md](LOOP-PROMPT.md) (section "Primary: `/goal` Invocation").
+Open a Claude Code session at `/home/rookslog/workspace/projects/gsd-modifier` (v2.1.139 or later) and paste the `/goal` invocation from [`.planning/goals/inject-migration.md`](../../goals/inject-migration.md).
 
-The first turn starts at Phase 0 Slice 0 (`00-surface-cleanup`). See [phases/00-surface-cleanup.md](phases/00-surface-cleanup.md) for the slice catalog.
+The first turn starts at Phase 0 Slice 0 (`00-surface-cleanup`). See [phases/00-surface-cleanup.md](phases/00-surface-cleanup.md) for the slice catalog. Operator-surface beyond initial invocation (status check, manual interrupt, resume after hard-stop, halt, fallback manual single-turn prompt) lives in [LOOP-PROMPT.md](LOOP-PROMPT.md).
 
 ## Cross-References
 

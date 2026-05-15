@@ -6,37 +6,11 @@ The operator's only obligations: initial GO, manual interrupt if needed, hard-st
 
 ## Primary: `/goal` Invocation
 
-Paste this into a Claude Code session at `/home/rookslog/workspace/projects/gsd-modifier` (v2.1.139 or later required):
+The canonical `/goal` block for this initiative lives in [`.planning/goals/inject-migration.md`](../../goals/inject-migration.md). Open that file, copy the block inside the fenced code section, and paste it into a fresh Claude Code session at `/home/rookslog/workspace/projects/gsd-modifier` (v2.1.139 or later).
 
-````text
-/goal The inject-migration initiative has reached a terminal or operator-required state. Specifically, the most recent agent turn output contains a [GOAL-EVAL] line whose `Sentinel:` field is INITIATIVE-COMPLETE or ABORTED, OR whose `Turn-end:` field begins with `hard-stop-`. The condition is also met if the turn cap of 300 turns is exceeded (runaway safety floor).
+Hit enter, then walk away. The `◎ /goal active` indicator shows the loop running.
 
-For each turn, the agent must:
-
-1. Set working directory to /home/rookslog/workspace/projects/gsd-modifier
-2. Read in order: .planning/initiatives/inject-migration/STATE.md, GUARDRAILS.md, REVIEWERS.md, PROTOCOL.md, the active phase plan in phases/
-3. Run Cold Start reconciliation per PROTOCOL.md "Cold Start"
-4. If Sentinel is INITIATIVE-COMPLETE or ABORTED: output [GOAL-EVAL] line and end turn
-5. Otherwise identify the next pending slice from the active phase plan
-6. Execute exactly one bounded slice per its slice spec
-7. Run slice's verification gates; if fail, invoke auto-recovery per GUARDRAILS.md
-8. If slice spec mandates a reviewer, spawn it via Agent tool per REVIEWERS.md
-9. At phase boundary (last slice of phase commits), spawn trajectory-verifier in a separate turn
-10. Commit with Why/Verification/Boundary body, Initiative: trailer, and Reviewer: trailer if applicable
-11. Update STATE.md atomically per PROTOCOL.md "State-Update Protocol"
-12. Write checkpoint to checkpoints/<UTC-timestamp>-phase<NN>-slice<MM>.md per template
-13. Output the [GOAL-EVAL] line on its own; end the turn
-
-Discipline:
-- Exactly one slice per turn
-- Reviewer verdicts are mandatory at the gates declared in REVIEWERS.md
-- Hard-stops (5 conditions in GUARDRAILS.md) emit HARD-STOP: <reason> and end the turn
-- Forbidden actions (15 in GUARDRAILS.md) are never taken regardless of reviewer recommendation
-
-Or stop after 300 turns.
-````
-
-That's it. Hit enter, then walk away. The `◎ /goal active` indicator shows the loop running.
+The `/goal` block is maintained in [`.planning/goals/`](../../goals/README.md) as a versioned registry. This file points there rather than carrying a second copy — refining the prompt is then a single-file diff, and the two copies can never drift.
 
 ## Status Check (read-only, no advancement)
 
