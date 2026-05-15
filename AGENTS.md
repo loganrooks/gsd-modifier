@@ -67,6 +67,23 @@ This repo is the standalone home for `gsd-modifier`.
   - planned work vs improvised repair
   - accepted boundary vs ambient untracked follow-up
 
+### Change-Class Triggers
+
+The propose-evidence-approve discipline applies in full to changes in any of the following classes. Slice specs in approved plans pre-authorize specific changes within these classes; ad hoc changes outside a pre-authorized spec require explicit operator approval.
+
+1. **Overlay carrier add/remove** — changes to `OVERLAY-MANIFEST.json` entries or files under `tooling/portable-gsd/overlay/` (and `harness_modifier/overlay/`)
+2. **Contract surface change** — anything under `harness_modifier/contract/`, `tooling/codex/audit_refmap.py`, `tooling/codex/scan_threshold_language.py`
+3. **Install/bootstrap script change** — `scripts/setup-portable-gsd*.sh`, `scripts/ci/check-*.sh`
+4. **Governance carrier change** — `AGENTS.md`, `CLAUDE.md`, `WORKFLOW.md`, `docs/handoff/current.md`, `.planning/STATUS.md`, `.planning/CURRENT-STATE.md`
+5. **Plan disposition or premise change** — `evidence/decision.md`, `evidence/implementation-disposition.md`, any decision artifact
+
+Out of scope (small mechanical fixes still proceed under the carve-out above):
+
+- Documentation typos with no semantic change
+- Test additions confirming existing behavior
+- Comment-only changes
+- Whitespace/formatting confined to one file
+
 ## Contract Propagation
 
 - when a change touches a contract-carrying surface such as a workflow, script, manifest, overlay file, contract checker, runtime adapter, or governing doc, do not stop at the local diff

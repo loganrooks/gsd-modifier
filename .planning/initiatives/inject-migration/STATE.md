@@ -2,18 +2,18 @@
 
 # Inject Migration State
 
-Last updated: 2026-05-15T23:47:45Z (slice 4 reclassify research-phase workflow)
+Last updated: 2026-05-15T23:51:39Z (slice 5 add change-class triggers)
 Last updated by: inject-migration /goal agent
 Schema version: 2
 
 ## Current Status
 
 - **Phase**: 0 (`00-surface-cleanup`)
-- **Slice within phase**: 5 (slice 4 complete; next is "Add change-class trigger taxonomy to AGENTS.md and CLAUDE.md" — governance carrier change pre-authorized by phase plan)
+- **Slice within phase**: 6 (slice 5 complete; next is "Delete temp handoff" — final Phase 0 slice before the phase-boundary trajectory-verifier turn)
 - **Status**: `in-progress` (one of: `pending`, `in-progress`, `paused-for-operator`, `blocked`, `complete`, `aborted`)
-- **Last checkpoint**: `checkpoints/2026-05-15T234745Z-phase00-slice04.md`
-- **Last commit**: `a212b47732c023066526c34c005eef5a69530c65` (lag-by-one — slice 3's commit reconciled via PROTOCOL.md cold-start step 4; will lag again to slice 4's commit after this turn's atomic commit)
-- **Sentinel**: `IN-PROGRESS` (slice 4 succeeded; all 4 stale-deleted carrier reclassifications complete in the `mode: overwrite → mode: add` batch; slice 5 begins governance work, slice 6 deletes the temp handoff, then trajectory-verifier at phase boundary)
+- **Last checkpoint**: `checkpoints/2026-05-15T235139Z-phase00-slice05.md`
+- **Last commit**: `95fba75a6b40259400484b7b7891fd14529761e8` (lag-by-one — slice 4's commit reconciled via PROTOCOL.md cold-start step 4; will lag again to slice 5's commit after this turn's atomic commit)
+- **Sentinel**: `IN-PROGRESS` (slice 5 succeeded; change-class trigger taxonomy landed in AGENTS.md + CLAUDE.md + operational checklist; slice 6 deletes temp handoff; phase 0 boundary verifier fires the turn AFTER slice 6 commits)
 
 ## Phase Progress
 
@@ -31,9 +31,9 @@ Schema version: 2
 
 ## Active Work
 
-- **Current task**: executing Phase 0 Slice 5 (add change-class trigger taxonomy to AGENTS.md and CLAUDE.md; create `posture-triggers.md` operational checklist)
-- **Started**: 2026-05-15T23:47:45Z
-- **Expected completion**: slice 5 adds the "Change-Class Triggers" subsection to AGENTS.md "Workflow Rules" (before "Contract Propagation"); appends a parallel CLAUDE.md paragraph in "Workflow Discipline"; creates `.planning/initiatives/inject-migration/posture-triggers.md` (~50 lines operational checklist)
+- **Current task**: executing Phase 0 Slice 6 (delete temp handoff `docs/handoff/DELETE-AFTER-INGESTION-2026-04-24-release-readiness-and-plan-004.md`)
+- **Started**: 2026-05-15T23:51:39Z
+- **Expected completion**: slice 6 confirms the orientation artifact + Plan 004 disposition + change-class triggers (just landed in slice 5) absorb the temp handoff's durable content, then `git rm`s the temp handoff to satisfy its delete-after-ingestion contract; phase-boundary trajectory-verifier fires in the turn AFTER slice 6's commit
 
 ## Blockers
 
@@ -64,7 +64,7 @@ Schema version: 2
 - Inject unit tests passing: 0 / target TBD
 - Bootstrap gate hard_failures: 4 (target: 0 after Phase 0; confirmed by Slice 4's exit verification once all 4 carriers reclassified)
 - Phases complete: 0 / 11
-- Slices complete: 5
+- Slices complete: 6
 
 ## Recent Checkpoints
 
@@ -76,6 +76,7 @@ Schema version: 2
 | 2026-05-15T23:43:31Z | 0.2 | success | Slice 2 reclassify `gsd-from-gsd2` skill — used `git mv` for byte-perfect rename (4528 bytes preserved); manifest entry flipped to `mode: add`; all 3 verification gates exit 0; no reviewer invoked |
 | 2026-05-15T23:45:17Z | 0.3 | success | Slice 3 reclassify `gsd-plant-seed` skill — `git mv` for byte-perfect rename (3119 bytes preserved); manifest entry flipped to `mode: add`; all 3 verification gates exit 0; no reviewer invoked |
 | 2026-05-15T23:47:45Z | 0.4 | success | Slice 4 reclassify `research-phase` workflow (dual-materializer case) — `git mv` for byte-perfect rename (3791 bytes preserved); BOTH codex AND claude materializer entries flipped to `mode: add` with new `source` paths; dual-materializer assertion `manifest entry correct`; all 3 verification gates exit 0; no reviewer invoked; bootstrap gate hard-failure-clearing batch now complete (deferred Slice 4 boundary check to phase-boundary trajectory-verifier turn) |
+| 2026-05-15T23:51:39Z | 0.5 | success | Slice 5 add change-class trigger taxonomy — added `### Change-Class Triggers` subsection in AGENTS.md "Workflow Rules" (before "Contract Propagation"); appended a parallel acknowledgement paragraph in CLAUDE.md "Workflow Discipline"; created `.planning/initiatives/inject-migration/posture-triggers.md` (66 lines operational checklist); spec's dangling `§58` reference adapted to "the carve-out above" for self-contained reference; 4 verification gates exit 0 (added `scan_threshold_language.py` to baseline gates: no findings on AGENTS.md, CLAUDE.md, or posture-triggers.md); no reviewer invoked (slice spec is the pre-spec'd governance authorization per GUARDRAILS Reviewer-Mediated Continuation table) |
 
 ## Reviewer Decisions Log
 

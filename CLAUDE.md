@@ -46,6 +46,8 @@ The propose-evidence-approve discipline in AGENTS.md "Workflow Rules" applies un
 - Small mechanical fixes may proceed only when the user's request is already explicit and the change is low-risk.
 - If the user challenges the premise of a change, pause implementation and reconcile before touching files.
 
+The change-class trigger taxonomy in AGENTS.md "Workflow Rules → Change-Class Triggers" applies under Claude. The five classes (overlay carrier, contract surface, install/bootstrap, governance, plan disposition) are runtime-neutral.
+
 ## Verification (Claude-side anchors)
 
 The verification stack in AGENTS.md "Verification" is runtime-neutral and runs identically here. Claude-side notes:
