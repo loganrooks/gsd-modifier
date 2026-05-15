@@ -1,35 +1,40 @@
 # Inject Migration Guardrails
 
-These rules apply on every iteration without exception. They override anything else if a conflict appears (including operator preference unless the operator explicitly overrides a specific rule with reasoning).
+Rules that apply on every iteration without exception. They override anything else if a conflict appears.
 
-## Hard Stops — Halt Iteration Immediately, Surface To Operator
+This initiative is **reviewer-mediated**, not operator-gated, between hard stops. The operator is involved only at:
 
-A hard stop means: do not commit, write a `paused-for-approval` checkpoint, set `STATE.md → Status` to `paused-for-approval`, exit the iteration. Wait for operator input.
+1. Initial `/goal` invocation
+2. Manual interrupt (`/goal clear` or Ctrl+C)
+3. Hard-stop conditions (5 only, listed below)
+4. Final retrospective review
 
-1. **Verification gate fails twice on the same slice in the same iteration**
-2. **Worktree contains uncommitted, untracked, or staged files outside the slice's declared write set** — do not auto-clean; investigate
-3. **Manifest schema validation fails** under `validate-manifest --strict --source-only` after a slice's edits
-4. **An ambiguity in the slice spec requires interpretation** that could plausibly be resolved more than one way
-5. **Surface change is required outside the slice's declared write set** to make verification pass — never expand the write set silently
-6. **The slice's commit body cannot be filled out honestly** under AGENTS.md §123 (e.g., the `Why:` is unclear because the slice's purpose has shifted)
-7. **A subagent returns evidence that contradicts the phase plan's premise** — pause; do not proceed on a falsified premise
-8. **The orientation artifact's premise check or the intervention-strategies analysis would change** if the new evidence were applied — surface to operator before continuing
-9. **The operator interrupts the loop** with any signal (text, question, or stop)
-10. **A previously-passing test now fails in a region unrelated to the slice** — likely a regression introduced earlier; stop and investigate
-11. **The 3-consecutive-failure rule fires** (STATE.md shows the same slice failed 3 separate iterations)
+Reviewer agents handle every other checkpoint. See [REVIEWERS.md](REVIEWERS.md).
 
-## Soft Stops — Note And Continue If Possible
+## Hard Stops (5) — Halt And Surface To Operator
 
-A soft stop means: log the issue to STATE.md `Blockers` or to the checkpoint, continue if the slice can still complete cleanly, surface in the next operator-visible report.
+A hard stop means: do not commit, do not continue, emit `HARD-STOP: <reason>` in the turn's output, write a `paused-for-operator` checkpoint, set `STATE.md → Status: paused-for-operator`, end the turn. The `/goal` evaluator detects the HARD-STOP line and terminates the goal.
 
-1. **Network timeout or transient error** during a tool call — retry once; if still failing, escalate to hard stop
+1. **Manifest schema validation fails** under `validate-manifest --strict --source-only` after a slice's edits, AND a `gsd-debugger` reviewer cannot identify a fix within the slice's declared write set
+2. **Commit body cannot be filled out honestly** under AGENTS.md §123 — the `Why:` is unclear because the slice's purpose has shifted away from the phase plan's intent
+3. **Premise change detected** — an `adversarial-auditor-xhigh` reviewer running the premise-change template returns `HALT`, meaning the orientation or intervention-strategies premise has been falsified
+4. **3-consecutive-failure rule** fires — STATE.md shows the same slice failed verification 3 separate times across 3 separate turns
+5. **Self-detected initiative-file corruption** — INITIATIVE.md, GUARDRAILS.md, PROTOCOL.md, REVIEWERS.md, or any active phase plan is malformed (unparseable markdown, contradictory directives, missing required sections)
+
+Other former hard-stop conditions are now reviewer-mediated (see "Reviewer-Mediated Continuation" below).
+
+## Soft Stops — Log And Continue
+
+A soft stop means: log to STATE.md `Blockers` or the checkpoint, continue if the slice can still complete cleanly, surface in the next operator-visible report.
+
+1. **Network timeout or transient tool error** during a non-gate tool call — retry once; if still failing, treat as a gate failure and invoke `gsd-debugger`
 2. **A cross-reference link in a doc points at a moved file** — note in checkpoint; do not auto-fix unless the slice spec authorizes it
-3. **A non-essential CI gate produces a warning** — note; continue; raise to phase-boundary review
-4. **Subagent timeout** — retry the subagent once with the same prompt; if still failing, hard-stop
+3. **A non-essential CI gate produces a warning** (not a failure) — note; continue; surface at phase boundary
+4. **Reviewer agent timeout** — retry the reviewer once with the same prompt; if still timing out, hard-stop with `HARD-STOP: reviewer-tool-failure`
 
 ## Forbidden Actions — Never, Under Any Circumstance
 
-These are forbidden regardless of operator request unless the operator explicitly overrides each one in writing in the same iteration's prompt.
+These are agent constraints. They cannot be reviewer-overridden. The only override mechanism is operator instruction in writing in the same turn (see "Operator Override" below).
 
 1. **Force-pushing to any branch** — `git push --force` / `--force-with-lease`
 2. **Resetting `main` to a non-descendant commit** — `git reset --hard <ref>` where `<ref>` is not an ancestor of HEAD
@@ -44,6 +49,8 @@ These are forbidden regardless of operator request unless the operator explicitl
 11. **Disabling, removing, or weakening any guardrail in this file** without operator approval
 12. **Deleting or reordering existing checkpoints** in `checkpoints/`
 13. **Publishing modifier changes to any external system** (npm, PyPI, GitHub Releases) — this initiative is repo-local until explicit operator authorization
+14. **Spawning more than 2 reviewers per gate event** — triangulation pairs only; beyond 2 = hard-stop with `HARD-STOP: reviewer-deadlock`
+15. **Acting on a reviewer's recommendation outside the slice's declared write set** — surface-change requests go through `Plan` reviewer first (see REVIEWERS.md)
 
 ## Required Discipline
 
@@ -53,26 +60,77 @@ Every iteration must satisfy these or the iteration's commit is invalid (revert 
 2. **Conventional commit subject** — `<type>(<scope>): <imperative>`, no trailing period, ≤72 chars
 3. **Body has Why/Verification/Boundary sections** per AGENTS.md §123
 4. **`Initiative: inject-migration phase <NN> slice <MM>` trailer** is present
-5. **Files staged exactly match the slice's declared write set** — no surprises
-6. **`git diff --check` is clean** before commit
-7. **`audit_refmap.py verify .` is clean** (exit 0) before commit
-8. **STATE.md updated AFTER commit, in a SEPARATE commit** if STATE.md edit is non-trivial; in the SAME commit only if the slice spec explicitly says so
+5. **`Reviewer:` trailer** is present when a reviewer's verdict influenced the commit (e.g., `Reviewer: adversarial-auditor-xhigh PASS @ phase-boundary-04`)
+6. **Files staged exactly match the slice's declared write set** — no surprises
+7. **`git diff --check` is clean** before commit
+8. **`audit_refmap.py verify .` is clean** (exit 0) before commit
+9. **STATE.md updated AFTER commit, in a SEPARATE commit** if STATE.md edit is non-trivial; in the SAME commit only if the slice spec explicitly says so
+10. **`[GOAL-EVAL]` line printed at end of each turn** — see PROTOCOL.md "Turn-End Discipline"
 
-## Approval-Required Actions (Stop, Surface To Operator)
+## Reviewer-Mediated Continuation (replaces former Approval-Required Actions)
 
-These actions require explicit operator approval at the time. The phase plan may pre-authorize them; if so, that's noted in the slice spec.
+These actions formerly required operator approval. They now route through reviewer agents per REVIEWERS.md.
 
-1. **Modifying any file under `harness_modifier/contract/`** — contract surface; high-risk
-2. **Modifying any file under `tooling/codex/audit_refmap.py`** — verification carrier
-3. **Modifying `OVERLAY-MANIFEST.json`** with a `parity_tier` or `mode` change for a carrier whose disposition is not pre-spec'd in the phase plan
-4. **Adding or removing entries to `OVERLAY-MANIFEST.json`** without phase-plan authorization
-5. **Modifying any `agents/*.toml` or `agents/*.md` file** — agent prompts; behavior-affecting
-6. **Modifying any `commands/gsd/*.md` overlay** — modifier-owned but operator-visible
-7. **Editing `AGENTS.md`, `CLAUDE.md`, `WORKFLOW.md`** — governance carriers
-8. **Editing `docs/handoff/current.md`** — live-state carrier (only allowed in initiative phases that specifically address handoff state)
-9. **Running `bash scripts/ci/check-bootstrap.sh`** — state-mutating; only at phase boundaries when the phase plan authorizes
-10. **Running `bash scripts/ci/check-deterministic.sh`** — generally safer; still log the run
-11. **Running the host matrix** (`harness_modifier/closure/host_exercise_matrix.py`) — state-mutating; phase-boundary only
+| Action | Reviewer | Triangulation if ESCALATE |
+|---|---|---|
+| Modify any file under `harness_modifier/contract/` | `adversarial-auditor-xhigh` (contract review) | second auditor with steel-man prompt |
+| Modify `tooling/codex/audit_refmap.py` | `adversarial-auditor-xhigh` | second auditor |
+| Modify `OVERLAY-MANIFEST.json` with parity_tier or mode change not pre-spec'd | `adversarial-auditor-xhigh` | `Explore` for manifest grammar check |
+| Add or remove `OVERLAY-MANIFEST.json` entries not pre-authorized in phase plan | `adversarial-auditor-xhigh` | `Explore` |
+| Modify any `agents/*.toml` or `agents/*.md` file | `adversarial-auditor-xhigh` | second auditor |
+| Modify any `commands/gsd/*.md` overlay | `adversarial-auditor-xhigh` | second auditor |
+| Edit `AGENTS.md`, `CLAUDE.md`, `WORKFLOW.md` outside a governance-slice | `adversarial-auditor-xhigh` | second auditor |
+| Edit `docs/handoff/current.md` outside a handoff-state slice | `adversarial-auditor-xhigh` | second auditor |
+| Run `bash scripts/ci/check-bootstrap.sh` mid-phase | `Plan` (scope review) | `adversarial-auditor-xhigh` |
+| Run host matrix (`harness_modifier/closure/host_exercise_matrix.py`) outside phase boundary | `Plan` | `adversarial-auditor-xhigh` |
+| Expand a slice's declared write set | `Plan` (surface-change review) | `adversarial-auditor-xhigh` |
+| Skip a phase declared as deferrable (Phase 7) | `adversarial-auditor-xhigh` (cost-benefit review) | second auditor |
+
+If a reviewer returns FAIL or the triangulation deadlocks, the action does not proceed — the main agent either re-attempts within original scope or hard-stops.
+
+## Auto-Recovery Patterns (replaces former Verification-Fail Halt)
+
+These are recovery paths the main agent takes BEFORE escalating to hard-stop. They preserve autonomy for transient or fixable failures.
+
+### Verification gate fails
+
+1. Retry once (gates can flake on filesystem / network)
+2. If still failing: spawn `gsd-debugger` per REVIEWERS.md
+3. If debugger returns PASS with a fix in the slice's write set: apply the fix, re-run the gate
+4. If debugger returns FAIL (fix needs scope expansion): spawn `Plan` reviewer; if Plan PASS: expand scope and apply; if Plan FAIL: hard-stop
+5. If debugger returns ESCALATE: triangulate per REVIEWERS.md table
+6. If debugger returns HALT: hard-stop with the debugger's stated reason
+
+### Worktree drift detected before slice execution
+
+1. `git status --short` shows files outside `STATE.md → Dirty-Worktree Pre-Conditions`
+2. Spawn `Explore` to identify the source of the drift (recent commit? unfinished prior slice?)
+3. If Explore identifies a recoverable cause (e.g., prior iteration's STATE.md edit not committed): `git restore` the unstaged drift, reconcile STATE.md
+4. If Explore cannot identify: hard-stop with `HARD-STOP: unknown-worktree-drift`
+
+### Slice ambiguity prevents safe execution
+
+1. Spawn `Plan` reviewer with the ambiguity context (see REVIEWERS.md template)
+2. If Plan returns a single recommended interpretation with PASS: execute that interpretation; log the decision in the checkpoint
+3. If Plan returns FAIL (slice spec is broken): hard-stop
+4. If Plan returns ESCALATE: triangulate with `adversarial-auditor-xhigh`
+
+### Subagent returns evidence contradicting the slice's premise
+
+1. Spawn `Explore` to verify the subagent's cited evidence
+2. If Explore PASS (no real contradiction): continue with original plan
+3. If Explore FAIL (subagent was wrong): re-run subagent with corrected input
+4. If Explore ESCALATE or evidence genuinely contradicts: invoke premise-change template via `adversarial-auditor-xhigh`; if HALT, hard-stop
+
+### Previously-passing test fails in region unrelated to the slice
+
+1. Spawn `gsd-debugger` per REVIEWERS.md
+2. Per debugger verdict: apply fix in-scope, expand scope via `Plan`, or hard-stop
+
+### Same slice has failed 2 times in this and prior iterations
+
+1. Treat next failure as automatic hard-stop (3-consecutive-failure rule)
+2. Surface to operator with the failure log
 
 ## Rollback Procedures
 
@@ -89,15 +147,15 @@ When a slice fails after commit (rare; gates should run before commit):
 1. `git reset --hard HEAD~1` — revert the commit (only if the commit is the most recent one, no later commits depend on it)
 2. Verify worktree clean
 3. Update STATE.md with `Blockers` entry; do not advance slice counter
-4. **DO NOT force-push** — origin is unaware of the unpublished commit; reset is local-only
-5. If the commit was already pushed (rare in this initiative), STOP — operator decides whether to revert or roll forward
+4. **Do not force-push** — origin is unaware of the unpublished commit; reset is local-only
+5. If the commit was already pushed (rare), hard-stop with `HARD-STOP: published-commit-revert-needed`
 
 When the agent detects an inconsistency between STATE.md and `git log`:
 
 1. Log the inconsistency in the next iteration's checkpoint
 2. Treat `git log` as ground truth
 3. Update STATE.md to match `git log`'s actual state
-4. Do not assume the inconsistency is benign; surface it to the operator on next visible report
+4. Continue if the inconsistency is small (e.g., a counter off by one). Hard-stop if structural (sentinel disagrees, phase progress disagrees with file existence).
 
 ## Worktree Hygiene
 
@@ -109,7 +167,7 @@ Before every iteration:
 - `git rev-parse HEAD` must equal `STATE.md → Last commit`
 - The active branch must be `main` (or whatever `STATE.md` declares)
 
-If any of these fails, hard-stop and ask.
+If any of these fails, follow the "Worktree drift detected" auto-recovery pattern.
 
 ## Cross-Runtime Coherence
 
@@ -119,7 +177,7 @@ The migration model has implications for how Codex and Claude experience each ca
 2. **Carrier output content matches expected for each runtime** — `core_required` means same effective outcome
 3. **Modifier-owned net-new** stays modifier-owned; do not let upstream conventions push the modifier carriers into shared paths inadvertently
 
-The bootstrap gate is the empirical check. If it surfaces a divergence after a slice, that's a hard stop.
+The bootstrap gate is the empirical check. If it surfaces a divergence after a slice, that's a `gsd-debugger` invocation (recoverable) or a hard-stop (irrecoverable).
 
 ## Sub-Initiative Isolation
 
@@ -136,18 +194,18 @@ Examples of out-of-scope concerns:
 - A drift item not on the inject-migration phase catalog
 - A spec ambiguity in unrelated planning artifacts
 
-## Operator-Override Mechanism
+## Operator Override Mechanism
 
-If the operator wants to override a guardrail for one iteration, they must say so explicitly with the rule number, e.g., "Override guardrail F.7 for this slice: I authorize amending the previous commit to fix the typo in its Why line."
+If the operator wants to override a guardrail for one turn, they must say so explicitly with the rule number in the `/goal` invocation or in a follow-up message. Example: "Override Forbidden #7 for this turn: I authorize amending the previous commit to fix the typo in its Why line."
 
-The agent records the override in the checkpoint's `Observations` section. The override applies only to that iteration. It does not modify this file.
+The agent records the override in the checkpoint's `Observations` section. The override applies only to that turn. It does not modify this file.
 
 ## Self-Diagnosis (read-only)
 
 If the agent suspects this guardrails file or any other initiative file has been corrupted (malformed, contradictory, partial):
 
 1. Do not attempt to repair
-2. Hard-stop
-3. Surface to operator with diagnosis details
+2. Hard-stop with `HARD-STOP: initiative-file-corruption` and cite the file + suspected issue
+3. End the turn
 
-The agent does not edit `GUARDRAILS.md`, `PROTOCOL.md`, `INITIATIVE.md`, or phase plans during normal iteration. These are operator-edited only. The only files the loop writes are `STATE.md`, `checkpoints/*`, and the slice's declared write set.
+The agent does not edit `GUARDRAILS.md`, `PROTOCOL.md`, `INITIATIVE.md`, `REVIEWERS.md`, or phase plans during normal iteration. These are operator-edited only. The only files the loop writes are `STATE.md`, `checkpoints/*`, and the slice's declared write set.

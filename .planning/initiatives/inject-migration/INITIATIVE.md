@@ -1,8 +1,8 @@
 # Inject Migration — Master Plan
 
-Date: 2026-05-08
+Date: 2026-05-08 (created); 2026-05-15 (rebuilt around `/goal` + reviewer-mediated checkpoints)
 Status: not started (Phase 0 Slice 0)
-Authority: governed by [AGENTS.md](../../../AGENTS.md) and [CLAUDE.md](../../../CLAUDE.md); operationalized by [PROTOCOL.md](PROTOCOL.md); bounded by [GUARDRAILS.md](GUARDRAILS.md); state tracked in [STATE.md](STATE.md)
+Authority: governed by [AGENTS.md](../../../AGENTS.md) and [CLAUDE.md](../../../CLAUDE.md); operationalized by [PROTOCOL.md](PROTOCOL.md); bounded by [GUARDRAILS.md](GUARDRAILS.md); reviewer architecture in [REVIEWERS.md](REVIEWERS.md); state tracked in [STATE.md](STATE.md); invocation in [LOOP-PROMPT.md](LOOP-PROMPT.md)
 
 ## Mission
 
@@ -67,19 +67,21 @@ No change required for these; they are already correctly modeled.
 
 11 phases. Each phase is bounded; each phase produces a coherent deliverable; phases land sequentially.
 
-| # | Phase | Slug | Key deliverable | Approval gate | Dependencies |
+Reviewer-mediated gates replace the formerly operator-gated approval points. See [REVIEWERS.md](REVIEWERS.md) for which reviewer at which gate. Per-phase verification at phase boundary is always `trajectory-verifier` (mandatory).
+
+| # | Phase | Slug | Key deliverable | Reviewer gate | Dependencies |
 |---|---|---|---|---|---|
-| 0 | Surface cleanup | `00-surface-cleanup` | 4 stale carriers reclassified; change-class triggers in governance; temp handoff deleted | none (slices small) | none |
-| 1 | Schema foundation | `01-schema-foundation` | ADR for manifest schema v4; operation kind catalog; marker conventions documented | operator review of ADR | Phase 0 |
-| 2 | Contract tools | `02-contract-tools` | `validate_inject_operations`, `apply_inject_operations`, `extract_inject_markers`, `verify_inject_state` implemented in `portable_gsd_contract.py`; unit tests | operator approval before merging contract code | Phase 1 |
-| 3 | Pilot | `03-pilot` | One reference (`mandatory-initial-read.md`) migrated to `mode: inject`; bootstrap gate green; both runtimes verify | operator review of pilot result | Phase 2 |
-| 4 | First wave | `04-first-wave-references` | 4 small references migrated (`verification-overrides`, `agent-contracts`, `planner-reviews`, `planning-config`) | none (per-slice gates) | Phase 3 |
-| 5 | Second wave | `05-second-wave-additive-workflows` | 5 additive-pattern workflows migrated (`spec-phase`, `verify-phase`, `complete-milestone`, `new-milestone`, `ingest-docs`) | none (per-slice gates) | Phase 4 |
-| 6 | Third wave | `06-third-wave-step-level` | 3 step-level workflows migrated (`health`, `update`, `progress`) — first uses of `step_remove` / `step_insert_after` | operator review when a new operation kind is first exercised | Phase 5 |
-| 7 | Fourth wave | `07-fourth-wave-large-workflows` | 3 large workflows migrated (`new-project`, `discuss-phase`, `plan-phase`) — DEFERRABLE; may stop initiative before this if cost-benefit changes | operator decides whether to enter | Phase 6 |
-| 8 | Templates and agents | `08-templates-and-agents` | Evaluate 7 templates + 4 agent .md files; migrate viable; document non-migrated | operator review per file | Phase 6 (independent of 7) |
-| 9 | Codex skill mirrors | `09-codex-skill-mirrors` | Decide between pre-conversion overlay vs accept-as-is for `skills/gsd-*/SKILL.md` | operator decides architectural direction | Phase 8 |
-| 10 | Closeout | `10-closeout` | Retrospective; ROADMAP/STATUS updated; AGENTS.md/CLAUDE.md document inject as stable; archive | operator final review | all prior |
+| 0 | Surface cleanup | `00-surface-cleanup` | 4 stale carriers reclassified; change-class triggers in governance; temp handoff deleted | none beyond per-phase | none |
+| 1 | Schema foundation | `01-schema-foundation` | ADR for manifest schema v4; operation kind catalog; marker conventions documented | `adversarial-auditor-xhigh` review of ADR-001 (pre-execute + post-execute) | Phase 0 |
+| 2 | Contract tools | `02-contract-tools` | `validate_inject_operations`, `apply_inject_operations`, `extract_inject_markers`, `verify_inject_state` implemented in `portable_gsd_contract.py`; unit tests | `adversarial-auditor-xhigh` review of contract diff (pre-commit) | Phase 1 |
+| 3 | Pilot | `03-pilot` | One reference (`mandatory-initial-read.md`) migrated to `mode: inject`; bootstrap gate green; both runtimes verify | `adversarial-auditor-xhigh` review of pilot result (post-commit) | Phase 2 |
+| 4 | First wave | `04-first-wave-references` | 4 small references migrated (`verification-overrides`, `agent-contracts`, `planner-reviews`, `planning-config`) | none beyond per-phase | Phase 3 |
+| 5 | Second wave | `05-second-wave-additive-workflows` | 5 additive-pattern workflows migrated (`spec-phase`, `verify-phase`, `complete-milestone`, `new-milestone`, `ingest-docs`) | none beyond per-phase | Phase 4 |
+| 6 | Third wave | `06-third-wave-step-level` | 3 step-level workflows migrated (`health`, `update`, `progress`) — first uses of `step_remove` / `step_insert_after` | `adversarial-auditor-xhigh` review of first new-operation-kind use | Phase 5 |
+| 7 | Fourth wave | `07-fourth-wave-large-workflows` | 3 large workflows migrated (`new-project`, `discuss-phase`, `plan-phase`) — DEFERRABLE; cost-benefit may not justify entry | `adversarial-auditor-xhigh` cost-benefit review (enter or skip; VERDICT determines) | Phase 6 |
+| 8 | Templates and agents | `08-templates-and-agents` | Evaluate 7 templates + 4 agent .md files; migrate viable; document non-migrated | `adversarial-auditor-xhigh` per-file (migrate or skip; VERDICT determines) | Phase 6 (independent of 7) |
+| 9 | Codex skill mirrors | `09-codex-skill-mirrors` | Decide between pre-conversion overlay vs accept-as-is for `skills/gsd-*/SKILL.md` | `adversarial-auditor-xhigh` review of ADR-002 (outcome A vs B) | Phase 8 |
+| 10 | Closeout | `10-closeout` | Retrospective; ROADMAP/STATUS updated; AGENTS.md/CLAUDE.md document inject as stable; archive | `trajectory-verifier` initiative-level + `adversarial-auditor-xhigh` retrospective review | all prior |
 
 Each phase has its own plan in `phases/<NN>-<slug>.md` with concrete slice-level detail.
 
@@ -155,32 +157,24 @@ Items deliberately not pursued in this initiative. They may be later initiatives
 
 ## How This Initiative Is Driven
 
-The initiative is **agent-driven** with operator gates at predefined approval points. The operator does not have to be present per-slice; the agent advances autonomously within GUARDRAILS, then stops at gate points.
+The initiative is **`/goal`-driven** with reviewer-mediated checkpoints. The operator invokes `/goal` once; the runtime fires turns automatically until the goal condition is met. Within turns, the agent advances autonomously through slices; at gates, the agent spawns reviewer agents per [REVIEWERS.md](REVIEWERS.md) and acts on their verdicts.
 
-Operator presence is required for:
+Operator presence is required only for:
 
-1. Initial GO signal (first iteration)
-2. Phase 1 ADR review
-3. Phase 2 contract code merge approval
-4. Phase 3 pilot result review
-5. Phase 6 first new-operation-kind exercise (operator confirms the operation is sane on first use)
-6. Phase 7 enter/skip decision
-7. Phase 8 per-template/agent migration decisions
-8. Phase 9 architectural direction decision
-9. Phase 10 closeout final review
+1. Initial `/goal` invocation (the GO signal — see [LOOP-PROMPT.md](LOOP-PROMPT.md))
+2. Manual interrupt (`/goal clear` or Ctrl+C) if intervention is wanted
+3. Hard-stop responses (5 conditions in [GUARDRAILS.md](GUARDRAILS.md); the goal terminates and the operator addresses the recorded `## Question for operator` in the checkpoint)
+4. Final retrospective review after `Sentinel: INITIATIVE-COMPLETE`
 
-Between these gates, the agent loops autonomously per [PROTOCOL.md](PROTOCOL.md).
+Every other former-approval-point is now mediated by `adversarial-auditor-xhigh`, `trajectory-verifier`, `gsd-debugger`, `Explore`, or `Plan` agents. Reviewer verdicts are **advisory + logged** — the operator audits decisions post-hoc via `STATE.md → Reviewer Decisions Log` and the per-slice checkpoints.
+
+Between operator-required events, the agent loops autonomously per [PROTOCOL.md](PROTOCOL.md). The expected operator-presence frequency is roughly: GO signal once, then nothing until a hard-stop or completion.
 
 ## How To Start
 
-```text
-# Operator: paste this into a fresh Claude Code session in the gsd-modifier repo:
-#
-# Read .planning/initiatives/inject-migration/LOOP-PROMPT.md and use the
-# "Standard Iteration" prompt to advance the initiative by one slice.
-```
+Open a Claude Code session at `/home/rookslog/workspace/projects/gsd-modifier` (v2.1.139 or later) and paste the `/goal` invocation from [LOOP-PROMPT.md](LOOP-PROMPT.md) (section "Primary: `/goal` Invocation").
 
-The first iteration starts at Phase 0 Slice 0 (`00-surface-cleanup`). See [phases/00-surface-cleanup.md](phases/00-surface-cleanup.md) for the slice catalog.
+The first turn starts at Phase 0 Slice 0 (`00-surface-cleanup`). See [phases/00-surface-cleanup.md](phases/00-surface-cleanup.md) for the slice catalog.
 
 ## Cross-References
 
@@ -218,6 +212,9 @@ These are risks the initiative as a whole faces. Per-phase risks live in phase p
 | Manifest schema v4 design proves insufficient for a real carrier's needs | medium | medium-high | phase 1 ADR is reviewable; phase 2 includes a backward-incompatibility test; phase 3 pilot exercises the model end-to-end before scale |
 | Modifier-net-new workflows (propagation-review, etc.) become drift surfaces of their own | low (small set) | low | initiative does not migrate them; their carriers stay `mode: add` |
 | Operator interruption or context loss leaves worktree in inconsistent state | high (long initiative) | low if PROTOCOL is followed | PROTOCOL Cold Start step 4 reconciles STATE.md against `git log`; checkpoint files preserve per-iteration history |
+| Reviewer agent gives wrong verdict (false PASS); agent proceeds with bad action | low-medium | medium-high | reviewer verdicts are advisory + logged; operator post-hoc audit via STATE.md → Reviewer Decisions Log and per-slice checkpoints; any reviewer-influenced commit carries `Reviewer:` trailer for grep-ability; per-slice commits are atomic rollback units |
+| `/goal` evaluator misjudges turn-end status (false completion) | low | high (premature termination) | `[GOAL-EVAL]` line format is exact and parseable; condition string is precise about terminal markers; 300-turn cap is safety floor, not target |
+| Reviewer triangulation deadlocks (1 PASS, 1 FAIL) on every gate | very low | high (initiative stalls) | hard-stop with `reviewer-deadlock` reason; operator addresses by revising slice spec or reviewer prompt template |
 | A new upstream feature (e.g., #2792 namespace meta-skills) lands during the initiative and changes the architectural assumptions | medium | medium | phase plans keep waves small; closeout phase reviews assumption drift; initiative may pause for re-orientation if a structural change lands |
 | `mode: inject` operations produce subtly different content than today's `mode: overwrite` carriers, breaking downstream LLM behavior | low (operations are explicit) | high (silent regression) | per-slice smoke tests; phase 3 pilot's exit criteria includes content-equivalence check |
 | Initiative drags on for many sessions, accumulating unobservable drift in this directory | medium | low | every iteration writes a checkpoint; phase boundaries write a phase-summary; STATE.md counters surface progress |
