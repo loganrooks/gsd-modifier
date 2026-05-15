@@ -740,14 +740,14 @@
       "parity_tier": "core_required",
       "materializers": {
         "codex": {
-          "mode": "overwrite",
+          "mode": "add",
           "target": "get-shit-done/workflows/research-phase.md",
-          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/research-phase.md"
+          "source": "harness_modifier/overlay/get-shit-done/workflows/research-phase.md"
         },
         "claude": {
-          "mode": "overwrite",
+          "mode": "add",
           "target": "get-shit-done/workflows/research-phase.md",
-          "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/research-phase.md"
+          "source": "harness_modifier/overlay/get-shit-done/workflows/research-phase.md"
         }
       }
     },

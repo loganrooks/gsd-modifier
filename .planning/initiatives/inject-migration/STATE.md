@@ -2,18 +2,18 @@
 
 # Inject Migration State
 
-Last updated: 2026-05-15T23:45:17Z (slice 3 reclassify gsd-plant-seed skill)
+Last updated: 2026-05-15T23:47:45Z (slice 4 reclassify research-phase workflow)
 Last updated by: inject-migration /goal agent
 Schema version: 2
 
 ## Current Status
 
 - **Phase**: 0 (`00-surface-cleanup`)
-- **Slice within phase**: 4 (slice 3 complete; next is "Reclassify research-phase workflow as modifier-owned" — note: workflow has dual codex+claude materializers per core_required parity_tier)
+- **Slice within phase**: 5 (slice 4 complete; next is "Add change-class trigger taxonomy to AGENTS.md and CLAUDE.md" — governance carrier change pre-authorized by phase plan)
 - **Status**: `in-progress` (one of: `pending`, `in-progress`, `paused-for-operator`, `blocked`, `complete`, `aborted`)
-- **Last checkpoint**: `checkpoints/2026-05-15T234517Z-phase00-slice03.md`
-- **Last commit**: `bbcbe2307f9cc3749dfc7912a501e06375c95529` (lag-by-one — slice 2's commit reconciled via PROTOCOL.md cold-start step 4; will lag again to slice 3's commit after this turn's atomic commit)
-- **Sentinel**: `IN-PROGRESS` (slice 3 succeeded; 3 of 4 stale-deleted carrier reclassifications complete; only `research-phase` workflow remains in slice 4 to complete Phase 0 hard-failure-clearing batch)
+- **Last checkpoint**: `checkpoints/2026-05-15T234745Z-phase00-slice04.md`
+- **Last commit**: `a212b47732c023066526c34c005eef5a69530c65` (lag-by-one — slice 3's commit reconciled via PROTOCOL.md cold-start step 4; will lag again to slice 4's commit after this turn's atomic commit)
+- **Sentinel**: `IN-PROGRESS` (slice 4 succeeded; all 4 stale-deleted carrier reclassifications complete in the `mode: overwrite → mode: add` batch; slice 5 begins governance work, slice 6 deletes the temp handoff, then trajectory-verifier at phase boundary)
 
 ## Phase Progress
 
@@ -31,9 +31,9 @@ Schema version: 2
 
 ## Active Work
 
-- **Current task**: executing Phase 0 Slice 4 (reclassify `research-phase` workflow as modifier-owned `mode: add`)
-- **Started**: 2026-05-15T23:45:17Z
-- **Expected completion**: slice 4 moves `research-phase.md` from `tooling/portable-gsd/overlay/get-shit-done/workflows/` to `harness_modifier/overlay/get-shit-done/workflows/` and flips BOTH codex AND claude materializer entries from `mode: overwrite` to `mode: add` (workflow is `parity_tier: core_required`, so both runtimes have materializer entries)
+- **Current task**: executing Phase 0 Slice 5 (add change-class trigger taxonomy to AGENTS.md and CLAUDE.md; create `posture-triggers.md` operational checklist)
+- **Started**: 2026-05-15T23:47:45Z
+- **Expected completion**: slice 5 adds the "Change-Class Triggers" subsection to AGENTS.md "Workflow Rules" (before "Contract Propagation"); appends a parallel CLAUDE.md paragraph in "Workflow Discipline"; creates `.planning/initiatives/inject-migration/posture-triggers.md` (~50 lines operational checklist)
 
 ## Blockers
 
@@ -57,14 +57,14 @@ Schema version: 2
 ## Counters
 
 - Carriers migrated to `mode: inject`: 0 / target ~25–30
-- Carriers reclassified to `mode: add`: 3 / target 4 (Phase 0)
+- Carriers reclassified to `mode: add`: 4 / target 4 (Phase 0) ✓
 - Carriers staying as `mode: overwrite`: ~5 (lib *.cjs) + others TBD per phase decisions
 - Net-new modifier-owned (`mode: add`): 18 (no migration; baseline)
 - Inject operation kinds implemented: 0 / target ~7
 - Inject unit tests passing: 0 / target TBD
 - Bootstrap gate hard_failures: 4 (target: 0 after Phase 0; confirmed by Slice 4's exit verification once all 4 carriers reclassified)
 - Phases complete: 0 / 11
-- Slices complete: 4
+- Slices complete: 5
 
 ## Recent Checkpoints
 
@@ -75,6 +75,7 @@ Schema version: 2
 | 2026-05-15T23:40:50Z | 0.1 | success | Slice 1 reclassify `gsd-do` skill — moved `SKILL.md` from `tooling/portable-gsd/overlay/skills/gsd-do/` to `harness_modifier/overlay/skills/gsd-do/`; manifest entry flipped to `mode: add` with new `source` path; all 3 verification gates exit 0; no reviewer invoked |
 | 2026-05-15T23:43:31Z | 0.2 | success | Slice 2 reclassify `gsd-from-gsd2` skill — used `git mv` for byte-perfect rename (4528 bytes preserved); manifest entry flipped to `mode: add`; all 3 verification gates exit 0; no reviewer invoked |
 | 2026-05-15T23:45:17Z | 0.3 | success | Slice 3 reclassify `gsd-plant-seed` skill — `git mv` for byte-perfect rename (3119 bytes preserved); manifest entry flipped to `mode: add`; all 3 verification gates exit 0; no reviewer invoked |
+| 2026-05-15T23:47:45Z | 0.4 | success | Slice 4 reclassify `research-phase` workflow (dual-materializer case) — `git mv` for byte-perfect rename (3791 bytes preserved); BOTH codex AND claude materializer entries flipped to `mode: add` with new `source` paths; dual-materializer assertion `manifest entry correct`; all 3 verification gates exit 0; no reviewer invoked; bootstrap gate hard-failure-clearing batch now complete (deferred Slice 4 boundary check to phase-boundary trajectory-verifier turn) |
 
 ## Reviewer Decisions Log
 
