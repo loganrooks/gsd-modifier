@@ -2,18 +2,18 @@
 
 # Inject Migration State
 
-Last updated: 2026-05-16T22:31:36Z (Phase 4 Slice 8 complete — planning-config migrated)
+Last updated: 2026-05-16T22:44:54Z (Phase 4 Slice 8 recovery — planning-config field row preserved)
 Last updated by: inject-migration /goal agent
 Schema version: 2
 
 ## Current Status
 
-- **Phase**: 4 (`04-first-wave-references` — first-wave references; `planning-config.md` migrated)
+- **Phase**: 4 (`04-first-wave-references` — first-wave references; `planning-config.md` migrated with field-row correction)
 - **Slice within phase**: 9 (phase debrief)
 - **Status**: `in-progress` (one of: `pending`, `in-progress`, `paused-for-operator`, `blocked`, `complete`, `aborted`)
 - **Last checkpoint**: `checkpoints/2026-05-16T223136Z-phase04-slice08.md`
-- **Last commit**: `01a01b4c1842f1c8a518968dae990f588d9ab371` (pre-slice HEAD; will lag by one after Phase 4 Slice 8 commit)
-- **Sentinel**: `IN-PROGRESS` (Phase 4 `planning-config.md` migration completed; broad full-discover baseline still out of scope)
+- **Last commit**: `6c71bc51c9c336bc3b05fb0770ae598843da208a` (pre-correction HEAD; will lag by one after the additive Phase 4 Slice 8 recovery commit)
+- **Sentinel**: `IN-PROGRESS` (Phase 4 `planning-config.md` migration completed with field-row correction; broad full-discover baseline still out of scope)
 
 ## Phase Progress
 
@@ -32,7 +32,7 @@ Schema version: 2
 ## Active Work
 
 - **Current task**: Phase 4 Slice 9 — phase debrief and migration metrics.
-- **Started**: 2026-05-16T22:31:36Z (Phase 4 Slice 8 completed)
+- **Started**: 2026-05-16T22:44:54Z (Phase 4 Slice 8 field-row recovery completed)
 - **Expected completion**: Run the Phase 4 state-mutating debrief gates authorized by the phase plan, confirm all 5 reference carriers materialize correctly under both runtimes, write `decisions/PHASE-04-debrief.md`, and record any bootstrap/full-discover caveats before the separate phase-boundary trajectory-verifier turn.
 
 ### Operator decisions (2026-05-16T19:20Z)
@@ -134,7 +134,7 @@ Schema version: 2
 | 2026-05-16T21:52:35Z | 4.5 | success | Slice 5 design migration of `planner-reviews.md` — created `decisions/MIG-design-planner-reviews.md` with upstream/current line citations, precise diff, candidate three-operation marker-clean `mode: inject` manifest JSON, source-file plan, materialization sketch, rollback plan, pure-function preflight, and blocking open question for Slice 6: Step 4 edits the final EOF fenced return-format example, which is not full-fidelity and marker-clean with today's v4 catalog |
 | 2026-05-16T22:03:38Z | 4.6 | success (Plan PASS + debugger PASS gate disposition) | Slice 6 applied `planner-reviews.md` via the Plan-approved three-operation marker-clean subset; changed manifest entry to `mode: inject` for both runtimes; added three inject source files; deleted old overwrite carrier; pure-function apply/verify passed all three operations; `validate-manifest --source-only --strict` exit 0 and 131/131 inject tests pass; broad full discover remains at the known baseline and was dispositioned by `gsd-debugger` PASS as out of scope for this carrier |
 | 2026-05-16T22:15:31Z | 4.7 | success | Slice 7 design migration of `planning-config.md` — created `decisions/MIG-design-planning-config.md` with upstream/current line citations, precise diff, candidate seven-operation source-freshening `mode: inject` manifest JSON, source-file plan, materialization sketch, rollback plan, pure-function preflight, and three blocking open questions for Slice 8: full-fidelity stale overwrite vs upstream-freshening, `gsd-tools.cjs` vs `gsd-sdk query` examples, and stale mode row disposition |
-| 2026-05-16T22:31:36Z | 4.8 | success (Plan PASS + debugger PASS gate disposition) | Slice 8 applied `planning-config.md` via the Plan-approved source-freshening seven-operation candidate; changed manifest entry to `mode: inject` for both runtimes; added seven inject source files; deleted old overwrite carrier; pure-function apply/verify passed all seven operations and confirmed upstream security/ship fields flow through, `gsd-tools.cjs` examples remain, and the stale `code-first` mode row is absent; `validate-manifest --source-only --strict` exit 0 and 131/131 inject tests pass; broad full discover remains the known OOS #5 baseline and was dispositioned by `gsd-debugger` PASS as out of scope for this carrier |
+| 2026-05-16T22:37:48Z | 4.8 | success (Explore PASS + Plan PASS + debugger PASS gate disposition) | Slice 8 applied `planning-config.md` via the Plan-approved source-freshening candidate plus a Plan-requested completeness correction; changed manifest entry to `mode: inject` for both runtimes; added eight inject source files; deleted old overwrite carrier; pure-function apply/verify passed all eight operations and confirmed upstream security/ship fields flow through, `gsd-tools.cjs` examples remain, `workflow.discuss_mode` defaults to `exploratory`, and the stale `code-first` mode row is absent; `validate-manifest --source-only --strict` exit 0 and 131/131 inject tests pass; broad full discover remains the known OOS #5 baseline and was dispositioned by `gsd-debugger` PASS as out of scope for this carrier |
 
 ## Reviewer Decisions Log
 
@@ -174,17 +174,19 @@ Schema version: 2
 | 2026-05-16T22:02:00Z | 4.6 | gsd-debugger | PASS | Broad full-discover failure is the known baseline; failures name stale `gsd-from-gsd2` / `gsd-plant-seed` wrapper expectations and unrelated seed/uplift helpers, not `planner-reviews.md` | proceeded on focused gates; no write-set expansion |
 | 2026-05-16T22:23:00Z | 4.8 | Plan | PASS | Source-freshening is the safest interpretation: preserve `gsd-tools.cjs`, `/gsd-discuss-phase`, and `workflow.discuss_mode: "exploratory"` while letting upstream-added field docs and upstream `interactive`/`yolo` mode row flow through | proceeded with Alternative A; no byte-for-byte stale-overwrite preservation |
 | 2026-05-16T22:29:00Z | 4.8 | gsd-debugger | PASS | Broad full-discover failure matches OOS #5 stale/non-carrier baseline; failing tests name `gsd-from-gsd2`, `gsd-plant-seed`, seed-audit, and transition/uplift helpers, not `planning-config.md` | proceeded on focused gates; no write-set expansion |
+| 2026-05-16T22:33:00Z | 4.8 | Explore | PASS | Dirty worktree was coherent recoverable in-flight Slice 8 work; `.planning/debug/phase-04-slice-08-gate-failure.md` was a related byproduct, not a commit surface | continued Slice 8 from the interrupted state and did not stage `.planning/debug/` |
+| 2026-05-16T22:34:00Z | 4.8 | Plan | PASS | Source-freshening remained correct, but the seven-operation implementation missed the Complete Field Reference `workflow.discuss_mode` row that Option A itself needed to preserve | added an eighth `block_replace` source/operation for the field-reference row before commit and reran gates |
 
 ## Auto-Recovery Counters
 
 Tracks resilience of the loop. The 3-consecutive-failure rule fires when any slice's `attempts` here reaches 3.
 
-- Total reviewer invocations: 34
-- Reviewer PASS verdicts: 24 (adversarial-auditor-xhigh @ Phase 0 boundary; adversarial-auditor-xhigh @ Phase 1 Slice 1 pre-execute + post-execute; adversarial-auditor-xhigh @ Phase 1 Slice 2 post-execute; trajectory-verifier @ Phase 1 boundary; adversarial-auditor-xhigh @ Phase 2 Slice 1 + Slice 2 + Slice 3 + Slice 4 pre-commit; trajectory-verifier @ Phase 2 boundary; Plan @ Phase 3 Slice 2 scope expansion; Plan @ Phase 3 Slice 3 schema follow-through scope expansion; adversarial-auditor-xhigh @ Phase 3 Slice 3 bootstrap-gate triangulation; Plan @ Phase 3 Slice 3.5 runtime-visibility follow-up scope; adversarial-auditor-xhigh @ Phase 3 Slice 3.5 contract review; adversarial-auditor-xhigh @ Phase 3 boundary bootstrap-gate triangulation; trajectory-verifier @ Phase 3 boundary; Plan @ Phase 4 Slice 2 ambiguity resolution; Plan @ Phase 4 Slice 2 gate-disposition recovery; Plan @ Phase 4 Slice 4 gate-disposition recovery; Plan @ Phase 4 Slice 6 ambiguity resolution; gsd-debugger @ Phase 4 Slice 6 broad full-discover baseline; Plan @ Phase 4 Slice 8 source-freshening ambiguity resolution; gsd-debugger @ Phase 4 Slice 8 broad full-discover baseline)
+- Total reviewer invocations: 36
+- Reviewer PASS verdicts: 26 (adversarial-auditor-xhigh @ Phase 0 boundary; adversarial-auditor-xhigh @ Phase 1 Slice 1 pre-execute + post-execute; adversarial-auditor-xhigh @ Phase 1 Slice 2 post-execute; trajectory-verifier @ Phase 1 boundary; adversarial-auditor-xhigh @ Phase 2 Slice 1 + Slice 2 + Slice 3 + Slice 4 pre-commit; trajectory-verifier @ Phase 2 boundary; Plan @ Phase 3 Slice 2 scope expansion; Plan @ Phase 3 Slice 3 schema follow-through scope expansion; adversarial-auditor-xhigh @ Phase 3 Slice 3 bootstrap-gate triangulation; Plan @ Phase 3 Slice 3.5 runtime-visibility follow-up scope; adversarial-auditor-xhigh @ Phase 3 Slice 3.5 contract review; adversarial-auditor-xhigh @ Phase 3 boundary bootstrap-gate triangulation; trajectory-verifier @ Phase 3 boundary; Plan @ Phase 4 Slice 2 ambiguity resolution; Plan @ Phase 4 Slice 2 gate-disposition recovery; Plan @ Phase 4 Slice 4 gate-disposition recovery; Plan @ Phase 4 Slice 6 ambiguity resolution; gsd-debugger @ Phase 4 Slice 6 broad full-discover baseline; Plan @ Phase 4 Slice 8 source-freshening ambiguity resolution; gsd-debugger @ Phase 4 Slice 8 broad full-discover baseline; Explore @ Phase 4 Slice 8 worktree-drift recovery; Plan @ Phase 4 Slice 8 field-row completeness correction)
 - Reviewer FAIL verdicts: 7 (gsd-debugger @ slice 0 hard-stop; Plan @ slice 0 hard-stop; adversarial-auditor-xhigh @ Phase 1 Slice 2 pre-execute → resolved by applying recommendations in writing; gsd-debugger @ Phase 3 Slice 2 full-discover stale-test scope issue → resolved by Plan scope expansion; gsd-debugger @ Phase 3 Slice 3 schema follow-through failure → resolved by Plan scope expansion; gsd-debugger @ Phase 4 Slice 2 broad full-discover baseline → resolved by Plan continuation disposition; gsd-debugger @ Phase 4 Slice 4 broad full-discover baseline → resolved by Plan continuation disposition)
 - Reviewer ESCALATE verdicts: 3 (trajectory-verifier @ Phase 0 boundary → resolved via triangulation with adversarial-auditor-xhigh PASS; gsd-debugger @ Phase 3 Slice 3 composite-bootstrap/full-discover failure → resolved via adversarial-auditor-xhigh PASS; gsd-debugger @ Phase 3 boundary composite-bootstrap/full-discover failure → resolved via adversarial-auditor-xhigh PASS and trajectory-verifier PASS)
 - Reviewer HALT verdicts: 0
-- Auto-recovery successes: 12 (Phase 0 boundary triangulation: ESCALATE → PASS via second reviewer; Phase 1 Slice 1 threshold-language scanner FAIL → in-place fix; Phase 1 Slice 2 reviewer FAIL → 3 recommendations applied in writing → post-execute PASS; Phase 3 Slice 2 full-discover stale-test failure → gsd-debugger FAIL → Plan PASS scope expansion → mandatory-initial-read tests pass; Phase 3 Slice 3 compatibility-declaration schema mismatch → gsd-debugger FAIL → Plan PASS scope expansion → targeted compatibility tests pass; Phase 3 Slice 3 composite-bootstrap/full-discover failure → gsd-debugger ESCALATE → adversarial-auditor-xhigh PASS conditional debrief disposition; Phase 3 Slice 3.5 reviewer-mediated follow-up → Plan PASS scope + adversarial-auditor-xhigh PASS contract review → runtime-visibility canary passes; Phase 3 boundary composite-bootstrap/full-discover failure → gsd-debugger ESCALATE → adversarial-auditor-xhigh PASS → trajectory-verifier PASS with OOS #5 tracking; Phase 4 Slice 2 broad full-discover baseline → gsd-debugger FAIL → Plan PASS continuation disposition without scope expansion; Phase 4 Slice 4 broad full-discover baseline → gsd-debugger FAIL → Plan PASS continuation disposition without scope expansion; Phase 4 Slice 6 broad full-discover baseline → gsd-debugger PASS continuation disposition without scope expansion; Phase 4 Slice 8 broad full-discover baseline → gsd-debugger PASS continuation disposition without scope expansion)
+- Auto-recovery successes: 14 (Phase 0 boundary triangulation: ESCALATE → PASS via second reviewer; Phase 1 Slice 1 threshold-language scanner FAIL → in-place fix; Phase 1 Slice 2 reviewer FAIL → 3 recommendations applied in writing → post-execute PASS; Phase 3 Slice 2 full-discover stale-test failure → gsd-debugger FAIL → Plan PASS scope expansion → mandatory-initial-read tests pass; Phase 3 Slice 3 compatibility-declaration schema mismatch → gsd-debugger FAIL → Plan PASS scope expansion → targeted compatibility tests pass; Phase 3 Slice 3 composite-bootstrap/full-discover failure → gsd-debugger ESCALATE → adversarial-auditor-xhigh PASS conditional debrief disposition; Phase 3 Slice 3.5 reviewer-mediated follow-up → Plan PASS scope + adversarial-auditor-xhigh PASS contract review → runtime-visibility canary passes; Phase 3 boundary composite-bootstrap/full-discover failure → gsd-debugger ESCALATE → adversarial-auditor-xhigh PASS → trajectory-verifier PASS with OOS #5 tracking; Phase 4 Slice 2 broad full-discover baseline → gsd-debugger FAIL → Plan PASS continuation disposition without scope expansion; Phase 4 Slice 4 broad full-discover baseline → gsd-debugger FAIL → Plan PASS continuation disposition without scope expansion; Phase 4 Slice 6 broad full-discover baseline → gsd-debugger PASS continuation disposition without scope expansion; Phase 4 Slice 8 broad full-discover baseline → gsd-debugger PASS continuation disposition without scope expansion; Phase 4 Slice 8 interrupted-worktree recovery → Explore PASS; Phase 4 Slice 8 field-row gap → Plan PASS completeness correction within write set)
 - Auto-recovery escalations to hard-stop: 1 (the slice 0 spec-contradiction hard-stop; resolved by operator)
 - Slice-level retries (cumulative): 11 (audit_refmap.py verify deterministic retry; scan_threshold_language re-run after "sufficient" rephrase; Slice 6 back-compat test restructure after first attempt surfaced 2 Phase 3 contract-code gaps — second attempt moved inject source path to harness_modifier/overlay/ per ADR-001 §A.1 + filtered remaining compat-declaration TODO; Phase 3 Slice 2 full-unittest retry before debugger escalation; Phase 3 Slice 3 `check-bootstrap.sh` retry after schema mismatch; Phase 3 Slice 3 `check-bootstrap.sh` retry after schema follow-through exposed the stale full-discover baseline; Phase 3 boundary `check-bootstrap.sh` retry before debugger escalation; Phase 4 Slice 2 full-unittest retry before debugger escalation; Phase 4 Slice 4 full-unittest retry before debugger escalation; Phase 4 Slice 6 full-unittest retry before debugger disposition; Phase 4 Slice 8 full-unittest retry before debugger disposition)
 - Per-slice attempt counts (only for slices not yet completed):
@@ -200,13 +202,13 @@ For the loop to start cleanly (under normal operation, not paused-for-operator s
 - `bash scripts/ci/check-bootstrap.sh` passed at the most recent commit (last verified: 2026-05-08, exit 0; surfaces 4 expected hard_failures from §1.4 of intervention-strategies)
 - ~~`python3 tooling/codex/audit_refmap.py verify .` exit 0~~ — KNOWN FAILING since 73f130d (2026-05-08); see Out-Of-Scope Surfaces #1; expected exit 1 with 8 unclassified items until operator addresses
 
-### Current actual worktree (normal operation, post-slice-8)
+### Current actual worktree (normal operation, post-slice-8 recovery)
 
 ```
 (empty)
 ```
 
-After this slice commit lands, the worktree should be clean. Future iterations should observe `git status --short` returning empty (modulo any in-flight slice's pre-commit edits, which are normal mid-slice state).
+After this recovery commit lands, the worktree should be clean. Future iterations should observe `git status --short` returning empty (modulo any in-flight slice's pre-commit edits, which are normal mid-slice state).
 
 ## Notes For The Agent
 
