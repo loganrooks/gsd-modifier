@@ -1,6 +1,8 @@
 # Goal Prompts Registry
 
-This directory stores Claude Code `/goal` prompt strings used in this repo. Each file is a complete, paste-ready `/goal` command for a specific workstream.
+This directory stores `/goal` prompt strings used in this repo (Claude Code and Codex CLI). Each file is a complete, paste-ready `/goal` command for a specific workstream on a specific runtime.
+
+Default file (`<workstream>.md`) is the Claude Code variant. Per-runtime siblings use a `-<runtime>` suffix (e.g., `<workstream>-codex.md`). Initiative governance under `.planning/initiatives/<workstream>/` is runtime-neutral and shared across siblings.
 
 ## Why
 
@@ -22,18 +24,21 @@ The `/goal` block in this directory is the **single source of truth** for the pr
 
 ## How to use
 
-1. Open the file for your workstream
+1. Open the file for your workstream + runtime
 2. Copy the `/goal` block (inside the fenced code block)
-3. Paste into a fresh Claude Code session (v2.1.139+) at the repo root
+3. Paste into a fresh Claude Code session (v2.1.139+) or Codex CLI session at the repo root
 4. Hit enter
 
-The loop will fire turns automatically until the goal condition is met or a hard-stop terminates the goal. Check status anytime by running `/goal` (no args).
+The loop will fire turns automatically until the goal condition is met or a hard-stop terminates the goal. Check status anytime by running `/goal` (no args) on either runtime.
+
+Codex variants require reviewer TOMLs under `.codex/agents/` to exist locally before invocation — see the variant file's Prerequisites section.
 
 ## Current goals
 
-| Goal | Workstream | Status |
-|---|---|---|
-| [`inject-migration.md`](inject-migration.md) | [Inject migration initiative](../initiatives/inject-migration/INITIATIVE.md) — overlay model migration from overwrite-heavy to surgical injection | NOT-STARTED |
+| Goal | Workstream | Runtime | Status |
+|---|---|---|---|
+| [`inject-migration.md`](inject-migration.md) | [Inject migration initiative](../initiatives/inject-migration/INITIATIVE.md) — overlay model migration from overwrite-heavy to surgical injection | Claude Code | Phase 2 complete; awaiting Phase 3 operator gate |
+| [`inject-migration-codex.md`](inject-migration-codex.md) | Same initiative, Codex CLI sibling | Codex CLI | Same state (shared STATE.md) |
 
 ## Adding a new goal
 
