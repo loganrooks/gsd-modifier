@@ -2,18 +2,18 @@
 
 # Inject Migration State
 
-Last updated: 2026-05-16T01:53:52Z (operator approval received for ADR-001; quality note #6 addressed via §3 universal-field clarification; OOS #3 mock-installer direction recorded; live control surface docs refreshed; ready to resume Phase 2)
-Last updated by: operator (approval direction) + inject-migration agent (state mechanics)
+Last updated: 2026-05-16T03:05:21Z (Phase 2 Slice 1 complete — schema reader for `schema_version: 4` and `mode: inject` landed; parser-only per slice boundary; pre-commit reviewer adversarial-auditor-xhigh PASS; 23/23 new tests + 10/10 existing contract tests pass)
+Last updated by: inject-migration /goal agent
 Schema version: 2
 
 ## Current Status
 
 - **Phase**: 2 (`02-contract-tools` — validate/apply/extract/verify functions in portable_gsd_contract.py + unit tests; ADR-001 approved 2026-05-16T01:53Z)
-- **Slice within phase**: 0 (cold-start in next `/goal` invocation fires Slice 1: schema reader for `schema_version: 4` and `mode: inject`)
+- **Slice within phase**: 1 (Slice 1 just landed — schema reader for `schema_version: 4` and `mode: inject`; next turn fires Slice 2: apply_inject_operations)
 - **Status**: `pending` (one of: `pending`, `in-progress`, `paused-for-operator`, `blocked`, `complete`, `aborted`)
-- **Last checkpoint**: `checkpoints/2026-05-16T015352Z-operator-approval.md`
-- **Last commit**: `979a525f010947c903c2f8ff2d39d5e5a64a88c3` (Phase 1 boundary commit; this turn's operator-approval commits will land on top per cold-start lag-by-one)
-- **Sentinel**: `IN-PROGRESS` (operator approved ADR-001 at 2026-05-16T01:53Z; Phase 2 cleared to start)
+- **Last checkpoint**: `checkpoints/2026-05-16T030521Z-phase02-slice01.md`
+- **Last commit**: `57fdb7f9ed996cfd509f4bdca5e4c355e873acf7` (operator-direction live-control-surface refresh; this turn's Slice 1 commit lands on top per cold-start lag-by-one — will reconcile on next turn)
+- **Sentinel**: `IN-PROGRESS` (Phase 2 Slice 1 complete; 5 slices + boundary remaining in Phase 2)
 
 ## Phase Progress
 
@@ -31,9 +31,9 @@ Schema version: 2
 
 ## Active Work
 
-- **Current task**: ready to start Phase 2 Slice 1 — extend manifest schema reader to recognize `schema_version: 4` and `mode: inject` (parser only; no apply-time logic yet); cold-start in next `/goal` invocation fires it
-- **Started**: (will be set by next turn's slice work)
-- **Expected completion**: per `phases/02-contract-tools.md`, Phase 2 has 6 slices + boundary verification; estimated 7 turns
+- **Current task**: Phase 2 Slice 1 complete; ready for Slice 2 — implement `apply_inject_operations` in `harness_modifier/contract/inject_operations.py` (the apply-time engine; in-memory pure function; pre-flight atomicity; per-kind apply semantics; idempotency)
+- **Started**: 2026-05-16T03:05:21Z (Slice 1 turn)
+- **Expected completion**: per `phases/02-contract-tools.md`, Phase 2 has 6 slices + boundary verification; 5 slices + boundary remaining
 
 ### Operator decisions (2026-05-16T01:53Z)
 
@@ -71,11 +71,12 @@ Schema version: 2
 - Carriers reclassified to `mode: add`: 4 / target 4 (Phase 0) ✓
 - Carriers staying as `mode: overwrite`: ~5 (lib *.cjs) + others TBD per phase decisions
 - Net-new modifier-owned (`mode: add`): 18 (no migration; baseline)
-- Inject operation kinds implemented: 0 / target ~7
-- Inject unit tests passing: 0 / target TBD
+- Inject operation kinds implemented: 0 / target ~7 (Slice 1 codifies the catalog + validators; apply-time engine is Slice 2)
+- Inject operation kinds catalogued + validated at parse-time: 7 / 7 ✓ (Slice 1: section_insert_after, section_replace, step_remove, step_insert_after, include_add, include_remove, block_replace)
+- Inject unit tests passing: 23 / target TBD (Slice 1 smoke + per-kind validators; growing across Slices 2-6)
 - Bootstrap gate hard_failures (source-layer `codex:overlay_manifest_contract`): 0 (target: 0 after Phase 0) ✓ — verified by `harness_canary.py report . --all-supported --strict` showing `codex:overlay_manifest_contract → status: ok`. Note: `claude:overlay_manifest_contract` reports 1 known-acceptable downstream artifact (see Out-Of-Scope Surfaces #4). The full bootstrap-chain `bash scripts/ci/check-bootstrap.sh` is BLOCKED by upstream installer behavior change (see Out-Of-Scope Surfaces #3); the canary is the source-layer evidence per the 2026-05-16 phase-boundary triangulation verdict.
 - Phases complete: 2 / 11 ✓ (Phase 0 closed 2026-05-16T00:22:40Z; Phase 1 closed 2026-05-16T01:09:41Z)
-- Slices complete: 12 (7 Phase 0 regular + 1 Phase 0 boundary + 3 Phase 1 regular + 1 Phase 1 boundary)
+- Slices complete: 13 (7 Phase 0 regular + 1 Phase 0 boundary + 3 Phase 1 regular + 1 Phase 1 boundary + 1 Phase 2 regular)
 
 ## Recent Checkpoints
 
@@ -95,6 +96,7 @@ Schema version: 2
 | 2026-05-16T01:03:24Z | 1.3 | success | Slice 3 add `inject mechanism change` as sixth change-class trigger — appended item #6 to AGENTS.md "Change-Class Triggers" list (line 79); updated CLAUDE.md parallel paragraph "five classes" → "six classes" (line 49); appended `### 6. Inject mechanism change` section in `posture-triggers.md` with triggering paths, distinction from class #2, and Phase 1 ADR-001 example; updated posture-triggers.md intro "five" → "six"; 4 verification gates exit 0 (diff-check, refmap, scan_threshold on AGENTS+CLAUDE, scan_threshold on posture-triggers); no reviewer invoked (governance-slice pre-authorized by phase plan per GUARDRAILS Reviewer-Mediated Continuation table) |
 | 2026-05-16T01:09:41Z | 1.boundary | success (PASS); paused-for-operator | Phase 1 boundary verification — trajectory-verifier returned PASS with detailed evidence on EC1-EC4 satisfaction (slice checkboxes properly deferred per GUARDRAILS:211; ADR-001 has all 10 sections + Risks + Appendix A; AGENTS.md/CLAUDE.md/posture-triggers.md include sixth trigger class; STATE.md authoritatively tracks slice completion via Counters); Phase 1 marked `[x]`; Phases complete 1→2; Slices complete 11→12; transitioned to paused-for-operator per phase plan exit gate; HARD-STOP: phase-1-operator-approval-required emitted; operator must explicitly approve ADR-001 (679 lines) and decide on 6 accumulated quality notes before Phase 2 begins |
 | 2026-05-16T01:53:52Z | operator-decision | success | Operator approved ADR-001; quality note #6 ADDRESSED via ADR §3 universal-field clarification (marker_key declared on every operation kind); notes #1–5 DEFERRED to Phase 10 retrospective; OOS #3 resolution direction set (Phase 2 verifies via unit tests + check-deterministic.sh; check-bootstrap.sh excluded; installer-unblock is a separate workstream); Phase 2 plan amended with "Note on OOS #3" subsection; live control surface docs (handoff/current.md, CURRENT-STATE.md, STATUS.md) refreshed to reflect inject-migration as active workstream; Status `paused-for-operator` → `pending`; ready to resume Phase 2 Slice 1 |
+| 2026-05-16T03:05:21Z | 2.1 | success (PASS via pre-commit reviewer) | Slice 1 schema reader for v4 + mode: inject — added `harness_modifier/contract/inject_operations.py` (7 operation kinds, universal marker_key validator per ADR §4 regex, parity_intent validator); extended `portable_gsd_contract.py` with v4 dispatch, inject normalization (empty source_path; operations field), v4-specific validation block (parity_intent required for inject; per-op validation; intra-runtime + cross-entry marker_key uniqueness); added `tooling/codex/tests/test_inject_schema.py` (23 tests); 6 verification gates exit 0 (diff-check, py_compile, new tests 23/23, existing portable_gsd_contract tests 10/10, refmap, threshold scan); pre-commit adversarial-auditor-xhigh returned PASS with 3 non-blocking polish notes (all forward-looking for Slices 2-4); apply/verify defensive skips name future slice in TODO comments |
 
 ## Reviewer Decisions Log
 
@@ -109,13 +111,14 @@ Schema version: 2
 | 2026-05-16T00:50:00Z | 1.2 | adversarial-auditor-xhigh (pre-execute) | FAIL | A.1 plan invented `<EOF>` sentinel that silently extends §3 schema (worked-example appendix should illustrate, not extend); A.3 cross-op dependency (section_insert_after → include_add into just-inserted block) requires §3 clarification or composition redesign; A.5 framing includes false claim that HTML comments are "visible at runtime" in JS (HTML comments would break JS syntax outright) | applied all 3 actionable recommendations in writing per REVIEWERS.md FAIL handling; chose option (ii) for A.1 (real text anchors, no sentinel); chose option (b) for A.3 (single self-contained source); rewrote A.5 leading with §9 boundary mapping; added "Patterns surfaced" subsection per quality note |
 | 2026-05-16T00:55:00Z | 1.2 | adversarial-auditor-xhigh (post-execute) | PASS (with 2 non-blocking quality notes) | All 4 pre-execute fixes substantively incorporated and verified by line citations; per-example completeness checked (A.2 missing materialized output sketch noted as quality gap; A.5 non-example abbreviation defensible); schema obedience verified (marker keys §4-conforming; operations §3-catalog); boundary honesty intact; 5 design observations surfaced in "Patterns surfaced" with backward-compatible amendment recommendations | proceeded to commit; 2 quality notes captured in commit body for operator review at Phase 1 exit gate |
 | 2026-05-16T01:08:00Z | 1.boundary | trajectory-verifier | PASS | All 4 Exit Criteria substantively verified (ADR-001 10-section completeness + Appendix A + Patterns surfaced; AGENTS.md/CLAUDE.md/posture-triggers.md sixth trigger class; STATE.md slice tracking; phase-plan checkbox deferral correct per GUARDRAILS:211); reviewer-mediation discipline correctly applied across all 3 Phase 1 slices; 6 accumulated quality notes correctly surfaced for operator at exit gate (do NOT block closure); no D5a register problems; phase-plan boundary statement honored (state-mutating gates properly skipped per phase plan line 131) | green-lighted Phase 1 closure; agent transitioned to paused-for-operator per phase plan operator-review gate |
+| 2026-05-16T03:04:00Z | 2.1 | adversarial-auditor-xhigh (pre-commit) | PASS (with 3 non-blocking polish notes) | Parser faithfully implements ADR-001 §3 7-kind catalog + §3 universal marker_key (commit 49aee86) + §4 regex pattern + §5 parity_intent vocabulary + §6 backward compat; v4 dispatch rejects mode:inject under schema_version <4 with clear ValueError; widening of v3 parity_tier/materializers block to (3,4) is correct per ADR §6; marker_key uniqueness reading (same-key-same-entry-different-runtimes ALLOWED for outcome_aligned mirroring; same-key-different-entries REJECTED; same-key-same-runtime-multiple-ops REJECTED) is the correct reconciliation of §3 "globally unique" with §5 outcome_aligned semantics; apply/verify defensive skips name future slice in TODO; 23 tests cover happy path + load-bearing failures + v3-rejects-inject + mixed-mode v4; scope discipline matches Slice 1 write set exactly | proceeded to commit per PASS; 3 polish notes captured in checkpoint for Slice 2-4 implementers (none blocking) |
 
 ## Auto-Recovery Counters
 
 Tracks resilience of the loop. The 3-consecutive-failure rule fires when any slice's `attempts` here reaches 3.
 
-- Total reviewer invocations: 9
-- Reviewer PASS verdicts: 5 (adversarial-auditor-xhigh @ Phase 0 boundary; adversarial-auditor-xhigh @ Phase 1 Slice 1 pre-execute + post-execute; adversarial-auditor-xhigh @ Phase 1 Slice 2 post-execute; trajectory-verifier @ Phase 1 boundary)
+- Total reviewer invocations: 10
+- Reviewer PASS verdicts: 6 (adversarial-auditor-xhigh @ Phase 0 boundary; adversarial-auditor-xhigh @ Phase 1 Slice 1 pre-execute + post-execute; adversarial-auditor-xhigh @ Phase 1 Slice 2 post-execute; trajectory-verifier @ Phase 1 boundary; adversarial-auditor-xhigh @ Phase 2 Slice 1 pre-commit)
 - Reviewer FAIL verdicts: 3 (gsd-debugger @ slice 0 hard-stop; Plan @ slice 0 hard-stop; adversarial-auditor-xhigh @ Phase 1 Slice 2 pre-execute → resolved by applying recommendations in writing)
 - Reviewer ESCALATE verdicts: 1 (trajectory-verifier @ Phase 0 boundary; resolved via triangulation with adversarial-auditor-xhigh PASS)
 - Reviewer HALT verdicts: 0
@@ -123,7 +126,7 @@ Tracks resilience of the loop. The 3-consecutive-failure rule fires when any sli
 - Auto-recovery escalations to hard-stop: 1 (the slice 0 spec-contradiction hard-stop; resolved by operator)
 - Slice-level retries (cumulative): 2 (audit_refmap.py verify deterministic retry; scan_threshold_language re-run after "sufficient" rephrase)
 - Per-slice attempt counts (only for slices not yet completed):
-  - (none — Phase 1 closed; ADR-001 approved 2026-05-16T01:53Z; Phase 2 cleared to start; Slice 1 attempt count begins at 0)
+  - (none — Phase 2 Slice 1 completed first-attempt; Slice 2 attempt count begins at 0)
 
 ## Dirty-Worktree Pre-Conditions
 

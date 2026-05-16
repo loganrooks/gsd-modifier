@@ -16,6 +16,7 @@ if str(REPO_ROOT_FOR_IMPORTS) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT_FOR_IMPORTS))
 
 from harness_modifier.compatibility import declaration as compatibility_declaration
+from harness_modifier.contract import inject_operations
 from harness_modifier.contract.runtime_adapters import registry as runtime_adapter_registry
 
 
@@ -23,8 +24,9 @@ DEFAULT_COMPACT_PROMPT_FILE = "tooling/compact-prompts/project.md"
 LOCAL_COMPACT_PROMPT_SELECTOR = ".codex.local/compact-prompt.txt"
 OVERLAY_REL_PATH = "tooling/portable-gsd/overlay"
 OVERLAY_MANIFEST_REL_PATH = "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json"
-VALID_MODES = {"add", "overwrite"}
+VALID_MODES = {"add", "overwrite", "inject"}
 VALID_PARITY_TIERS = {"core_required", "core_adapted", "runtime_specific"}
+SUPPORTED_SCHEMA_VERSIONS = {2, 3, 4}
 RUNTIME_SPECIFIC_REFERENCE_PATTERN = re.compile(r"(?:~|\$HOME)\/\.claude\b")
 RUNTIME_SPECIFIC_REFERENCE_SUFFIXES = {".md", ".toml"}
 RUNTIME_SPECIFIC_REFERENCE_EXCLUDED = {"CHANGELOG.md"}
@@ -268,7 +270,7 @@ def normalize_overlay_materializer_entry(
     parity_tier: str,
     runtime: str,
     materializer: dict[str, Any],
-) -> dict[str, str]:
+) -> dict[str, Any]:
     mode = materializer.get("mode")
     target = materializer.get("target")
     source = materializer.get("source")
@@ -290,7 +292,36 @@ def normalize_overlay_materializer_entry(
     }
 
 
-def load_overlay_manifest_specs(repo_root: pathlib.Path, runtime: str = "codex") -> dict[str, dict[str, str]]:
+def normalize_overlay_inject_materializer_entry(
+    repo_root: pathlib.Path,
+    logical_id: str,
+    capability_id: str,
+    parity_tier: str,
+    runtime: str,
+    materializer: dict[str, Any],
+) -> dict[str, Any]:
+    target = materializer.get("target")
+    operations = materializer.get("operations")
+    if not isinstance(target, str) or not target:
+        raise ValueError(f"overlay manifest entry {logical_id} has non-string target for {runtime}")
+    if not isinstance(operations, list):
+        raise ValueError(
+            f"overlay manifest entry {logical_id} inject materializer must declare operations list for {runtime}"
+        )
+    return {
+        "logical_id": logical_id,
+        "capability_id": capability_id,
+        "parity_tier": parity_tier,
+        "runtime": runtime,
+        "mode": "inject",
+        "target_path": target,
+        "source_rel_path": "",
+        "source_path": "",
+        "operations": operations,
+    }
+
+
+def load_overlay_manifest_specs(repo_root: pathlib.Path, runtime: str = "codex") -> dict[str, dict[str, Any]]:
     payload = load_overlay_manifest_payload(repo_root)
     schema_version = int(payload.get("schema_version", 2))
     entries = payload.get("entries", {})
@@ -308,13 +339,13 @@ def load_overlay_manifest_specs(repo_root: pathlib.Path, runtime: str = "codex")
             for rel_path, entry in entries.items()
             if runtime == "codex"
         }
-    if schema_version != 3:
+    if schema_version not in SUPPORTED_SCHEMA_VERSIONS:
         raise ValueError(f"unsupported overlay manifest schema version: {schema_version}")
 
-    flattened: dict[str, dict[str, str]] = {}
+    flattened: dict[str, dict[str, Any]] = {}
     for logical_id, entry in entries.items():
         if not isinstance(entry, dict):
-            raise ValueError(f"overlay manifest entry {logical_id} must be an object under schema 3")
+            raise ValueError(f"overlay manifest entry {logical_id} must be an object under schema {schema_version}")
         capability_id = entry.get("capability_id")
         parity_tier = entry.get("parity_tier")
         materializers = entry.get("materializers", {})
@@ -326,14 +357,34 @@ def load_overlay_manifest_specs(repo_root: pathlib.Path, runtime: str = "codex")
             raise ValueError(f"overlay manifest entry {logical_id} materializers must be an object")
         if runtime not in materializers:
             continue
-        spec = normalize_overlay_materializer_entry(
-            repo_root,
-            str(logical_id),
-            capability_id,
-            parity_tier,
-            runtime,
-            materializers[runtime],
-        )
+        materializer = materializers[runtime]
+        if not isinstance(materializer, dict):
+            raise ValueError(
+                f"overlay manifest entry {logical_id} materializer for {runtime} must be an object"
+            )
+        mode = materializer.get("mode")
+        if mode == "inject":
+            if schema_version < 4:
+                raise ValueError(
+                    f"overlay manifest entry {logical_id} uses mode: inject which requires schema_version >= 4"
+                )
+            spec = normalize_overlay_inject_materializer_entry(
+                repo_root,
+                str(logical_id),
+                capability_id,
+                parity_tier,
+                runtime,
+                materializer,
+            )
+        else:
+            spec = normalize_overlay_materializer_entry(
+                repo_root,
+                str(logical_id),
+                capability_id,
+                parity_tier,
+                runtime,
+                materializer,
+            )
         target_path = spec["target_path"]
         if target_path in flattened:
             raise ValueError(f"duplicate overlay target for runtime {runtime}: {target_path}")
@@ -516,7 +567,9 @@ def build_manifest_validation_report_for_roots(
     missing_from_manifest = sorted(overlay_paths - declared_overlay_source_paths)
     missing_from_overlay = sorted(default_overlay_paths - overlay_paths)
     missing_source_files = sorted(
-        rel_path for rel_path, spec in entry_specs.items() if not pathlib.Path(spec["source_path"]).exists()
+        rel_path
+        for rel_path, spec in entry_specs.items()
+        if spec["mode"] != "inject" and not pathlib.Path(spec["source_path"]).exists()
     )
     overwrite_paths = {spec["target_path"] for spec in entry_specs.values() if spec["mode"] == "overwrite"}
     add_paths = {spec["target_path"] for spec in entry_specs.values() if spec["mode"] == "add"}
@@ -524,32 +577,93 @@ def build_manifest_validation_report_for_roots(
         {
             spec["target_path"]: spec["source_rel_path"]
             for spec in entry_specs.values()
-            if spec["source_rel_path"] != f"{OVERLAY_REL_PATH}/{spec['target_path']}"
+            if spec["mode"] != "inject"
+            and spec["source_rel_path"] != f"{OVERLAY_REL_PATH}/{spec['target_path']}"
         }.items()
     )
     overwrite_missing_in_backup = sorted(overwrite_paths - backup_paths) if require_backup_meta else []
     add_present_in_backup = sorted(add_paths & backup_paths) if require_backup_meta else []
     backup_overlay_not_overwrite = sorted((backup_paths & overlay_paths) - overwrite_paths) if require_backup_meta else []
 
-    if manifest_schema_version == 3:
+    if manifest_schema_version in (3, 4):
         manifest_entries = manifest_payload.get("entries", {})
         for logical_id, entry in sorted(manifest_entries.items()):
             if not isinstance(entry, dict):
-                hard_failures.append(f"schema 3 entry {logical_id} must be an object")
+                hard_failures.append(f"schema {manifest_schema_version} entry {logical_id} must be an object")
                 continue
             parity_tier = entry.get("parity_tier")
             materializers = entry.get("materializers")
             if parity_tier not in VALID_PARITY_TIERS:
-                hard_failures.append(f"schema 3 entry {logical_id} has invalid parity_tier")
+                hard_failures.append(
+                    f"schema {manifest_schema_version} entry {logical_id} has invalid parity_tier"
+                )
             if not isinstance(materializers, dict):
-                hard_failures.append(f"schema 3 entry {logical_id} must declare materializers")
+                hard_failures.append(
+                    f"schema {manifest_schema_version} entry {logical_id} must declare materializers"
+                )
                 continue
             if parity_tier in {"core_required", "core_adapted"}:
                 missing_runtimes = sorted(set(SUPPORTED_RUNTIMES) - set(materializers))
                 if missing_runtimes:
                     hard_failures.append(
-                        f"schema 3 entry {logical_id} is {parity_tier} but is missing materializers for {', '.join(missing_runtimes)}"
+                        f"schema {manifest_schema_version} entry {logical_id} is {parity_tier} "
+                        f"but is missing materializers for {', '.join(missing_runtimes)}"
                     )
+
+    if manifest_schema_version == 4:
+        manifest_entries = manifest_payload.get("entries", {})
+        marker_key_entry_locations: dict[str, dict[str, list[str]]] = {}
+        for logical_id, entry in sorted(manifest_entries.items()):
+            if not isinstance(entry, dict):
+                continue
+            materializers = entry.get("materializers")
+            if not isinstance(materializers, dict):
+                continue
+            inject_runtimes = sorted(
+                runtime_id
+                for runtime_id, m in materializers.items()
+                if isinstance(m, dict) and m.get("mode") == "inject"
+            )
+            if not inject_runtimes:
+                continue
+            parity_intent = entry.get("parity_intent")
+            if parity_intent is None:
+                hard_failures.append(
+                    f"schema 4 entry {logical_id} has mode: inject materializer but is missing parity_intent"
+                )
+            else:
+                hard_failures.extend(
+                    inject_operations.validate_parity_intent(parity_intent, str(logical_id))
+                )
+            for runtime_id in inject_runtimes:
+                materializer = materializers[runtime_id]
+                mat_errors, marker_keys = inject_operations.validate_inject_materializer(
+                    materializer, str(logical_id), str(runtime_id)
+                )
+                hard_failures.extend(mat_errors)
+                seen_in_runtime: dict[str, int] = {}
+                for op_index, mk in enumerate(marker_keys):
+                    seen_in_runtime[mk] = seen_in_runtime.get(mk, 0) + 1
+                    entries_for_key = marker_key_entry_locations.setdefault(mk, {})
+                    entries_for_key.setdefault(str(logical_id), []).append(
+                        f"{runtime_id}#{op_index}"
+                    )
+                for mk, count in seen_in_runtime.items():
+                    if count > 1:
+                        hard_failures.append(
+                            f"schema 4 entry {logical_id} runtime {runtime_id}: "
+                            f"marker_key {mk!r} appears {count} times in operations list; expected once"
+                        )
+        for mk in sorted(marker_key_entry_locations):
+            entry_locations = marker_key_entry_locations[mk]
+            if len(entry_locations) > 1:
+                detail = ", ".join(
+                    f"{entry_id} ({'/'.join(locs)})"
+                    for entry_id, locs in sorted(entry_locations.items())
+                )
+                hard_failures.append(
+                    f"schema 4 marker_key {mk!r} is used by multiple entries: {detail}"
+                )
 
     if invalid_modes:
         hard_failures.append(f"overlay manifest contains invalid modes for {len(invalid_modes)} paths")
@@ -680,6 +794,10 @@ def apply_overlay(repo_root: pathlib.Path, compact_prompt: str, runtime: str = "
     entry_specs = load_overlay_manifest_specs(repo_root, runtime=runtime)
     written: list[str] = []
     for rel_path, spec in sorted(entry_specs.items()):
+        if spec["mode"] == "inject":
+            # Inject apply-time logic lands in Phase 2 Slice 2; Slice 1 parser-only
+            # path leaves inject entries untouched.
+            continue
         source = pathlib.Path(spec["source_path"])
         target = live_root / spec["target_path"]
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -755,6 +873,11 @@ def build_materialization_report_for_roots(
         live_path = live_root / target_rel_path
         if not live_path.exists():
             missing_live_targets.append(target_rel_path)
+            continue
+        if mode == "inject":
+            # Inject verify-time logic lands in Phase 2 Slice 4; Slice 1 parser-only
+            # path asserts only target presence for inject entries (no content
+            # equivalence and no backup-copy check, since inject does neither).
             continue
         overlay_text = render_overlay_text(
             read_text(pathlib.Path(spec["source_path"])),
