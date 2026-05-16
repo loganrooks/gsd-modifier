@@ -2,18 +2,18 @@
 
 # Inject Migration State
 
-Last updated: 2026-05-16T20:51:41Z (Phase 3 boundary complete — pilot verified; Phase 4 Slice 1 next)
+Last updated: 2026-05-16T21:03:58Z (Phase 4 Slice 1 complete — verification-overrides design surfaced apply ambiguity)
 Last updated by: inject-migration /goal agent
 Schema version: 2
 
 ## Current Status
 
-- **Phase**: 4 (`04-first-wave-references` — Phase 3 pilot closed; next slice designs `references/verification-overrides.md`)
-- **Slice within phase**: 1 (design migration of `references/verification-overrides.md`)
+- **Phase**: 4 (`04-first-wave-references` — first-wave references; `verification-overrides.md` design complete)
+- **Slice within phase**: 2 (apply migration of `references/verification-overrides.md`; must resolve Slice 1 blocking open question before edits)
 - **Status**: `in-progress` (one of: `pending`, `in-progress`, `paused-for-operator`, `blocked`, `complete`, `aborted`)
-- **Last checkpoint**: `checkpoints/2026-05-16T205141Z-phase03-boundary.md`
-- **Last commit**: `04aa7a289f740859397306f2278b3c03aab150b7` (pre-boundary HEAD; will lag by one after Phase 3 boundary commit)
-- **Sentinel**: `IN-PROGRESS` (Phase 3 pilot closed; initiative continues to Phase 4)
+- **Last checkpoint**: `checkpoints/2026-05-16T210358Z-phase04-slice01.md`
+- **Last commit**: `6e84784f35dac63b7d8c05622d4d584c3236e6d1` (pre-slice HEAD; will lag by one after Phase 4 Slice 1 commit)
+- **Sentinel**: `IN-PROGRESS` (Phase 4 first reference design surfaced a before-apply ambiguity)
 
 ## Phase Progress
 
@@ -31,9 +31,9 @@ Schema version: 2
 
 ## Active Work
 
-- **Current task**: Phase 4 Slice 1 — design migration of `references/verification-overrides.md`.
-- **Started**: pending next `/goal` iteration (Phase 4 begins after this boundary commit)
-- **Expected completion**: Slice 1 produces `decisions/MIG-design-verification-overrides.md` with upstream/current diff, proposed `mode: inject` manifest entry, inject source plan, materialization sketch, and open-question disposition.
+- **Current task**: Phase 4 Slice 2 — resolve the `verification-overrides.md` design ambiguity before applying any manifest/source changes.
+- **Started**: 2026-05-16T21:03:58Z (Phase 4 Slice 1 completed)
+- **Expected completion**: Slice 2 may apply the migration only after reading `decisions/MIG-design-verification-overrides.md` and resolving its blocking open question: whether to accept marker lines inside the final fenced example, drop that redundant final-example delta, or pause for an ADR amendment adding a clean EOF block-replacement operation.
 
 ### Operator decisions (2026-05-16T19:20Z)
 
@@ -51,7 +51,7 @@ Schema version: 2
 
 ## Blockers
 
-- (none active) Phase 3 is closed. Phase 4 begins with the first small-reference design slice.
+- **Phase 4 Slice 2 precondition**: `decisions/MIG-design-verification-overrides.md` identifies a not-pilot-evident issue. Most of `verification-overrides.md` can be marker-clean, but the final EOF fenced `Example VERIFICATION.md` block cannot be migrated full-fidelity under current v4 operations without putting GSD markers inside the code example. Before Slice 2 edits the manifest or sources, route this ambiguity through the Plan reviewer or stop for an ADR-amendment decision.
 
 ### Resolved blockers
 
@@ -91,7 +91,7 @@ Schema version: 2
 - Inject unit tests passing: 131 / target TBD (Slice 1: 23 parse-time + Slice 2: 35 apply-time + Slice 3: 20 extract-marker + Slice 4: 23 verify + Slice 5: 23 thorough + Slice 6: 7 back-compat; all 6 regular Phase 2 slices complete)
 - Bootstrap/materialization hard_failures: 0 (target: 0 for pilot materialization) ✓ — verified at Phase 3 boundary by `bash scripts/ci/check-deterministic.sh` exit 0, `./scripts/setup-portable-gsd-runtime.sh --runtime both` exit 0, `python3 harness_modifier/contract/portable_gsd_contract.py verify-materialized . --all-supported --strict` exit 0 with top-level `hard_failures: []`, and `python3 harness_modifier/contract/harness_canary.py report . --all-supported --strict` exit 0 with `parity_state: dual-runtime-aligned`. The composite `bash scripts/ci/check-bootstrap.sh` still exits 1 because its broad full-discover step hits non-pilot baseline failures before later contract gates run; Phase 3 boundary closure explicitly invokes the Phase 0 intent-over-literal precedent and records OOS #5 as the recurring-cost follow-up.
 - Phases complete: 4 / 11 ✓ (Phase 0 closed 2026-05-16T00:22:40Z; Phase 1 closed 2026-05-16T01:09:41Z; Phase 2 closed 2026-05-16T04:15:43Z paused-for-operator; Phase 3 closed 2026-05-16T20:51:41Z)
-- Slices complete: 24 (7 Phase 0 regular + 1 Phase 0 boundary + 3 Phase 1 regular + 1 Phase 1 boundary + 6 Phase 2 regular + 1 Phase 2 boundary + 3 Phase 3 regular + 1 Phase 3 follow-up + 1 Phase 3 boundary)
+- Slices complete: 25 (7 Phase 0 regular + 1 Phase 0 boundary + 3 Phase 1 regular + 1 Phase 1 boundary + 6 Phase 2 regular + 1 Phase 2 boundary + 3 Phase 3 regular + 1 Phase 3 follow-up + 1 Phase 3 boundary + 1 Phase 4 design)
 
 ## Recent Checkpoints
 
@@ -123,6 +123,7 @@ Schema version: 2
 | 2026-05-16T20:12:14Z | 3.3 | success (conditional PASS via debugger + adversarial audit) | Slice 3 pilot verification/debrief — completed schema v4 compatibility follow-through (compat declaration + compatibility readers + tests) after `check-bootstrap.sh` first failed on stale declaration metadata (`gsd-debugger` FAIL + Plan PASS); materialization passed for both runtimes; direct inspection confirmed upstream mandatory-initial-read text plus injected reading-packet block between markers; `verify-materialized --all-supported --strict` exit 0 with `hard_failures: []`; composite `check-bootstrap.sh` still exits 1 on non-pilot full-discover baseline tests, disposition triangulated as acceptable for this slice by `gsd-debugger` ESCALATE + `adversarial-auditor-xhigh` PASS if debrief names the refreshed baseline and runtime-visibility canary gap; debrief recommends a narrow runtime_visibility.py inject follow-up before phase-boundary verification |
 | 2026-05-16T20:31:47Z | 3.5 | success (Plan PASS + adversarial audit PASS) | Slice 3.5 runtime-visibility follow-up — `runtime_visibility.py` now treats `mode: inject` entries as manifest-backed live-target operation checks using `inject_operations.verify_inject_state` instead of reading empty `source_path`; focused tests cover verified and missing-marker inject states; direct `harness_canary.py report . --all-supported --strict` now exits 0 with `parity_state: dual-runtime-aligned` and `unknown_live_drift: 0`; next turn should run the Phase 3 boundary verifier |
 | 2026-05-16T20:51:41Z | 3.boundary | success (PASS via gate triangulation + trajectory verifier) | Phase 3 boundary verification — direct deterministic/materialization/canary gates passed with `hard_failures: []` and `inject_failure_count: 0`; `check-bootstrap.sh` still exits 1 on non-pilot broad full-discover failures, but `gsd-debugger` ESCALATE + adversarial-auditor-xhigh PASS classified the failure as composite-gate over-aggregation; trajectory-verifier PASS accepted Phase 0's intent-over-literal precedent for EC3, required OOS #5 tracking, marked Phase 3 `[x]`, and advanced to Phase 4 Slice 1 |
+| 2026-05-16T21:03:58Z | 4.1 | success | Slice 1 design migration of `verification-overrides.md` — created `decisions/MIG-design-verification-overrides.md` with upstream/current line citations, precise diff, candidate `mode: inject` manifest JSON, inject source plan, materialization sketch, rollback plan, and blocking open question; design recommends resolving the EOF fenced-example marker issue before Slice 2 applies any manifest/source changes |
 
 ## Reviewer Decisions Log
 
@@ -167,7 +168,7 @@ Tracks resilience of the loop. The 3-consecutive-failure rule fires when any sli
 - Auto-recovery escalations to hard-stop: 1 (the slice 0 spec-contradiction hard-stop; resolved by operator)
 - Slice-level retries (cumulative): 7 (audit_refmap.py verify deterministic retry; scan_threshold_language re-run after "sufficient" rephrase; Slice 6 back-compat test restructure after first attempt surfaced 2 Phase 3 contract-code gaps — second attempt moved inject source path to harness_modifier/overlay/ per ADR-001 §A.1 + filtered remaining compat-declaration TODO; Phase 3 Slice 2 full-unittest retry before debugger escalation; Phase 3 Slice 3 `check-bootstrap.sh` retry after schema mismatch; Phase 3 Slice 3 `check-bootstrap.sh` retry after schema follow-through exposed the stale full-discover baseline; Phase 3 boundary `check-bootstrap.sh` retry before debugger escalation)
 - Per-slice attempt counts (only for slices not yet completed):
-  - (none — Phase 3 boundary complete; next slice is Phase 4 Slice 1)
+  - (none — Phase 4 Slice 1 complete; next slice is Phase 4 Slice 2, but it has a pre-edit ambiguity to route)
 
 ## Dirty-Worktree Pre-Conditions
 
