@@ -2,18 +2,18 @@
 
 # Inject Migration State
 
-Last updated: 2026-05-16T21:20:25Z (Phase 4 Slice 2 complete — verification-overrides migrated via marker-clean inject subset)
+Last updated: 2026-05-16T21:29:00Z (Phase 4 Slice 3 complete — agent-contracts design ready)
 Last updated by: inject-migration /goal agent
 Schema version: 2
 
 ## Current Status
 
-- **Phase**: 4 (`04-first-wave-references` — first-wave references; `verification-overrides.md` migrated)
-- **Slice within phase**: 3 (design migration of `references/agent-contracts.md`)
+- **Phase**: 4 (`04-first-wave-references` — first-wave references; `agent-contracts.md` design complete)
+- **Slice within phase**: 4 (apply migration of `references/agent-contracts.md`)
 - **Status**: `in-progress` (one of: `pending`, `in-progress`, `paused-for-operator`, `blocked`, `complete`, `aborted`)
-- **Last checkpoint**: `checkpoints/2026-05-16T212025Z-phase04-slice02.md`
-- **Last commit**: `4380771c0eb48a35fa56c8a7a95011cab2fde527` (pre-slice HEAD; will lag by one after Phase 4 Slice 2 commit)
-- **Sentinel**: `IN-PROGRESS` (Phase 4 first reference apply completed; broad full-discover baseline still out of scope)
+- **Last checkpoint**: `checkpoints/2026-05-16T212900Z-phase04-slice03.md`
+- **Last commit**: `b4b84ab000e78ed52e537ddb61471a7eb60346c1` (pre-slice HEAD; will lag by one after Phase 4 Slice 3 commit)
+- **Sentinel**: `IN-PROGRESS` (Phase 4 second reference design completed; broad full-discover baseline still out of scope)
 
 ## Phase Progress
 
@@ -31,9 +31,9 @@ Schema version: 2
 
 ## Active Work
 
-- **Current task**: Phase 4 Slice 3 — design migration of `references/agent-contracts.md`.
-- **Started**: 2026-05-16T21:20:25Z (Phase 4 Slice 2 completed)
-- **Expected completion**: Slice 3 should produce `decisions/MIG-design-agent-contracts.md` with upstream/current citations, precise diff, candidate manifest JSON, source-file plan, materialization sketch, rollback plan, and any open questions before the apply slice.
+- **Current task**: Phase 4 Slice 4 — apply migration of `references/agent-contracts.md`.
+- **Started**: 2026-05-16T21:29:00Z (Phase 4 Slice 3 completed)
+- **Expected completion**: Slice 4 should apply `decisions/MIG-design-agent-contracts.md`: convert the manifest entry to `mode: inject`, create three source files under `harness_modifier/overlay/inject-sources/get-shit-done/references/agent-contracts/`, delete the old overwrite carrier, and run the focused manifest/inject gates while dispositioning the known broad full-discover baseline if it recurs unchanged.
 
 ### Operator decisions (2026-05-16T19:20Z)
 
@@ -93,7 +93,7 @@ Schema version: 2
 - Inject unit tests passing: 131 / target TBD (Slice 1: 23 parse-time + Slice 2: 35 apply-time + Slice 3: 20 extract-marker + Slice 4: 23 verify + Slice 5: 23 thorough + Slice 6: 7 back-compat; all 6 regular Phase 2 slices complete)
 - Bootstrap/materialization hard_failures: 0 (target: 0 for pilot materialization) ✓ — verified at Phase 3 boundary by `bash scripts/ci/check-deterministic.sh` exit 0, `./scripts/setup-portable-gsd-runtime.sh --runtime both` exit 0, `python3 harness_modifier/contract/portable_gsd_contract.py verify-materialized . --all-supported --strict` exit 0 with top-level `hard_failures: []`, and `python3 harness_modifier/contract/harness_canary.py report . --all-supported --strict` exit 0 with `parity_state: dual-runtime-aligned`. The composite `bash scripts/ci/check-bootstrap.sh` still exits 1 because its broad full-discover step hits non-pilot baseline failures before later contract gates run; Phase 3 boundary closure explicitly invokes the Phase 0 intent-over-literal precedent and records OOS #5 as the recurring-cost follow-up.
 - Phases complete: 4 / 11 ✓ (Phase 0 closed 2026-05-16T00:22:40Z; Phase 1 closed 2026-05-16T01:09:41Z; Phase 2 closed 2026-05-16T04:15:43Z paused-for-operator; Phase 3 closed 2026-05-16T20:51:41Z)
-- Slices complete: 26 (7 Phase 0 regular + 1 Phase 0 boundary + 3 Phase 1 regular + 1 Phase 1 boundary + 6 Phase 2 regular + 1 Phase 2 boundary + 3 Phase 3 regular + 1 Phase 3 follow-up + 1 Phase 3 boundary + 1 Phase 4 design + 1 Phase 4 apply)
+- Slices complete: 27 (7 Phase 0 regular + 1 Phase 0 boundary + 3 Phase 1 regular + 1 Phase 1 boundary + 6 Phase 2 regular + 1 Phase 2 boundary + 3 Phase 3 regular + 1 Phase 3 follow-up + 1 Phase 3 boundary + 2 Phase 4 designs + 1 Phase 4 apply)
 
 ## Recent Checkpoints
 
@@ -127,6 +127,7 @@ Schema version: 2
 | 2026-05-16T20:51:41Z | 3.boundary | success (PASS via gate triangulation + trajectory verifier) | Phase 3 boundary verification — direct deterministic/materialization/canary gates passed with `hard_failures: []` and `inject_failure_count: 0`; `check-bootstrap.sh` still exits 1 on non-pilot broad full-discover failures, but `gsd-debugger` ESCALATE + adversarial-auditor-xhigh PASS classified the failure as composite-gate over-aggregation; trajectory-verifier PASS accepted Phase 0's intent-over-literal precedent for EC3, required OOS #5 tracking, marked Phase 3 `[x]`, and advanced to Phase 4 Slice 1 |
 | 2026-05-16T21:03:58Z | 4.1 | success | Slice 1 design migration of `verification-overrides.md` — created `decisions/MIG-design-verification-overrides.md` with upstream/current line citations, precise diff, candidate `mode: inject` manifest JSON, inject source plan, materialization sketch, rollback plan, and blocking open question; design recommends resolving the EOF fenced-example marker issue before Slice 2 applies any manifest/source changes |
 | 2026-05-16T21:20:25Z | 4.2 | success (Plan PASS + gate-disposition recovery) | Slice 2 applied `verification-overrides.md` via the Plan-approved four-operation marker-clean subset; changed manifest entry to `mode: inject` for both runtimes; added four inject source files; deleted old overwrite carrier; `validate-manifest --source-only --strict` exit 0 and 131/131 inject tests pass; broad full discover remains at the known six-failure baseline and was dispositioned by `gsd-debugger` FAIL + Plan PASS as out of scope for this carrier |
+| 2026-05-16T21:29:00Z | 4.3 | success | Slice 3 design migration of `agent-contracts.md` — created `decisions/MIG-design-agent-contracts.md` with upstream/current line citations, precise diff, candidate three-operation `mode: inject` manifest JSON, source-file plan, materialization sketch, rollback plan, and no blocking open questions; pure-function preflight applied and verified all three proposed operations |
 
 ## Reviewer Decisions Log
 
@@ -174,7 +175,7 @@ Tracks resilience of the loop. The 3-consecutive-failure rule fires when any sli
 - Auto-recovery escalations to hard-stop: 1 (the slice 0 spec-contradiction hard-stop; resolved by operator)
 - Slice-level retries (cumulative): 8 (audit_refmap.py verify deterministic retry; scan_threshold_language re-run after "sufficient" rephrase; Slice 6 back-compat test restructure after first attempt surfaced 2 Phase 3 contract-code gaps — second attempt moved inject source path to harness_modifier/overlay/ per ADR-001 §A.1 + filtered remaining compat-declaration TODO; Phase 3 Slice 2 full-unittest retry before debugger escalation; Phase 3 Slice 3 `check-bootstrap.sh` retry after schema mismatch; Phase 3 Slice 3 `check-bootstrap.sh` retry after schema follow-through exposed the stale full-discover baseline; Phase 3 boundary `check-bootstrap.sh` retry before debugger escalation; Phase 4 Slice 2 full-unittest retry before debugger escalation)
 - Per-slice attempt counts (only for slices not yet completed):
-  - (none — Phase 4 Slice 2 complete; next slice is Phase 4 Slice 3)
+  - (none — Phase 4 Slice 3 complete; next slice is Phase 4 Slice 4)
 
 ## Dirty-Worktree Pre-Conditions
 
