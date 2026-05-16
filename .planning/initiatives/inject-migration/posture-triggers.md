@@ -1,8 +1,8 @@
 # Change-Class Triggers — Operational Checklist
 
-Companion to AGENTS.md "Workflow Rules → Change-Class Triggers" for inject-migration loop operators and reviewers. AGENTS.md is authoritative; this file is a quick-reference restating of the five classes with concrete repo examples.
+Companion to AGENTS.md "Workflow Rules → Change-Class Triggers" for inject-migration loop operators and reviewers. AGENTS.md is authoritative; this file is a quick-reference restating of the six classes with concrete repo examples.
 
-## Five Trigger Classes
+## Six Trigger Classes
 
 ### 1. Overlay carrier add/remove
 
@@ -55,6 +55,18 @@ Triggering paths:
 - Any other decision artifact under `.planning/` describing why an earlier plan was adjusted or abandoned
 
 Examples in this initiative: the orientation artifact (release-readiness-orientation-2026-05-08.md) and intervention-strategies (intervention-strategies-2026-05-08.md) are the load-bearing premise inputs; any future ADR or premise revision under `.planning/initiatives/inject-migration/` falls here.
+
+### 6. Inject mechanism change
+
+Triggering paths:
+
+- `.planning/initiatives/inject-migration/decisions/ADR-001-manifest-schema-v4.md` (operation kind catalog, marker conventions, `parity_intent` semantics, backward-compat shims)
+- Future ADRs under `.planning/initiatives/inject-migration/decisions/` that extend the inject mechanism (e.g., the `append_after_text` or non-XML markdown anchor amendments surfaced in ADR-001 Appendix A "Patterns surfaced")
+- Files in `harness_modifier/contract/` that implement inject operations (overlap with class #2 contract surface; this class adds the spec-design dimension)
+
+Distinction from class #2 (contract surface change): class #2 covers code that VALIDATES manifests and applies materialization; class #6 covers the DESIGN of the inject mechanism (schema-version 4 spec, operation semantics, marker conventions, `parity_intent` semantics). New operation kinds count as inject mechanism changes; new USES of existing operation kinds do not.
+
+Examples in this initiative: ADR-001 (Phase 1 Slices 1 and 2) is itself an inject mechanism change — it introduces the v4 schema. Future amendments to ADR-001's catalog (e.g., adding `append_after_text` per the schema gap surfaced in Appendix A) would also fall in this class.
 
 ## When In Doubt
 

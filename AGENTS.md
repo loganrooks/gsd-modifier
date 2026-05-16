@@ -76,6 +76,7 @@ The propose-evidence-approve discipline applies in full to changes in any of the
 3. **Install/bootstrap script change** — `scripts/setup-portable-gsd*.sh`, `scripts/ci/check-*.sh`
 4. **Governance carrier change** — `AGENTS.md`, `CLAUDE.md`, `WORKFLOW.md`, `docs/handoff/current.md`, `.planning/STATUS.md`, `.planning/CURRENT-STATE.md`
 5. **Plan disposition or premise change** — `evidence/decision.md`, `evidence/implementation-disposition.md`, any decision artifact
+6. **Inject mechanism change** — modifications to `mode: inject` operation kinds, marker conventions, `parity_intent` semantics, or backward-compat shims. New operation kinds count as inject mechanism changes; new uses of existing operation kinds do not.
 
 Out of scope (small mechanical fixes still proceed under the carve-out above):
 

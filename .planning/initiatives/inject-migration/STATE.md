@@ -2,18 +2,18 @@
 
 # Inject Migration State
 
-Last updated: 2026-05-16T00:57:06Z (Phase 1 Slice 2 complete: ADR-001 Appendix A worked examples landed; pre-execute reviewer FAIL → applied 3 recommendations → post-execute PASS-with-2-notes)
+Last updated: 2026-05-16T01:03:24Z (Phase 1 Slice 3 complete: extended change-class triggers with sixth class `inject mechanism change`; Phase 1 regular slices done; phase-boundary trajectory-verifier + operator-approval gate pending next turn)
 Last updated by: inject-migration /goal agent
 Schema version: 2
 
 ## Current Status
 
 - **Phase**: 1 (`01-schema-foundation` — ADR-001 manifest schema v4)
-- **Slice within phase**: 3 (slice 2 worked-examples appendix complete; slice 3 extends AGENTS.md/CLAUDE.md change-class triggers with `mode: inject` as the sixth trigger class)
+- **Slice within phase**: 4 (sentinel: all 3 regular slices 1–3 committed; next turn runs `trajectory-verifier` for phase-boundary verification per PROTOCOL.md "Phase-boundary mandate" AND prepares the operator-approval handoff per `phases/01-schema-foundation.md:120` "Operator review gate")
 - **Status**: `in-progress` (one of: `pending`, `in-progress`, `paused-for-operator`, `blocked`, `complete`, `aborted`)
-- **Last checkpoint**: `checkpoints/2026-05-16T005706Z-phase01-slice02.md`
-- **Last commit**: `ee3f5375d791add8e882be8657f01dfc13e0f32e` (lag-by-one — slice 1 commit reconciled via PROTOCOL.md cold-start step 4; will lag again to slice 2's commit after this turn's atomic commit)
-- **Sentinel**: `IN-PROGRESS` (ADR-001 fully drafted with 10 sections + Risks §11 + Appendix A 5 worked examples + Patterns surfaced subsection; slice 3 is governance edits; phase-boundary trajectory-verifier fires after slice 3 commits with operator-review gate per phase plan exit criterion)
+- **Last checkpoint**: `checkpoints/2026-05-16T010324Z-phase01-slice03.md`
+- **Last commit**: `fa8c6314f39a044e69a1eb34a50d1e7702f315ef` (lag-by-one — slice 2 commit reconciled via PROTOCOL.md cold-start step 4; will lag again to slice 3's commit after this turn's atomic commit)
+- **Sentinel**: `IN-PROGRESS` (Phase 1 regular slices complete; trajectory-verifier is the next-turn gate; AFTER verifier PASS the agent transitions to `paused-for-operator` per phase plan exit gate — operator must explicitly approve ADR-001 before Phase 2 begins)
 
 ## Phase Progress
 
@@ -31,9 +31,9 @@ Schema version: 2
 
 ## Active Work
 
-- **Current task**: executing Phase 1 Slice 3 (extend AGENTS.md "Change-Class Triggers" subsection with sixth class `mode: inject`; parallel CLAUDE.md update; extend `posture-triggers.md` operational checklist)
-- **Started**: 2026-05-16T00:57:06Z
-- **Expected completion**: Slice 3 adds the sixth trigger class for inject mechanism changes (per the spec content at `phases/01-schema-foundation.md:99`: "**Inject mechanism change** — modifications to `mode: inject` operation kinds, marker conventions, parity_intent semantics, or backward-compat shims..."); 3 verification gates including `scan_threshold_language` on AGENTS.md/CLAUDE.md
+- **Current task**: NEXT TURN must run `trajectory-verifier` per REVIEWERS.md "Phase Boundary Verification" template for phase `01-schema-foundation`. Per `phases/01-schema-foundation.md:122-131`, state-mutating gates (bootstrap/deterministic) are NOT required at this phase boundary (no contract code; no carrier changes; only docs). The verifier reads the phase plan's Exit Criteria (lines 113-118), the 3 slice commits (`ee3f537`, `fa8c631`, plus this turn's slice 3 commit), and confirms ADR-001 has all 10 sections + Risks + Appendix A; AGENTS.md and CLAUDE.md include `mode: inject` as a change-class trigger; STATE.md reflects 3/3 slices committed. AFTER verifier PASS, the agent must transition to `paused-for-operator` and emit `HARD-STOP: phase-1-operator-approval-required` per the phase plan's "Operator review gate" (line 120) — operator must explicitly approve ADR-001 before Phase 2 begins.
+- **Started**: (next-turn cold start)
+- **Expected completion**: trajectory-verifier returns PASS → STATE.md marks Phase 1 `[x]` → Status set to `paused-for-operator` → `HARD-STOP: phase-1-operator-approval-required` emitted → operator reviews ADR-001 (and the 6 quality notes accumulated across slices 1+2 reviewer post-execute verdicts) → operator invokes next iteration explicitly to advance to Phase 2 Slice 0
 
 ## Blockers
 
@@ -68,7 +68,7 @@ Schema version: 2
 - Inject unit tests passing: 0 / target TBD
 - Bootstrap gate hard_failures (source-layer `codex:overlay_manifest_contract`): 0 (target: 0 after Phase 0) ✓ — verified by `harness_canary.py report . --all-supported --strict` showing `codex:overlay_manifest_contract → status: ok`. Note: `claude:overlay_manifest_contract` reports 1 known-acceptable downstream artifact (see Out-Of-Scope Surfaces #4). The full bootstrap-chain `bash scripts/ci/check-bootstrap.sh` is BLOCKED by upstream installer behavior change (see Out-Of-Scope Surfaces #3); the canary is the source-layer evidence per the 2026-05-16 phase-boundary triangulation verdict.
 - Phases complete: 1 / 11
-- Slices complete: 10 (7 Phase 0 regular + 1 Phase 0 boundary + 2 Phase 1 ADR slices)
+- Slices complete: 11 (7 Phase 0 regular + 1 Phase 0 boundary + 3 Phase 1 regular)
 
 ## Recent Checkpoints
 
@@ -85,6 +85,7 @@ Schema version: 2
 | 2026-05-16T00:22:40Z | 0.boundary | success (PASS via triangulation) | Phase 0 boundary verification — trajectory-verifier returned ESCALATE (source-layer goal met; downstream materialization issues are out-of-scope but disposition is governance-level); adversarial-auditor-xhigh returned PASS (joint verdict resolves the ESCALATE; Phase 0's source-layer mission delivered; downstream issues logged as Out-Of-Scope Surfaces #3 and #4); two Out-Of-Scope Surfaces entries added; Phase 0 marked `[x]`; Phase advanced to 1 Slice 0 |
 | 2026-05-16T00:40:58Z | 1.1 | success (PASS via dual reviewer) | Slice 1 draft ADR-001 manifest schema v4 — wrote 347-line ADR with all 10 required sections (per slice spec) + Risks (§11) + Appendix A placeholder (per pre-execute rec 7+6); pre-execute adversarial-auditor-xhigh PASS with 7 actionable recommendations on outline (all incorporated in prose); post-execute adversarial-auditor-xhigh PASS with 4 non-blocking quality notes (surfaced in commit body for operator review at Phase 1 exit gate); 3 verification gates exit 0 (after one threshold-language fix on "sufficient" → "covers ... via composition") |
 | 2026-05-16T00:57:06Z | 1.2 | success (PASS via FAIL→fix→PASS) | Slice 2 ADR-001 Appendix A worked examples — pre-execute adversarial-auditor-xhigh FAIL with 3 actionable recommendations (A.1 EOF sentinel extends schema; A.3 cross-op dependency; A.5 false JS-comment-visibility claim); applied all 3 recommendations in writing without re-spawning pre-execute; wrote 332 new appendix lines (ADR now 679 lines) covering 5 examples + "Patterns surfaced" subsection naming 5 design observations; post-execute adversarial-auditor-xhigh PASS with 2 non-blocking quality notes (A.2 missing materialized output sketch; §3-vs-appendix marker_key tension); 3 verification gates exit 0 |
+| 2026-05-16T01:03:24Z | 1.3 | success | Slice 3 add `inject mechanism change` as sixth change-class trigger — appended item #6 to AGENTS.md "Change-Class Triggers" list (line 79); updated CLAUDE.md parallel paragraph "five classes" → "six classes" (line 49); appended `### 6. Inject mechanism change` section in `posture-triggers.md` with triggering paths, distinction from class #2, and Phase 1 ADR-001 example; updated posture-triggers.md intro "five" → "six"; 4 verification gates exit 0 (diff-check, refmap, scan_threshold on AGENTS+CLAUDE, scan_threshold on posture-triggers); no reviewer invoked (governance-slice pre-authorized by phase plan per GUARDRAILS Reviewer-Mediated Continuation table) |
 
 ## Reviewer Decisions Log
 
