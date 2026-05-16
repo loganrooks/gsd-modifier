@@ -255,28 +255,153 @@ def _wrap_with_markers(body: str, key: str) -> str:
     return f"{_start_marker(key)}\n{body.strip()}\n{_end_marker(key)}"
 
 
+class MarkerExtractionError(Exception):
+    """Raised when content contains structurally malformed marker regions.
+
+    `reason` is one of: `nested`, `unbalanced_start`, `unbalanced_end`,
+    `mismatched_end`, `duplicate_key`. `line` (1-based) points at the offending
+    marker line where applicable; `key` carries the marker key involved."""
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        reason: str,
+        line: int | None = None,
+        key: str | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.reason = reason
+        self.line = line
+        self.key = key
+
+
+# Deliberately permissive key capture (\S+): the extractor's job is to SURFACE
+# structural anomalies, including markers with malformed keys. A stricter regex
+# would silently skip lines that look like markers but have a key violating §4
+# convention, hiding the corruption from verify-time triage. Key-format validation
+# lives in the parse-time manifest validator (MARKER_KEY_PATTERN above).
+_MARKER_START_RE: re.Pattern[str] = re.compile(
+    r"^<!-- GSD_MODIFIER:start key:(?P<key>\S+) -->$"
+)
+_MARKER_END_RE: re.Pattern[str] = re.compile(
+    r"^<!-- GSD_MODIFIER:end key:(?P<key>\S+) -->$"
+)
+
+
+def extract_inject_markers(content: str) -> dict[str, MarkerRegion]:
+    """Scan content for ALL GSD_MODIFIER marker regions and return a {key: MarkerRegion} dict.
+
+    Insertion order in the returned dict reflects first-occurrence ordering in `content`.
+
+    Detects and raises `MarkerExtractionError` for the following malformed states:
+
+    - **nested** — a new start marker appears before the currently-open marker is closed.
+      ADR-001 §4 does not describe nested marker regions; injection regions are flat.
+    - **unbalanced_start** — a start marker has no matching end marker before EOF.
+    - **unbalanced_end** — an end marker appears with no matching prior start.
+    - **mismatched_end** — an end marker's key does not match the currently-open start's key.
+    - **duplicate_key** — the same KEY is used for two distinct (separately-bracketed)
+      marker regions in the same content; apply-time idempotency would only see the first.
+
+    Consumers:
+
+    - `apply_inject_operations` (Phase 2 Slice 2) calls this indirectly via `find_marker`,
+      which catches `MarkerExtractionError` to preserve apply-time tolerance — the engine
+      can still write a corrected file even when the prior on-disk state is malformed.
+    - `verify_inject_state` (Phase 2 Slice 4) will call this directly so verify-time
+      surfaces malformed materialized state as a hard failure (the verify gate is the
+      right place for the operator to learn about corruption).
+    """
+    lines = content.splitlines(keepends=False)
+    markers: dict[str, MarkerRegion] = {}
+    open_key: str | None = None
+    open_line: int | None = None
+    for i, raw_line in enumerate(lines):
+        line = raw_line.strip()
+        start_match = _MARKER_START_RE.match(line)
+        end_match = _MARKER_END_RE.match(line)
+        if start_match is not None:
+            key = start_match.group("key")
+            if open_key is not None:
+                raise MarkerExtractionError(
+                    f"nested marker region detected at line {i + 1}: key {key!r} "
+                    f"opens while key {open_key!r} (opened at line {open_line + 1 if open_line is not None else '?'}) "
+                    f"is still open; ADR-001 §4 does not support nested regions",
+                    reason="nested",
+                    line=i + 1,
+                    key=key,
+                )
+            if key in markers:
+                raise MarkerExtractionError(
+                    f"duplicate marker key {key!r} at line {i + 1}; the same KEY already "
+                    f"brackets a region starting at line {markers[key].start_line + 1}",
+                    reason="duplicate_key",
+                    line=i + 1,
+                    key=key,
+                )
+            open_key = key
+            open_line = i
+            continue
+        if end_match is not None:
+            key = end_match.group("key")
+            if open_key is None:
+                raise MarkerExtractionError(
+                    f"unbalanced end marker at line {i + 1}: key {key!r} has no matching "
+                    f"prior start marker",
+                    reason="unbalanced_end",
+                    line=i + 1,
+                    key=key,
+                )
+            if key != open_key:
+                raise MarkerExtractionError(
+                    f"mismatched end marker at line {i + 1}: end key {key!r} does not "
+                    f"match currently-open start key {open_key!r} (opened at line "
+                    f"{open_line + 1 if open_line is not None else '?'})",
+                    reason="mismatched_end",
+                    line=i + 1,
+                    key=key,
+                )
+            body = "\n".join(lines[open_line + 1 : i]) if open_line is not None else ""
+            markers[open_key] = MarkerRegion(
+                key=open_key,
+                start_line=open_line if open_line is not None else i,
+                end_line=i,
+                body=body,
+            )
+            open_key = None
+            open_line = None
+    if open_key is not None:
+        raise MarkerExtractionError(
+            f"unbalanced start marker at line {open_line + 1 if open_line is not None else '?'}: "
+            f"key {open_key!r} was never closed before EOF",
+            reason="unbalanced_start",
+            line=open_line + 1 if open_line is not None else None,
+            key=open_key,
+        )
+    return markers
+
+
 def find_marker(content: str, key: str) -> MarkerRegion | None:
     """Locate a single marker region by key.
 
-    Returns None if either marker is absent or the start marker has no
-    matching end marker (treated as absent for the apply-time check; the
-    Slice 3 extract_inject_markers utility will surface unbalanced markers
-    as a separate concern)."""
-    start = _start_marker(key)
-    end = _end_marker(key)
-    lines = content.splitlines(keepends=False)
-    start_idx: int | None = None
-    for i, line in enumerate(lines):
-        if line.strip() == start:
-            start_idx = i
-            break
-    if start_idx is None:
+    Implemented in terms of `extract_inject_markers` (Slice 3 refactor). Returns
+    None when the key is absent OR when the content's marker structure is
+    malformed in any way (nested, unbalanced, mismatched, or duplicate-key).
+
+    Apply-time semantics: when on-disk state is corrupt for this key, returning
+    None causes the per-op apply functions to treat the key as absent and EMIT
+    A FRESH marker block. The corrupted on-disk region is NOT removed by apply
+    (apply is additive, not corrective). The next verify run will call
+    `extract_inject_markers` directly and surface the compounded structural
+    anomaly as a hard failure — that is the right gate for operator triage.
+    Verify-time callers should therefore invoke `extract_inject_markers`
+    directly, never `find_marker`."""
+    try:
+        markers = extract_inject_markers(content)
+    except MarkerExtractionError:
         return None
-    for j in range(start_idx + 1, len(lines)):
-        if lines[j].strip() == end:
-            body = "\n".join(lines[start_idx + 1 : j])
-            return MarkerRegion(key=key, start_line=start_idx, end_line=j, body=body)
-    return None
+    return markers.get(key)
 
 
 _STEP_BLOCK_RE_CACHE: dict[str, re.Pattern[str]] = {}
