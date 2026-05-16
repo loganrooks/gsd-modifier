@@ -885,6 +885,8 @@ def build_materialization_report_for_roots(
     missing_live_targets: list[str] = []
     backup_copy_missing: list[str] = []
     content_mismatch: list[str] = []
+    inject_verifications: list[dict[str, Any]] = []
+    inject_failures: list[str] = []
 
     for rel_path, spec in sorted(entry_specs.items()):
         mode = spec["mode"]
@@ -894,9 +896,47 @@ def build_materialization_report_for_roots(
             missing_live_targets.append(target_rel_path)
             continue
         if mode == "inject":
-            # Inject verify-time logic lands in Phase 2 Slice 4; Slice 1 parser-only
-            # path asserts only target presence for inject entries (no content
-            # equivalence and no backup-copy check, since inject does neither).
+            # Phase 2 Slice 4: verify_inject_state asserts each operation's
+            # effects landed per ADR-001 §8 Option V1 (marker presence + position
+            # check; non-marker regions are NOT asserted). Structural corruption
+            # surfaces via extraction_error.
+            materialized_content = read_text(live_path)
+            verify_result = inject_operations.verify_inject_state(
+                materialized_content, spec.get("operations", [])
+            )
+            per_op_records = [
+                {
+                    "marker_key": v.marker_key,
+                    "kind": v.kind,
+                    "status": v.status,
+                    "detail": v.detail,
+                    "op_index": v.op_index,
+                }
+                for v in verify_result.operation_verifications
+            ]
+            inject_verifications.append(
+                {
+                    "target_path": target_rel_path,
+                    "passed": verify_result.passed,
+                    "extraction_error": verify_result.extraction_error,
+                    "operation_verifications": per_op_records,
+                }
+            )
+            if not verify_result.passed:
+                if verify_result.extraction_error is not None:
+                    inject_failures.append(
+                        f"{target_rel_path}: marker structural corruption "
+                        f"({verify_result.extraction_error})"
+                    )
+                else:
+                    failed_summaries = [
+                        f"#{v.op_index} {v.kind} {v.marker_key}: {v.status}"
+                        for v in verify_result.operation_verifications
+                        if v.status != inject_operations.VERIFY_STATUS_OK
+                    ]
+                    inject_failures.append(
+                        f"{target_rel_path}: " + "; ".join(failed_summaries)
+                    )
             continue
         overlay_text = render_overlay_text(
             read_text(pathlib.Path(spec["source_path"])),
@@ -923,6 +963,11 @@ def build_materialization_report_for_roots(
         hard_failures.append(f"{len(backup_copy_missing)} overwrite entries are missing backup copies")
     if content_mismatch:
         hard_failures.append(f"{len(content_mismatch)} live targets do not match the materialized overlay contract")
+    if inject_failures:
+        hard_failures.append(
+            f"{len(inject_failures)} inject entries failed verify_inject_state: "
+            + "; ".join(inject_failures)
+        )
 
     return {
         "modifier_repo_root": str(modifier_repo_root),
@@ -956,6 +1001,8 @@ def build_materialization_report_for_roots(
             "missing_live_target_count": len(missing_live_targets),
             "backup_copy_missing_count": len(backup_copy_missing),
             "content_mismatch_count": len(content_mismatch),
+            "inject_entry_count": len(inject_verifications),
+            "inject_failure_count": len(inject_failures),
             "runtime_specific_reference_hit_count": runtime_specific_reference_scan["summary"]["total_hits"],
             "runtime_specific_reference_review_needed_count": runtime_specific_reference_scan["summary"][
                 "review_needed_count"
@@ -966,6 +1013,8 @@ def build_materialization_report_for_roots(
         "missing_live_targets": missing_live_targets,
         "backup_copy_missing": backup_copy_missing,
         "content_mismatch": content_mismatch,
+        "inject_verifications": inject_verifications,
+        "inject_failures": inject_failures,
         "runtime_specific_reference_scan": runtime_specific_reference_scan,
         "hard_failures": hard_failures,
     }

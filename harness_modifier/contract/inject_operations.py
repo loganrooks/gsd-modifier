@@ -726,3 +726,533 @@ def apply_inject_operations(
             )
         )
     return current, records
+
+
+# ---------------------------------------------------------------------------
+# Verify-time engine (Phase 2 Slice 4)
+# ---------------------------------------------------------------------------
+
+
+VERIFY_STATUS_OK = "verified"
+VERIFY_STATUS_MISSING_MARKER = "missing_marker"
+VERIFY_STATUS_WRONG_POSITION = "wrong_position"
+VERIFY_STATUS_ANCHOR_MISSING = "anchor_missing"
+VERIFY_STATUS_MARKER_CORRUPTION = "marker_corruption"
+VERIFY_STATUS_UNEXPECTED_PRESENT = "unexpected_present"
+
+
+@dataclass(frozen=True)
+class OperationVerification:
+    """Per-operation verify outcome from verify_inject_state.
+
+    `status` is one of: verified, missing_marker, wrong_position,
+    anchor_missing, marker_corruption, unexpected_present.
+    `detail` carries a human-readable explanation for operator triage.
+    `region` is the located MarkerRegion when present; None when absent
+    (missing_marker / unexpected_present cases or when extraction failed)."""
+
+    marker_key: str
+    kind: str
+    status: str
+    detail: str
+    op_index: int
+    region: MarkerRegion | None = None
+
+
+@dataclass(frozen=True)
+class VerifyResult:
+    """Outcome of verify_inject_state for a single materialized target.
+
+    `passed` is True iff every per-op verification is OK AND there is no
+    extraction_error (the markers' structural state must also be clean).
+    `extraction_error` is None when extract_inject_markers succeeded,
+    otherwise carries the MarkerExtractionError reason string."""
+
+    passed: bool
+    operation_verifications: list[OperationVerification]
+    extraction_error: str | None = None
+
+
+def _verify_position_after_line(
+    region: MarkerRegion, anchor_line: int
+) -> bool:
+    """True iff `region` starts after the line `anchor_line` (0-indexed)."""
+    return region.start_line > anchor_line
+
+
+def _verify_position_inside_tag(
+    region: MarkerRegion, content: str, tag: str
+) -> bool:
+    """True iff `region` is bracketed by <tag>...</tag> in `content` (line-oriented)."""
+    open_tag_prefix = f"<{tag}"
+    close_tag = f"</{tag}>"
+    lines = content.splitlines(keepends=False)
+    open_line: int | None = None
+    close_line: int | None = None
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+        if open_line is None and (stripped == f"<{tag}>" or stripped.startswith(open_tag_prefix)):
+            open_line = i
+            continue
+        if open_line is not None and stripped == close_tag:
+            close_line = i
+            break
+    if open_line is None or close_line is None:
+        return False
+    return open_line < region.start_line and region.end_line < close_line
+
+
+def _verify_position_between_anchors(
+    region: MarkerRegion, content: str, start_anchor: str, end_anchor: str
+) -> bool:
+    """True iff `region` is positioned between `start_anchor` and `end_anchor` in `content`.
+
+    For the degenerate same-anchor case the region must follow the (single)
+    anchor; the end-side check is satisfied because there is no end-side bound."""
+    start_idx = content.find(start_anchor)
+    if start_idx == -1:
+        return False
+    if start_anchor == end_anchor:
+        anchor_end_char = start_idx + len(start_anchor)
+        char_of_marker_start = sum(
+            len(line) + 1 for line in content.splitlines(keepends=False)[: region.start_line]
+        )
+        return char_of_marker_start >= anchor_end_char
+    end_idx = content.find(end_anchor, start_idx + len(start_anchor))
+    if end_idx == -1:
+        return False
+    char_of_marker_start = sum(
+        len(line) + 1 for line in content.splitlines(keepends=False)[: region.start_line]
+    )
+    char_of_marker_end = sum(
+        len(line) + 1
+        for line in content.splitlines(keepends=False)[: region.end_line + 1]
+    )
+    return start_idx < char_of_marker_start and char_of_marker_end <= end_idx
+
+
+def _find_line_index_of(content: str, needle: str) -> int | None:
+    """Return the 0-indexed line that contains `needle` as a substring, or None."""
+    for i, line in enumerate(content.splitlines(keepends=False)):
+        if needle in line:
+            return i
+    return None
+
+
+def _step_block_present_outside_markers(
+    content: str, name: str, markers: dict[str, MarkerRegion]
+) -> bool:
+    """True iff `<step name="NAME">...</step>` exists in `content` OUTSIDE any marker region."""
+    step_loc = _find_step_block(content, name)
+    if step_loc is None:
+        return False
+    step_start_char, _step_end_char = step_loc
+    # Locate the 1-based line of step_start_char
+    char_cursor = 0
+    for line_index, line in enumerate(content.splitlines(keepends=False)):
+        line_end_char = char_cursor + len(line) + 1  # +1 for the newline
+        if char_cursor <= step_start_char < line_end_char:
+            for region in markers.values():
+                if region.start_line <= line_index <= region.end_line:
+                    return False
+            return True
+        char_cursor = line_end_char
+    return False
+
+
+def _verify_section_insert_after(
+    op: dict[str, Any], content: str, markers: dict[str, MarkerRegion], op_index: int
+) -> OperationVerification:
+    marker_key = op["marker_key"]
+    tag = op["tag"]
+    region = markers.get(marker_key)
+    if region is None:
+        return OperationVerification(
+            marker_key=marker_key,
+            kind="section_insert_after",
+            status=VERIFY_STATUS_MISSING_MARKER,
+            detail=f"expected marker for key {marker_key!r} not found in materialized content",
+            op_index=op_index,
+        )
+    anchor_line = _find_line_index_of(content, f"</{tag}>")
+    if anchor_line is None:
+        return OperationVerification(
+            marker_key=marker_key,
+            kind="section_insert_after",
+            status=VERIFY_STATUS_ANCHOR_MISSING,
+            detail=f"anchor </{tag}> not found in materialized content",
+            op_index=op_index,
+            region=region,
+        )
+    if not _verify_position_after_line(region, anchor_line):
+        return OperationVerification(
+            marker_key=marker_key,
+            kind="section_insert_after",
+            status=VERIFY_STATUS_WRONG_POSITION,
+            detail=(
+                f"marker for {marker_key!r} is at line {region.start_line + 1} but should "
+                f"appear after </{tag}> at line {anchor_line + 1}"
+            ),
+            op_index=op_index,
+            region=region,
+        )
+    return OperationVerification(
+        marker_key=marker_key,
+        kind="section_insert_after",
+        status=VERIFY_STATUS_OK,
+        detail="marker present after anchor",
+        op_index=op_index,
+        region=region,
+    )
+
+
+def _verify_section_replace(
+    op: dict[str, Any], content: str, markers: dict[str, MarkerRegion], op_index: int
+) -> OperationVerification:
+    marker_key = op["marker_key"]
+    region = markers.get(marker_key)
+    if region is None:
+        return OperationVerification(
+            marker_key=marker_key,
+            kind="section_replace",
+            status=VERIFY_STATUS_MISSING_MARKER,
+            detail=(
+                f"expected marker for key {marker_key!r} not found; section_replace "
+                f"requires a prior section_insert_after to have created the marker"
+            ),
+            op_index=op_index,
+        )
+    return OperationVerification(
+        marker_key=marker_key,
+        kind="section_replace",
+        status=VERIFY_STATUS_OK,
+        detail="marker present (body content not asserted per ADR §8 Option V1)",
+        op_index=op_index,
+        region=region,
+    )
+
+
+def _verify_step_remove(
+    op: dict[str, Any], content: str, markers: dict[str, MarkerRegion], op_index: int
+) -> OperationVerification:
+    marker_key = op["marker_key"]
+    name = op["name"]
+    sentinel = f"<!-- GSD_MODIFIER:step_removed name:{name} -->"
+    region = markers.get(marker_key)
+    if region is None:
+        return OperationVerification(
+            marker_key=marker_key,
+            kind="step_remove",
+            status=VERIFY_STATUS_MISSING_MARKER,
+            detail=f"expected step_remove marker for key {marker_key!r} not found",
+            op_index=op_index,
+        )
+    if sentinel not in region.body:
+        return OperationVerification(
+            marker_key=marker_key,
+            kind="step_remove",
+            status=VERIFY_STATUS_MARKER_CORRUPTION,
+            detail=(
+                f"marker for {marker_key!r} exists but body lacks the expected "
+                f"step_removed sentinel for name={name!r}"
+            ),
+            op_index=op_index,
+            region=region,
+        )
+    if _step_block_present_outside_markers(content, name, markers):
+        return OperationVerification(
+            marker_key=marker_key,
+            kind="step_remove",
+            status=VERIFY_STATUS_UNEXPECTED_PRESENT,
+            detail=(
+                f"step name={name!r} block is still present in materialized content "
+                f"outside the removal marker; the apply step did not actually remove it"
+            ),
+            op_index=op_index,
+            region=region,
+        )
+    return OperationVerification(
+        marker_key=marker_key,
+        kind="step_remove",
+        status=VERIFY_STATUS_OK,
+        detail="step removed; sentinel marker present",
+        op_index=op_index,
+        region=region,
+    )
+
+
+def _verify_step_insert_after(
+    op: dict[str, Any], content: str, markers: dict[str, MarkerRegion], op_index: int
+) -> OperationVerification:
+    marker_key = op["marker_key"]
+    after_name = op["after_name"]
+    region = markers.get(marker_key)
+    if region is None:
+        return OperationVerification(
+            marker_key=marker_key,
+            kind="step_insert_after",
+            status=VERIFY_STATUS_MISSING_MARKER,
+            detail=f"expected marker for key {marker_key!r} not found",
+            op_index=op_index,
+        )
+    step_loc = _find_step_block(content, after_name)
+    if step_loc is None:
+        return OperationVerification(
+            marker_key=marker_key,
+            kind="step_insert_after",
+            status=VERIFY_STATUS_ANCHOR_MISSING,
+            detail=f"anchor step name={after_name!r} not found in materialized content",
+            op_index=op_index,
+            region=region,
+        )
+    _start_char, end_char = step_loc
+    # Compute the line containing end_char
+    char_cursor = 0
+    anchor_end_line: int | None = None
+    for line_index, line in enumerate(content.splitlines(keepends=False)):
+        line_end_char = char_cursor + len(line) + 1
+        if char_cursor <= end_char <= line_end_char:
+            anchor_end_line = line_index
+            break
+        char_cursor = line_end_char
+    if anchor_end_line is None or not _verify_position_after_line(region, anchor_end_line):
+        return OperationVerification(
+            marker_key=marker_key,
+            kind="step_insert_after",
+            status=VERIFY_STATUS_WRONG_POSITION,
+            detail=(
+                f"marker for {marker_key!r} at line {region.start_line + 1} "
+                f"does not appear after the {after_name!r} step block"
+            ),
+            op_index=op_index,
+            region=region,
+        )
+    return OperationVerification(
+        marker_key=marker_key,
+        kind="step_insert_after",
+        status=VERIFY_STATUS_OK,
+        detail="marker present after anchor step",
+        op_index=op_index,
+        region=region,
+    )
+
+
+def _verify_include_add(
+    op: dict[str, Any], content: str, markers: dict[str, MarkerRegion], op_index: int
+) -> OperationVerification:
+    marker_key = op["marker_key"]
+    tag = op["tag"]
+    line = op["line"]
+    region = markers.get(marker_key)
+    if region is None:
+        return OperationVerification(
+            marker_key=marker_key,
+            kind="include_add",
+            status=VERIFY_STATUS_MISSING_MARKER,
+            detail=f"expected include_add marker for key {marker_key!r} not found",
+            op_index=op_index,
+        )
+    if line.strip() not in region.body:
+        return OperationVerification(
+            marker_key=marker_key,
+            kind="include_add",
+            status=VERIFY_STATUS_MARKER_CORRUPTION,
+            detail=(
+                f"marker for {marker_key!r} exists but body does not contain "
+                f"expected line {line!r}"
+            ),
+            op_index=op_index,
+            region=region,
+        )
+    if not _verify_position_inside_tag(region, content, tag):
+        return OperationVerification(
+            marker_key=marker_key,
+            kind="include_add",
+            status=VERIFY_STATUS_WRONG_POSITION,
+            detail=(
+                f"marker for {marker_key!r} at line {region.start_line + 1} is not "
+                f"positioned inside the <{tag}>...</{tag}> body"
+            ),
+            op_index=op_index,
+            region=region,
+        )
+    return OperationVerification(
+        marker_key=marker_key,
+        kind="include_add",
+        status=VERIFY_STATUS_OK,
+        detail="marker present inside tag body with expected line",
+        op_index=op_index,
+        region=region,
+    )
+
+
+def _verify_include_remove(
+    op: dict[str, Any], content: str, markers: dict[str, MarkerRegion], op_index: int
+) -> OperationVerification:
+    marker_key = op["marker_key"]
+    region = markers.get(marker_key)
+    if region is not None:
+        return OperationVerification(
+            marker_key=marker_key,
+            kind="include_remove",
+            status=VERIFY_STATUS_UNEXPECTED_PRESENT,
+            detail=(
+                f"include_remove expected marker {marker_key!r} to be ABSENT after apply, "
+                f"but it is present at line {region.start_line + 1}"
+            ),
+            op_index=op_index,
+            region=region,
+        )
+    return OperationVerification(
+        marker_key=marker_key,
+        kind="include_remove",
+        status=VERIFY_STATUS_OK,
+        detail="marker absent as expected (include_remove post-state)",
+        op_index=op_index,
+    )
+
+
+def _verify_block_replace(
+    op: dict[str, Any], content: str, markers: dict[str, MarkerRegion], op_index: int
+) -> OperationVerification:
+    marker_key = op["marker_key"]
+    start_anchor = op["start_anchor"]
+    end_anchor = op["end_anchor"]
+    region = markers.get(marker_key)
+    if region is None:
+        return OperationVerification(
+            marker_key=marker_key,
+            kind="block_replace",
+            status=VERIFY_STATUS_MISSING_MARKER,
+            detail=f"expected block_replace marker for key {marker_key!r} not found",
+            op_index=op_index,
+        )
+    if start_anchor not in content:
+        return OperationVerification(
+            marker_key=marker_key,
+            kind="block_replace",
+            status=VERIFY_STATUS_ANCHOR_MISSING,
+            detail=f"start_anchor {start_anchor!r} not found in materialized content",
+            op_index=op_index,
+            region=region,
+        )
+    if start_anchor != end_anchor and end_anchor not in content:
+        return OperationVerification(
+            marker_key=marker_key,
+            kind="block_replace",
+            status=VERIFY_STATUS_ANCHOR_MISSING,
+            detail=f"end_anchor {end_anchor!r} not found in materialized content",
+            op_index=op_index,
+            region=region,
+        )
+    if not _verify_position_between_anchors(region, content, start_anchor, end_anchor):
+        return OperationVerification(
+            marker_key=marker_key,
+            kind="block_replace",
+            status=VERIFY_STATUS_WRONG_POSITION,
+            detail=(
+                f"marker for {marker_key!r} at line {region.start_line + 1} is not "
+                f"positioned between start_anchor {start_anchor!r} and "
+                f"end_anchor {end_anchor!r}"
+            ),
+            op_index=op_index,
+            region=region,
+        )
+    return OperationVerification(
+        marker_key=marker_key,
+        kind="block_replace",
+        status=VERIFY_STATUS_OK,
+        detail="marker present between anchors",
+        op_index=op_index,
+        region=region,
+    )
+
+
+_VERIFY_DISPATCH: dict[
+    str,
+    Callable[
+        [dict[str, Any], str, dict[str, MarkerRegion], int],
+        OperationVerification,
+    ],
+] = {
+    "section_insert_after": _verify_section_insert_after,
+    "section_replace": _verify_section_replace,
+    "step_remove": _verify_step_remove,
+    "step_insert_after": _verify_step_insert_after,
+    "include_add": _verify_include_add,
+    "include_remove": _verify_include_remove,
+    "block_replace": _verify_block_replace,
+}
+
+
+def verify_inject_state(
+    materialized_content: str, expected_operations: list[dict[str, Any]]
+) -> VerifyResult:
+    """Verify that all expected inject operations have actually landed in materialized content.
+
+    Per ADR-001 §8 Option V1 (default): marker presence + position check, NOT
+    content-hash verification of the marker-bounded region. The function asserts
+    that each operation's effects are visible:
+
+    - create-class ops (section_insert_after, step_insert_after, include_add,
+      block_replace): marker exists and is positioned correctly relative to its
+      anchor
+    - section_replace: marker exists (body content is not asserted here; that is
+      the materialization step's job per slice spec line 92)
+    - step_remove: marker exists with the step_removed sentinel AND the original
+      step block is no longer present in non-marker regions
+    - include_remove: marker is ABSENT (inverse post-state of include_add)
+
+    Non-marker regions are NOT verified (modifier doesn't own them per slice
+    spec line 92's "content drifted in non-marker region should pass").
+
+    Structural corruption (nested / unbalanced / mismatched / duplicate-key
+    markers) is surfaced via the `extraction_error` field on the result —
+    verify-time is the strict gate per ADR §8 and Slice 3's strict-vs-tolerant
+    split.
+    """
+    try:
+        markers = extract_inject_markers(materialized_content)
+        extraction_error: str | None = None
+    except MarkerExtractionError as exc:
+        return VerifyResult(
+            passed=False,
+            operation_verifications=[],
+            extraction_error=exc.reason,
+        )
+
+    verifications: list[OperationVerification] = []
+    for op_index, op in enumerate(expected_operations):
+        if not isinstance(op, dict):
+            verifications.append(
+                OperationVerification(
+                    marker_key="",
+                    kind="unknown",
+                    status=VERIFY_STATUS_MARKER_CORRUPTION,
+                    detail=f"operation #{op_index} is not a dict",
+                    op_index=op_index,
+                )
+            )
+            continue
+        kind = op.get("kind")
+        marker_key = op.get("marker_key", "")
+        if not isinstance(kind, str) or kind not in _VERIFY_DISPATCH:
+            verifications.append(
+                OperationVerification(
+                    marker_key=str(marker_key) if isinstance(marker_key, str) else "",
+                    kind=str(kind) if kind is not None else "unknown",
+                    status=VERIFY_STATUS_MARKER_CORRUPTION,
+                    detail=f"operation #{op_index} has unknown kind {kind!r}",
+                    op_index=op_index,
+                )
+            )
+            continue
+        verify_fn = _VERIFY_DISPATCH[kind]
+        verifications.append(verify_fn(op, materialized_content, markers, op_index))
+
+    passed = all(v.status == VERIFY_STATUS_OK for v in verifications)
+    return VerifyResult(
+        passed=passed,
+        operation_verifications=verifications,
+        extraction_error=extraction_error,
+    )
