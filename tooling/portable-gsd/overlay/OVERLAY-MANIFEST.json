@@ -387,16 +387,75 @@
     "get-shit-done/references/verification-overrides.md": {
       "capability_id": "get-shit-done/references/verification-overrides.md",
       "parity_tier": "core_required",
+      "parity_intent": "outcome_aligned",
       "materializers": {
         "codex": {
-          "mode": "overwrite",
+          "mode": "inject",
           "target": "get-shit-done/references/verification-overrides.md",
-          "source": "tooling/portable-gsd/overlay/get-shit-done/references/verification-overrides.md"
+          "operations": [
+            {
+              "kind": "block_replace",
+              "start_anchor": "<override_format>\n",
+              "end_anchor": "</override_format>\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/verification-overrides/override-format-body.md",
+              "marker_key": "GSD_MODIFIER:references-verification-overrides:override-format-body"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "<verifier_behavior>\n",
+              "end_anchor": "</verifier_behavior>\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/verification-overrides/verifier-behavior-body.md",
+              "marker_key": "GSD_MODIFIER:references-verification-overrides:verifier-behavior-body"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "<creating_overrides>\n",
+              "end_anchor": "</creating_overrides>\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/verification-overrides/creating-overrides-body.md",
+              "marker_key": "GSD_MODIFIER:references-verification-overrides:creating-overrides-body"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "<override_lifecycle>\n",
+              "end_anchor": "</override_lifecycle>\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/verification-overrides/override-lifecycle-body.md",
+              "marker_key": "GSD_MODIFIER:references-verification-overrides:override-lifecycle-body"
+            }
+          ]
         },
         "claude": {
-          "mode": "overwrite",
+          "mode": "inject",
           "target": "get-shit-done/references/verification-overrides.md",
-          "source": "tooling/portable-gsd/overlay/get-shit-done/references/verification-overrides.md"
+          "operations": [
+            {
+              "kind": "block_replace",
+              "start_anchor": "<override_format>\n",
+              "end_anchor": "</override_format>\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/verification-overrides/override-format-body.md",
+              "marker_key": "GSD_MODIFIER:references-verification-overrides:override-format-body"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "<verifier_behavior>\n",
+              "end_anchor": "</verifier_behavior>\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/verification-overrides/verifier-behavior-body.md",
+              "marker_key": "GSD_MODIFIER:references-verification-overrides:verifier-behavior-body"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "<creating_overrides>\n",
+              "end_anchor": "</creating_overrides>\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/verification-overrides/creating-overrides-body.md",
+              "marker_key": "GSD_MODIFIER:references-verification-overrides:creating-overrides-body"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "<override_lifecycle>\n",
+              "end_anchor": "</override_lifecycle>\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/verification-overrides/override-lifecycle-body.md",
+              "marker_key": "GSD_MODIFIER:references-verification-overrides:override-lifecycle-body"
+            }
+          ]
         }
       }
     },
