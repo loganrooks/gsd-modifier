@@ -162,6 +162,17 @@ print('inject_operations module imports correctly')
 - This phase does NOT modify upstream conversion logic. Upstream's `bin/install.js` is untouched.
 - This phase does NOT add any host-matrix scenarios for inject. That's a Phase 6+ concern when richer operations are exercised.
 
+## Note on OOS #3 (installer-block) — Operator Direction 2026-05-16T01:53Z
+
+Per `STATE.md` → Out-Of-Scope Surfaces #3, the upstream installer is currently blocking `bash scripts/ci/check-bootstrap.sh` because of a hooks-classification prompt for 12 pre-existing untracked `.codex/hooks/` files. Operator direction for Phase 2:
+
+- **In scope for Phase 2 verification**: per-slice unit tests on synthetic content (already specified per slice); `bash scripts/ci/check-deterministic.sh` at the phase boundary (manifest reading only; not affected by installer hooks).
+- **Out of scope for Phase 2 verification**: `bash scripts/ci/check-bootstrap.sh` (its first step is the blocked installer); full materializer-runtime exercise.
+- **Phase 2 contract code does NOT depend on the installer being unblocked**. `apply_inject_operations` and `verify_inject_state` operate on string content; tests inject synthetic strings and assert string outputs. No filesystem materialization in test paths.
+- **Resolution of OOS #3 itself is a separate workstream**, to be addressed before Phase 3 (pilot) attempts end-to-end materialization. Options under consideration: (a) mock the installer surface for test purposes; (b) investigate the upstream installer change to unblock the bootstrap chain; (c) accept and document long-term divergence.
+
+This direction supersedes any implicit assumption that Phase 2 boundary verification would re-establish the bootstrap-chain green-state.
+
 ## Risks (phase-level)
 
 | Risk | Likelihood | Impact | Mitigation |
