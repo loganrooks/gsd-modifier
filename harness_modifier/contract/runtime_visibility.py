@@ -16,6 +16,7 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[2]))
 
 from harness_modifier.compatibility import declaration as compatibility_declaration
+from harness_modifier.contract import inject_operations
 from harness_modifier.contract import portable_gsd_contract as pgc
 
 
@@ -36,6 +37,8 @@ SUB_SELECTIVE_BACKUP = "backup_carried_outside_overlay_subset"
 SUB_SELECTIVE_INSTALL = "install_mutation_outside_overlay_subset"
 SUB_SELECTIVE_UNTRACKED = "untracked_live_only_outside_overlay_subset"
 SUB_OBSOLETE_UNTRACKED = "untracked_live_only_residue"
+SUB_INJECT_VERIFIED = "inject_operation_state_verified"
+SUB_INJECT_UNVERIFIED = "inject_operation_state_unverified"
 SUB_UNKNOWN_MISSING_LIVE = "overlay_covered_missing_from_live"
 SUB_UNKNOWN_MISSING_BOTH = "missing_from_overlay_and_live"
 SUB_UNKNOWN_UNRESOLVED = "unresolved_overlay_live_divergence"
@@ -275,12 +278,44 @@ def entry_specs_for_family(
     modifier_repo_root: pathlib.Path,
     runtime: str,
     rel_glob: str,
-) -> dict[str, dict[str, str]]:
+) -> dict[str, dict[str, Any]]:
     return {
         rel_path: spec
         for rel_path, spec in pgc.load_overlay_manifest_specs(modifier_repo_root, runtime=runtime).items()
         if pathlib.PurePosixPath(rel_path).match(rel_glob)
     }
+
+
+def inject_verification_payload(
+    verify_result: inject_operations.VerifyResult,
+) -> dict[str, Any]:
+    return {
+        "passed": verify_result.passed,
+        "extraction_error": verify_result.extraction_error,
+        "operation_verifications": [
+            {
+                "marker_key": verification.marker_key,
+                "kind": verification.kind,
+                "status": verification.status,
+                "detail": verification.detail,
+                "op_index": verification.op_index,
+            }
+            for verification in verify_result.operation_verifications
+        ],
+    }
+
+
+def failed_inject_verification_summary(
+    verify_result: inject_operations.VerifyResult,
+) -> str:
+    if verify_result.extraction_error is not None:
+        return f"marker structural corruption: {verify_result.extraction_error}"
+    failed = [
+        f"#{verification.op_index} {verification.kind} {verification.marker_key}: {verification.status}"
+        for verification in verify_result.operation_verifications
+        if verification.status != inject_operations.VERIFY_STATUS_OK
+    ]
+    return "; ".join(failed) if failed else "no failed operations reported"
 
 
 def empty_summary() -> dict[str, int]:
@@ -337,9 +372,17 @@ def build_runtime_report_for_runtime_roots(
             live_paths = collect_rel_paths(live_root, spec.rel_glob)
             for rel_path in sorted(overlay_paths | live_paths):
                 overlay_spec = runtime_entry_specs.get(rel_path)
-                overlay_path = pathlib.Path(overlay_spec["source_path"]) if overlay_spec else overlay_root / rel_path
+                is_inject = overlay_spec is not None and overlay_spec.get("mode") == "inject"
+                overlay_path = (
+                    None
+                    if is_inject
+                    else pathlib.Path(overlay_spec["source_path"]) if overlay_spec else overlay_root / rel_path
+                )
                 live_path = live_root / rel_path
-                overlay_exists = overlay_spec is not None and overlay_path.exists()
+                overlay_exists = (
+                    overlay_spec is not None
+                    and (is_inject or (overlay_path is not None and overlay_path.exists()))
+                )
                 live_exists = live_path.exists()
                 in_manifest = rel_path in manifest_paths
                 in_backup_meta = rel_path in backup_paths
@@ -349,8 +392,9 @@ def build_runtime_report_for_runtime_roots(
                 normalized_overlay = None
                 raw_equal = False
                 normalized_equal = False
+                inject_verification = None
 
-                if overlay_exists:
+                if overlay_exists and not is_inject and overlay_path is not None:
                     overlay_text = read_text(overlay_path)
                     normalized_overlay = normalize_overlay_text(
                         overlay_text,
@@ -365,27 +409,47 @@ def build_runtime_report_for_runtime_roots(
                 if normalized_overlay is not None and live_text is not None:
                     normalized_equal = normalized_overlay == live_text
 
-                classification, subclassification, note = classify(
-                    family=spec.family,
-                    rel_path=rel_path,
-                    overlay_exists=overlay_exists,
-                    live_exists=live_exists,
-                    in_manifest=in_manifest,
-                    in_backup_meta=in_backup_meta,
-                    is_install_mutation_target=is_install_mutation_target,
-                    raw_equal=raw_equal,
-                    normalized_equal=normalized_equal,
-                    overlay_text=normalized_overlay if normalized_overlay is not None else overlay_text,
-                    live_text=live_text,
-                )
+                if is_inject and live_text is not None:
+                    operations = overlay_spec.get("operations", []) if overlay_spec else []
+                    verify_result = inject_operations.verify_inject_state(
+                        live_text,
+                        operations if isinstance(operations, list) else [],
+                    )
+                    inject_verification = inject_verification_payload(verify_result)
+                    if verify_result.passed:
+                        classification = INTENTIONAL
+                        subclassification = SUB_INJECT_VERIFIED
+                        note = "mode: inject operation state verified against the live runtime target"
+                    else:
+                        classification = UNKNOWN
+                        subclassification = SUB_INJECT_UNVERIFIED
+                        note = (
+                            "mode: inject live target failed operation-state verification: "
+                            + failed_inject_verification_summary(verify_result)
+                        )
+                else:
+                    classification, subclassification, note = classify(
+                        family=spec.family,
+                        rel_path=rel_path,
+                        overlay_exists=overlay_exists,
+                        live_exists=live_exists,
+                        in_manifest=in_manifest,
+                        in_backup_meta=in_backup_meta,
+                        is_install_mutation_target=is_install_mutation_target,
+                        raw_equal=raw_equal,
+                        normalized_equal=normalized_equal,
+                        overlay_text=normalized_overlay if normalized_overlay is not None else overlay_text,
+                        live_text=live_text,
+                    )
 
                 entries.append(
                     {
                         "family": spec.family,
                         "rel_path": rel_path,
+                        "mode": overlay_spec.get("mode") if overlay_spec else None,
                         "overlay_exists": overlay_exists,
                         "live_exists": live_exists,
-                        "overlay_path": str(overlay_path) if overlay_exists else None,
+                        "overlay_path": str(overlay_path) if overlay_exists and overlay_path is not None else None,
                         "live_path": str(live_path) if live_exists else None,
                         "in_manifest": in_manifest,
                         "in_backup_meta": in_backup_meta,
@@ -398,6 +462,7 @@ def build_runtime_report_for_runtime_roots(
                         "classification": classification,
                         "subclassification": subclassification,
                         "note": note,
+                        "inject_verification": inject_verification,
                     }
                 )
 

@@ -12,6 +12,46 @@ class RuntimeVisibilityTests(unittest.TestCase):
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(text, encoding="utf-8")
 
+    def _write_inject_fixture(self, repo_root: pathlib.Path, live_content: str) -> str:
+        target = "get-shit-done/references/injected.md"
+        marker_key = "GSD_MODIFIER:test:runtime-visibility"
+        self._write(repo_root, "scripts/setup-portable-gsd.sh", 'quality_reasoning = {"gsd-planner": "xhigh"}\n')
+        self._write(
+            repo_root,
+            "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
+            json.dumps(
+                {
+                    "schema_version": 4,
+                    "entries": {
+                        target: {
+                            "capability_id": target,
+                            "parity_tier": "runtime_specific",
+                            "parity_intent": "outcome_aligned",
+                            "materializers": {
+                                "codex": {
+                                    "mode": "inject",
+                                    "target": target,
+                                    "operations": [
+                                        {
+                                            "kind": "block_replace",
+                                            "start_anchor": "Anchor line\n",
+                                            "end_anchor": "Anchor line\n",
+                                            "source": "harness_modifier/overlay/inject-sources/injected.md",
+                                            "marker_key": marker_key,
+                                        }
+                                    ],
+                                }
+                            },
+                        }
+                    },
+                }
+            ),
+        )
+        self._write(repo_root, ".codex/gsd-file-manifest.json", json.dumps({"version": "1", "files": [target]}) + "\n")
+        self._write(repo_root, ".codex/gsd-local-patches/backup-meta.json", json.dumps({"files": []}) + "\n")
+        self._write(repo_root, f".codex/{target}", live_content)
+        return target
+
     def test_normalize_overlay_text_replaces_tokens(self) -> None:
         repo_root = pathlib.Path("/tmp/example-repo")
         text = "__PROJECT_ROOT__ :: __COMPACT_PROMPT_FILE__"
@@ -119,6 +159,47 @@ class RuntimeVisibilityTests(unittest.TestCase):
             self.assertEqual(report["subclassification_summary"][rv.SUB_TEMPLATE_MATERIALIZATION], 1)
             self.assertEqual(report["subclassification_summary"][rv.SUB_OBSOLETE_UNTRACKED], 1)
             self.assertFalse(claude_report["present"])
+
+    def test_build_report_verifies_inject_entry_without_source_path_read(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            target = self._write_inject_fixture(
+                repo_root,
+                "Anchor line\n"
+                "<!-- GSD_MODIFIER:start key:GSD_MODIFIER:test:runtime-visibility -->\n"
+                "Injected content\n"
+                "<!-- GSD_MODIFIER:end key:GSD_MODIFIER:test:runtime-visibility -->\n",
+            )
+
+            report = rv.build_report(repo_root, runtime_scope="codex")
+            codex_report = report["runtimes"]["codex"]
+            entry = next(entry for entry in codex_report["entries"] if entry["rel_path"] == target)
+
+            self.assertTrue(entry["overlay_exists"])
+            self.assertIsNone(entry["overlay_path"])
+            self.assertEqual(entry["mode"], "inject")
+            self.assertEqual(entry["classification"], rv.INTENTIONAL)
+            self.assertEqual(entry["subclassification"], rv.SUB_INJECT_VERIFIED)
+            self.assertTrue(entry["inject_verification"]["passed"])
+            self.assertEqual(codex_report["summary"]["unknown_live_drift"], 0)
+            self.assertEqual(codex_report["summary"]["intentional_materialized_carry"], 1)
+
+    def test_build_report_marks_failed_inject_verification_as_unknown_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = pathlib.Path(tmpdir)
+            target = self._write_inject_fixture(repo_root, "Anchor line\nInjected content without marker\n")
+
+            report = rv.build_report(repo_root, runtime_scope="codex")
+            codex_report = report["runtimes"]["codex"]
+            entry = next(entry for entry in codex_report["entries"] if entry["rel_path"] == target)
+
+            self.assertTrue(entry["overlay_exists"])
+            self.assertIsNone(entry["overlay_path"])
+            self.assertEqual(entry["classification"], rv.UNKNOWN)
+            self.assertEqual(entry["subclassification"], rv.SUB_INJECT_UNVERIFIED)
+            self.assertFalse(entry["inject_verification"]["passed"])
+            self.assertIn("missing_marker", entry["note"])
+            self.assertEqual(codex_report["summary"]["unknown_live_drift"], 1)
 
     def test_build_report_marks_dual_runtime_read_side_when_both_runtimes_exist_without_markers(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:

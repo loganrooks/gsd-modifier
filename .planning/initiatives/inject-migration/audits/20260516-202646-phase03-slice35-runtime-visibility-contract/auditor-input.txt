@@ -1,0 +1,75 @@
+You are the `adversarial-auditor-xhigh` reviewer for the inject-migration initiative.
+
+Review type: contract-surface review before commit.
+Author runtime: the initiative corpus and prior proposal/debrief artifacts were authored under Claude/Codex mixed execution; this specific implementation diff was authored by Codex and must be reviewed for contract correctness against the Claude-authored initiative rules.
+
+Return your verdict in exactly this REVIEWERS.md block format:
+
+VERDICT: <PASS | FAIL | ESCALATE | HALT>
+REASONING: <one paragraph; what you evaluated and why it landed on this verdict>
+RECOMMENDATION: <if PASS: empty or "proceed"; if FAIL: actionable next step; if ESCALATE: what second reviewer to invoke and why; if HALT: which hard-stop condition fires>
+EVIDENCE:
+- <bullets with cited file:line refs, commit SHAs, or tool outputs>
+
+Context paths to read:
+1. `.planning/initiatives/inject-migration/STATE.md`
+2. `.planning/initiatives/inject-migration/GUARDRAILS.md`
+3. `.planning/initiatives/inject-migration/REVIEWERS.md`
+4. `.planning/initiatives/inject-migration/phases/03-pilot.md`
+5. `.planning/initiatives/inject-migration/decisions/PILOT-DEBRIEF-mandatory-initial-read.md`
+6. `harness_modifier/contract/runtime_visibility.py`
+7. `harness_modifier/contract/portable_gsd_contract.py`
+8. `harness_modifier/contract/inject_operations.py`
+9. `tooling/codex/tests/test_runtime_visibility.py`
+
+Current HEAD before this slice's commit:
+- `0c0e0c17343c5dac728bc95dc0b046b3c60e61ce` (`fix(inject-migration): complete pilot verification`)
+
+Why this review is required:
+- The follow-up edit touches `harness_modifier/contract/runtime_visibility.py`, a contract surface.
+- `GUARDRAILS.md` requires `adversarial-auditor-xhigh` for files under `harness_modifier/contract/`.
+- Plan reviewer already approved the narrow write set: `runtime_visibility.py`, `test_runtime_visibility.py`, STATE.md, and one checkpoint.
+
+Problem being fixed:
+- Phase 3 Slice 3 proved the pilot carrier materializes correctly in both runtimes.
+- The remaining blocker is the phase-boundary `harness_canary.py report . --all-supported --strict` gate.
+- That gate crashed because `runtime_visibility.py` assumed every manifest-backed surface has a readable `source_path`.
+- For `mode: inject`, `portable_gsd_contract.py` normalizes `source_path` to `""` because inject entries are not source-backed overwrite/add carriers; they are live-target operation-state checks.
+- The crash reproduced before the fix:
+  - command: `python3 harness_modifier/contract/harness_canary.py report . --all-supported --strict`
+  - result: exit 1 with `IsADirectoryError: [Errno 21] Is a directory: '.'` from `runtime_visibility.py` reading `Path('.')`.
+
+Proposed diff to review:
+- Run `git diff -- harness_modifier/contract/runtime_visibility.py tooling/codex/tests/test_runtime_visibility.py`.
+- High-level behavior change:
+  - `runtime_visibility.py` imports `inject_operations`.
+  - It adds two subclassifications:
+    - `inject_operation_state_verified`
+    - `inject_operation_state_unverified`
+  - For `mode: inject` manifest specs, it no longer reads `source_path`.
+  - It treats an inject entry as overlay-covered by the manifest/operations contract.
+  - If the live target exists, it calls `inject_operations.verify_inject_state(live_text, operations)`.
+  - Passing inject verification classifies as `intentional materialized carry`.
+  - Failing inject verification classifies as `unknown live drift` and records failed operation-state details.
+  - The runtime visibility entry now carries `mode` and `inject_verification` fields.
+  - Non-inject overwrite/add behavior should remain unchanged.
+- Focused tests added:
+  - verified inject target without a source path is intentional materialized carry
+  - missing-marker inject target is unknown drift, not a crash
+
+Verification already run before this audit:
+- `python3 -m py_compile harness_modifier/contract/runtime_visibility.py tooling/codex/tests/test_runtime_visibility.py`: exit 0
+- `python3 -m unittest tooling.codex.tests.test_runtime_visibility`: exit 0, 8 tests OK
+- `python3 harness_modifier/contract/harness_canary.py report . --all-supported --strict`: exit 0; summary status ok; `parity_state: dual-runtime-aligned`; runtime visibility summary has `unknown_live_drift: 0`
+- `python3 harness_modifier/contract/portable_gsd_contract.py verify-materialized . --all-supported --strict`: exit 0; top-level `hard_failures: []`; both runtimes report `inject_failure_count: 0`
+- `git diff --check`: exit 0
+- `python3 tooling/codex/audit_refmap.py verify .`: exit 1 with the known six runtime-mirror unclassified links in `.codex/.claude`; this slice adds no Markdown links and no new unclassified targets.
+
+Audit questions:
+1. Does the implementation preserve the existing runtime visibility contract for overwrite/add/live-only surfaces?
+2. Is it correct to classify verified `mode: inject` entries as `intentional materialized carry` by reusing `verify_inject_state`, rather than comparing overlay source text?
+3. Does failed inject verification surface as a hard-enough runtime visibility conflict (`unknown live drift`) for canary/parity purposes?
+4. Is the new entry shape (`mode`, `inject_verification`) acceptably additive for downstream consumers?
+5. Is there any reason `harness_canary.py` itself must be edited in this slice, despite the focused tests and direct canary rerun passing?
+
+PASS means this diff is safe to commit as the Phase 3 Slice 3.5 runtime-visibility follow-up. FAIL means name the blocking defect and the smallest fix. ESCALATE only if the evidence is genuinely ambiguous. HALT only if this reveals initiative premise/contract corruption.

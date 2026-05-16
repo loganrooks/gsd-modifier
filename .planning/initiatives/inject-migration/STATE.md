@@ -2,25 +2,25 @@
 
 # Inject Migration State
 
-Last updated: 2026-05-16T20:12:14Z (Phase 3 Slice 3 complete — pilot materializes correctly in both runtimes; debrief recommends a narrow runtime_visibility.py inject follow-up before phase-boundary verification)
+Last updated: 2026-05-16T20:31:47Z (Phase 3 Slice 3.5 complete — runtime_visibility.py now handles mode: inject; phase-boundary verification next)
 Last updated by: inject-migration /goal agent
 Schema version: 2
 
 ## Current Status
 
-- **Phase**: 3 (`03-pilot` — Slice 1 design complete; Slice 2 source migration complete; Slice 3 materialization/debrief complete; runtime-visibility follow-up needed before boundary)
-- **Slice within phase**: 3.5 (Slice 3 proved the pilot materialization and wrote the debrief; next slice fixes runtime_visibility.py for `mode: inject` before phase-boundary verification)
+- **Phase**: 3 (`03-pilot` — Slice 1 design complete; Slice 2 source migration complete; Slice 3 materialization/debrief complete; Slice 3.5 runtime-visibility follow-up complete; phase-boundary verification next)
+- **Slice within phase**: boundary (runtime-visibility follow-up complete; next turn runs phase-boundary verification)
 - **Status**: `in-progress` (one of: `pending`, `in-progress`, `paused-for-operator`, `blocked`, `complete`, `aborted`)
-- **Last checkpoint**: `checkpoints/2026-05-16T201214Z-phase03-slice03.md`
-- **Last commit**: `f64db5ae2182918ad86c24c642a7c8fcae409b37` (pre-slice HEAD; will lag by one after Phase 3 Slice 3 commit)
-- **Sentinel**: `IN-PROGRESS` (Phase 3 pilot mechanism proved; runtime-visibility follow-up and phase-boundary verification pending)
+- **Last checkpoint**: `checkpoints/2026-05-16T203147Z-phase03-slice35.md`
+- **Last commit**: `0c0e0c17343c5dac728bc95dc0b046b3c60e61ce` (pre-slice HEAD; will lag by one after Phase 3 Slice 3.5 commit)
+- **Sentinel**: `IN-PROGRESS` (Phase 3 pilot mechanism proved; phase-boundary verification pending)
 
 ## Phase Progress
 
 - [x] **Phase 0** — Surface cleanup (reclassify 4 stale-deleted carriers; add change-class triggers; delete temp handoff) — closed 2026-05-16T00:22:40Z; joint verdict PASS (trajectory-verifier ESCALATE + adversarial-auditor-xhigh PASS; details in `checkpoints/2026-05-16T002240Z-phase00-boundary.md`)
 - [x] **Phase 1** — Schema foundation (manifest schema v4 ADR; mode: inject semantics; operation kinds) — closed 2026-05-16T01:09:41Z; trajectory-verifier PASS authorized closure; paused-for-operator per phase plan operator-review gate (operator must explicitly approve ADR-001 before Phase 2 begins; details in `checkpoints/2026-05-16T010941Z-phase01-boundary.md`)
 - [x] **Phase 2** — Contract tools (validate/apply/extract/verify functions in portable_gsd_contract.py + unit tests) — closed 2026-05-16T04:15:43Z; trajectory-verifier PASS authorized closure; paused-for-operator per phase plan line 138 operator review gate (operator must approve contract-code diff before Phase 3 begins; details in `checkpoints/2026-05-16T041543Z-phase02-boundary.md`)
-- [ ] **Phase 3** — Pilot (migrate `references/mandatory-initial-read.md` end-to-end through both runtimes; materialization/debrief complete; runtime-visibility follow-up needed before phase-boundary verification)
+- [ ] **Phase 3** — Pilot (migrate `references/mandatory-initial-read.md` end-to-end through both runtimes; materialization/debrief/runtime-visibility follow-up complete; phase-boundary verification pending)
 - [ ] **Phase 4** — First wave (4 small references)
 - [ ] **Phase 5** — Second wave (5 additive workflows)
 - [ ] **Phase 6** — Third wave (3 step-level workflows: health, update, progress)
@@ -31,9 +31,9 @@ Schema version: 2
 
 ## Active Work
 
-- **Current task**: Phase 3 follow-up — apply a narrow reviewer-mediated fix so `runtime_visibility.py` and `harness_canary.py` understand `mode: inject` entries, then run phase-boundary verification.
+- **Current task**: Phase 3 phase-boundary verification — run the required verifier now that the pilot materialization and runtime-visibility canary pass.
 - **Started**: 2026-05-16T19:20:33Z (Phase 3 Slice 1)
-- **Expected completion**: Phase 3 completes after the runtime-visibility inject follow-up and phase-boundary verifier pass. The pilot carrier itself is materialized and verified in both runtimes.
+- **Expected completion**: Phase 3 completes after the phase-boundary verifier pass. The pilot carrier itself is materialized and verified in both runtimes, and the runtime-visibility canary now handles the inject carrier.
 
 ### Operator decisions (2026-05-16T19:20Z)
 
@@ -51,7 +51,7 @@ Schema version: 2
 
 ## Blockers
 
-1. **Runtime-visibility canary inject gap (Phase 3 Slice 3, 2026-05-16)** — direct `python3 harness_modifier/contract/harness_canary.py report . --all-supported --strict` currently fails before reporting because `runtime_visibility.py` reads `overlay_spec["source_path"]` for every manifest-backed surface; inject specs intentionally normalize with `source_path: ""`, which resolves to `Path(".")` and raises `IsADirectoryError`. This is a phase-boundary blocker, not a pilot-materialization failure. Next slice should use Plan-mediated scope expansion and the contract-surface reviewer path to update runtime visibility and tests before phase-boundary verification.
+- (none active) Phase 3 still needs the phase-boundary verifier turn, but the runtime-visibility canary blocker is resolved.
 
 ### Resolved blockers
 
@@ -60,6 +60,8 @@ Schema version: 2
    - **Contradiction B** (audit_refmap.py verify gate vs pre-existing baseline): resolved by amending Required Discipline #8 in `GUARDRAILS.md` to allow the documented 8-item known baseline and require slices to not introduce NEW unclassified items.
    - Additional PROTOCOL fixes: cold-start step 4 documents the lag-by-one pattern; cold-start step 7 consults STATE.md → Status as resume authority; per-turn flow reordered to commit STATE.md + checkpoint atomically with slice work; Discipline #5/#9 amended to authorize STATE.md and checkpoint in every slice's write set implicitly.
    - Original hard-stop record preserved: `checkpoints/2026-05-15T225033Z-phase00-slice00.md`.
+
+2. ~~**Runtime-visibility canary inject gap (Phase 3 Slice 3, 2026-05-16)**~~ — **RESOLVED 2026-05-16** by Phase 3 Slice 3.5. `runtime_visibility.py` now treats `mode: inject` entries as live-target operation-state checks using `inject_operations.verify_inject_state` instead of reading `source_path`; focused runtime-visibility tests cover verified and missing-marker cases; direct `python3 harness_modifier/contract/harness_canary.py report . --all-supported --strict` exits 0 with `parity_state: dual-runtime-aligned` and `unknown_live_drift: 0`.
 
 ## Out-Of-Scope Surfaces
 
@@ -85,9 +87,9 @@ Schema version: 2
 - Inject comprehensive thorough tests ✓ (Slice 5: 23 tests across 7 suites — ambiguous anchor / malformed anchor / ordering / find_marker behavioral divergence / verify-helper asymmetry / empty-body section_replace / 3-pass idempotency / apply→verify round-trip; addresses all 3 Slice 2-4 reviewer follow-up notes)
 - Inject back-compat regression ✓ (Slice 6: 7 tests — mixed-mode v4 manifest with overwrite + add + inject coexists through validate → apply → verify; v3 manifest unchanged by Phase 2; v3 + mode: inject rejected with clear ValueError)
 - Inject unit tests passing: 131 / target TBD (Slice 1: 23 parse-time + Slice 2: 35 apply-time + Slice 3: 20 extract-marker + Slice 4: 23 verify + Slice 5: 23 thorough + Slice 6: 7 back-compat; all 6 regular Phase 2 slices complete)
-- Bootstrap/materialization hard_failures: 0 (target: 0 for pilot materialization) ✓ — verified by `./scripts/setup-portable-gsd-runtime.sh --runtime both` exit 0 and `python3 harness_modifier/contract/portable_gsd_contract.py verify-materialized . --all-supported --strict` exit 0 with top-level `hard_failures: []`. The composite `bash scripts/ci/check-bootstrap.sh` still exits 1 because its trailing full-discover unittest step hits non-pilot baseline failures before later contract gates run; this disposition was triangulated by `gsd-debugger` ESCALATE + `adversarial-auditor-xhigh` PASS in Phase 3 Slice 3.
+- Bootstrap/materialization hard_failures: 0 (target: 0 for pilot materialization) ✓ — verified by `./scripts/setup-portable-gsd-runtime.sh --runtime both` exit 0 and `python3 harness_modifier/contract/portable_gsd_contract.py verify-materialized . --all-supported --strict` exit 0 with top-level `hard_failures: []`. Phase 3 Slice 3.5 also verified `python3 harness_modifier/contract/harness_canary.py report . --all-supported --strict` exit 0 with `parity_state: dual-runtime-aligned` and `unknown_live_drift: 0`. The composite `bash scripts/ci/check-bootstrap.sh` still exits 1 because its trailing full-discover unittest step hits non-pilot baseline failures before later contract gates run; this disposition was triangulated by `gsd-debugger` ESCALATE + `adversarial-auditor-xhigh` PASS in Phase 3 Slice 3.
 - Phases complete: 3 / 11 ✓ (Phase 0 closed 2026-05-16T00:22:40Z; Phase 1 closed 2026-05-16T01:09:41Z; Phase 2 closed 2026-05-16T04:15:43Z paused-for-operator)
-- Slices complete: 22 (7 Phase 0 regular + 1 Phase 0 boundary + 3 Phase 1 regular + 1 Phase 1 boundary + 6 Phase 2 regular + 1 Phase 2 boundary + 3 Phase 3 regular)
+- Slices complete: 23 (7 Phase 0 regular + 1 Phase 0 boundary + 3 Phase 1 regular + 1 Phase 1 boundary + 6 Phase 2 regular + 1 Phase 2 boundary + 3 Phase 3 regular + 1 Phase 3 follow-up)
 
 ## Recent Checkpoints
 
@@ -117,6 +119,7 @@ Schema version: 2
 | 2026-05-16T19:20:33Z | 3.1 | success | Slice 1 pilot design — created `decisions/PILOT-DESIGN-mandatory-initial-read.md` (250 lines) with upstream/current diff, proposed schema v4 `mode: inject` manifest entry, inject source content, materialization preview, source-only preflight, verification plan, rollback plan, and no blocking open questions; preflight applied one degenerate `block_replace` against real upstream content and `verify_inject_state` passed; `git diff --check` exit 0; `audit_refmap.py verify .` exit 1 with the same bounded 7 unclassified baseline items and no new items from this doc; no reviewer invoked |
 | 2026-05-16T19:37:37Z | 3.2 | success (auto-recovered via debugger + Plan) | Slice 2 pilot migration — bumped `OVERLAY-MANIFEST.json` to schema v4; changed `get-shit-done/references/mandatory-initial-read.md` codex+claude materializers from `overwrite` to one-operation `inject`; created `harness_modifier/overlay/inject-sources/get-shit-done/references/mandatory-initial-read/extended-content.md`; deleted the old overwrite source; full unittest initially exposed stale source-inspection tests for the migrated carrier, then `gsd-debugger` FAIL + Plan PASS authorized a narrow test/helper scope expansion; source validation and 131/131 inject tests pass; full discover is back to unrelated baseline stale surfaces only |
 | 2026-05-16T20:12:14Z | 3.3 | success (conditional PASS via debugger + adversarial audit) | Slice 3 pilot verification/debrief — completed schema v4 compatibility follow-through (compat declaration + compatibility readers + tests) after `check-bootstrap.sh` first failed on stale declaration metadata (`gsd-debugger` FAIL + Plan PASS); materialization passed for both runtimes; direct inspection confirmed upstream mandatory-initial-read text plus injected reading-packet block between markers; `verify-materialized --all-supported --strict` exit 0 with `hard_failures: []`; composite `check-bootstrap.sh` still exits 1 on non-pilot full-discover baseline tests, disposition triangulated as acceptable for this slice by `gsd-debugger` ESCALATE + `adversarial-auditor-xhigh` PASS if debrief names the refreshed baseline and runtime-visibility canary gap; debrief recommends a narrow runtime_visibility.py inject follow-up before phase-boundary verification |
+| 2026-05-16T20:31:47Z | 3.5 | success (Plan PASS + adversarial audit PASS) | Slice 3.5 runtime-visibility follow-up — `runtime_visibility.py` now treats `mode: inject` entries as manifest-backed live-target operation checks using `inject_operations.verify_inject_state` instead of reading empty `source_path`; focused tests cover verified and missing-marker inject states; direct `harness_canary.py report . --all-supported --strict` now exits 0 with `parity_state: dual-runtime-aligned` and `unknown_live_drift: 0`; next turn should run the Phase 3 boundary verifier |
 
 ## Reviewer Decisions Log
 
@@ -142,17 +145,19 @@ Schema version: 2
 | 2026-05-16T19:50:00Z | 3.3 | Plan | PASS | Expand Slice 3 narrowly to compatibility declaration, duplicate compatibility readers, and schema-v4 tests; also classify intentional Claude-agent references in the Codex reviewer-dispatch skill | applied schema v4 follow-through; targeted compatibility tests passed |
 | 2026-05-16T20:01:00Z | 3.3 | gsd-debugger | ESCALATE | `check-bootstrap.sh` retry proved pilot materialization clean, but the script's broad full-discover step still failed on stale non-pilot tests; debugger could not alone waive a slice-declared gate | triangulated with `adversarial-auditor-xhigh` per gate-failure table |
 | 2026-05-16T20:12:00Z | 3.3 | adversarial-auditor-xhigh | PASS (conditional) | Pilot materialization is verified; composite bootstrap failure is broad-test over-aggregation, but debrief must name the refreshed full-discover baseline and the runtime_visibility.py inject gap as a phase-boundary blocker | proceeded with debrief + STATE/checkpoint commit; next slice must fix runtime visibility before phase-boundary verification |
+| 2026-05-16T20:22:00Z | 3.5 | Plan | PASS | Runtime-visibility canary failure is localized to `runtime_visibility.py` reading inject `source_path: ""`; no independent `harness_canary.py` contract defect was evidenced | expanded follow-up write set to `harness_modifier/contract/runtime_visibility.py`, `tooling/codex/tests/test_runtime_visibility.py`, STATE, and checkpoint; leave `harness_canary.py` unchanged unless direct rerun proves need |
+| 2026-05-16T20:30:00Z | 3.5 | adversarial-auditor-xhigh | PASS | Diff is the smallest correct contract fix; non-inject paths are preserved; inject reuses `verify_inject_state`; failed inject flows to `unknown_live_drift`; new entry fields are additive | proceeded to commit the runtime-visibility follow-up; audit artifacts recorded under `audits/20260516-202646-phase03-slice35-runtime-visibility-contract/` |
 
 ## Auto-Recovery Counters
 
 Tracks resilience of the loop. The 3-consecutive-failure rule fires when any slice's `attempts` here reaches 3.
 
-- Total reviewer invocations: 20
-- Reviewer PASS verdicts: 13 (adversarial-auditor-xhigh @ Phase 0 boundary; adversarial-auditor-xhigh @ Phase 1 Slice 1 pre-execute + post-execute; adversarial-auditor-xhigh @ Phase 1 Slice 2 post-execute; trajectory-verifier @ Phase 1 boundary; adversarial-auditor-xhigh @ Phase 2 Slice 1 + Slice 2 + Slice 3 + Slice 4 pre-commit; trajectory-verifier @ Phase 2 boundary; Plan @ Phase 3 Slice 2 scope expansion; Plan @ Phase 3 Slice 3 schema follow-through scope expansion; adversarial-auditor-xhigh @ Phase 3 Slice 3 bootstrap-gate triangulation)
+- Total reviewer invocations: 22
+- Reviewer PASS verdicts: 15 (adversarial-auditor-xhigh @ Phase 0 boundary; adversarial-auditor-xhigh @ Phase 1 Slice 1 pre-execute + post-execute; adversarial-auditor-xhigh @ Phase 1 Slice 2 post-execute; trajectory-verifier @ Phase 1 boundary; adversarial-auditor-xhigh @ Phase 2 Slice 1 + Slice 2 + Slice 3 + Slice 4 pre-commit; trajectory-verifier @ Phase 2 boundary; Plan @ Phase 3 Slice 2 scope expansion; Plan @ Phase 3 Slice 3 schema follow-through scope expansion; adversarial-auditor-xhigh @ Phase 3 Slice 3 bootstrap-gate triangulation; Plan @ Phase 3 Slice 3.5 runtime-visibility follow-up scope; adversarial-auditor-xhigh @ Phase 3 Slice 3.5 contract review)
 - Reviewer FAIL verdicts: 5 (gsd-debugger @ slice 0 hard-stop; Plan @ slice 0 hard-stop; adversarial-auditor-xhigh @ Phase 1 Slice 2 pre-execute → resolved by applying recommendations in writing; gsd-debugger @ Phase 3 Slice 2 full-discover stale-test scope issue → resolved by Plan scope expansion; gsd-debugger @ Phase 3 Slice 3 schema follow-through failure → resolved by Plan scope expansion)
 - Reviewer ESCALATE verdicts: 2 (trajectory-verifier @ Phase 0 boundary → resolved via triangulation with adversarial-auditor-xhigh PASS; gsd-debugger @ Phase 3 Slice 3 composite-bootstrap/full-discover failure → resolved via adversarial-auditor-xhigh PASS)
 - Reviewer HALT verdicts: 0
-- Auto-recovery successes: 6 (Phase 0 boundary triangulation: ESCALATE → PASS via second reviewer; Phase 1 Slice 1 threshold-language scanner FAIL → in-place fix; Phase 1 Slice 2 reviewer FAIL → 3 recommendations applied in writing → post-execute PASS; Phase 3 Slice 2 full-discover stale-test failure → gsd-debugger FAIL → Plan PASS scope expansion → mandatory-initial-read tests pass; Phase 3 Slice 3 compatibility-declaration schema mismatch → gsd-debugger FAIL → Plan PASS scope expansion → targeted compatibility tests pass; Phase 3 Slice 3 composite-bootstrap/full-discover failure → gsd-debugger ESCALATE → adversarial-auditor-xhigh PASS conditional debrief disposition)
+- Auto-recovery successes: 7 (Phase 0 boundary triangulation: ESCALATE → PASS via second reviewer; Phase 1 Slice 1 threshold-language scanner FAIL → in-place fix; Phase 1 Slice 2 reviewer FAIL → 3 recommendations applied in writing → post-execute PASS; Phase 3 Slice 2 full-discover stale-test failure → gsd-debugger FAIL → Plan PASS scope expansion → mandatory-initial-read tests pass; Phase 3 Slice 3 compatibility-declaration schema mismatch → gsd-debugger FAIL → Plan PASS scope expansion → targeted compatibility tests pass; Phase 3 Slice 3 composite-bootstrap/full-discover failure → gsd-debugger ESCALATE → adversarial-auditor-xhigh PASS conditional debrief disposition; Phase 3 Slice 3.5 reviewer-mediated follow-up → Plan PASS scope + adversarial-auditor-xhigh PASS contract review → runtime-visibility canary passes)
 - Auto-recovery escalations to hard-stop: 1 (the slice 0 spec-contradiction hard-stop; resolved by operator)
 - Slice-level retries (cumulative): 6 (audit_refmap.py verify deterministic retry; scan_threshold_language re-run after "sufficient" rephrase; Slice 6 back-compat test restructure after first attempt surfaced 2 Phase 3 contract-code gaps — second attempt moved inject source path to harness_modifier/overlay/ per ADR-001 §A.1 + filtered remaining compat-declaration TODO; Phase 3 Slice 2 full-unittest retry before debugger escalation; Phase 3 Slice 3 `check-bootstrap.sh` retry after schema mismatch; Phase 3 Slice 3 `check-bootstrap.sh` retry after schema follow-through exposed the stale full-discover baseline)
 - Per-slice attempt counts (only for slices not yet completed):
