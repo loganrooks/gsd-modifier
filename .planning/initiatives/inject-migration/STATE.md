@@ -2,18 +2,18 @@
 
 # Inject Migration State
 
-Last updated: 2026-05-16T04:15:43Z (Phase 2 BOUNDARY CLOSED — trajectory-verifier PASS for all 7 Exit Criteria; Phase 2 marked [x]; transitioned to paused-for-operator per phase plan line 138 operator review gate; HARD-STOP: phase-2-operator-approval-required emitted; operator must approve contract-code diff before Phase 3 pilot can start)
+Last updated: 2026-05-16T19:20:33Z (Phase 3 Slice 1 complete — pilot design written for mandatory-initial-read.md; source-only real-carrier preflight passed; next slice applies the one-carrier manifest/source migration)
 Last updated by: inject-migration /goal agent
 Schema version: 2
 
 ## Current Status
 
-- **Phase**: 2 (`02-contract-tools` — CLOSED 2026-05-16T04:15:43Z; trajectory-verifier PASS; paused for operator approval per phase plan line 138)
-- **Slice within phase**: boundary (Phase 2 boundary verification turn complete; next turn after operator approval fires Phase 3 Slice 1)
-- **Status**: `paused-for-operator` (one of: `pending`, `in-progress`, `paused-for-operator`, `blocked`, `complete`, `aborted`)
-- **Last checkpoint**: `checkpoints/2026-05-16T041543Z-phase02-boundary.md`
-- **Last commit**: `da92227ded9e3be72adc67c89169826e284f9598` (Slice 6 back-compat regression; this turn's Phase 2 boundary closure commit lands on top per cold-start lag-by-one — will reconcile when operator unblocks)
-- **Sentinel**: `IN-PROGRESS` (Phase 2 closed via trajectory-verifier PASS; transitioned to paused-for-operator per phase plan line 138 operator review gate)
+- **Phase**: 3 (`03-pilot` — Slice 1 design complete; Slice 2 apply migration next)
+- **Slice within phase**: 2 (Slice 1 design-only artifact complete; next slice applies the pilot migration)
+- **Status**: `in-progress` (one of: `pending`, `in-progress`, `paused-for-operator`, `blocked`, `complete`, `aborted`)
+- **Last checkpoint**: `checkpoints/2026-05-16T192033Z-phase03-slice01.md`
+- **Last commit**: `af598f40d5022e674fc14f8fe703d91637c284b3` (pre-slice HEAD; prior two planning commits reconciled as ground truth before Phase 3 Slice 1 commit)
+- **Sentinel**: `IN-PROGRESS` (Phase 3 pilot has started; no runtime behavior changed yet)
 
 ## Phase Progress
 
@@ -31,9 +31,16 @@ Schema version: 2
 
 ## Active Work
 
-- **Current task**: PAUSED FOR OPERATOR. Phase 2 closed via trajectory-verifier PASS at 2026-05-16T04:15:43Z. Operator must (1) approve Phase 2 contract code via `git diff f75d092..da92227 -- harness_modifier/contract/{inject_operations,portable_gsd_contract}.py` review; (2) decide on the 1 Phase 3 TODO (compat-declaration overlay_schema_version bump 3→4); (3) decide on the 5 pre-existing baseline failures (accept-as-baseline / separate-workstream / separate-initiative); (4) authorize Phase 3 start by invoking next `/goal` iteration. Phase 3 first slice = pilot migration of `references/mandatory-initial-read.md`.
-- **Started**: 2026-05-16T04:15:43Z (Phase 2 boundary turn)
-- **Expected completion**: pending operator response; on approval, Phase 3 pilot phase begins
+- **Current task**: Phase 3 Slice 2 — apply the pilot migration for `references/mandatory-initial-read.md`: bump `schema_version` 3→4, replace the single manifest entry with `mode: inject`, create the designed inject source file, delete the old overwrite source, and run source-level gates.
+- **Started**: 2026-05-16T19:20:33Z (Phase 3 Slice 1)
+- **Expected completion**: Phase 3 completes after Slice 3 materialization verification + pilot debrief; Slice 3 remains exposed to the known installer/bootstrap blocker in Out-Of-Scope Surfaces #3.
+
+### Operator decisions (2026-05-16T19:20Z)
+
+- **Phase 2 contract diff APPROVED for pilot use** via operator instruction to "just run it"; this approval covers proceeding into Phase 3, not broad rollout to Phase 4+.
+- **Phase 3 schema-version TODO ACCEPTED**: Slice 2 will bump `OVERLAY-MANIFEST.json` `schema_version` from 3 to 4 when the first real `mode: inject` entry lands.
+- **5 pre-existing baseline test failures remain OUT OF SCOPE** for this initiative unless they change shape or block the pilot directly.
+- **Phase 3 start AUTHORIZED**; Phase 3 Slice 1 executed as a design-only slice.
 
 ### Operator decisions (2026-05-16T01:53Z)
 
@@ -80,7 +87,7 @@ Schema version: 2
 - Inject unit tests passing: 131 / target TBD (Slice 1: 23 parse-time + Slice 2: 35 apply-time + Slice 3: 20 extract-marker + Slice 4: 23 verify + Slice 5: 23 thorough + Slice 6: 7 back-compat; all 6 regular Phase 2 slices complete)
 - Bootstrap gate hard_failures (source-layer `codex:overlay_manifest_contract`): 0 (target: 0 after Phase 0) ✓ — verified by `harness_canary.py report . --all-supported --strict` showing `codex:overlay_manifest_contract → status: ok`. Note: `claude:overlay_manifest_contract` reports 1 known-acceptable downstream artifact (see Out-Of-Scope Surfaces #4). The full bootstrap-chain `bash scripts/ci/check-bootstrap.sh` is BLOCKED by upstream installer behavior change (see Out-Of-Scope Surfaces #3); the canary is the source-layer evidence per the 2026-05-16 phase-boundary triangulation verdict.
 - Phases complete: 3 / 11 ✓ (Phase 0 closed 2026-05-16T00:22:40Z; Phase 1 closed 2026-05-16T01:09:41Z; Phase 2 closed 2026-05-16T04:15:43Z paused-for-operator)
-- Slices complete: 19 (7 Phase 0 regular + 1 Phase 0 boundary + 3 Phase 1 regular + 1 Phase 1 boundary + 6 Phase 2 regular + 1 Phase 2 boundary)
+- Slices complete: 20 (7 Phase 0 regular + 1 Phase 0 boundary + 3 Phase 1 regular + 1 Phase 1 boundary + 6 Phase 2 regular + 1 Phase 2 boundary + 1 Phase 3 regular)
 
 ## Recent Checkpoints
 
@@ -107,6 +114,7 @@ Schema version: 2
 | 2026-05-16T03:58:44Z | 2.5 | success (no reviewer per slice spec) | Slice 5 thorough tests — added `tooling/codex/tests/test_inject_operations_thorough.py` (23 tests across 7 suites: AmbiguousAnchor 3 / MalformedAnchor 3 / Ordering 3 / FindMarkerBehavioralDivergence 2 / VerifyHelperAsymmetry 2 / SectionReplaceEmptyBody 1 / IdempotencyUnderPermutation 3 / ApplyThenVerifyRoundTrip 6); all 3 Slice 2-4 reviewer follow-up notes addressed in-suite (_insert_lines_between empty-body branch exercised; find_marker None on nested-but-closed/duplicate-key pinned; _find_line_index_of substring asymmetry pinned with documented "current behavior; flip if tightened" note); 6 gates exit 0 (diff, py_compile, new tests 23/23, inject+contract suite 134/134, refmap, threshold); FULL DISCOVER shows 443 tests with 5 PRE-EXISTING baseline failures unrelated to inject (in test_health_and_migration_follow_through_contract / test_seed_consumer_follow_through_contract / test_state_snapshot_future_carry — same as pre-Phase-2 state; net new green +23); no reviewer per slice spec ("test addition; lower-discipline; small mechanical fix"); Phase 2 Exit Criterion 5 "Existing tests still pass" will need operator triangulation at phase boundary per Sub-Initiative Isolation |
 | 2026-05-16T04:06:48Z | 2.6 | success (no reviewer per slice spec) | Slice 6 back-compat regression — added `tooling/codex/tests/test_inject_back_compat.py` (7 tests in 2 suites: MixedModeManifestTests 5 + SchemaVersion3StillWorksAfterV4SupportTests 2); validates that overwrite + add + inject coexist in a v4 manifest through validate → apply → verify; surfaces ONE Phase 3 TODO (compat-declaration overlay_schema_version is hardcoded to 3; bump to 4 needed when first v4 entry ships) — filtered in test via `_PHASE3_TODO_HARD_FAILURE_SUBSTRINGS` constant per "tests only" slice boundary; 7 gates exit 0 (diff, py_compile, new tests 7/7, inject+contract suite 141/141, refmap, threshold); FULL DISCOVER shows 450 tests with same 5 pre-existing baseline failures (net new green +7); no reviewer per slice spec; one test-restructure recovery (first attempt placed inject source under tooling/portable-gsd/overlay/ tripping missing_from_manifest; second attempt placed it under harness_modifier/overlay/ per ADR-001 §A.1 convention — no contract code touched); LAST regular slice of Phase 2; next turn fires trajectory-verifier for phase-boundary verification |
 | 2026-05-16T04:15:43Z | 2.boundary | success (PASS); paused-for-operator | Phase 2 boundary verification — ran state-mutating phase-boundary gates (check-deterministic.sh exit 0; importability check success; check-bootstrap.sh excluded per OOS #3 operator direction); spawned trajectory-verifier per PROTOCOL.md "Phase-boundary mandate" → PASS for all 7 Exit Criteria with detailed file:line evidence (4 core functions exist with correct names + locations; portable_gsd_contract.py integrates both apply + verify codepaths; 131/131 inject suite passes; 5 pre-existing baseline failures correctly out-of-scope per Sub-Initiative Isolation; manifest schema_version=3 unchanged; 1 Phase 3 TODO correctly documented as Phase 3 follow-up; reviewer-mediation discipline correctly applied across all 6 slices per PROTOCOL.md); Phase 2 marked [x]; Phases complete 2→3; Slices complete 18→19; transitioned to paused-for-operator per phase plan line 138 operator review gate; HARD-STOP: phase-2-operator-approval-required emitted; operator must (1) approve contract-code diff f75d092..da92227, (2) decide on 1 Phase 3 TODO, (3) decide on 5 pre-existing baseline failures, (4) authorize Phase 3 start |
+| 2026-05-16T19:20:33Z | 3.1 | success | Slice 1 pilot design — created `decisions/PILOT-DESIGN-mandatory-initial-read.md` (250 lines) with upstream/current diff, proposed schema v4 `mode: inject` manifest entry, inject source content, materialization preview, source-only preflight, verification plan, rollback plan, and no blocking open questions; preflight applied one degenerate `block_replace` against real upstream content and `verify_inject_state` passed; `git diff --check` exit 0; `audit_refmap.py verify .` exit 1 with the same bounded 7 unclassified baseline items and no new items from this doc; no reviewer invoked |
 
 ## Reviewer Decisions Log
 
@@ -140,7 +148,7 @@ Tracks resilience of the loop. The 3-consecutive-failure rule fires when any sli
 - Auto-recovery escalations to hard-stop: 1 (the slice 0 spec-contradiction hard-stop; resolved by operator)
 - Slice-level retries (cumulative): 3 (audit_refmap.py verify deterministic retry; scan_threshold_language re-run after "sufficient" rephrase; Slice 6 back-compat test restructure after first attempt surfaced 2 Phase 3 contract-code gaps — second attempt moved inject source path to harness_modifier/overlay/ per ADR-001 §A.1 + filtered remaining compat-declaration TODO)
 - Per-slice attempt counts (only for slices not yet completed):
-  - (none — Phase 2 closed via trajectory-verifier PASS; paused-for-operator pending operator approval)
+  - (none — Phase 3 Slice 1 complete; next slice is Phase 3 Slice 2)
 
 ## Dirty-Worktree Pre-Conditions
 
@@ -158,7 +166,7 @@ For the loop to start cleanly (under normal operation, not paused-for-operator s
 (empty)
 ```
 
-The temp handoff was deleted in this slice. The worktree is now fully clean. All Phase 0 deltas committed; nothing pending. Future iterations should observe `git status --short` returning empty (modulo any in-flight slice's pre-commit edits, which are normal mid-slice state).
+After this slice commit lands, the worktree should be clean. Future iterations should observe `git status --short` returning empty (modulo any in-flight slice's pre-commit edits, which are normal mid-slice state).
 
 ## Notes For The Agent
 
