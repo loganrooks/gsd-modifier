@@ -274,16 +274,61 @@
     "get-shit-done/references/agent-contracts.md": {
       "capability_id": "get-shit-done/references/agent-contracts.md",
       "parity_tier": "core_required",
+      "parity_intent": "outcome_aligned",
       "materializers": {
         "codex": {
-          "mode": "overwrite",
+          "mode": "inject",
           "target": "get-shit-done/references/agent-contracts.md",
-          "source": "tooling/portable-gsd/overlay/get-shit-done/references/agent-contracts.md"
+          "operations": [
+            {
+              "kind": "block_replace",
+              "start_anchor": "## Marker Rules\n",
+              "end_anchor": "## Key Handoff Contracts\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/agent-contracts/marker-rules-body.md",
+              "marker_key": "GSD_MODIFIER:references-agent-contracts:marker-rules"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "## Key Handoff Contracts\n",
+              "end_anchor": "## Workflow Regex Patterns\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/agent-contracts/handoff-contracts-body.md",
+              "marker_key": "GSD_MODIFIER:references-agent-contracts:handoff-contracts"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "> **NOTE:** `## PLAN COMPLETE` is the gsd-executor's completion marker but execute-phase.md does not regex-match it. Instead, it detects executor completion via spot-checks (SUMMARY.md existence, git commit state). This is intentional behavior, not a mismatch.\n",
+              "end_anchor": "> **NOTE:** `## PLAN COMPLETE` is the gsd-executor's completion marker but execute-phase.md does not regex-match it. Instead, it detects executor completion via spot-checks (SUMMARY.md existence, git commit state). This is intentional behavior, not a mismatch.\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/agent-contracts/clean-completion-note.md",
+              "marker_key": "GSD_MODIFIER:references-agent-contracts:clean-completion-note"
+            }
+          ]
         },
         "claude": {
-          "mode": "overwrite",
+          "mode": "inject",
           "target": "get-shit-done/references/agent-contracts.md",
-          "source": "tooling/portable-gsd/overlay/get-shit-done/references/agent-contracts.md"
+          "operations": [
+            {
+              "kind": "block_replace",
+              "start_anchor": "## Marker Rules\n",
+              "end_anchor": "## Key Handoff Contracts\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/agent-contracts/marker-rules-body.md",
+              "marker_key": "GSD_MODIFIER:references-agent-contracts:marker-rules"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "## Key Handoff Contracts\n",
+              "end_anchor": "## Workflow Regex Patterns\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/agent-contracts/handoff-contracts-body.md",
+              "marker_key": "GSD_MODIFIER:references-agent-contracts:handoff-contracts"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "> **NOTE:** `## PLAN COMPLETE` is the gsd-executor's completion marker but execute-phase.md does not regex-match it. Instead, it detects executor completion via spot-checks (SUMMARY.md existence, git commit state). This is intentional behavior, not a mismatch.\n",
+              "end_anchor": "> **NOTE:** `## PLAN COMPLETE` is the gsd-executor's completion marker but execute-phase.md does not regex-match it. Instead, it detects executor completion via spot-checks (SUMMARY.md existence, git commit state). This is intentional behavior, not a mismatch.\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/agent-contracts/clean-completion-note.md",
+              "marker_key": "GSD_MODIFIER:references-agent-contracts:clean-completion-note"
+            }
+          ]
         }
       }
     },
