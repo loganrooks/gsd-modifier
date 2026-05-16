@@ -2,18 +2,18 @@
 
 # Inject Migration State
 
-Last updated: 2026-05-16T03:49:35Z (Phase 2 Slice 4 complete — verify_inject_state landed for all 7 kinds per ADR §8 Option V1; materialization-report integration rolls inject_failures into hard_failures so verify-materialized --strict exits 1 on inject corruption; pre-commit reviewer adversarial-auditor-xhigh PASS with 2 Slice 5 follow-up polish notes + 1 Phase 3+ orphan-marker-scan observation; 23/23 new tests + 111/111 combined suite pass)
+Last updated: 2026-05-16T03:58:44Z (Phase 2 Slice 5 complete — comprehensive thorough-test sweep added; all 3 Slice 2-4 reviewer follow-up notes addressed in-suite; 23 new tests cover ambiguous anchors / malformed anchors / ordering / find_marker behavioral divergence / verify-helper asymmetries / empty-body section_replace / three-pass idempotency / apply→verify round-trip; 134/134 inject + contract suite pass; full discover shows same 5 pre-existing baseline failures unrelated to inject)
 Last updated by: inject-migration /goal agent
 Schema version: 2
 
 ## Current Status
 
 - **Phase**: 2 (`02-contract-tools` — validate/apply/extract/verify functions in portable_gsd_contract.py + unit tests; ADR-001 approved 2026-05-16T01:53Z)
-- **Slice within phase**: 4 (Slice 4 just landed — verify_inject_state + materialization-report integration; next turn fires Slice 5: comprehensive thorough tests)
+- **Slice within phase**: 5 (Slice 5 just landed — comprehensive thorough-test sweep; next turn fires Slice 6: back-compat regression test)
 - **Status**: `pending` (one of: `pending`, `in-progress`, `paused-for-operator`, `blocked`, `complete`, `aborted`)
-- **Last checkpoint**: `checkpoints/2026-05-16T034935Z-phase02-slice04.md`
-- **Last commit**: `6233f9f2b718395c223517baafcc54b38d3a3dea` (Slice 3 extract_inject_markers utility; this turn's Slice 4 commit lands on top per cold-start lag-by-one — will reconcile on next turn)
-- **Sentinel**: `IN-PROGRESS` (Phase 2 Slice 4 complete; 2 slices + boundary remaining in Phase 2)
+- **Last checkpoint**: `checkpoints/2026-05-16T035844Z-phase02-slice05.md`
+- **Last commit**: `4522c6ec4496f984aa3545e052a1355b280fc83e` (Slice 4 verify_inject_state; this turn's Slice 5 commit lands on top per cold-start lag-by-one — will reconcile on next turn)
+- **Sentinel**: `IN-PROGRESS` (Phase 2 Slice 5 complete; 1 slice + boundary remaining in Phase 2)
 
 ## Phase Progress
 
@@ -31,9 +31,9 @@ Schema version: 2
 
 ## Active Work
 
-- **Current task**: Phase 2 Slice 4 complete; ready for Slice 5 — `tooling/codex/tests/test_inject_operations_thorough.py` (comprehensive per-kind exercises beyond Slice 2/3/4 happy + idempotency + fatal tests; covers Slice 2-4 reviewer polish-note edge cases including: closure-in-loop latent risk; `_insert_lines_between` unexercised branch; nested-but-closed find_marker behavior divergence; `_find_line_index_of` substring asymmetry; `_step_block_present_outside_markers` false-match in nested step bodies)
-- **Started**: 2026-05-16T03:49:35Z (Slice 4 turn)
-- **Expected completion**: per `phases/02-contract-tools.md`, Phase 2 has 6 slices + boundary verification; 2 slices + boundary remaining
+- **Current task**: Phase 2 Slice 5 complete; ready for Slice 6 — `tooling/codex/tests/test_inject_back_compat.py` (backward compatibility regression test: build a manifest with mixed `mode: overwrite`, `mode: add`, and `mode: inject` entries; run validate-manifest + verify-materialized; confirm all three modes coexist without interference)
+- **Started**: 2026-05-16T03:58:44Z (Slice 5 turn)
+- **Expected completion**: per `phases/02-contract-tools.md`, Phase 2 has 6 slices + boundary verification; 1 slice + boundary remaining
 
 ### Operator decisions (2026-05-16T01:53Z)
 
@@ -75,10 +75,11 @@ Schema version: 2
 - Inject operation kinds catalogued + validated at parse-time: 7 / 7 ✓ (Slice 1)
 - Inject marker-extraction utility ✓ (Slice 3: extract_inject_markers strict; find_marker tolerant wrapper; 5 failure-mode taxonomy: nested / unbalanced_start / unbalanced_end / mismatched_end / duplicate_key)
 - Inject verify-time engine ✓ (Slice 4: verify_inject_state for all 7 kinds per ADR §8 Option V1; OperationVerification + VerifyResult dataclasses; 6 status enum; materialization-report integration via build_materialization_report_for_roots; inject_failures rolled into hard_failures so --strict exits 1)
-- Inject unit tests passing: 101 / target TBD (Slice 1: 23 parse-time + Slice 2: 35 apply-time + Slice 3: 20 extract-marker + Slice 4: 23 verify; growing across Slices 5-6)
+- Inject comprehensive thorough tests ✓ (Slice 5: 23 tests across 7 suites — ambiguous anchor / malformed anchor / ordering / find_marker behavioral divergence / verify-helper asymmetry / empty-body section_replace / 3-pass idempotency / apply→verify round-trip; addresses all 3 Slice 2-4 reviewer follow-up notes)
+- Inject unit tests passing: 124 / target TBD (Slice 1: 23 parse-time + Slice 2: 35 apply-time + Slice 3: 20 extract-marker + Slice 4: 23 verify + Slice 5: 23 thorough; Slice 6 back-compat remaining)
 - Bootstrap gate hard_failures (source-layer `codex:overlay_manifest_contract`): 0 (target: 0 after Phase 0) ✓ — verified by `harness_canary.py report . --all-supported --strict` showing `codex:overlay_manifest_contract → status: ok`. Note: `claude:overlay_manifest_contract` reports 1 known-acceptable downstream artifact (see Out-Of-Scope Surfaces #4). The full bootstrap-chain `bash scripts/ci/check-bootstrap.sh` is BLOCKED by upstream installer behavior change (see Out-Of-Scope Surfaces #3); the canary is the source-layer evidence per the 2026-05-16 phase-boundary triangulation verdict.
 - Phases complete: 2 / 11 ✓ (Phase 0 closed 2026-05-16T00:22:40Z; Phase 1 closed 2026-05-16T01:09:41Z)
-- Slices complete: 16 (7 Phase 0 regular + 1 Phase 0 boundary + 3 Phase 1 regular + 1 Phase 1 boundary + 4 Phase 2 regular)
+- Slices complete: 17 (7 Phase 0 regular + 1 Phase 0 boundary + 3 Phase 1 regular + 1 Phase 1 boundary + 5 Phase 2 regular)
 
 ## Recent Checkpoints
 
@@ -102,6 +103,7 @@ Schema version: 2
 | 2026-05-16T03:20:12Z | 2.2 | success (PASS via pre-commit reviewer) | Slice 2 apply_inject_operations engine — added apply-time block in `inject_operations.py` (InjectOperationError + OperationRecord + MarkerRegion dataclasses; 7 per-kind apply functions; _APPLY_NEEDS_SOURCE dispatch; apply_inject_operations main dispatcher with pre-flight atomicity per ADR §7); extended `apply_overlay` in `portable_gsd_contract.py` to call apply path for inject mode with `render_overlay_text`-enabled resolver (Slice 1 reviewer note (b) heeded via `spec.get("operations", [])`); added `tooling/codex/tests/test_inject_apply.py` (35 tests: per-kind happy + idempotency + fatal; dispatcher integration; pre-flight atomicity; full idempotency round-trip; record contract); 6 verification gates exit 0 (diff-check, py_compile, new tests 35/35, Slice 1 + contract tests 33/33, refmap, threshold scan); pre-commit adversarial-auditor-xhigh PASS with 3 polish notes (closure-in-loop latent risk; dead branch test; OperationRecord shape for Slice 4) + convergent-risk note (document "first-match" anchor convention — APPLIED in-slice as single-line docstring addition) |
 | 2026-05-16T03:33:48Z | 2.3 | success (PASS via pre-commit reviewer) | Slice 3 extract_inject_markers utility — added MarkerExtractionError + _MARKER_START_RE/_MARKER_END_RE precompiled regex (deliberate `\S+` key acceptance to surface anomalies, with one-line comment explaining permissiveness asymmetry); added public extract_inject_markers single-pass line scanner with single open-key state machine raising on 5 failure modes (nested / unbalanced_start / unbalanced_end / mismatched_end / duplicate_key); refactored find_marker to thin wrapper around extract_inject_markers (try/except returns None preserving Slice 2 apply-time tolerance); added `tooling/codex/tests/test_inject_markers.py` (20 tests: 7 happy + 5 failure + 1 error contract + 4 find_marker tolerance regression + 3 boundary); 88/88 combined inject + contract suite pass (no Slice 1/2/v3 regression); refmap exit 1 with 7 unclassified items bounded by OOS #1 baseline (no NEW items per Required Discipline #8); pre-commit adversarial-auditor-xhigh PASS with 1 docstring honesty polish + 1 comment APPLIED in-slice (apply-is-additive-not-corrective framing; regex permissiveness rationale) and 1 follow-up regression test deferred to Slice 5 (find_marker None on nested-but-closed / duplicate-key for "A") |
 | 2026-05-16T03:49:35Z | 2.4 | success (PASS via pre-commit reviewer) | Slice 4 verify_inject_state — added VERIFY_STATUS_* constants (6) + OperationVerification (with optional MarkerRegion per Slice 2 reviewer note c) + VerifyResult frozen dataclasses; 7 per-kind verify functions mirroring ADR §3 catalog (section_insert_after position-after-tag; section_replace marker-presence-only per V1; step_remove sentinel + step-block-absent-outside-markers; step_insert_after position-after-step; include_add inside-tag + line-in-body; include_remove marker-absent-as-inverse-post-state; block_replace between-anchors with degenerate same-anchor); _VERIFY_DISPATCH + main verify_inject_state using Slice 3 extract_inject_markers strict path (MarkerExtractionError → VerifyResult.extraction_error); integrated into build_materialization_report_for_roots replacing Slice 1 TODO skip (inject_verifications + inject_failures + summary counts; inject_failures rolled into hard_failures); added `tooling/codex/tests/test_inject_verify.py` (23 tests: 4 spec-mandated + 12 per-kind + 2 structural-corruption + 3 result-contract + 2 materialization-report integration); 111/111 combined inject + contract suite pass; refmap exit 1 (7 unclassified bounded by OOS #1 baseline); pre-commit adversarial-auditor-xhigh PASS with 2 Slice 5 follow-up polish notes (_find_line_index_of substring asymmetry; _step_block_present_outside_markers nested-step-body false-match) + 1 Phase 3+ observation (orphan-marker scan as separate gate); none blocking |
+| 2026-05-16T03:58:44Z | 2.5 | success (no reviewer per slice spec) | Slice 5 thorough tests — added `tooling/codex/tests/test_inject_operations_thorough.py` (23 tests across 7 suites: AmbiguousAnchor 3 / MalformedAnchor 3 / Ordering 3 / FindMarkerBehavioralDivergence 2 / VerifyHelperAsymmetry 2 / SectionReplaceEmptyBody 1 / IdempotencyUnderPermutation 3 / ApplyThenVerifyRoundTrip 6); all 3 Slice 2-4 reviewer follow-up notes addressed in-suite (_insert_lines_between empty-body branch exercised; find_marker None on nested-but-closed/duplicate-key pinned; _find_line_index_of substring asymmetry pinned with documented "current behavior; flip if tightened" note); 6 gates exit 0 (diff, py_compile, new tests 23/23, inject+contract suite 134/134, refmap, threshold); FULL DISCOVER shows 443 tests with 5 PRE-EXISTING baseline failures unrelated to inject (in test_health_and_migration_follow_through_contract / test_seed_consumer_follow_through_contract / test_state_snapshot_future_carry — same as pre-Phase-2 state; net new green +23); no reviewer per slice spec ("test addition; lower-discipline; small mechanical fix"); Phase 2 Exit Criterion 5 "Existing tests still pass" will need operator triangulation at phase boundary per Sub-Initiative Isolation |
 
 ## Reviewer Decisions Log
 
@@ -134,7 +136,7 @@ Tracks resilience of the loop. The 3-consecutive-failure rule fires when any sli
 - Auto-recovery escalations to hard-stop: 1 (the slice 0 spec-contradiction hard-stop; resolved by operator)
 - Slice-level retries (cumulative): 2 (audit_refmap.py verify deterministic retry; scan_threshold_language re-run after "sufficient" rephrase)
 - Per-slice attempt counts (only for slices not yet completed):
-  - (none — Phase 2 Slice 4 completed first-attempt; Slice 5 attempt count begins at 0)
+  - (none — Phase 2 Slice 5 completed first-attempt; Slice 6 attempt count begins at 0)
 
 ## Dirty-Worktree Pre-Conditions
 
