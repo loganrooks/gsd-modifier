@@ -461,16 +461,117 @@
     "get-shit-done/references/planning-config.md": {
       "capability_id": "get-shit-done/references/planning-config.md",
       "parity_tier": "core_required",
+      "parity_intent": "outcome_aligned",
       "materializers": {
         "codex": {
-          "mode": "overwrite",
+          "mode": "inject",
           "target": "get-shit-done/references/planning-config.md",
-          "source": "tooling/portable-gsd/overlay/get-shit-done/references/planning-config.md"
+          "operations": [
+            {
+              "kind": "block_replace",
+              "start_anchor": "- Useful for: OSS contributions, client projects, keeping planning private\n",
+              "end_anchor": "**Auto-detection:** If `.planning/` is gitignored, `commit_docs` is automatically `false` regardless of config.json. This prevents git errors when users have `.planning/` in `.gitignore`.\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/planning-config/commit-docs-gsd-tools-body.md",
+              "marker_key": "GSD_MODIFIER:references-planning-config:commit-docs-gsd-tools"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "**Commit via CLI (handles checks automatically):**\n",
+              "end_anchor": "The CLI checks `commit_docs` config and gitignore status internally — no manual conditionals needed.\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/planning-config/commit-via-cli-body.md",
+              "marker_key": "GSD_MODIFIER:references-planning-config:commit-via-cli"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "Use `init execute-phase` which returns all config as JSON:\n",
+              "end_anchor": "Or use `state load` for the config values:\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/planning-config/init-execute-phase-command.md",
+              "marker_key": "GSD_MODIFIER:references-planning-config:init-execute-phase-command"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "Or use `state load` for the config values:\n",
+              "end_anchor": "**Branch creation:**\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/planning-config/state-load-command.md",
+              "marker_key": "GSD_MODIFIER:references-planning-config:state-load-command"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "| `workflow.subagent_timeout` | `300000` | Timeout in milliseconds for parallel subagent tasks (e.g. codebase mapping). Increase for large codebases or slower models. Default: 300000 (5 minutes). |\n",
+              "end_anchor": "| `manager.flags.plan` | `\"\"` | Flags passed to plan workflow when dispatched from manager |\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/planning-config/top-manager-discuss-row.md",
+              "marker_key": "GSD_MODIFIER:references-planning-config:top-manager-discuss-row"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "Set via `manager.*` namespace (e.g., `\"manager\": { \"flags\": { \"discuss\": \"--auto\" } }`).\n",
+              "end_anchor": "| `manager.flags.plan` | string | `\"\"` | Any CLI flags string | Flags passed to plan workflow from manager |\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/planning-config/manager-fields-discuss-row.md",
+              "marker_key": "GSD_MODIFIER:references-planning-config:manager-fields-discuss-row"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "    \"use_worktrees\": true,\n",
+              "end_anchor": "  },\n  \"manager\": {\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/planning-config/team-example-discuss-mode.md",
+              "marker_key": "GSD_MODIFIER:references-planning-config:team-example-discuss-mode"
+            }
+          ]
         },
         "claude": {
-          "mode": "overwrite",
+          "mode": "inject",
           "target": "get-shit-done/references/planning-config.md",
-          "source": "tooling/portable-gsd/overlay/get-shit-done/references/planning-config.md"
+          "operations": [
+            {
+              "kind": "block_replace",
+              "start_anchor": "- Useful for: OSS contributions, client projects, keeping planning private\n",
+              "end_anchor": "**Auto-detection:** If `.planning/` is gitignored, `commit_docs` is automatically `false` regardless of config.json. This prevents git errors when users have `.planning/` in `.gitignore`.\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/planning-config/commit-docs-gsd-tools-body.md",
+              "marker_key": "GSD_MODIFIER:references-planning-config:commit-docs-gsd-tools"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "**Commit via CLI (handles checks automatically):**\n",
+              "end_anchor": "The CLI checks `commit_docs` config and gitignore status internally — no manual conditionals needed.\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/planning-config/commit-via-cli-body.md",
+              "marker_key": "GSD_MODIFIER:references-planning-config:commit-via-cli"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "Use `init execute-phase` which returns all config as JSON:\n",
+              "end_anchor": "Or use `state load` for the config values:\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/planning-config/init-execute-phase-command.md",
+              "marker_key": "GSD_MODIFIER:references-planning-config:init-execute-phase-command"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "Or use `state load` for the config values:\n",
+              "end_anchor": "**Branch creation:**\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/planning-config/state-load-command.md",
+              "marker_key": "GSD_MODIFIER:references-planning-config:state-load-command"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "| `workflow.subagent_timeout` | `300000` | Timeout in milliseconds for parallel subagent tasks (e.g. codebase mapping). Increase for large codebases or slower models. Default: 300000 (5 minutes). |\n",
+              "end_anchor": "| `manager.flags.plan` | `\"\"` | Flags passed to plan workflow when dispatched from manager |\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/planning-config/top-manager-discuss-row.md",
+              "marker_key": "GSD_MODIFIER:references-planning-config:top-manager-discuss-row"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "Set via `manager.*` namespace (e.g., `\"manager\": { \"flags\": { \"discuss\": \"--auto\" } }`).\n",
+              "end_anchor": "| `manager.flags.plan` | string | `\"\"` | Any CLI flags string | Flags passed to plan workflow from manager |\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/planning-config/manager-fields-discuss-row.md",
+              "marker_key": "GSD_MODIFIER:references-planning-config:manager-fields-discuss-row"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "    \"use_worktrees\": true,\n",
+              "end_anchor": "  },\n  \"manager\": {\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/planning-config/team-example-discuss-mode.md",
+              "marker_key": "GSD_MODIFIER:references-planning-config:team-example-discuss-mode"
+            }
+          ]
         }
       }
     },
