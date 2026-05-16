@@ -53,6 +53,8 @@ The §5.2 example manifest at `intervention-strategies-2026-05-08.md:538` uses `
 
 The 7 kinds:
 
+**Common to all kinds**: every operation accepts a `marker_key` (string) field declaring the unique KEY (per §4 convention) that labels the marker region the operation creates (for `section_insert_after`, `step_remove`, `step_insert_after`, `include_add`, `block_replace`) or the existing region it acts on (for `section_replace`, `include_remove`). The per-kind signatures below omit `marker_key` for brevity; the contract validator (Phase 2) enforces the field's presence and global uniqueness across the manifest. Worked examples in Appendix A show the field on every operation.
+
 ### `section_insert_after { tag, source }`
 
 Insert content from a source file immediately after the named XML close tag in the target.
