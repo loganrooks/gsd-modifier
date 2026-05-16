@@ -400,16 +400,61 @@
     "get-shit-done/references/planner-reviews.md": {
       "capability_id": "get-shit-done/references/planner-reviews.md",
       "parity_tier": "core_required",
+      "parity_intent": "outcome_aligned",
       "materializers": {
         "codex": {
-          "mode": "overwrite",
+          "mode": "inject",
           "target": "get-shit-done/references/planner-reviews.md",
-          "source": "tooling/portable-gsd/overlay/get-shit-done/references/planner-reviews.md"
+          "operations": [
+            {
+              "kind": "block_replace",
+              "start_anchor": "### Step 1: Load REVIEWS.md\n",
+              "end_anchor": "### Step 2: Categorize Feedback\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/planner-reviews/step-1-load-reviews-body.md",
+              "marker_key": "GSD_MODIFIER:references-planner-reviews:load-reviews"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "### Step 2: Categorize Feedback\n",
+              "end_anchor": "### Step 3: Plan Fresh with Review Context\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/planner-reviews/step-2-categorize-feedback-body.md",
+              "marker_key": "GSD_MODIFIER:references-planner-reviews:categorize-feedback"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "### Step 3: Plan Fresh with Review Context\n",
+              "end_anchor": "### Step 4: Return\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/planner-reviews/step-3-plan-fresh-body.md",
+              "marker_key": "GSD_MODIFIER:references-planner-reviews:plan-fresh"
+            }
+          ]
         },
         "claude": {
-          "mode": "overwrite",
+          "mode": "inject",
           "target": "get-shit-done/references/planner-reviews.md",
-          "source": "tooling/portable-gsd/overlay/get-shit-done/references/planner-reviews.md"
+          "operations": [
+            {
+              "kind": "block_replace",
+              "start_anchor": "### Step 1: Load REVIEWS.md\n",
+              "end_anchor": "### Step 2: Categorize Feedback\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/planner-reviews/step-1-load-reviews-body.md",
+              "marker_key": "GSD_MODIFIER:references-planner-reviews:load-reviews"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "### Step 2: Categorize Feedback\n",
+              "end_anchor": "### Step 3: Plan Fresh with Review Context\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/planner-reviews/step-2-categorize-feedback-body.md",
+              "marker_key": "GSD_MODIFIER:references-planner-reviews:categorize-feedback"
+            },
+            {
+              "kind": "block_replace",
+              "start_anchor": "### Step 3: Plan Fresh with Review Context\n",
+              "end_anchor": "### Step 4: Return\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/planner-reviews/step-3-plan-fresh-body.md",
+              "marker_key": "GSD_MODIFIER:references-planner-reviews:plan-fresh"
+            }
+          ]
         }
       }
     },

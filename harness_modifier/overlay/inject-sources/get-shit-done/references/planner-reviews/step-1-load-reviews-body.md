@@ -1,0 +1,14 @@
+Read the reviews file from `<files_to_read>`. Parse:
+- Per-reviewer feedback (strengths, concerns, suggestions)
+- Review Consumer Contract:
+  - Must Address In Replan
+  - Explicit Rebuttal Required If Not Accepted
+  - Safe To Defer
+- Review Synthesis:
+  - Agreed Concerns
+  - Lone High-Signal Concerns
+  - Merely Adequate Areas
+  - Later Audit Risks
+  - Divergent Views
+- Treat synthesis as guidance, not as permission to ignore a strong individual criticism.
+- If the consumer-contract section is missing or incomplete, derive the same buckets from the individual reviews and synthesis instead of downgrading the review pass.

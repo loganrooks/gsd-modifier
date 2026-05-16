@@ -1,0 +1,16 @@
+Group review feedback into:
+- **Must address**:
+  - Every item in `Must Address In Replan`
+  - HIGH severity agreed concerns
+  - Any lone high-signal criticism that is well-justified and would create likely later-audit failure if ignored
+  - Later audit risks or merely-adequate areas that would leave the plan weak, misleadingly closure-ready, or brittle against the repo quality bar if left untouched
+- **Should address**:
+  - MEDIUM severity agreed concerns
+  - Merely adequate areas that leave the plan technically passable but weak for the repo's quality bar, when they are not already in Must address
+- **Consider**:
+  - Items listed in `Safe To Defer`
+  - Individual reviewer suggestions that are useful but not load-bearing
+  - LOW severity items
+- **Explicit rebuttal required**:
+  - Every item in `Explicit Rebuttal Required If Not Accepted`
+- Consensus raises confidence, but lack of consensus does not automatically downgrade a criticism.
