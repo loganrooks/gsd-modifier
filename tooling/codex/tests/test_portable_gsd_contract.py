@@ -70,8 +70,20 @@ class PortableGsdContractTests(unittest.TestCase):
                 "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
                 json.dumps(
                     {
-                        "schema_version": 2,
-                        "entries": {"get-shit-done/workflows/plan-phase.md": "overwrite"},
+                        "schema_version": 4,
+                        "entries": {
+                            "get-shit-done/workflows/plan-phase.md": {
+                                "capability_id": "get-shit-done/workflows/plan-phase.md",
+                                "parity_tier": "runtime_specific",
+                                "materializers": {
+                                    "codex": {
+                                        "mode": "overwrite",
+                                        "target": "get-shit-done/workflows/plan-phase.md",
+                                        "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/plan-phase.md",
+                                    }
+                                },
+                            }
+                        },
                     }
                 )
                 + "\n",
@@ -105,11 +117,41 @@ class PortableGsdContractTests(unittest.TestCase):
                 "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
                 json.dumps(
                     {
-                        "schema_version": 2,
+                        "schema_version": 4,
                         "entries": {
-                            "agents/gsd-planner.toml": "add",
-                            "config.toml": "add",
-                            "get-shit-done/workflows/plan-phase.md": "overwrite",
+                            "agents/gsd-planner.toml": {
+                                "capability_id": "agents/gsd-planner.toml",
+                                "parity_tier": "runtime_specific",
+                                "materializers": {
+                                    "codex": {
+                                        "mode": "add",
+                                        "target": "agents/gsd-planner.toml",
+                                        "source": "tooling/portable-gsd/overlay/agents/gsd-planner.toml",
+                                    }
+                                },
+                            },
+                            "config.toml": {
+                                "capability_id": "config.toml",
+                                "parity_tier": "runtime_specific",
+                                "materializers": {
+                                    "codex": {
+                                        "mode": "add",
+                                        "target": "config.toml",
+                                        "source": "tooling/portable-gsd/overlay/config.toml",
+                                    }
+                                },
+                            },
+                            "get-shit-done/workflows/plan-phase.md": {
+                                "capability_id": "get-shit-done/workflows/plan-phase.md",
+                                "parity_tier": "runtime_specific",
+                                "materializers": {
+                                    "codex": {
+                                        "mode": "overwrite",
+                                        "target": "get-shit-done/workflows/plan-phase.md",
+                                        "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/plan-phase.md",
+                                    }
+                                },
+                            },
                         },
                     }
                 )
@@ -144,8 +186,20 @@ class PortableGsdContractTests(unittest.TestCase):
                 "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
                 json.dumps(
                     {
-                        "schema_version": 2,
-                        "entries": {"get-shit-done/workflows/plan-phase.md": "overwrite"},
+                        "schema_version": 4,
+                        "entries": {
+                            "get-shit-done/workflows/plan-phase.md": {
+                                "capability_id": "get-shit-done/workflows/plan-phase.md",
+                                "parity_tier": "runtime_specific",
+                                "materializers": {
+                                    "codex": {
+                                        "mode": "overwrite",
+                                        "target": "get-shit-done/workflows/plan-phase.md",
+                                        "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/plan-phase.md",
+                                    }
+                                },
+                            }
+                        },
                     }
                 )
                 + "\n",
@@ -182,8 +236,20 @@ class PortableGsdContractTests(unittest.TestCase):
                 "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
                 json.dumps(
                     {
-                        "schema_version": 2,
-                        "entries": {"get-shit-done/workflows/plan-phase.md": "overwrite"},
+                        "schema_version": 4,
+                        "entries": {
+                            "get-shit-done/workflows/plan-phase.md": {
+                                "capability_id": "get-shit-done/workflows/plan-phase.md",
+                                "parity_tier": "runtime_specific",
+                                "materializers": {
+                                    "codex": {
+                                        "mode": "overwrite",
+                                        "target": "get-shit-done/workflows/plan-phase.md",
+                                        "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/plan-phase.md",
+                                    }
+                                },
+                            }
+                        },
                     }
                 )
                 + "\n",
@@ -262,9 +328,24 @@ class PortableGsdContractTests(unittest.TestCase):
                 "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json",
                 json.dumps(
                     {
-                        "schema_version": 2,
+                        "schema_version": 4,
                         "entries": {
-                            "get-shit-done/workflows/update.md": "overwrite",
+                            "get-shit-done/workflows/update.md": {
+                                "capability_id": "get-shit-done/workflows/update.md",
+                                "parity_tier": "core_required",
+                                "materializers": {
+                                    "codex": {
+                                        "mode": "overwrite",
+                                        "target": "get-shit-done/workflows/update.md",
+                                        "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/update.md",
+                                    },
+                                    "claude": {
+                                        "mode": "overwrite",
+                                        "target": "get-shit-done/workflows/update.md",
+                                        "source": "tooling/portable-gsd/overlay/get-shit-done/workflows/update.md",
+                                    },
+                                },
+                            },
                         },
                     }
                 )
@@ -278,6 +359,11 @@ class PortableGsdContractTests(unittest.TestCase):
             self._write(repo_root, ".codex/get-shit-done/workflows/update.md", update_example)
             self._write(repo_root, ".codex/gsd-local-patches/get-shit-done/workflows/update.md", update_example)
             self._write(repo_root, ".codex/agents/gsd-debugger.toml", "configDir = ~/.claude\n")
+            self._write(
+                repo_root,
+                ".codex/skills/adversarial-cross-vendor-audit/SKILL.md",
+                "Claude auditor agent lives at ~/.claude/agents/adversarial-auditor-xhigh.md\n",
+            )
 
             report = pgc.build_materialization_report(repo_root, pgc.DEFAULT_COMPACT_PROMPT_FILE)
 
@@ -286,13 +372,13 @@ class PortableGsdContractTests(unittest.TestCase):
             self.assertEqual(compatibility["path"], "harness_modifier/compatibility/declaration.json")
             self.assertEqual(compatibility["runtime_basis"]["runtime"], ".codex")
             self.assertTrue(compatibility["overlay_schema_version_matches_declaration"])
-            self.assertEqual(report["summary"]["compatibility_declaration_rule_count"], 3)
-            self.assertEqual(runtime_scan["summary"]["total_hits"], 3)
-            self.assertEqual(runtime_scan["summary"]["expected_baseline_count"], 3)
+            self.assertEqual(report["summary"]["compatibility_declaration_rule_count"], 4)
+            self.assertEqual(runtime_scan["summary"]["total_hits"], 4)
+            self.assertEqual(runtime_scan["summary"]["expected_baseline_count"], 4)
             self.assertEqual(runtime_scan["summary"]["review_needed_count"], 0)
             self.assertFalse(runtime_scan["requires_contextual_reread"])
             self.assertEqual(runtime_scan["compatibility_declaration_path"], "harness_modifier/compatibility/declaration.json")
-            self.assertEqual(runtime_scan["baseline_rule_count"], 3)
+            self.assertEqual(runtime_scan["baseline_rule_count"], 4)
             classifications = {hit["path"]: hit["classification"] for hit in runtime_scan["hits"]}
             self.assertEqual(classifications["agents/gsd-debugger.toml"], "upstream_only_contextual_carry")
             self.assertEqual(classifications["get-shit-done/workflows/update.md"], "overlay_owned_comment_example")
@@ -300,7 +386,11 @@ class PortableGsdContractTests(unittest.TestCase):
                 classifications["gsd-local-patches/get-shit-done/workflows/update.md"],
                 "pristine_backup_mirror",
             )
-            self.assertEqual(report["summary"]["runtime_specific_reference_hit_count"], 3)
+            self.assertEqual(
+                classifications["skills/adversarial-cross-vendor-audit/SKILL.md"],
+                "intentional_cross_vendor_reviewer_dispatch",
+            )
+            self.assertEqual(report["summary"]["runtime_specific_reference_hit_count"], 4)
             self.assertEqual(report["summary"]["runtime_specific_reference_review_needed_count"], 0)
             self.assertEqual(report["hard_failures"], [])
 

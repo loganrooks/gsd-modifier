@@ -160,7 +160,7 @@ class ProjectUpliftTests(unittest.TestCase):
         self._write(root, "CLAUDE.md", "# Claude\n")
         self._write(root, ".planning/CLAUDE.md", "# Planning Claude\n")
         self._write(root, ".planning/CLAIM-TYPES.md", "# Claim Types\n")
-        self._write(root, "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json", json.dumps({"schema_version": 2, "entries": {}}) + "\n")
+        self._write(root, "tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json", json.dumps({"schema_version": 4, "entries": {}}) + "\n")
         self._write(
             root,
             ".planning/LONG-ARC.md",
@@ -675,12 +675,12 @@ class ProjectUpliftTests(unittest.TestCase):
             self.assertEqual(compatibility["observed_runtime_manifest_version"], "1.38.1")
             self.assertTrue(compatibility["observed_runtime_version_aligned"])
             self.assertEqual(compatibility["runtime_basis"]["runtime"], ".codex")
-            self.assertEqual(compatibility["declared_overlay_schema_version"], 3)
-            self.assertEqual(compatibility["overlay_manifest_schema_version"], 2)
+            self.assertEqual(compatibility["declared_overlay_schema_version"], 4)
+            self.assertEqual(compatibility["overlay_manifest_schema_version"], 4)
             self.assertTrue(compatibility["overlay_manifest_schema_version_matches_declaration"])
             self.assertEqual(compatibility["uplift_manifest_schema_version"], 6)
             self.assertEqual(compatibility["upstream_compatibility_window"]["state"], "active")
-            self.assertEqual(compatibility["parity_scan_baseline"]["rule_count"], 3)
+            self.assertEqual(compatibility["parity_scan_baseline"]["rule_count"], 4)
             self.assertEqual(compatibility["support_claims"]["active_core_profiles"], ["codex", "claude"])
             self.assertNotIn("dual-runtime-core release claims before the parity matrix is green", compatibility["held_later"])
 

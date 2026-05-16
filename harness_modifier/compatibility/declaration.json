@@ -63,7 +63,7 @@
     "runtime_specific_divergence_disposition": "warn",
     "note": "Dual-runtime-core is active once repo-self proof is green; rerun the synthetic host matrix before widening broader host compatibility language."
   },
-  "overlay_schema_version": 3,
+  "overlay_schema_version": 4,
   "uplift_manifest_schema_version": 6,
   "upstream_compatibility_window": {
     "mode": "dual_runtime_core_profiles",
@@ -104,6 +104,16 @@
         "family": "pristine_backup_mirror",
         "ownership": "pristine_backup",
         "note": "pristine backup mirror of an upstream or overlay-owned comment example"
+      },
+      {
+        "path": "skills/adversarial-cross-vendor-audit/SKILL.md",
+        "path_match_mode": "exact",
+        "text": "~/.claude/agents/",
+        "text_match_mode": "contains",
+        "classification": "intentional_cross_vendor_reviewer_dispatch",
+        "family": "reviewer_dispatch_bridge",
+        "ownership": "runtime_local_skill",
+        "note": "Codex-to-Claude adversarial reviewer bridge intentionally names the Claude-side agent definition path"
       }
     ]
   },

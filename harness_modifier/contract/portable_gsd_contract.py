@@ -875,7 +875,7 @@ def build_materialization_report_for_roots(
     overlay_schema_version_matches_declaration = observed_overlay_schema_version == declared_overlay_schema_version or {
         observed_overlay_schema_version,
         declared_overlay_schema_version,
-    } == {2, 3}
+    } == {3, 4}
 
     if not overlay_schema_version_matches_declaration:
         hard_failures.append(

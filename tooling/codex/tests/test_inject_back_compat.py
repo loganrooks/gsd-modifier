@@ -184,30 +184,9 @@ class MixedModeManifestTests(unittest.TestCase):
             marker_idx = inject_content.find("<!-- GSD_MODIFIER:start")
             self.assertLess(close_idx, marker_idx)
 
-    # Known Phase 3 contract-code gap surfaced by mixed-mode verify-materialized:
-    # compatibility declaration overlay_schema_version is hardcoded to 3 in
-    # declaration.json and the compat check at build_materialization_report only
-    # allows 2↔3 transition. When Phase 3 ships the first v4 entry, the
-    # declaration bumps to 4 and the compat check needs to allow 3↔4 transition.
-    # Filtered below; this is a Phase 3 follow-up, not a Slice 6 blocker.
-    _PHASE3_TODO_HARD_FAILURE_SUBSTRINGS = (
-        "compatibility declaration overlay schema version does not match",
-    )
-
-    def _filter_phase3_todo_failures(self, hard_failures: list[str]) -> list[str]:
-        return [
-            f
-            for f in hard_failures
-            if not any(sub in f for sub in self._PHASE3_TODO_HARD_FAILURE_SUBSTRINGS)
-        ]
-
     def test_verify_materialized_accepts_correctly_landed_mixed_mode(self) -> None:
-        # The inject verify-engine itself produces passing results when the
-        # mixed-mode manifest is applied correctly. The two Phase 3 contract-code
-        # gaps (compat-declaration schema-version bump; missing_from_manifest
-        # accounting for inject operation sources) surface as hard_failures that
-        # are filtered out below — they are tracked as Phase 3 follow-ups, not
-        # Slice 6 blockers.
+        # The inject verify-engine and the surrounding mixed-mode materialization
+        # contract should both pass once the Phase 3 schema declaration is v4.
         with tempfile.TemporaryDirectory() as tmpdir:
             root = pathlib.Path(tmpdir)
             self._build_mixed_manifest(root)
@@ -218,23 +197,10 @@ class MixedModeManifestTests(unittest.TestCase):
                 pgc.apply_overlay(root, compact_prompt="x", runtime=runtime)
 
             report = pgc.build_materialization_report(root, compact_prompt="x", runtime="codex")
-            non_phase3_failures = self._filter_phase3_todo_failures(report["hard_failures"])
-            self.assertEqual(
-                non_phase3_failures,
-                [],
-                f"unexpected (non-Phase-3-TODO) hard_failures: {non_phase3_failures}",
-            )
-            # The inject verify-engine itself passes
+            self.assertEqual(report["hard_failures"], [])
             self.assertEqual(report["summary"]["inject_entry_count"], 1)
             self.assertEqual(report["summary"]["inject_failure_count"], 0)
             self.assertTrue(report["inject_verifications"][0]["passed"])
-            # The Phase 3 TODO compat-declaration hard_failure is present
-            # (documents the schema-version-bump gap for the Phase 3 pilot turn)
-            self.assertEqual(
-                len(report["hard_failures"]) - len(non_phase3_failures),
-                1,
-                f"expected exactly 1 Phase-3-TODO failure; got hard_failures: {report['hard_failures']}",
-            )
 
     def test_verify_materialized_inject_failure_does_not_corrupt_other_modes(
         self,
@@ -242,8 +208,7 @@ class MixedModeManifestTests(unittest.TestCase):
         # Apply works for all 3 modes; then manually corrupt the inject target.
         # The inject_failure_count rises to 1 (Slice 4's verify_inject_state
         # catches the missing marker); the overwrite + add live targets are
-        # still intact (their codepaths are independent). The two Phase 3 TODO
-        # hard_failures are also present but unrelated to the corruption.
+        # still intact (their codepaths are independent).
         with tempfile.TemporaryDirectory() as tmpdir:
             root = pathlib.Path(tmpdir)
             self._build_mixed_manifest(root)

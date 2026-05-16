@@ -396,7 +396,7 @@ def build_compatibility_basis(repo_root: pathlib.Path, declaration: dict) -> dic
     observed_overlay_schema_version = overlay_manifest.get("schema_version")
     overlay_manifest_schema_version_matches_declaration = (
         observed_overlay_schema_version == declared_overlay_schema_version
-        or {observed_overlay_schema_version, declared_overlay_schema_version} == {2, 3}
+        or {observed_overlay_schema_version, declared_overlay_schema_version} == {3, 4}
     )
     return {
         "compatibility_posture": str(declaration["compatibility_posture"]),

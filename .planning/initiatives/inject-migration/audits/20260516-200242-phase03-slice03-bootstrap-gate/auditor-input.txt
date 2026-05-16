@@ -1,0 +1,118 @@
+You are reviewing a gate-failure recovery decision for the inject-migration initiative.
+
+Author/runtime context:
+- The initiative artifacts and most prior debrief/proposal prose were authored under Claude Code / Claude-style GSD workflows.
+- This invocation is from Codex via the adversarial-cross-vendor-audit skill because REVIEWERS.md requires `adversarial-auditor-xhigh` as reviewer B for this gate-failure escalation.
+
+Review question:
+The Phase 3 Slice 3 gate `bash scripts/ci/check-bootstrap.sh` exits 1. A `gsd-debugger` reviewer returned ESCALATE, arguing that the pilot materialization itself is verified and the failing portion is the script's trailing full unittest discovery over known stale, unrelated baseline tests. Review that hypothesis and return a REVIEWERS.md verdict.
+
+Return exactly this verdict block at the end:
+
+VERDICT: <PASS | FAIL | ESCALATE | HALT>
+REASONING: <one paragraph>
+RECOMMENDATION: <actionable next step>
+EVIDENCE: <bullets with file paths/lines or command outputs>
+
+Relevant initiative rules:
+- GUARDRAILS.md says verification gate failures retry once, then `gsd-debugger`; if debugger ESCALATE, triangulate per REVIEWERS.md.
+- REVIEWERS.md triangulation table names `adversarial-auditor-xhigh` as reviewer B for gate failures.
+- STATE.md says pre-existing full-discover baseline failures/errors remain out of scope for this initiative unless they change shape or block the pilot directly. The named baseline surfaces include `gsd-from-gsd2`, `gsd-plant-seed`, seed-audit helper, and transition/uplift carry.
+- Phase 3 Slice 3's objective is to prove one pilot carrier, `get-shit-done/references/mandatory-initial-read.md`, materializes correctly through both runtimes and to write the debrief before phase-boundary verification.
+
+Slice details:
+- Phase: 3 (`03-pilot`)
+- Slice: 3 (`post-migration verification + pilot debrief`)
+- Original write set:
+  - `.planning/initiatives/inject-migration/decisions/PILOT-DEBRIEF-mandatory-initial-read.md` CREATE
+  - implicit STATE.md and checkpoint
+- Plan-approved expanded write set already used for a schema follow-through recovery:
+  - `harness_modifier/compatibility/declaration.json`
+  - `harness_modifier/contract/portable_gsd_contract.py`
+  - `tooling/codex/project_uplift.py`
+  - `tooling/codex/tests/test_inject_back_compat.py`
+  - `tooling/codex/tests/test_portable_gsd_contract.py`
+  - `tooling/codex/tests/test_project_uplift.py`
+
+What passed before the current failure:
+- `python3 -m unittest tooling.codex.tests.test_inject_back_compat tooling.codex.tests.test_portable_gsd_contract tooling.codex.tests.test_project_uplift` exit 0; 45 tests OK.
+- `python3 -m py_compile harness_modifier/contract/portable_gsd_contract.py tooling/codex/project_uplift.py tooling/codex/tests/test_inject_back_compat.py tooling/codex/tests/test_portable_gsd_contract.py tooling/codex/tests/test_project_uplift.py` exit 0.
+- `bash scripts/ci/check-deterministic.sh` exit 0; 48 tests OK; `validate-manifest` hard_failures `[]`; manifest schema_version 4.
+- `./scripts/setup-portable-gsd-runtime.sh --runtime both` exit 0.
+- `python3 harness_modifier/contract/portable_gsd_contract.py verify-materialized . --all-supported --strict` exit 0 with top-level `hard_failures: []`.
+- Both runtime reports have one inject verification:
+  - target `get-shit-done/references/mandatory-initial-read.md`
+  - kind `block_replace`
+  - marker key `GSD_MODIFIER:references-mandatory-initial-read:extended-content`
+  - status `verified`
+  - detail `marker present between anchors`
+- Direct inspection of `.codex/get-shit-done/references/mandatory-initial-read.md` and `.claude/get-shit-done/references/mandatory-initial-read.md` shows the upstream mandatory initial read text preserved, followed by the injected reading-packet tier block between the expected start/end markers.
+
+The failed gate:
+Command run twice:
+
+`bash scripts/ci/check-bootstrap.sh`
+
+The script body is:
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+
+cd "${REPO_ROOT}"
+
+./scripts/setup-portable-gsd-runtime.sh --runtime both
+
+python3 -m unittest discover -s tooling/codex/tests
+
+python3 harness_modifier/contract/harness_canary.py report . --all-supported --strict
+python3 harness_modifier/contract/portable_gsd_contract.py validate-manifest . --all-supported --strict
+python3 harness_modifier/contract/portable_gsd_contract.py verify-materialized . --all-supported --strict
+python3 tooling/codex/audit_refmap.py verify .
+
+git diff --check
+```
+
+Observed failure shape on both attempts:
+- The setup/materialization portion completed for both runtimes.
+- The failure occurred at `python3 -m unittest discover -s tooling/codex/tests`, before the script reached the later canary/contract/refmap/diff checks.
+- Full discover result: 450 tests; failures=2, errors=4.
+
+Failure details:
+- `test_health_and_migration_follow_through_contract.HealthAndMigrationFollowThroughContractTests.test_skill_wrappers_keep_health_and_uplift_follow_through_explicit`: FileNotFoundError for `tooling/portable-gsd/overlay/skills/gsd-from-gsd2/SKILL.md`.
+- `test_health_and_migration_follow_through_contract.HealthAndMigrationFollowThroughContractTests.test_overlay_manifest_owns_health_and_migration_surfaces`: expected `overlay_entry_mode("skills/gsd-from-gsd2/SKILL.md") == "overwrite"`, got `"add"`.
+- `test_seed_consumer_follow_through_contract.SeedConsumerFollowThroughContractTests.test_plant_seed_wrapper_mentions_strengthening_carry`: FileNotFoundError for `tooling/portable-gsd/overlay/skills/gsd-plant-seed/SKILL.md`.
+- `test_seed_consumer_follow_through_contract.SeedConsumerFollowThroughContractTests.test_overlay_manifest_owns_seed_producer_and_wrapper`: expected `overlay_entry_mode("skills/gsd-plant-seed/SKILL.md") == "overwrite"`, got `"add"`.
+- `test_seed_audit_gate_follow_through_contract.SeedAuditGateFollowThroughContractTests.test_seed_audit_surfaces_vintage_why_and_strengthening_carry`: node audit helper returned nonzero.
+- `test_transition_uplift_continuity.TransitionUpliftContinuityTests.test_phase_complete_preserves_project_uplift_section`: node `.codex/get-shit-done/bin/gsd-tools.cjs phase complete` returned nonzero.
+
+Debugger reviewer output:
+
+VERDICT: ESCALATE
+
+REASONING: The failure is deterministic, not flaky, and the mandatory-initial-read inject pilot is not the failing surface. `check-bootstrap.sh` is too broad for the pilot verification contract because it runs full `tooling/codex/tests` discovery, and that suite still contains known stale assertions for unrelated Phase 0 seed/migration/uplift carriers that were intentionally reclassified to `mode: add` or have separate helper drift. The slice edit does not appear incomplete for the inject pilot; the gate is aggregating pre-existing baseline failures into a pilot verification decision.
+
+RECOMMENDATION: Treat the pilot materialization as verified, but escalate the gate disposition: either split `check-bootstrap.sh` into scoped bootstrap/materialization vs full-regression gates, or record an explicit waiver for these pre-existing full-discover failures while opening a separate cleanup slice for the stale `gsd-from-gsd2`, `gsd-plant-seed`, seed-audit, and transition/uplift tests.
+
+EVIDENCE:
+- `scripts/ci/check-bootstrap.sh:9-16` runs `setup-portable-gsd-runtime.sh --runtime both`, then broad `python3 -m unittest discover -s tooling/codex/tests`, then contract/refmap checks.
+- `tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json:322-349` shows `get-shit-done/references/mandatory-initial-read.md` uses `mode: inject` for both runtimes with marker key `GSD_MODIFIER:references-mandatory-initial-read:extended-content`.
+- `tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json:948-988` shows `skills/gsd-from-gsd2/SKILL.md` and `skills/gsd-plant-seed/SKILL.md` are `mode: add`, sourced from `harness_modifier/overlay/...`.
+- Focused rerun output: `Ran 12 tests ... FAILED (failures=2, errors=4)` for the four reported modules, matching the retry shape.
+- `tooling/codex/tests/test_health_and_migration_follow_through_contract.py:14,35-37` still expects `gsd-from-gsd2` to be `overwrite` and reads the deleted `tooling/portable-gsd/overlay/...` wrapper path.
+- `tooling/codex/tests/test_seed_consumer_follow_through_contract.py:13,37-39` still expects `gsd-plant-seed` to be `overwrite` and reads the deleted `tooling/portable-gsd/overlay/...` wrapper path.
+- `.planning/initiatives/inject-migration/checkpoints/2026-05-16T035844Z-phase02-slice05.md:56-61` already classifies these failing tests as unrelated to inject work and out of scope pending operator decision.
+
+Additional observation to consider, not the original check-bootstrap failure:
+- A separate direct run of `python3 harness_modifier/contract/harness_canary.py report . --all-supported --strict` failed before reporting because `harness_modifier/contract/runtime_visibility.py` tried to read `overlay_spec["source_path"]` for an inject materializer whose source_path is empty, causing `IsADirectoryError: [Errno 21] Is a directory: '.'`.
+- This indicates a Phase 3/4 compatibility gap in the runtime-visibility canary path: `mode: inject` needs special handling there, likely by comparing live target/marker verification rather than reading an overlay source file.
+- Fixing that would require additional scope beyond the already Plan-approved schema-follow-through files.
+
+Questions for this auditor:
+1. Is the debugger hypothesis correct enough to proceed with a debrief and commit if the debrief records that `check-bootstrap.sh` exit 1 is caused by known stale full-discover baseline tests while the bootstrap/materialization contract itself is verified?
+2. Or does Phase 3 Slice 3 need more code changes before commit?
+3. If more code changes are required, should the next action be a Plan reviewer scope expansion rather than direct edits?
+4. Does the separate `runtime_visibility.py` canary failure need to be fixed in this slice before committing, or can it be recorded as a phase-boundary risk/debrief action?
