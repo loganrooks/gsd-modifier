@@ -1,5 +1,5 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "entries": {
     "agents/gsd-code-fixer.md": {
       "capability_id": "agents/gsd-code-fixer.md",
@@ -322,16 +322,33 @@
     "get-shit-done/references/mandatory-initial-read.md": {
       "capability_id": "get-shit-done/references/mandatory-initial-read.md",
       "parity_tier": "core_required",
+      "parity_intent": "outcome_aligned",
       "materializers": {
         "codex": {
-          "mode": "overwrite",
+          "mode": "inject",
           "target": "get-shit-done/references/mandatory-initial-read.md",
-          "source": "tooling/portable-gsd/overlay/get-shit-done/references/mandatory-initial-read.md"
+          "operations": [
+            {
+              "kind": "block_replace",
+              "start_anchor": "If the prompt contains a `<required_reading>` block, you MUST use the `Read` tool to load every file listed there before performing any other actions. This is your primary context.\n",
+              "end_anchor": "If the prompt contains a `<required_reading>` block, you MUST use the `Read` tool to load every file listed there before performing any other actions. This is your primary context.\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/mandatory-initial-read/extended-content.md",
+              "marker_key": "GSD_MODIFIER:references-mandatory-initial-read:extended-content"
+            }
+          ]
         },
         "claude": {
-          "mode": "overwrite",
+          "mode": "inject",
           "target": "get-shit-done/references/mandatory-initial-read.md",
-          "source": "tooling/portable-gsd/overlay/get-shit-done/references/mandatory-initial-read.md"
+          "operations": [
+            {
+              "kind": "block_replace",
+              "start_anchor": "If the prompt contains a `<required_reading>` block, you MUST use the `Read` tool to load every file listed there before performing any other actions. This is your primary context.\n",
+              "end_anchor": "If the prompt contains a `<required_reading>` block, you MUST use the `Read` tool to load every file listed there before performing any other actions. This is your primary context.\n",
+              "source": "harness_modifier/overlay/inject-sources/get-shit-done/references/mandatory-initial-read/extended-content.md",
+              "marker_key": "GSD_MODIFIER:references-mandatory-initial-read:extended-content"
+            }
+          ]
         }
       }
     },

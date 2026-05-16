@@ -40,6 +40,21 @@ def overlay_entry_mode(rel_path: str) -> str:
     return next(iter(materializers.values()))["mode"]
 
 
+def _materializer_for_path(rel_path: str, runtime: str = "codex") -> dict:
+    entry = overlay_entry(rel_path)
+    if isinstance(entry, str) or "mode" in entry:
+        raise ValueError(f"overlay entry {rel_path!r} has no materializers")
+    materializers = entry.get("materializers", {})
+    if runtime in materializers and materializers[runtime].get("target") == rel_path:
+        return materializers[runtime]
+    for materializer in materializers.values():
+        if materializer.get("target") == rel_path:
+            return materializer
+    if runtime in materializers:
+        return materializers[runtime]
+    return next(iter(materializers.values()))
+
+
 def overlay_source_path(rel_path: str) -> Path:
     entry = overlay_entry(rel_path)
     if isinstance(entry, str):
@@ -55,3 +70,14 @@ def overlay_source_path(rel_path: str) -> Path:
         else:
             source_rel_path = materializers["codex"]["source"]
     return ROOT / source_rel_path
+
+
+def overlay_inject_source_paths(rel_path: str, runtime: str = "codex") -> list[Path]:
+    materializer = _materializer_for_path(rel_path, runtime=runtime)
+    if materializer.get("mode") != "inject":
+        raise ValueError(f"overlay entry {rel_path!r} is not mode: inject")
+    return [
+        ROOT / operation["source"]
+        for operation in materializer.get("operations", [])
+        if isinstance(operation, dict) and operation.get("source")
+    ]

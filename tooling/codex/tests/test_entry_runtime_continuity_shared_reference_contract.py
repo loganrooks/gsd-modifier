@@ -1,7 +1,7 @@
 import unittest
 from pathlib import Path
 
-from tooling.codex.tests.overlay_paths import overlay_entry_mode
+from tooling.codex.tests.overlay_paths import overlay_entry_mode, overlay_inject_source_paths
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -58,10 +58,10 @@ class EntryRuntimeContinuitySharedReferenceContractTests(unittest.TestCase):
             self.assertIn("\n- ", section, msg=f"{heading} lost its trigger bullets")
 
     def test_mandatory_initial_read_stays_grammar_only(self) -> None:
-        text = (
-            ROOT
-            / "tooling/portable-gsd/overlay/get-shit-done/references/mandatory-initial-read.md"
-        ).read_text()
+        (source_path,) = overlay_inject_source_paths(
+            "get-shit-done/references/mandatory-initial-read.md"
+        )
+        text = source_path.read_text()
         self.assertNotIn("entry-runtime-uplift-continuity.md", text)
 
     def test_new_project_points_at_shared_reference_and_keeps_route_read_only(self) -> None:
