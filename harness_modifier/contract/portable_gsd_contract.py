@@ -794,13 +794,32 @@ def apply_overlay(repo_root: pathlib.Path, compact_prompt: str, runtime: str = "
     entry_specs = load_overlay_manifest_specs(repo_root, runtime=runtime)
     written: list[str] = []
     for rel_path, spec in sorted(entry_specs.items()):
-        if spec["mode"] == "inject":
-            # Inject apply-time logic lands in Phase 2 Slice 2; Slice 1 parser-only
-            # path leaves inject entries untouched.
-            continue
-        source = pathlib.Path(spec["source_path"])
         target = live_root / spec["target_path"]
         target.parent.mkdir(parents=True, exist_ok=True)
+        if spec["mode"] == "inject":
+            # Inject mode enriches an upstream-installed file in place per ADR-001 §7.
+            # The target MUST exist (the installer ran first); apply_inject_operations
+            # produces the new content atomically — write only on success.
+            if not target.exists():
+                raise FileNotFoundError(
+                    f"inject target {target} does not exist; mode: inject requires the "
+                    f"upstream file to be installed before injection runs"
+                )
+            original_content = read_text(target)
+            operations = spec.get("operations", [])
+
+            def _resolver(source_rel_path: str) -> str:
+                return render_overlay_text(
+                    read_text(repo_root / source_rel_path), repo_root, compact_prompt
+                )
+
+            new_content, _records = inject_operations.apply_inject_operations(
+                original_content, operations, _resolver
+            )
+            target.write_text(new_content, encoding="utf-8")
+            written.append(spec["target_path"])
+            continue
+        source = pathlib.Path(spec["source_path"])
         text = render_overlay_text(read_text(source), repo_root, compact_prompt)
         target.write_text(text, encoding="utf-8")
         written.append(spec["target_path"])

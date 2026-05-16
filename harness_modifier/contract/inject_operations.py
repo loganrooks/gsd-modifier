@@ -1,4 +1,4 @@
-"""Inject-mode operation kinds and validators for OVERLAY-MANIFEST.json schema v4.
+"""Inject-mode operation kinds, validators, and apply-time engine for OVERLAY-MANIFEST.json schema v4.
 
 Per ADR-001 (.planning/initiatives/inject-migration/decisions/ADR-001-manifest-schema-v4.md):
 
@@ -9,15 +9,21 @@ Per ADR-001 (.planning/initiatives/inject-migration/decisions/ADR-001-manifest-s
   the SAME key may appear once per runtime materializer (intentional outcome_aligned
   mirroring per §5); the SAME key in two DIFFERENT entries is a collision
 - `parity_intent` is REQUIRED for v4 mode: inject entries (§2.3)
+- apply-time semantics per §7: pre-flight atomicity (all operations computed in-memory
+  before any caller-side write); idempotency via marker presence + content comparison;
+  fail-loud on anchor-not-found, marker_key conflict, or source resolution failure
 
-This module is parse-time only (Phase 2 Slice 1 boundary): it validates manifest
-shape and per-operation field presence/typing. Apply-time and verify-time logic
-land in later Phase 2 slices.
+This module is split into two phases:
+
+- **Parse-time** (Phase 2 Slice 1): manifest shape and per-operation field validation
+- **Apply-time** (Phase 2 Slice 2 — this module section): the pure functions that
+  transform target content per the operations array, returning new content + records
 """
 
 from __future__ import annotations
 
 import re
+from dataclasses import dataclass, field
 from typing import Any, Callable
 
 
@@ -180,3 +186,418 @@ def validate_parity_intent(value: Any, entry_id: str) -> list[str]:
             f"entry {entry_id!r}: invalid parity_intent {value!r}; expected one of: {valid}"
         ]
     return []
+
+
+# ---------------------------------------------------------------------------
+# Apply-time engine (Phase 2 Slice 2)
+# ---------------------------------------------------------------------------
+
+
+class InjectOperationError(Exception):
+    """Fatal failure applying an inject operation.
+
+    Carries marker_key + reason so the caller can produce actionable triage
+    messages. op_index is filled in by the dispatcher when known."""
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        marker_key: str,
+        reason: str,
+        op_index: int | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.marker_key = marker_key
+        self.reason = reason
+        self.op_index = op_index
+
+
+@dataclass(frozen=True)
+class OperationRecord:
+    """Record of what a single operation did to the content."""
+
+    marker_key: str
+    kind: str
+    status: str  # "applied" | "skipped_idempotent"
+    op_index: int = 0
+
+
+@dataclass(frozen=True)
+class MarkerRegion:
+    """Located <!-- GSD_MODIFIER:start key:KEY --> ... end region.
+
+    Line indices are 0-based and refer to the splitlines(keepends=False)
+    view of the source content. `body` is the inclusive content between
+    (but not including) the marker lines themselves.
+    """
+
+    key: str
+    start_line: int
+    end_line: int
+    body: str
+
+
+def _start_marker(key: str) -> str:
+    return f"<!-- GSD_MODIFIER:start key:{key} -->"
+
+
+def _end_marker(key: str) -> str:
+    return f"<!-- GSD_MODIFIER:end key:{key} -->"
+
+
+def _wrap_with_markers(body: str, key: str) -> str:
+    """Wrap a body string with GSD_MODIFIER start/end markers.
+
+    The body is `.strip()`'d so callers can pass source-file content without
+    worrying about trailing newlines; this also gives a stable byte sequence
+    for the idempotency comparison."""
+    return f"{_start_marker(key)}\n{body.strip()}\n{_end_marker(key)}"
+
+
+def find_marker(content: str, key: str) -> MarkerRegion | None:
+    """Locate a single marker region by key.
+
+    Returns None if either marker is absent or the start marker has no
+    matching end marker (treated as absent for the apply-time check; the
+    Slice 3 extract_inject_markers utility will surface unbalanced markers
+    as a separate concern)."""
+    start = _start_marker(key)
+    end = _end_marker(key)
+    lines = content.splitlines(keepends=False)
+    start_idx: int | None = None
+    for i, line in enumerate(lines):
+        if line.strip() == start:
+            start_idx = i
+            break
+    if start_idx is None:
+        return None
+    for j in range(start_idx + 1, len(lines)):
+        if lines[j].strip() == end:
+            body = "\n".join(lines[start_idx + 1 : j])
+            return MarkerRegion(key=key, start_line=start_idx, end_line=j, body=body)
+    return None
+
+
+_STEP_BLOCK_RE_CACHE: dict[str, re.Pattern[str]] = {}
+
+
+def _find_step_block(content: str, name: str) -> tuple[int, int] | None:
+    """Find <step name="NAME"...>...</step> block; returns (start, end) char offsets."""
+    if name not in _STEP_BLOCK_RE_CACHE:
+        _STEP_BLOCK_RE_CACHE[name] = re.compile(
+            rf'<step\s+name="{re.escape(name)}"[^>]*>.*?</step>',
+            re.DOTALL,
+        )
+    m = _STEP_BLOCK_RE_CACHE[name].search(content)
+    if m is None:
+        return None
+    return (m.start(), m.end())
+
+
+def _replace_lines(content: str, start_line: int, end_line: int, replacement: str) -> str:
+    """Replace lines [start_line, end_line] inclusive with `replacement`.
+
+    Preserves the original content's trailing newline (if any)."""
+    lines = content.splitlines(keepends=False)
+    new_lines = lines[:start_line] + replacement.splitlines() + lines[end_line + 1 :]
+    new_content = "\n".join(new_lines)
+    if content.endswith("\n") and not new_content.endswith("\n"):
+        new_content += "\n"
+    return new_content
+
+
+def _remove_lines(content: str, start_line: int, end_line: int) -> str:
+    """Drop lines [start_line, end_line] inclusive."""
+    lines = content.splitlines(keepends=False)
+    new_lines = lines[:start_line] + lines[end_line + 1 :]
+    new_content = "\n".join(new_lines)
+    if content.endswith("\n") and not new_content.endswith("\n"):
+        new_content += "\n"
+    return new_content
+
+
+def _raise_marker_conflict(marker_key: str, kind: str) -> None:
+    raise InjectOperationError(
+        f"marker_key {marker_key!r} is present in the target but its content does not "
+        f"match the expected source for kind {kind!r}; this indicates either a configuration "
+        f"error (two different operations sharing one key) or a manual edit inside the marker "
+        f"region (operator triage required)",
+        marker_key=marker_key,
+        reason="marker_key_conflict",
+    )
+
+
+def _raise_anchor_not_found(marker_key: str, anchor: str, kind: str) -> None:
+    raise InjectOperationError(
+        f"anchor {anchor!r} not found in target for kind {kind!r} (marker_key {marker_key!r})",
+        marker_key=marker_key,
+        reason="anchor_not_found",
+    )
+
+
+def apply_section_insert_after(
+    content: str, op: dict[str, Any], source: str
+) -> tuple[str, str]:
+    marker_key = op["marker_key"]
+    tag = op["tag"]
+    existing = find_marker(content, marker_key)
+    if existing is not None:
+        if existing.body.strip() == source.strip():
+            return content, "skipped_idempotent"
+        _raise_marker_conflict(marker_key, "section_insert_after")
+    close_tag = f"</{tag}>"
+    idx = content.find(close_tag)
+    if idx == -1:
+        _raise_anchor_not_found(marker_key, close_tag, "section_insert_after")
+    insertion_point = idx + len(close_tag)
+    marker_block = _wrap_with_markers(source, marker_key)
+    new_content = (
+        content[:insertion_point] + "\n" + marker_block + content[insertion_point:]
+    )
+    return new_content, "applied"
+
+
+def apply_section_replace(
+    content: str, op: dict[str, Any], source: str
+) -> tuple[str, str]:
+    marker_key = op["marker_key"]
+    existing = find_marker(content, marker_key)
+    if existing is None:
+        raise InjectOperationError(
+            f"section_replace requires marker_key {marker_key!r} to already be present "
+            f"(prior section_insert_after with the same key must have run)",
+            marker_key=marker_key,
+            reason="anchor_not_found",
+        )
+    if existing.body.strip() == source.strip():
+        return content, "skipped_idempotent"
+    new_body = source.strip()
+    return (
+        _replace_lines(
+            content,
+            existing.start_line + 1,
+            existing.end_line - 1,
+            new_body,
+        )
+        if existing.end_line > existing.start_line + 1
+        else _insert_lines_between(content, existing.start_line, existing.end_line, new_body)
+    ), "applied"
+
+
+def _insert_lines_between(content: str, start_line: int, end_line: int, body: str) -> str:
+    """Insert `body` lines between two marker lines (no existing body)."""
+    lines = content.splitlines(keepends=False)
+    new_lines = lines[: start_line + 1] + body.splitlines() + lines[end_line:]
+    new_content = "\n".join(new_lines)
+    if content.endswith("\n") and not new_content.endswith("\n"):
+        new_content += "\n"
+    return new_content
+
+
+def apply_step_remove(content: str, op: dict[str, Any]) -> tuple[str, str]:
+    marker_key = op["marker_key"]
+    name = op["name"]
+    sentinel = f"<!-- GSD_MODIFIER:step_removed name:{name} -->"
+    existing = find_marker(content, marker_key)
+    if existing is not None:
+        if sentinel in existing.body:
+            return content, "skipped_idempotent"
+        _raise_marker_conflict(marker_key, "step_remove")
+    step_loc = _find_step_block(content, name)
+    if step_loc is None:
+        _raise_anchor_not_found(marker_key, f'<step name="{name}">', "step_remove")
+    start, end = step_loc
+    marker_block = _wrap_with_markers(sentinel, marker_key)
+    new_content = content[:start] + marker_block + content[end:]
+    return new_content, "applied"
+
+
+def apply_step_insert_after(
+    content: str, op: dict[str, Any], source: str
+) -> tuple[str, str]:
+    marker_key = op["marker_key"]
+    after_name = op["after_name"]
+    existing = find_marker(content, marker_key)
+    if existing is not None:
+        if existing.body.strip() == source.strip():
+            return content, "skipped_idempotent"
+        _raise_marker_conflict(marker_key, "step_insert_after")
+    step_loc = _find_step_block(content, after_name)
+    if step_loc is None:
+        _raise_anchor_not_found(
+            marker_key, f'<step name="{after_name}">', "step_insert_after"
+        )
+    _start, end = step_loc
+    marker_block = _wrap_with_markers(source, marker_key)
+    new_content = content[:end] + "\n" + marker_block + content[end:]
+    return new_content, "applied"
+
+
+def apply_include_add(content: str, op: dict[str, Any]) -> tuple[str, str]:
+    marker_key = op["marker_key"]
+    tag = op["tag"]
+    line = op["line"]
+    existing = find_marker(content, marker_key)
+    if existing is not None:
+        if existing.body.strip() == line.strip():
+            return content, "skipped_idempotent"
+        _raise_marker_conflict(marker_key, "include_add")
+    close_tag = f"</{tag}>"
+    idx = content.find(close_tag)
+    if idx == -1:
+        _raise_anchor_not_found(marker_key, close_tag, "include_add")
+    marker_block = _wrap_with_markers(line, marker_key)
+    new_content = content[:idx] + marker_block + "\n" + content[idx:]
+    return new_content, "applied"
+
+
+def apply_include_remove(content: str, op: dict[str, Any]) -> tuple[str, str]:
+    marker_key = op["marker_key"]
+    line = op["line"]
+    existing = find_marker(content, marker_key)
+    if existing is None:
+        return content, "skipped_idempotent"
+    if line.strip() not in existing.body:
+        raise InjectOperationError(
+            f"include_remove marker_key {marker_key!r} body does not contain expected "
+            f"line {line!r}; operator triage required to reconcile manifest with target",
+            marker_key=marker_key,
+            reason="marker_key_conflict",
+        )
+    new_content = _remove_lines(content, existing.start_line, existing.end_line)
+    return new_content, "applied"
+
+
+def apply_block_replace(
+    content: str, op: dict[str, Any], source: str
+) -> tuple[str, str]:
+    marker_key = op["marker_key"]
+    start_anchor = op["start_anchor"]
+    end_anchor = op["end_anchor"]
+    existing = find_marker(content, marker_key)
+    if existing is not None:
+        if existing.body.strip() == source.strip():
+            return content, "skipped_idempotent"
+        _raise_marker_conflict(marker_key, "block_replace")
+    start_idx = content.find(start_anchor)
+    if start_idx == -1:
+        _raise_anchor_not_found(marker_key, start_anchor, "block_replace")
+    if start_anchor == end_anchor:
+        # Degenerate same-anchor case (per ADR-001 §A.1 worked example):
+        # the "between" region is empty; the operation effectively inserts
+        # AFTER the anchor.
+        insertion_point = start_idx + len(start_anchor)
+        marker_block = _wrap_with_markers(source, marker_key)
+        new_content = (
+            content[:insertion_point] + "\n" + marker_block + content[insertion_point:]
+        )
+        return new_content, "applied"
+    end_search_start = start_idx + len(start_anchor)
+    end_idx = content.find(end_anchor, end_search_start)
+    if end_idx == -1:
+        _raise_anchor_not_found(marker_key, end_anchor, "block_replace")
+    between_start = start_idx + len(start_anchor)
+    marker_block = _wrap_with_markers(source, marker_key)
+    new_content = (
+        content[:between_start] + "\n" + marker_block + "\n" + content[end_idx:]
+    )
+    return new_content, "applied"
+
+
+# Per-kind apply dispatch (kind -> (apply_callable, needs_source))
+_APPLY_NEEDS_SOURCE: dict[str, tuple[Callable[..., tuple[str, str]], bool]] = {
+    "section_insert_after": (apply_section_insert_after, True),
+    "section_replace": (apply_section_replace, True),
+    "step_remove": (apply_step_remove, False),
+    "step_insert_after": (apply_step_insert_after, True),
+    "include_add": (apply_include_add, False),
+    "include_remove": (apply_include_remove, False),
+    "block_replace": (apply_block_replace, True),
+}
+
+
+def apply_inject_operations(
+    content: str,
+    operations: list[dict[str, Any]],
+    source_resolver: Callable[[str], str],
+) -> tuple[str, list[OperationRecord]]:
+    """Apply all inject operations in declared order; return (new_content, records).
+
+    Pure function: does NOT write files. The caller (portable_gsd_contract.apply_overlay)
+    is responsible for atomic write.
+
+    Pre-flight atomicity per ADR-001 §7: all operations are computed in-memory before
+    any caller-side write. If any operation raises InjectOperationError, this function
+    propagates the exception WITHOUT returning a partial result. The caller can leave
+    the on-disk target untouched, satisfying ADR's "no half-migrated file is ever written."
+
+    The source_resolver is a callable that takes the operation's `source` string field
+    and returns the source file content. Callers compose it with their own I/O (e.g.,
+    `lambda p: (repo_root / p).read_text(encoding='utf-8')`); tests can pass a dict-backed
+    closure for synthetic content.
+
+    Anchor-resolution convention: all per-kind apply functions resolve their anchor
+    (close tag for section_insert_after / include_add; step name for step_remove /
+    step_insert_after; start/end anchor text for block_replace) to the FIRST match in
+    the target content. Targets with the same anchor appearing multiple times will
+    bind to the first one. ADR-001 §A.1–A.4 carriers do not exhibit multi-occurrence
+    anchors; if a future migration surfaces one, the per-kind signature would need
+    extension (e.g., an occurrence-index argument or a more specific anchor).
+    """
+    current = content
+    records: list[OperationRecord] = []
+    for op_index, op in enumerate(operations):
+        if not isinstance(op, dict):
+            raise InjectOperationError(
+                f"operation #{op_index} is not a dict (got {type(op).__name__})",
+                marker_key="",
+                reason="malformed_operation",
+                op_index=op_index,
+            )
+        kind = op.get("kind")
+        marker_key = op.get("marker_key", "")
+        if not isinstance(kind, str) or kind not in _APPLY_NEEDS_SOURCE:
+            raise InjectOperationError(
+                f"operation #{op_index} has unknown kind {kind!r}",
+                marker_key=str(marker_key) if isinstance(marker_key, str) else "",
+                reason="unknown_kind",
+                op_index=op_index,
+            )
+        apply_fn, needs_source = _APPLY_NEEDS_SOURCE[kind]
+        try:
+            if needs_source:
+                source_path = op.get("source")
+                if not isinstance(source_path, str) or not source_path:
+                    raise InjectOperationError(
+                        f"operation #{op_index} (kind {kind!r}) requires a non-empty source field",
+                        marker_key=str(marker_key),
+                        reason="malformed_operation",
+                        op_index=op_index,
+                    )
+                try:
+                    source_content = source_resolver(source_path)
+                except (FileNotFoundError, IsADirectoryError, OSError) as exc:
+                    raise InjectOperationError(
+                        f"operation #{op_index} (kind {kind!r}) failed to resolve source "
+                        f"{source_path!r}: {exc}",
+                        marker_key=str(marker_key),
+                        reason="source_missing",
+                        op_index=op_index,
+                    ) from exc
+                current, status = apply_fn(current, op, source_content)
+            else:
+                current, status = apply_fn(current, op)
+        except InjectOperationError as exc:
+            if exc.op_index is None:
+                exc.op_index = op_index
+            raise
+        records.append(
+            OperationRecord(
+                marker_key=str(marker_key),
+                kind=kind,
+                status=status,
+                op_index=op_index,
+            )
+        )
+    return current, records
