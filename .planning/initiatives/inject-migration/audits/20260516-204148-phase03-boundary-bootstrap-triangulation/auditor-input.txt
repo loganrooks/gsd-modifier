@@ -1,0 +1,65 @@
+You are reviewer B for a gate-failure triangulation in the inject-migration initiative.
+
+Author/runtime context: the initiative artifacts were authored under Claude/Codex mixed operator sessions; REVIEWERS.md requires this `adversarial-auditor-xhigh` same-vendor-style critical read for gate-failure escalation.
+
+Context paths to read:
+1. .planning/initiatives/inject-migration/REVIEWERS.md
+2. .planning/initiatives/inject-migration/GUARDRAILS.md
+3. .planning/initiatives/inject-migration/STATE.md
+4. .planning/initiatives/inject-migration/phases/03-pilot.md
+5. .planning/initiatives/inject-migration/decisions/PILOT-DEBRIEF-mandatory-initial-read.md
+6. .planning/initiatives/inject-migration/checkpoints/2026-05-16T203147Z-phase03-slice35.md
+7. tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json
+8. scripts/ci/check-bootstrap.sh
+9. tooling/codex/tests/test_health_and_migration_follow_through_contract.py
+10. tooling/codex/tests/test_seed_consumer_follow_through_contract.py
+
+Gate under review:
+- Phase 3 boundary ran `bash scripts/ci/check-bootstrap.sh`.
+- It failed twice with exit 1.
+- The script did successfully materialize both runtimes before failing in broad `python3 -m unittest discover -s tooling/codex/tests`.
+- The observed full-discover failures/errors were:
+  - `test_health_and_migration_follow_through_contract...test_skill_wrappers_keep_health_and_uplift_follow_through_explicit`: FileNotFoundError for `tooling/portable-gsd/overlay/skills/gsd-from-gsd2/SKILL.md`
+  - `test_health_and_migration_follow_through_contract...test_overlay_manifest_owns_health_and_migration_surfaces`: expected `mode: overwrite` for `skills/gsd-from-gsd2/SKILL.md`, actual `mode: add`
+  - `test_seed_consumer_follow_through_contract...test_plant_seed_wrapper_mentions_strengthening_carry`: FileNotFoundError for `tooling/portable-gsd/overlay/skills/gsd-plant-seed/SKILL.md`
+  - `test_seed_consumer_follow_through_contract...test_overlay_manifest_owns_seed_producer_and_wrapper`: expected `mode: overwrite` for `skills/gsd-plant-seed/SKILL.md`, actual `mode: add`
+  - `test_seed_audit_gate_follow_through_contract...test_seed_audit_surfaces_vintage_why_and_strengthening_carry`: node audit helper returned nonzero
+  - `test_transition_uplift_continuity...test_phase_complete_preserves_project_uplift_section`: node phase-complete helper returned nonzero
+
+Direct Phase 3 boundary evidence already collected:
+- `bash scripts/ci/check-deterministic.sh`: exit 0, 48 tests OK, manifest contract report `hard_failures: []`.
+- `./scripts/setup-portable-gsd-runtime.sh --runtime both`: exit 0; both Codex and Claude materialized; both runtime post-materialization reports had `hard_failures: []` and `inject_failure_count: 0` for `get-shit-done/references/mandatory-initial-read.md`.
+- `python3 harness_modifier/contract/portable_gsd_contract.py verify-materialized . --all-supported --strict`: exit 0; top-level `hard_failures: []`; both runtime entries for `mandatory-initial-read.md` passed the `GSD_MODIFIER:references-mandatory-initial-read:extended-content` marker verification.
+- `python3 harness_modifier/contract/harness_canary.py report . --all-supported --strict`: exit 0; summary `status: ok`, `issue_count: 0`, `parity_state: dual-runtime-aligned`, both runtimes had post-materialization `inject_failure_count: 0`.
+
+Reviewer A verdict (`gsd-debugger`):
+
+VERDICT: ESCALATE
+REASONING: The repeated `check-bootstrap.sh` failure is not a Phase 3 pilot-materialization blocker: the script materializes runtimes first, then fails at broad `python3 -m unittest discover -s tooling/codex/tests` before later contract gates can run, while the pilot carrier is `mode: inject` for both runtimes and recorded as materialized/verified with `hard_failures: []`. The observed failures line up with a pre-existing/non-pilot baseline plus gate over-aggregation: `gsd-from-gsd2` and `gsd-plant-seed` were intentionally reclassified to `mode: add`, but stale tests still expect `overwrite` and old overlay paths; the seed-audit and transition/uplift errors are runtime-state-dependent full-discover failures unrelated to `mandatory-initial-read.md`. Because Phase 3 exit criterion still literally requires bootstrap exit 0, a debugger should not waive the boundary gate inside the current write set; this is a trajectory-verifier/adversarial-auditor judgment about whether zero materialization hard failures satisfy the phase intent despite the composite script exit.
+RECOMMENDATION: Invoke `trajectory-verifier` for Phase 3 boundary with this diagnosis; record the composite-gate failure in the boundary checkpoint/STATE if closure is accepted. Do not make code/test changes inside the boundary write set. If the verifier rejects closure, the smallest remediation is outside the boundary write set: either split/scope `scripts/ci/check-bootstrap.sh` so bootstrap/materialization is separable from full regression, or update the stale non-pilot full-discover tests for `gsd-from-gsd2`, `gsd-plant-seed`, seed-audit, and transition/uplift via a separate reviewer-mediated cleanup slice.
+EVIDENCE:
+- `scripts/ci/check-bootstrap.sh:9-16` runs runtime setup, then broad unittest discovery, then canary/manifest/materialized/refmap gates; unittest failure prevents later contract gates.
+- `.planning/initiatives/inject-migration/phases/03-pilot.md:108-111` requires pilot materialization plus bootstrap exit 0 for phase closure; `.planning/initiatives/inject-migration/phases/03-pilot.md:119-125` lists the boundary commands.
+- `tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json:322-353` shows the Phase 3 pilot carrier is `mode: inject` for both Codex and Claude with marker key `GSD_MODIFIER:references-mandatory-initial-read:extended-content`.
+- `.planning/initiatives/inject-migration/STATE.md:42` records the full-discover failures as out of scope unless they change shape or block the pilot directly, and says no `mandatory-initial-read.md` test failed.
+- `.planning/initiatives/inject-migration/STATE.md:90` records setup/runtime verification and `verify-materialized` exit 0 with top-level `hard_failures: []`, plus `harness_canary.py` pass after Slice 3.5.
+- `tooling/portable-gsd/overlay/OVERLAY-MANIFEST.json:948-988` shows `skills/gsd-from-gsd2/SKILL.md` and `skills/gsd-plant-seed/SKILL.md` are currently `mode: add` from `harness_modifier/overlay/...`.
+- `tooling/codex/tests/test_health_and_migration_follow_through_contract.py:11-14,31-37` still expects `gsd-from-gsd2` to be `overwrite` and reads the old `tooling/portable-gsd/overlay/...` path.
+- `tooling/codex/tests/test_seed_consumer_follow_through_contract.py:11-13,36-39` still expects `gsd-plant-seed` to be `overwrite` and reads the old `tooling/portable-gsd/overlay/...` path.
+- `.planning/initiatives/inject-migration/checkpoints/2026-05-16T203147Z-phase03-slice35.md:32-35` records focused runtime-visibility tests, direct `harness_canary.py`, and `verify-materialized` all passing after the inject runtime-visibility follow-up.
+- `.planning/initiatives/inject-migration/REVIEWERS.md:105,109` assigns phase-boundary ambiguity to `trajectory-verifier` with adversarial audit escalation, and gate-failure escalation from `gsd-debugger` to `adversarial-auditor-xhigh`.
+
+Question for reviewer B:
+Should the main loop treat the repeated `check-bootstrap.sh` exit 1 as blocking Phase 3 boundary closure, or accept Reviewer A's diagnosis that the pilot bootstrap/materialization obligation has been satisfied by the direct contract gates while the composite script's broad full-discover failure is a documented non-pilot baseline/gate-over-aggregation issue?
+
+Important constraints:
+- Do not recommend code or test edits unless they are necessary to avoid a false Phase 3 closure.
+- Phase 3 boundary checkpoint/STATE may record caveats, reviewer verdicts, and out-of-scope follow-up.
+- Phase 3 cannot be marked complete without a later `trajectory-verifier` boundary PASS or triangulated equivalent; this audit is only reviewer B for the gate-failure escalation.
+- Return the verdict block exactly in REVIEWERS.md format:
+
+VERDICT: <PASS | FAIL | ESCALATE | HALT>
+REASONING: <one paragraph>
+RECOMMENDATION: <actionable recommendation>
+EVIDENCE:
+- <bullets with cited file:line refs or command evidence>
